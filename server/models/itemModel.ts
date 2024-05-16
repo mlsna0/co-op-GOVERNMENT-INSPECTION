@@ -7,7 +7,7 @@ const itemSchema = new mongoose.Schema({
   salary: { type: Number, required: true }
 });
 
-const Items = mongoose.model('Comments', itemSchema);
+const Items = mongoose.model('items', itemSchema);
 
 export interface ItemModel {
   name: String;
