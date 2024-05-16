@@ -14,6 +14,6 @@ const itemSchema = new Schema<IItem>({
   salary: { type: Number, required: true }
 });
 
-const Item = model<IItem>('Item', itemSchema);
+const Item = model<IItem>('Items', itemSchema);
 export default Item;
 export type { IItem };
