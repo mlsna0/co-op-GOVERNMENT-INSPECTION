@@ -1,34 +1,18 @@
-// import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-// async function setMongo(): Promise<any> {
-//   let mongodbURI;
-//   if (process.env.NODE_ENV === 'test') {
-//     mongodbURI = process.env.MONGODB_TEST_URI;
-//   } else {
-//     mongodbURI = process.env.MONGODB_URI;
-//   }
-//   mongoose.Promise = global.Promise;
-//   mongoose.set('useCreateIndex', true);
-//   mongoose.set('useNewUrlParser', true);
-//   mongoose.set('useFindAndModify', false);
-//   mongoose.set('useUnifiedTopology', true);
-//   // Connect to MongoDB using Mongoose
-//   await mongoose.connect(mongodbURI);
-//   console.log('Connected to MongoDB');
-// }
-// export default setMongo;
+dotenv.config(); // Load environment variables from .env file
 
-import mongoose = require('mongoose'); 
+async function setMongo(): Promise<void> {
+  const mongodbURI = process.env.NODE_ENV === 'test' ? process.env.MONGODB_TEST_URI : process.env.MONGODB_URI;
+  console.log("mongodbURI : ",mongodbURI)
 
-async function setMongo(): Promise<any> {
-  let mongodbURI;
-  if (process.env.NODE_ENV === 'test') {
-    mongodbURI = process.env.MONGODB_TEST_URI;
-  } else {
-    mongodbURI = process.env.MONGODB_URI;
+  if (!mongodbURI) {
+    throw new Error('MongoDB URI is not defined');
   }
 
   const options = {
+<<<<<<< HEAD
     // useMongoClient: true,
     autoIndex: false, // Don't build indexes
     // reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
@@ -41,17 +25,29 @@ async function setMongo(): Promise<any> {
     useCreateIndex: true,
     // useUnifiedTopology: true
 
+=======
+    autoIndex: false,
+    // poolSize: 10,
+    // bufferMaxEntries: 0,
+    // useNewUrlParser: true,
+    // useFindAndModify: false,
+    // useCreateIndex: true,
+    // useUnifiedTopology: true
+    // Remove poolSize and bufferMaxEntries options
+>>>>>>> main
   };
 
-  (<any>mongoose).Promise = global.Promise;
-  // mongoose.set('useCreateIndex', true);
-  // mongoose.set('useNewUrlParser', true);
-  // mongoose.set('useFindAndModify', false);
-  // mongoose.set('useUnifiedTopology', true);
-  // Connect to MongoDB using Mongoose
-  await mongoose.connect(mongodbURI, options);
-  // await mongoose.connect(mongodbURI);
-  console.log('Connected to MongoDB');
+  (mongoose as any).Promise = global.Promise;
+
+  try {
+    await mongoose.connect(mongodbURI, options);
+    console.log('Connected to MongoDB');
+  } catch (error) {
+    console.error('Error connecting to MongoDB', error);
+    throw error;
+  }
 }
 
 export default setMongo;
+
+  
