@@ -1,19 +1,19 @@
-import { Schema, model, Document } from 'mongoose';
+import * as mongoose from 'mongoose';
 
-interface IItem extends Document {
-  name: string;
-  country: string;
-  city: string;
-  salary: number;
-}
-
-const itemSchema = new Schema<IItem>({
+const itemSchema = new mongoose.Schema({
   name: { type: String, required: true },
   country: { type: String, required: true },
   city: { type: String, required: true },
   salary: { type: Number, required: true }
 });
 
-const Item = model<IItem>('Item', itemSchema);
-export default Item;
-export type { IItem };
+const Items = mongoose.model('Comments', itemSchema);
+
+export interface ItemModel {
+  name: String;
+  country: String;
+  city: String;
+  salary: Number;
+}
+
+export default Items;
