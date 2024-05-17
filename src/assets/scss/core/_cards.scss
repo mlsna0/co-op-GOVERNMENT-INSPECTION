@@ -199,7 +199,7 @@
     &.bg-danger,
     &.card-rotate.bg-danger .front,
     &.card-rotate.bg-danger .back{
-      background: linear-gradient(60deg, $red-400, $red-600);
+      background: linear-gradient(60deg, rgb(255,209,0) -400, rbg(255,209,0) -600);
     }
 
     .card-header-rose .card-icon,

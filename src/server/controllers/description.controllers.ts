@@ -1,7 +1,7 @@
 import descriptionModel from "../model/description.model";
 import maincon from "../controllers/main.controllers";
 import userModel from "../model/user.model";
-import * as moment from 'moment';
+import moment from 'moment';
 
 
 var ejs = require('ejs');

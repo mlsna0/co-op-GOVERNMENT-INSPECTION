@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Item } from '../models/item.model';
+import { Item } from '../models/item.model'; // แก้ไขการ import ให้ถูกต้อง
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  private apiUrl = 'mongodb://localhost:27017/Angular-Project'; // URL ของ backend
+  private apiUrl = 'mongodb://localhost:27017/Angula-Project'; // URL ของ backend ควรเป็น URL ของ backend จริง
 
   constructor(private http: HttpClient) { }
 

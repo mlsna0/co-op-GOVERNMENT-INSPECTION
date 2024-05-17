@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../service/data.service';
-import { Item } from '../models/item.model';
+import { FormGroup, FormsModule,FormControl,FormBuilder, Validator } from '@angular/forms';
+import $ from "jquery";
+import 'bootstrap';
+import { HttpClient } from '@angular/common/http';
+import { dataflow } from 'googleapis/build/src/apis/dataflow';
+import { SharedService } from "../services/shared.service"
+
 
 @Component({
   selector: 'app-table-list',
@@ -8,89 +13,119 @@ import { Item } from '../models/item.model';
   styleUrls: ['./table-list.component.css']
 })
 export class TableListComponent implements OnInit {
-  data: Item[] = [];
-  showPopup = false;
-  isEdit = false;
-  formData: Item = {
-    id: null,
-    name: '',
-    country: '',
-    city: '',
-    salary: null
-  };
+  people:any[] =[];
+  //ListUser: users[] =[];
+  Form:FormGroup;
 
-  constructor(private dataService: DataService) {}
-
-  ngOnInit() {
-    this.loadData();
-  }
-
-  loadData() {
-    this.dataService.getItems().subscribe(
-      (items: Item[]) => {
-        console.log('Data loaded:', items); // เพิ่ม console.log ตรงนี้เพื่อดูข้อมูลที่โหลดมา
-        this.data = items;
-      },
-      error => {
-        console.error('Error loading data', error);
-      }
-    );
-  }
-
-  openAddPopup() {
-    this.isEdit = false;
-    this.formData = {
-      id: null,
-      name: '',
-      country: '',
-      city: '',
-      salary: null
-    };
-    console.log('Opening add popup with formData:', this.formData); // ดูข้อมูลตอนเปิด popup เพิ่ม
-    this.showPopup = true;
-  }
-
-  openEditPopup(item: Item) {
-    this.isEdit = true;
-    this.formData = { ...item };
-    console.log('Opening edit popup with formData:', this.formData); // ดูข้อมูลตอนเปิด popup แก้ไข
-    this.showPopup = true;
-  }
-
-  closePopup() {
-    this.showPopup = false;
-    console.log('Popup closed'); // เพิ่ม console.log เพื่อเช็คเมื่อ popup ถูกปิด
-  }
-
-  submitForm() {
-    if (this.isEdit) {
-      console.log('Submitting form for edit with formData:', this.formData); // ดูข้อมูลก่อนที่จะส่งข้อมูลอัพเดต
-      this.dataService.updateItem(this.formData).subscribe(
-        (updatedItem: Item) => {
-          console.log('Item updated:', updatedItem); // ดูข้อมูลหลังจากอัพเดต
-          const index = this.data.findIndex(item => item.id === updatedItem.id);
-          if (index !== -1) {
-            this.data[index] = updatedItem;
-          }
-          this.closePopup();
-        },
-        error => {
-          console.error('Error updating item', error);
-        }
-      );
-    } else {
-      console.log('Submitting form for add with formData:', this.formData); // ดูข้อมูลก่อนที่จะส่งข้อมูลเพิ่มใหม่
-      this.dataService.addItem(this.formData).subscribe(
-        (newItem: Item) => {
-          console.log('Item added:', newItem); // ดูข้อมูลหลังจากเพิ่มใหม่
-          this.data.push(newItem);
-          this.closePopup();
-        },
-        error => {
-          console.error('Error adding item', error);
-        }
-      );
-    }
+  items:any[]= [];
+  PersonINT :number = 0;
+  personInputs: number[]=[];
+addItemForm: any;
+addDataForm: any;
+  constructor(
+    private fb:FormBuilder,
+    private http:HttpClient,
+    private sv:SharedService
+  ) { 
+    this.addItemForm = this.fb.group({
+      id: [''],
+      startDate: [''],
+      endDate: [''],
+      location: ['']
+    }); 
   }
   
+  
+  openModal() {
+    $('#myModal').modal('show'); 
+    
+    this.sv.getData().subscribe( res => {
+console.log("res getData :",res);
+
+    })
+    
+    this.sv.postData({
+      key1:"",
+      key2:""
+    }).subscribe( res => {
+      console.log("res getData :",res);
+      
+          })
+  }
+
+ addPersonModel(){
+  $('#addPersonModel').modal('show');
+ }
+ addPersonInput(){
+  console.log("connet..")
+  
+  this.PersonINT++;
+  this.personInputs = Array(this.PersonINT).fill(1).map((x, i) => i);
+  console.log(this.PersonINT);
+  
+
+
+ }
+ addPersonCommit(value){
+  console.log("commit succus",value)
+  
+  
+ }
+  onRecord(){
+    $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
+   
+  }
+//insert
+  onInsert(){
+    $('#insertModel').modal('show'); 
+  }
+  onInsertSummit(){
+    if (this.addItemForm.valid) {
+      this.items.push(this.addItemForm.value);
+      this.addItemForm.reset();
+      console.log(this.items);
+    }
+
+  }
+  getCurrentLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        this.addItemForm.patchValue({
+          location:` Lat: ${lat}, Lng: ${lng}`
+        });
+      }, (error) => {
+        console.error(error);
+      });
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
+  }
+  //insert end here
+  detailCommit(){
+
+  }
+  recordCommit(){
+    
+
+  
+  }
+  printPDF(){
+
+  }
+  ngOnInit() {
+    this.Form =this.fb.group({
+      Full_name1: new FormControl(""),
+      Full_name2: new FormControl(""),
+      Full_name3: new FormControl("")
+    })
+  }
+
+  searchData(data:string){
+   this.sv.searchData(res =>{
+
+   })
+  }
+
 }

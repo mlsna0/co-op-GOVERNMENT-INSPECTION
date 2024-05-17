@@ -7,7 +7,7 @@ function setRoutes(app): void {
   const itemModelCtrl = new ItemModelCtrl();
 
   // Testst
-  router.route('/itemModel').get(itemModelCtrl.getAlltest);
+  router.route('/itemModel').get(itemModelCtrl.getAll);
   router.route('/itemModel/count').get(itemModelCtrl.count);
   router.route('/itemModel').post(itemModelCtrl.insert);
   router.route('/itemModel/:id').get(itemModelCtrl.get);

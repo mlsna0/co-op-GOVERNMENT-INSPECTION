@@ -7,9 +7,8 @@ import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
 import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
-import { DataService } from './service/data.service';
-import { BrowserModule } from '@angular/platform-browser';
- // นำเข้า AdminLayoutModule แทนที่จะประกาศ component ที่นี่
+import { TableListComponent } from './table-list/table-list.component';
+import { SharedService } from "./services/shared.service"
 
 @NgModule({
   imports: [
@@ -20,7 +19,6 @@ import { BrowserModule } from '@angular/platform-browser';
     ComponentsModule,
     RouterModule,
     AppRoutingModule,
-    BrowserModule,
     
   ],
   declarations: [
@@ -28,9 +26,8 @@ import { BrowserModule } from '@angular/platform-browser';
     AdminLayoutComponent,
     
 
-
   ],
-  providers: [],
+  providers: [SharedService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
