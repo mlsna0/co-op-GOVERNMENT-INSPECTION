@@ -16,11 +16,14 @@ export class TableListComponent implements OnInit {
   people:any[] =[];
   //ListUser: users[] =[];
   Form:FormGroup;
+  addRecordForm:FormGroup;
+  addPersonalForm:FormGroup;
 
   items:any[]= [];
   PersonINT :number = 0;
   personInputs: number[]=[];
 addItemForm: any;
+
 addDataForm: any;
   constructor(
     private fb:FormBuilder,
@@ -30,8 +33,14 @@ addDataForm: any;
     this.addItemForm = this.fb.group({
       id: [''],
       startDate: [''],
+      detail:[''],
       endDate: [''],
-      location: ['']
+      location: [''],
+      topic: ['']
+    }); 
+    this.addPersonalForm = this.fb.group({
+      rank: [''],
+      fullname: [''],
     }); 
   }
   
@@ -79,16 +88,30 @@ addDataForm: any;
   onInsert(){
     $('#insertModel').modal('show'); 
   }
-  onInsertSummit() {
-    if (this.addItemForm.valid) {
-      this.items.push(this.addItemForm.value);
-      this.addItemForm.reset();
-      console.log(this.items);
-      // ส่งข้อมูลไปยัง controller
-      this.sv.postItemData(this.items).subscribe(res => {
-        console.log("res postItemData:", res);
-      });
-    }
+  onInsertSummit(data) {
+      
+    console.log(data);
+    // console.log(this.addPersonalForm.value);
+    
+    // console.log(this.items);
+    // ส่งข้อมูลไปยัง controller
+
+    // this.sv.postItemData(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
+    //   console.log("res postItemData:", res);
+    // });
+    this.sv.postDataTest(data).subscribe(res => {
+      console.log("res postItemData:", res);
+    });
+
+    // if (this.addItemForm.valid) {
+    //   this.items.push(this.addItemForm.value);
+    //   this.addItemForm.reset();
+    //   // console.log(this.items);
+    //   // ส่งข้อมูลไปยัง controller
+    //   this.sv.postItemData(this.items).subscribe(res => {
+    //     console.log("res postItemData:", res);
+    //   });
+    // }
   }
   getCurrentLocation() {
     if (navigator.geolocation) {

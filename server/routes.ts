@@ -4,6 +4,8 @@ import ItemModelCtrl from './controller/itemController';
 import RecordModelCtrl from './controller/recordController';
 import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
+import uploadService from './service/uploadservice.service'
+
 
 function setRoutes(app): void {
   const router = express.Router();
@@ -16,9 +18,12 @@ function setRoutes(app): void {
   router.route('/itemModel').get(itemModelCtrl.getAll);
   router.route('/itemModel/count').get(itemModelCtrl.count);
   router.route('/itemModel').post(itemModelCtrl.insert);
+  // router.route('/postPersonData').post(itemModelCtrl.postItemToView);
+  router.route('/postItemData').post(itemModelCtrl.postItemToView);
   router.route('/itemModel/:id').get(itemModelCtrl.get);
   router.route('/itemModel/:id').put(itemModelCtrl.update);
   router.route('/itemModel/:id').delete(itemModelCtrl.delete);
+  router.route('/postDataTest').post(uploadService.none(),itemModelCtrl.postDataTest)
 
   // RecordModel routes
   router.route('/recordModel').get(recordModelCtrl.getAll);
@@ -43,6 +48,8 @@ function setRoutes(app): void {
   router.route('/viewModel/:id').get(viewModelCtrl.get);
   router.route('/viewModel/:id').put(viewModelCtrl.update);
   router.route('/viewModel/:id').delete(viewModelCtrl.delete);
+
+  
 
   app.use('/api', router);
 }

@@ -3,10 +3,32 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import setMongo from './mongo';  // Import the setMongo function
 import setRoutes from './routes';
+import * as path from 'path';
+
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+
+app.use(express.json());  
+app.use(express.urlencoded({ extended: false }));
+app.use('/uploads', express.static(path.join(__dirname, './uploads')));
+app.use('/', express.static(path.join(__dirname, '../public')));
+
+app.use((req, res, next) => {
+req.headers['content-type'] = req.headers['content-type'] || 'application/json; charset=utf-8' || 'text/csv; charset=utf-8';
+res.header("Access-Control-Allow-Origin", "*");
+res.header(
+  "Access-Control-Allow-Headers",
+  "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+);    
+if (req.method === 'OPTIONS') {
+  res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+  return res.status(200).json({});
+}   
+next();
+});
+
 
 // Define the Item schema and model
 
@@ -64,7 +86,7 @@ app.use(bodyParser.json());
 // });
 
 async function main(): Promise<void> {
-  const app = express();
+ 
 
   try {
     await setMongo(); 
