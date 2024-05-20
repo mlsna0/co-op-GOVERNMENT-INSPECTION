@@ -20,6 +20,9 @@ export class TableListComponent implements OnInit {
   //ListUser: users[] =[];
   Form:FormGroup;
   dtOptions:any ={};
+  addRecordForm:FormGroup;
+  addPersonalForm:FormGroup;
+
   items:any[]= [];
   PersonINT :number = 0;
   personInputs: number[]=[];
@@ -38,8 +41,14 @@ export class TableListComponent implements OnInit {
     this.addItemForm = this.fb.group({
       id: [''],
       startDate: [''],
+      detail:[''],
       endDate: [''],
-      location: ['']
+      location: [''],
+      topic: ['']
+    }); 
+    this.addPersonalForm = this.fb.group({
+      rank: [''],
+      fullname: [''],
     }); 
   }
   documentImageUrl = 'assets/img/sampleA4-1.png';
@@ -94,20 +103,18 @@ export class TableListComponent implements OnInit {
     }
   }
   openModal() {
-    $('#myModal').modal('show'); 
-    
-    this.sv.getData().subscribe( res => {
-console.log("res getData :",res);
+    $('#myModal').modal('show');
 
-    })
-    
+    this.sv.getData().subscribe(res => {
+      console.log("res getData:", res);
+    });
+
     this.sv.postData({
-      key1:"",
-      key2:""
-    }).subscribe( res => {
-      console.log("res getData :",res);
-      
-          })
+      key1: "",
+      key2: ""
+    }).subscribe(res => {
+      console.log("res postData:", res);
+    });
   }
 
  addPersonModel(){
@@ -123,11 +130,13 @@ console.log("res getData :",res);
 
 
  }
- addPersonCommit(value){
-  console.log("commit succus",value)
-  
-  
- }
+ addPersonCommit(value: any) {
+  console.log("commit success", value);
+  // ส่งข้อมูลไปยัง controller
+  this.sv.postPersonData(value).subscribe(res => {
+    console.log("res postPersonData:", res);
+  });
+}
   onRecord(){
     $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
    
@@ -136,15 +145,30 @@ console.log("res getData :",res);
   onInsert(){
     $('#insertModel').modal('show'); 
   }
+  onInsertSummit(data) {
+      
+    console.log(data);
+    // console.log(this.addPersonalForm.value);
+    
+    // console.log(this.items);
+    // ส่งข้อมูลไปยัง controller
 
-  onInsertSummit(){
-    if (this.addItemForm.valid) {
-      this.items.push(this.addItemForm.value);
-      this.addItemForm.reset();
-      console.log(this.items);
-      // console.log("connected..insertsubmit");
-    }
+    // this.sv.postItemData(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
+    //   console.log("res postItemData:", res);
+    // });
+    this.sv.postDataTest(data).subscribe(res => {
+      console.log("res postItemData:", res);
+    });
 
+    // if (this.addItemForm.valid) {
+    //   this.items.push(this.addItemForm.value);
+    //   this.addItemForm.reset();
+    //   // console.log(this.items);
+    //   // ส่งข้อมูลไปยัง controller
+    //   this.sv.postItemData(this.items).subscribe(res => {
+    //     console.log("res postItemData:", res);
+    //   });
+    // }
   }
   getCurrentLocation() {
     if (navigator.geolocation) {
@@ -175,10 +199,10 @@ console.log("res getData :",res);
   }
 
 
-  searchData(data:string){
-   this.sv.searchData(res =>{
-
-   })
+  searchData(data: string) {
+    this.sv.searchData(data).subscribe(res => {
+      console.log("res searchData:", res);
+    });
   }
 
 }

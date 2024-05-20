@@ -1,9 +1,12 @@
 const multer = require('multer');
-import * as fs from 'fs';
-import * as path from 'path';
-import { Path } from 'mongoose';
+import * as path from 'path'
 
+// import * as multer from 'multer'
+
+import * as fs from 'fs';
 const storage = multer.diskStorage({
+
+
     destination: function (req, file, cb) {
         console.log("aaaaa");
         
