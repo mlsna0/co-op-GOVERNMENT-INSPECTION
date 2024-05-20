@@ -64,6 +64,7 @@ label{
     display: flex;
     justify-content: center;
     align-items: center;
+  
 
 }
 
@@ -100,3 +101,4 @@ label{
     border: 1px solid #ddd;
     justify-content: flex-end;
   }
+

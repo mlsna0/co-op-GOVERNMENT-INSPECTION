@@ -5,6 +5,8 @@ import 'bootstrap';
 import { HttpClient } from '@angular/common/http';
 import { dataflow } from 'googleapis/build/src/apis/dataflow';
 import { SharedService } from "../services/shared.service"
+import { DataTableDirective } from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
+import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 
 
 
@@ -16,16 +18,16 @@ import { SharedService } from "../services/shared.service"
 export class TableListComponent implements OnInit {
   people:any[] =[];
   //ListUser: users[] =[];
-    Form:FormGroup;
-    dtOptions:any ={};
+  Form:FormGroup;
+  dtOptions:any ={};
   items:any[]= [];
   PersonINT :number = 0;
   personInputs: number[]=[];
-addItemForm: any;
-addDataForm: any;
-activeButton: string='';
-isTyproActive:boolean = false;
-typroText: string='';
+  addItemForm: any;
+  addDataForm: any;
+  activeButton: string='';
+  isTyproActive:boolean = false;
+  typroText: string='';
 
   
   constructor(
@@ -41,7 +43,9 @@ typroText: string='';
     }); 
   }
   documentImageUrl = 'assets/img/sampleA4-1.png';
-    ngOnInit() {
+
+
+  ngOnInit() {
     // this.Form =this.fb.group({
     //   Full_name1: new FormControl(""),
     //   Full_name2: new FormControl(""),
@@ -51,13 +55,13 @@ typroText: string='';
     
       columnDefs: [
         {
-          targets: [5],
-          orderable: false
+          // targets: [5],
+          // orderable: false
         }
       ],
       pagingType: 'full_numbers',
       "language": {
-        "lengthMenu": "แสดง  MENU  รายการ",
+        "lengthMenu": "แสดง MENU รายการ",
         "search": "ค้นหา"
         ,
         "info": "แสดงหน้า PAGE จากทั้งหมด PAGES หน้า",
@@ -132,11 +136,13 @@ console.log("res getData :",res);
   onInsert(){
     $('#insertModel').modal('show'); 
   }
+
   onInsertSummit(){
     if (this.addItemForm.valid) {
       this.items.push(this.addItemForm.value);
       this.addItemForm.reset();
       console.log(this.items);
+      // console.log("connected..insertsubmit");
     }
 
   }

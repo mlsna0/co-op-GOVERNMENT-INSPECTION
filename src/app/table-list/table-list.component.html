@@ -1,4 +1,3 @@
-
 <!--สิ่งที่ติดปัญหาอยู่และยังไม่ได้แก้ไข
   1.templat datatable ไม่สามารถดึงได้มาใช้งานได่้
   2.ยังไม่ได้เชื่อมค่อกับระบบฐานข้อมูล
@@ -29,7 +28,7 @@
               การลงตรวจอิเล็กทรอนิค
             </h4>
             <p class="card-category"></p>
-            <div class="btnBar">
+            <!-- <div class="btnBar">
               <form class="navbar-form">
                 <span class="bmd-form-group">
                   <div class="input-group no-border">
@@ -40,73 +39,57 @@
                     </button>
                   </div>
                 </span>
-              </form> 
-              <!-- (click)="searchData(myInputSearch.value)" --> 
-            </div>
+              </form> -->
+            <!-- (click)="searchData(myInputSearch.value)" -->
+            <!-- </div> -->
           </div>
 
           <!-- </div> card-Edit -->
           <div class="card-body">
             <div class="table-responsive">
-              <table datatable [dtOptions]="dtOptions" class="table table-border table-hover table-bordered  nowrap">
+              <table width="100%" datatable [dtOptions]="dtOptions"
+                class="table table-border table-hover table-bordered nowrap">
                 <thead class="text-primary">
-                  <th>ครั้งที่</th>
-                  <th>วันที่เริ่มตรวจสอบ</th>
-                  <th>วันที่เสร็จสิ้น</th>
-                  <th>สถานที่</th>
-                  <th class="text-center"><i class="fa fa-gear"></i></th>
+                  <tr>
+                    <th>ครั้งที่</th>
+                    <th>วันที่เริ่มตรวจสอบ</th>
+                    <th>วันที่เสร็จสิ้น</th>
+                    <th>สถานที่</th>
+                    <th class="text-center"><i class="fa fa-gear"></i></th>
+                  </tr>
                 </thead>
                 <tbody>
-                  <!--*ngfor="let item of Items"-->
+                  <!--*ngfor="let item of items"-->
                   <tr>
-                    <td>1<!--{{item.id}}-->
-                    </td>
-                    <td>
-                      13/5/2567
-                      <!-- {{item.StartDate}} -->
+                    <!-- ข้อมูลที่จะดึงจาก services มาใส่ใน tbody นี้นะมีแบบให้แห้แหละ -->
 
+                    <td>
+                      1
+                      <!-- {{item.id}} -->
                     </td>
                     <td>
-                      16/5/2567
+                      20/5/2567
+                      <!-- {{item.StartDate}} -->
+                    </td>
+                    <td>
+                      20/5/2567
                       <!-- {{item.endDate}} -->
                     </td>
                     <td>
+                      127.0.0.0.1
                       <!-- {{item.location}} -->
-                      ที่หน้าตึก NT
-
                     </td>
-                    <!--  ข้อมูลที่จะดึงจาก services มาใส่ใน tbody นี้นะมีแบบให้แห้แหละ
-                      <tbody *ngfor="let item of Items">
-                      <tr>
-                        <td>1
-                          {{item.id}}
-                        </td>
-                        <td>
-                          13/5/2567
-                          {{item.StartDate}}
-    
-                        </td>
-                        <td>16/5/2567
-                          {{item.endDate}}
-                        </td>
-                        <td>
-                          {{item.location}}
-                          ที่หน้าตึก NT
-    
-                        </td>
-                    </tbody> -->
 
+                    <td class=" text-center " style="width: 1%; white-space: nowrap;">
 
-                    <td class=" text-center justify-content-end" style="width: 1%; white-space: nowrap;">
-
-                      <button (click)="openModal()" class="btn btn-warning" style="border: none; background: none;"
-                        data-toggle="tooltip" data-placement="bottom" title="ดูรายละเอียด">
+                      <button (click)="openModal()" class="btn btn-warning" style="border: none; background: none;">
+                        <!--data-toggle="tooltip" data-placement="bottom" title="ดูรายละเอียด"-->
                         <i class="fa fa-file-text-o" style="color: black;"></i>
                       </button>&nbsp;
 
 
-                      <button (click)="onRecord()" class="btn btn-warning" style="border: none; background: none;"
-                        data-toggle="tooltip" data-placement="top" title="จดบันทึการตรวจสอบ">
+                      <button (click)="onRecord()" class="btn btn-warning"
+                        style="border: none; background: none;"><!--  data-toggle="tooltip" data-placement="top" title="จดบันทึการตรวจสอบ"-->
                         <!--class="btn btn-danger pull-center"-->
                         <i class="fa fa-pencil-square-o" style="color: black;"></i>
                       </button> &nbsp;
@@ -115,17 +98,10 @@
                         <i class="fa fa-file-pdf-o" (click)="printPDF()" style="color: black;"></i>
                         &nbsp;
                       </button>
-
-
-
-                      <!-- เว้นที่ให้ใส่ card edit by land -->
-
-
-                      <!-- <button class="btn btn-danger pull-center"  href="#" (click)="ViewDetail(item.id)">  ตรวจสอบ</button> -->
                     </td>
                   </tr>
                 </tbody>
-                
+
               </table>
             </div>
           </div>
@@ -217,8 +193,8 @@
                 <div class="row">
                   <div class="col-sm">
                     <div class="form-group">
-                      <label for="location">งานที่ตรวจ</label>
-                      <input type="text" id="location" formControlName="task" class="form-control"
+                      <label for="task">งานที่ตรวจ</label>
+                      <input type="text" id="task" formControlName="task" class="form-control"
                         placeholder="งานที่ตรวจ" />
                     </div>
                   </div>
@@ -231,11 +207,11 @@
 
                     <div class="col-sm-3">
                       <div class="form-group">
-                        <label for="location">ยศ/ตำเเหน่ง</label>
-                        <input type="text" id="location" formControlName="rank" class="form-control"
+                        <label for="rank">ยศ/ตำเเหน่ง</label>
+                        <input type="text" id="rank" formControlName="rank" class="form-control"
                           placeholder="ยศ/ตำเเหน่ง" />
                         <div *ngFor="let input of personInputs">
-                          <input type="text" id="location" formControlName="rank" class="form-control"
+                          <input type="text" id="rank" formControlName="rank" class="form-control"
                             placeholder="ยศ/ตำเเหน่ง" />
                         </div>
 
@@ -245,11 +221,11 @@
                     </div>
                     <div class="col-sm-5">
                       <div class="form-group">
-                        <label for="location">ชื่อ-นามสกุล</label>
-                        <input type="text" id="location" formControlName="fullname" class="form-control"
+                        <label for="fullname">ชื่อ-นามสกุล</label>
+                        <input type="text" id="fullname" formControlName="fullname" class="form-control"
                           placeholder="--กรอกข้อมูล--" />
                         <div *ngFor="let input of personInputs">
-                          <input type="text" id="location" formControlName="fullname" class="form-control"
+                          <input type="text" id="fullname" formControlName="fullname" class="form-control"
                             placeholder="--กรอกข้อมูล--" />
                         </div>
 
@@ -267,8 +243,8 @@
                 </form>
 
                 <div class="form-group">
-                  <label for="location">รายละเอียด</label>
-                  <input type="text" id="location" formControlName="detail" class="form-control"
+                  <label for="detail">รายละเอียด</label>
+                  <input type="text" id="detail" formControlName="detail" class="form-control"
                     placeholder="รายละเอียด" />
                 </div>
                 <div class="form-group">
@@ -386,8 +362,14 @@
                   [ngStyle]="{ height: '210mm' }">
 
                   <div *ngIf="isTyproActive" class="full-page-textarea-container">
-                    <textarea [(ngModel)]="typroText" placeholder="ใส่ข้อมูล.."
+                    <textarea [(ngModel)]="typroText" placeholder="พิมพ์ที่นี้.."
                       class="form-control mt-3 full-page-textarea"></textarea>
+                  </div>
+
+                  <div class="row">
+                    <div class="col">
+                      ผู้ที่ทำการตรวจสอบ
+                    </div>
                   </div>
                 </div>
               </div>
