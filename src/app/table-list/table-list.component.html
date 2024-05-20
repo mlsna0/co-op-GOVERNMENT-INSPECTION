@@ -1,5 +1,15 @@
+
+<!--สิ่งที่ติดปัญหาอยู่และยังไม่ได้แก้ไข
+  1.templat datatable ไม่สามารถดึงได้มาใช้งานได่้
+  2.ยังไม่ได้เชื่อมค่อกับระบบฐานข้อมูล
+  3.ยังไม่ได้สร้าง services
+  4.ยังไม่ได้ดึง ข้อมูลมาแสดงผล
+  5.ยังไม่ได้สร้าง ระบบ เขียน และการมีคำสั่งของ pdf
+  6.การพิมพ์ยังไม่ได้ทำเพิ่มได้แต่แบบที่เห็น
+  7.ส่วนของ "tooltip" เรียกใช่งานจาก bootstrap ไม่ได้ tooltip คือ เมื่อเอาเมาส์ไปที่ปุ่มแล้วมันจะขึ้นข้อความขึ้นมานะอย่าง "ดูรายละเอียด"
+-->
 <div class="main-content">
-  <div class="row justify-content-end"  >
+  <div class="row justify-content-end">
     <div class="col-sm-2">
       <div class="insert-data">
         <button class="btn btn-danger pull-center" (click)="onInsert()">
@@ -30,97 +40,92 @@
                     </button>
                   </div>
                 </span>
-              </form>
-              <!--(click)="searchData(myInputSearch.value)" -->
-              <!-- <div class="insert-data">
-                                <button class="btn btn-danger pull-center" (click)="onInsert()"> <i class="fa fa-plus"></i>
-                                    &nbsp;เพิ่มรายการ</button>
-                            </div> -->
+              </form> 
+              <!-- (click)="searchData(myInputSearch.value)" --> 
             </div>
           </div>
 
           <!-- </div> card-Edit -->
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table">
+              <table datatable [dtOptions]="dtOptions" class="table table-border table-hover table-bordered  nowrap">
                 <thead class="text-primary">
                   <th>ครั้งที่</th>
                   <th>วันที่เริ่มตรวจสอบ</th>
                   <th>วันที่เสร็จสิ้น</th>
-
                   <th>สถานที่</th>
-                  <th > <i class="fa fa-gear"></i></th>
-                 
+                  <th class="text-center"><i class="fa fa-gear"></i></th>
                 </thead>
-                <tbody > 
+                <tbody>
                   <!--*ngfor="let item of Items"-->
                   <tr>
                     <td>1<!--{{item.id}}-->
-                      <!-- {{item.id}} -->
                     </td>
                     <td>
                       13/5/2567
                       <!-- {{item.StartDate}} -->
-                     
+
                     </td>
-                    <td>16/5/2567
+                    <td>
+                      16/5/2567
                       <!-- {{item.endDate}} -->
                     </td>
                     <td>
                       <!-- {{item.location}} -->
                       ที่หน้าตึก NT
-                    
-                    </td>
 
-                    <td>
-                      <div class="container">
-                        <div class="row">
-                          <div class="col-sm-3 text-center">
-                            <button (click)="openModal()" class="btn btn-info">
-                              <i class="fa fa-file-text-o"></i> &nbsp;
-                            </button>
-                          </div>
-                          <div class="col-sm-3 text-center">
-                            <button class="btn btn-danger pull-center" (click)="onRecord()">
-                              <i class="fa fa-pencil-square-o"></i> &nbsp;
-                            </button>
-                          </div>
-                          <div class="col-sm-3 text-center">
-                            <button class="btn btn-warning">
-                              <i class="fa fa-file-pdf-o" (click)="printPDF()"></i>
-                              &nbsp;
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                    </td>
+                    <!--  ข้อมูลที่จะดึงจาก services มาใส่ใน tbody นี้นะมีแบบให้แห้แหละ
+                      <tbody *ngfor="let item of Items">
+                      <tr>
+                        <td>1
+                          {{item.id}}
+                        </td>
+                        <td>
+                          13/5/2567
+                          {{item.StartDate}}
+    
+                        </td>
+                        <td>16/5/2567
+                          {{item.endDate}}
+                        </td>
+                        <td>
+                          {{item.location}}
+                          ที่หน้าตึก NT
+    
+                        </td>
+                    </tbody> -->
+
+
+                    <td class=" text-center justify-content-end" style="width: 1%; white-space: nowrap;">
+
+                      <button (click)="openModal()" class="btn btn-warning" style="border: none; background: none;"
+                        data-toggle="tooltip" data-placement="bottom" title="ดูรายละเอียด">
+                        <i class="fa fa-file-text-o" style="color: black;"></i>
+                      </button>&nbsp;
+
+
+                      <button (click)="onRecord()" class="btn btn-warning" style="border: none; background: none;"
+                        data-toggle="tooltip" data-placement="top" title="จดบันทึการตรวจสอบ">
+                        <!--class="btn btn-danger pull-center"-->
+                        <i class="fa fa-pencil-square-o" style="color: black;"></i>
+                      </button> &nbsp;
+
+                      <button class="btn btn-warning" style="border: none; background: none;">
+                        <i class="fa fa-file-pdf-o" (click)="printPDF()" style="color: black;"></i>
+                        &nbsp;
+                      </button>
+
 
 
                       <!-- เว้นที่ให้ใส่ card edit by land -->
 
-                    
+
                       <!-- <button class="btn btn-danger pull-center"  href="#" (click)="ViewDetail(item.id)">  ตรวจสอบ</button> -->
                     </td>
                   </tr>
                 </tbody>
-                <tbody *ngfor="let item of Items">
-                  <tr>
-                    <td>1
-                      {{item.id}}
-                    </td>
-                    <td>
-                      13/5/2567
-                      {{item.StartDate}}
-                     
-                    </td>
-                    <td>16/5/2567
-                      {{item.endDate}}
-                    </td>
-                    <td>
-                      {{item.location}}
-                      ที่หน้าตึก NT
-                    
-                    </td>
-                </tbody>
+                
               </table>
             </div>
           </div>
@@ -171,10 +176,18 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header" class="card-header card-header-danger">
-              <h5 class="modal-title" id="addItemModalLabel">เพิ่มรายการ</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+
+              <div class="row">
+                <div class="col-sm">
+                  <h5 class="modal-title" id="addItemModalLabel" style="color: white;">เพิ่มรายการ</h5>
+                </div>
+                <div class="col-sm">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+              </div>
+
             </div>
             <div class="modal-body">
               <form [formGroup]="addItemForm" (ngSubmit)="onInsertSummit()">
@@ -189,15 +202,15 @@
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label for="startDate">วันที่เริ่มตรวจสอบ</label>
-                      <input type="date" id="startDate" formControlName="startDate" class="form-control"
-                        placeholder="วันที่เริ่มตรวจสอบ" />
+                      <input style="color:rgb(171, 171, 171)" type="date" id="startDate" formControlName="startDate"
+                        class="form-control" placeholder="วันที่เริ่มตรวจสอบ" />
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label for="endDate">วันที่เสร็จสิ้น</label>
-                      <input type="date" id="endDate" formControlName="endDate" class="form-control"
-                        placeholder="วันที่เสร็จสิ้น" />
+                      <input style="color:rgb(171, 171, 171)" type="date" id="endDate" formControlName="endDate"
+                        class="form-control" placeholder="วันที่เสร็จสิ้น" />
                     </div>
                   </div>
                 </div>
@@ -211,66 +224,48 @@
                   </div>
                 </div>
 
-               
-                  
-                  <form action method="post">
-                    <div class="row">
-              
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label for="location">ยศ/ตำเเหน่ง</label>
-                      <input type="text" id="location" formControlName="rank" class="form-control"
-                        placeholder="ยศ/ตำเเหน่ง" />
-                      <div *ngFor="let input of personInputs" >
+
+
+                <form action method="post">
+                  <div class="row">
+
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="location">ยศ/ตำเเหน่ง</label>
                         <input type="text" id="location" formControlName="rank" class="form-control"
-                        placeholder="ยศ/ตำเเหน่ง" />
+                          placeholder="ยศ/ตำเเหน่ง" />
+                        <div *ngFor="let input of personInputs">
+                          <input type="text" id="location" formControlName="rank" class="form-control"
+                            placeholder="ยศ/ตำเเหน่ง" />
+                        </div>
+
+
+
                       </div>
-                      
-                    
-                      
                     </div>
-                  </div>
-                  <div class="col-sm-5">
-                    <div class="form-group">
-                      <label for="location">ชื่อ-นามสกุล</label>
-                      <input type="text" id="location" formControlName="fullname" class="form-control"
-                      placeholder="--กรอกข้อมูล--" />
-                      <div *ngFor="let input of personInputs" >
+                    <div class="col-sm-5">
+                      <div class="form-group">
+                        <label for="location">ชื่อ-นามสกุล</label>
                         <input type="text" id="location" formControlName="fullname" class="form-control"
-                        placeholder="--กรอกข้อมูล--" />
+                          placeholder="--กรอกข้อมูล--" />
+                        <div *ngFor="let input of personInputs">
+                          <input type="text" id="location" formControlName="fullname" class="form-control"
+                            placeholder="--กรอกข้อมูล--" />
+                        </div>
+
+
+
                       </div>
-                  
-                      
-                       
                     </div>
+                    <div class="col-md-2">
+                      <button (click)="addPersonInput()" style="border: none; background: none;"><i
+                          class="fa fa-plus"></i></button>
+                    </div>
+
+
                   </div>
-                  <div class="col-md-2">
-                  <button
-                  (click)="addPersonInput()"
-                  style="border: 1px solid black; background: none;"><i
-                      class="fa fa-plus"></i></button>
-                    </div>
-                  
-                 
-                </div>
-              </form>
-                <!-- <div class="form-group">
-                                  
-                                    <label for="id" class="form-label">ครั้งที่</label>
-                                    <input type="id" id="Date" formControlName="id" class="form-control"
-                                        placeholder="ครั้งที่">
-                                    
-                                </div>
-                                <div class="form-group">
-                                    <label for="startDate">วันที่เริ่มตรวจสอบ</label>
-                                    <input type="text" id="startDate" formControlName="startDate" class="form-control"
-                                        placeholder="วันที่เริ่มตรวจสอบ">
-                                </div>
-                                <div class="form-group">
-                                    <label for="endDate">วันที่เสร็จสิ้น</label>
-                                    <input type="text" id="endDate" formControlName="endDate" class="form-control"
-                                        placeholder="วันที่เสร็จสิ้น">
-                                </div> -->
+                </form>
+
                 <div class="form-group">
                   <label for="location">รายละเอียด</label>
                   <input type="text" id="location" formControlName="detail" class="form-control"
@@ -284,29 +279,10 @@
                 <button type="button" class="btn btn-primary" (click)="getCurrentLocation()">เลือก location
                   ปัจจุบัน</button>
 
-                <!-- <div class="form-group">
-                  <label for="location">งานที่ตรวจ</label>
-                  <input type="text" id="location" formControlName="task" class="form-control"
-                    placeholder="งานที่ตรวจ" />
-                </div> -->
-                <!-- <div class="form-group">
-                                        <label for="location">ยศ/ตำเเหน่ง</label>
-                                        <input type="text" id="location" formControlName="location" class="form-control"
-                                            placeholder="ยศ/ตำเเหน่ง">
-                                    </div> -->
-                <!-- <div class="form-group">
-                                        <label for="location">ชื่อ-นามสกุล</label>
-                                        <input type="text" id="location" formControlName="location" class="form-control"
-                                            placeholder="ชื่อ-นามสกุล">
-                                    </div> -->
-                <!-- <div class="form-group">
-                  <label for="location">รายละเอียด</label>
-                  <input type="text" id="location" formControlName="detail" class="form-control"
-                    placeholder="รายละเอียด" />
-                </div> -->
+
 
                 <div class="modal-footer">
-                  <button type="submit" class="btn btn-success" ><i class="fa fa-check"></i>บันทึก</button>
+                  <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>บันทึก</button>
                   <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>
                     ปิด
                   </button>
@@ -323,65 +299,46 @@
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header" style="background: rgb(255, 209, 0)">
-              <h5 class="modal-title" id="myModalLabel">รายละเอียด</h5>
+              <h5 class="modal-title" id="myModalLabel" style="color: white;">รายละเอียด</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body-detail" [ngStyle]="{ width: '60%', height: '297mm' }">
               <!-- เนื้อหาของป๊อปอัพ -->
-
-              <!-- end-->
               <form action method="get">
-                <div class="mat-form-field-wrapper">
-                  <div class="mat-form-field-flex"></div>
-                </div>
-                
-                <!-- <table>
-                  <tr>
-                    ครั้งที่: item.id -->
-                    <!-- {{item.id}} -->
-                    <!-- <br />วันที่เริ่มตรวจสอบ: item.dateStart -->
-                    <!-- {{item.dateStart}} -->
-                    <!-- <br />วันที่เสร็จสิ้น: item.dateEnd -->
-                    <!-- {{item.dateEnd}} -->
-                    <!-- <br />ผู้รับผิดชอบ: -->
-
-                    <!-- ส่วนด้านล่างนี้ต้องลูปในการแสดง-->
-                    <!-- <br />&nbsp; item.prefix &nbsp; this.name &nbsp; item.lname
-                    <br />สถานที่: item.location
-                    <br />เอกสาร: item.img
-                  </tr>
-                </table> -->
-                <div class="container">
-                  <div class="row">
-                    <div class="col-sm">
-                      ครั้งที่: 1    <!-- {{item.id}} -->
-                    </div>
-                    <div class="col-sm-12">
-                      วันที่เริ่มตรวจสอบ: 13/5/2560<!-- {{item.startDate}} -->
-                    </div>
-                    <div class="col-sm-12">
-                      วันที่เสร็จสิ้น: 16/5/2560 <!-- {{item.endDate}} -->
-                    </div>
-                    <div class="col-sm-12">
-                      หัวข้อการตรวสอบ: &nbsp; การตรวจสอบการทำงานระบบการเดินทาง <!-- {{item.task}} -->
-                    </div>
-                    <div class="col-sm-12">
-                      รายละเอียด: &nbsp; เพื่อปรับปรุง แก้ไขให้มีอุติเหตุลดน้อยลง และลดการติดขัดจราจร <!--{{item.detail}}-->
-                    </div>
-                    <div class="col-sm-12">
-                      รายชื่อผู้รับผิดชอบ:
-                      <div class="col-sm-12">
-                        <!--ต้องมี *ngfor เพื่อ loop รายชื้อ-->
-                        <!--item.rank--> ยศ.ท &nbsp; : &nbsp; จำเริญใจ พิสุธ<!--item.Full_name-->
-                      </div>
-                    </div>
-                    
+                <div class="left-panel">
+                  <div class="form-group">
+                    <label>ครั้งที่:</label>
+                    <!-- <p>{{ item.id }}</p> -->
                   </div>
-                
+                  <div class="form-group">
+                    <label>วันที่เริ่มตรวจสอบ:</label>
+                    <!-- <p>{{ item.startDate | date: 'd/M/yyyy' }}</p> -->
+                  </div>
+                  <div class="form-group">
+                    <label>วันที่เสร็จสิ้น:</label>
+                    <!-- <p>{{ item.endDate | date: 'd/M/yyyy' }}</p> -->
+                  </div>
+                  <div class="form-group">
+                    <label>หัวข้อการตรวจสอบ:</label>
+                    <!-- <p>{{ item.task }}</p> -->
+                  </div>
+                  <div class="form-group">
+                    <label>รายละเอียด:</label>
+                    <!-- <p>{{ item.detail }}</p> -->
+                  </div>
+                  <div class="form-group">
+                    <label>รายชื่อผู้รับผิดชอบ:</label>
+                    <!-- <div *ngFor="let person of item.responsiblePeople">
+                      <p>{{ person.rank }} &nbsp; : &nbsp; {{ person.name }}</p>
+                    </div> -->
+                  </div>
                 </div>
               </form>
+              <div class="right-panel">
+                <img [src]="documentImageUrl" alt="A4 Document">
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-success pull-center" (click)="detailCommit()">
@@ -394,72 +351,16 @@
           </div>
         </div>
       </div>
-      <form [formGroup]="Form" (ngSubmit)="addPersonCommit(Form.value)">
-        <div class="modal fade" id="addPersonModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-          aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header" style="background: rgb(255, 209, 0)">
-                <h5 class="modal-title" id="myModalLabel">เพิ่มผู้รับผิดชอบ</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body" [ngStyle]="{ width: '100%', height: '170mm' }">
-                <!-- เนื้อหาของป๊อปอัพ -->
+      <!--[formGroup]="Form" (ngSubmit)="addPersonCommit(Form.value)" modal อันที่เป็นของ add person หน้าเล็กๆๆ ถูกลบออกนะ-->
 
-                <table>
-                  <tr>
-                    <br />ผู้รับผิดชอบ:
-                    <button (click)="addPersonInput()" style="border: 1px solid black; background: none">
-                      <i class="fa fa-plus"></i>
-                    </button>
-
-                    <div *ngIf="PersonINT == 1">
-                      <input type="text" placeholder="ระบุชื่อ-นามสกุล" formControlName="Full_name1" />
-                    </div>
-                    <div *ngIf="PersonINT == 2">
-                      <input type="text" placeholder="ระบุชื่อ-นามสกุล" formControlName="Full_name1" />
-                      <br /><input type="text" placeholder="ระบุชื่อ-นามสกุล" formControlName="Full_name2" />
-                    </div>
-                    <div *ngIf="PersonINT == 3">
-                      <input type="text" placeholder="ระบุชื่อ-นามสกุล" formControlName="Full_name1" />
-                      <br /><input type="text" placeholder="ระบุชื่อ-นามสกุล" formControlName="Full_name2" />
-                      <br /><input type="text" placeholder="ระบุชื่อ-นามสกุล" formControlName="Full_name3" />
-                    </div>
-                  </tr>
-                </table>
-              </div>
-              <div class="modal-footer">
-                <button type="submit" class="btn btn-success pull-center">
-                  <i class="fa fa-check"></i>&nbsp; ยืนยัน
-                </button>
-
-                <button type="button" class="btn btn-danger" data-dismiss="modal">
-                  <i class="fa fa-times"></i>&nbsp; ปิด
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
       <!-- จดบันทึก-->
       <div class="modal fade" id="writtenModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header" style="background: rgb(255, 209, 0)">
-              <h5 class="modal-title" id="myModalLabel">จดบันทึก</h5>
-              <div class="section">
-                &nbsp;
-                <button class="btn btn-just-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </button>
-                &nbsp;
-                <button class="btn btn-just-icon">
-                  <i class="fa fa-pencil-square-o"></i>
-                </button>
-              </div>
+              <h5 style="color: white;" class="modal-title" id="myModalLabel">จดบันทึก</h5>
+
 
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -467,9 +368,27 @@
             </div>
             <div class="container">
               <div class="row">
+                <div class="col-sm">
+                  <div class="section">
+                    &nbsp;
+                    <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'typro'}"
+                      (click)="setActive('typro')">
+                      <i class="fa fa-file-word-o"></i>
+                    </button>
+                    &nbsp;
+                    <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'writte'}"
+                      (click)="setActive('writte')">
+                      <i class="fa fa-pencil-square-o"></i>
+                    </button>
+                  </div>
+                </div>
                 <div class="col-md-12" class="modal-body" style="width: 210mm; height: 297mm"
                   [ngStyle]="{ height: '210mm' }">
-                  <a>comming soon.... </a>
+
+                  <div *ngIf="isTyproActive" class="full-page-textarea-container">
+                    <textarea [(ngModel)]="typroText" placeholder="ใส่ข้อมูล.."
+                      class="form-control mt-3 full-page-textarea"></textarea>
+                  </div>
                 </div>
               </div>
             </div>

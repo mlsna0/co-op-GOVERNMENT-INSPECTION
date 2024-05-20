@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { TableListComponent } from './table-list/table-list.component';
 import { SharedService } from "./services/shared.service"
+// import { DataTablesModule } from "angular-datatables";
 
 @NgModule({
   imports: [
@@ -19,7 +20,7 @@ import { SharedService } from "./services/shared.service"
     ComponentsModule,
     RouterModule,
     AppRoutingModule,
-    
+    // DataTablesModule,
   ],
   declarations: [
     AppComponent,

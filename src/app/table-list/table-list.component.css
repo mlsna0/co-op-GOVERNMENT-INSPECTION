@@ -11,7 +11,7 @@
 
 .modal-body-detail{
     display: flex;
-    justify-content: center;
+
     align-items: top;
     width: 100%;
 
@@ -36,35 +36,67 @@
 .icon-search:hover{
     box-shadow:0 10px 10px 0 #b5b3b3;
 }
-/* .search-table input{
-    padding-left: 12px;
-     
-    background: none;
-    border: none;
-    color: #000000;
-    border-bottom: 1px solid #a1a0a0;
-    transition: border-bottom 0.6s ease;
-    
-} */
 
-/* .search-table input:focus {
-    border: none;
-    border-bottom: 2px solid #000000; /* เส้นใต้สีน้ำเงินเมื่อ focus */
- 
-/* .search-table input::placeholder{
-     color: #2b2a2a; 
-} */
 
 label{
     color: black;
 }
-/* 
-.insert-data button{
-   position: relative;
-   left: 1000px;
-} */
 
-/* 
-.insert-data:hover{
-    box-shadow: 0px 5px 12px 0px #fffffa;
-} */
+
+.btn-just-icon.active {
+    background-color: #55b559; /* สีพื้นหลังเมื่อปุ่ม active */
+    color: white; /* สีตัวอักษรเมื่อปุ่ม active */
+  }
+
+.form-control.mt-3 {
+    position: relative;
+  }
+.full-page-textarea{
+    width: 100%;
+    height: calc(297mm - 50px); /* 297mm minus some margin for modal padding */
+    border: none;
+    resize: none;
+
+}
+.full-page-textarea-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.btn-warning:hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color:rgb(255, 209,0); /* สีพื้นหลังที่ต้องการเมื่อ hover */
+    z-index: -1;
+}
+
+.left-panel {
+    flex: 1;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+    width:120mm;
+    height: 100%;
+  }
+.right-panel {
+    flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 20px;
+  margin-left: auto;
+  }
+
+.right-panel img {
+    width: 210mm;
+    height: 297mm;
+    border: 1px solid #ddd;
+    justify-content: flex-end;
+  }

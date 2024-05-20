@@ -7,6 +7,7 @@ import { dataflow } from 'googleapis/build/src/apis/dataflow';
 import { SharedService } from "../services/shared.service"
 
 
+
 @Component({
   selector: 'app-table-list',
   templateUrl: './table-list.component.html',
@@ -15,13 +16,18 @@ import { SharedService } from "../services/shared.service"
 export class TableListComponent implements OnInit {
   people:any[] =[];
   //ListUser: users[] =[];
-  Form:FormGroup;
-
+    Form:FormGroup;
+    dtOptions:any ={};
   items:any[]= [];
   PersonINT :number = 0;
   personInputs: number[]=[];
 addItemForm: any;
 addDataForm: any;
+activeButton: string='';
+isTyproActive:boolean = false;
+typroText: string='';
+
+  
   constructor(
     private fb:FormBuilder,
     private http:HttpClient,
@@ -34,8 +40,55 @@ addDataForm: any;
       location: ['']
     }); 
   }
+  documentImageUrl = 'assets/img/sampleA4-1.png';
+    ngOnInit() {
+    // this.Form =this.fb.group({
+    //   Full_name1: new FormControl(""),
+    //   Full_name2: new FormControl(""),
+    //   Full_name3: new FormControl("")
+    // })
+    this.dtOptions = {
+    
+      columnDefs: [
+        {
+          targets: [5],
+          orderable: false
+        }
+      ],
+      pagingType: 'full_numbers',
+      "language": {
+        "lengthMenu": "แสดง  MENU  รายการ",
+        "search": "ค้นหา"
+        ,
+        "info": "แสดงหน้า PAGE จากทั้งหมด PAGES หน้า",
+        "infoEmpty": "แสดง 0 ของ 0 รายการ",
+        "zeroRecords": "ไม่พบข้อมูล",
+        "paginate": {
+          "first": "หน้าแรก",
+          "last": "หน้าสุดท้าย",
+          "next": "ต่อไป",
+          "previous": "ย้อนกลับ"
+        },
+      }
+    };
+
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+
+    
+  }
+  setActive(button: string){
+    this.activeButton = button;
   
-  
+    if (button === 'typro'){
+      this.isTyproActive =true;
+      console.log("connented..")
+    }else{
+      this.isTyproActive= false;
+      console.log("close..")
+    }
+  }
   openModal() {
     $('#myModal').modal('show'); 
     
@@ -114,13 +167,7 @@ console.log("res getData :",res);
   printPDF(){
 
   }
-  ngOnInit() {
-    this.Form =this.fb.group({
-      Full_name1: new FormControl(""),
-      Full_name2: new FormControl(""),
-      Full_name3: new FormControl("")
-    })
-  }
+
 
   searchData(data:string){
    this.sv.searchData(res =>{
