@@ -1,17 +1,29 @@
-import { Schema, model, Document } from 'mongoose';
+// import { Schema, model, Document } from 'mongoose';
 
-interface view extends Document {
-view_rank: string;
-view_full_name: string;
+// interface view extends Document {
+// view_rank: string;
+// view_full_name: string;
  
-}
+// }
 
-const viewSchema = new Schema<view>({
-view_rank: { type: String, required: true },
-view_full_name: { type: String, required: true },
+// const viewSchema = new Schema<view>({
+// view_rank: { type: String, required: true },
+// view_full_name: { type: String, required: true },
  
+// });
+
+// const viewMo = model<view>('viewMo', viewSchema);
+// export default viewMo;
+// export type { view };
+
+
+import * as mongoose from 'mongoose';
+
+const viewSchema = new mongoose.Schema({
+    view_rank: String,
+    view_full_name: String
 });
 
-const viewMo = model<view>('viewMo', viewSchema);
-export default viewMo;
-export type { view };
+const ViewModel = mongoose.model('ViewModel', viewSchema);
+
+export default ViewModel;

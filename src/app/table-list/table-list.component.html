@@ -177,7 +177,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <form [formGroup]="addItemForm" (ngSubmit)="onInsertSummit()">
+              <form [formGroup]="addItemForm" (ngSubmit)="onInsertSummit(addItemForm.value)">
                 <div class="row">
                   <div class="col-sm-2">
                     <div class="form-group">
@@ -204,8 +204,8 @@
                 <div class="row">
                   <div class="col-sm">
                     <div class="form-group">
-                      <label for="location">งานที่ตรวจ</label>
-                      <input type="text" id="location" formControlName="task" class="form-control"
+                      <label for="topic">งานที่ตรวจ</label>
+                      <input type="text" id="topic" formControlName="topic" class="form-control"
                         placeholder="งานที่ตรวจ" />
                     </div>
                   </div>
@@ -213,16 +213,16 @@
 
                
                   
-                  <form action method="post">
+                  <form [formGroup]="addPersonalForm">
                     <div class="row">
               
                   <div class="col-sm-3">
                     <div class="form-group">
-                      <label for="location">ยศ/ตำเเหน่ง</label>
-                      <input type="text" id="location" formControlName="rank" class="form-control"
+                      <label for="rank">ยศ/ตำเเหน่ง</label>
+                      <input type="text" id="rank" formControlName="rank" class="form-control"
                         placeholder="ยศ/ตำเเหน่ง" />
                       <div *ngFor="let input of personInputs" >
-                        <input type="text" id="location" formControlName="rank" class="form-control"
+                        <input type="text" id="rank" formControlName="rank" class="form-control"
                         placeholder="ยศ/ตำเเหน่ง" />
                       </div>
                       

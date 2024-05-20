@@ -9,7 +9,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SharedService {
-  private baseUrl = 'mongodb://localhost:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
+  // private baseUrl = 'mongodb://127.0.0.1:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
+  private baseUrl = 'http://localhost:3000/api'; // ปรับ URL ให้ตรงกับ API ของคุณ
 
   constructor(private http: HttpClient) { }
 
@@ -22,11 +23,34 @@ export class SharedService {
   }
 
   postPersonData(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/postPersonData`, data);
+    return this.http.post(`${this.baseUrl}/postItemData`, data);
   }
 
-  postItemData(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/postItemData`, data);
+  postDataTest(data:any){
+    console.log("DATA : ",data)
+    let formData = new FormData
+    formData.append("endDate",data.endDate)
+    formData.append("id",data.id)
+    formData.append("location",data.location)
+    formData.append("startDate",data.startDate)
+    formData.append("topic",data.topic)
+    formData.append("detail",data.detail)
+
+    return this.http.post(`${this.baseUrl}/postDataTest/`,formData);
+  }
+
+  postItemData(data: any,personal:any): Observable<any> {
+  
+    // console.log('data in service post item',data);
+    // console.log('personal in service ',personal);
+
+    const formData :any={
+      item: data,
+      personal: personal
+    }
+    console.log("URL ",this.baseUrl)
+    
+    return this.http.post(`${this.baseUrl}/postItemData`,formData);
   }
 
   searchData(query: string): Observable<any> {
