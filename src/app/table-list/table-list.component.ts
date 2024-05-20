@@ -23,7 +23,6 @@ export class TableListComponent implements OnInit {
   PersonINT :number = 0;
   personInputs: number[]=[];
 addItemForm: any;
-
 addDataForm: any;
   constructor(
     private fb:FormBuilder,
