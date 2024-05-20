@@ -90,8 +90,9 @@ addDataForm: any;
   }
   onInsertSummit(data) {
       
-    console.log(data);
-    // console.log(this.addPersonalForm.value);
+    // console.log(data);
+    console.log(this.addItemForm.value);
+    console.log(this.addPersonalForm.value);
     
     // console.log(this.items);
     // ส่งข้อมูลไปยัง controller
@@ -99,7 +100,7 @@ addDataForm: any;
     // this.sv.postItemData(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
     //   console.log("res postItemData:", res);
     // });
-    this.sv.postDataTest(data).subscribe(res => {
+    this.sv.postDataTest(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
       console.log("res postItemData:", res);
     });
 
@@ -113,6 +114,7 @@ addDataForm: any;
     //   });
     // }
   }
+  
   getCurrentLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -153,5 +155,15 @@ addDataForm: any;
       console.log("res searchData:", res);
     });
   }
-
+  fetchItems() {
+    this.sv.getItems().subscribe(
+      res => {
+        this.items = res;
+        console.log('Items fetched successfully:', this.items);
+      },
+      error => {
+        console.error('Error fetching items:', error);
+      }
+    );
+  }
 }

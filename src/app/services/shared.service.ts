@@ -26,7 +26,7 @@ export class SharedService {
     return this.http.post(`${this.baseUrl}/postItemData`, data);
   }
 
-  postDataTest(data:any){
+  postDataTest(data:any,personal:any){
     console.log("DATA : ",data)
     let formData = new FormData
     formData.append("endDate",data.endDate)
@@ -35,6 +35,8 @@ export class SharedService {
     formData.append("startDate",data.startDate)
     formData.append("topic",data.topic)
     formData.append("detail",data.detail)
+    formData.append("rank",personal.rank)
+    formData.append("fullname",personal.fullname)
 
     return this.http.post(`${this.baseUrl}/postDataTest/`,formData);
   }
@@ -56,4 +58,8 @@ export class SharedService {
   searchData(query: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/searchData?query=${query}`);
   }
+  getItems(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/getItems`);
+  }
+  
 }

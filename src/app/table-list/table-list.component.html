@@ -44,34 +44,20 @@
             <div class="table-responsive">
               <table class="table">
                 <thead class="text-primary">
-                  <th>ครั้งที่</th>
-                  <th>วันที่เริ่มตรวจสอบ</th>
-                  <th>วันที่เสร็จสิ้น</th>
-
-                  <th>สถานที่</th>
-                  <th > <i class="fa fa-gear"></i></th>
-                 
-                </thead>
-                <tbody > 
-                  <!--*ngfor="let item of Items"-->
                   <tr>
-                    <td>1<!--{{item.id}}-->
-                      <!-- {{item.id}} -->
-                    </td>
-                    <td>
-                      13/5/2567
-                      <!-- {{item.StartDate}} -->
-                     
-                    </td>
-                    <td>16/5/2567
-                      <!-- {{item.endDate}} -->
-                    </td>
-                    <td>
-                      <!-- {{item.location}} -->
-                      ที่หน้าตึก NT
-                    
-                    </td>
-
+                    <th>ครั้งที่</th>
+                    <th>วันที่เริ่มตรวจสอบ</th>
+                    <th>วันที่เสร็จสิ้น</th>
+                    <th>สถานที่</th>
+                    <th><i class="fa fa-gear"></i></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of items; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.startDate }}</td>
+                    <td>{{ item.endDate }}</td>
+                    <td>{{ item.location }}</td>
                     <td>
                       <div class="container">
                         <div class="row">
@@ -86,47 +72,19 @@
                             </button>
                           </div>
                           <div class="col-sm-3 text-center">
-                            <button class="btn btn-warning">
-                              <i class="fa fa-file-pdf-o" (click)="printPDF()"></i>
-                              &nbsp;
+                            <button class="btn btn-warning" (click)="printPDF()">
+                              <i class="fa fa-file-pdf-o"></i> &nbsp;
                             </button>
                           </div>
                         </div>
                       </div>
-
-
-                      <!-- เว้นที่ให้ใส่ card edit by land -->
-
-                    
-                      <!-- <button class="btn btn-danger pull-center"  href="#" (click)="ViewDetail(item.id)">  ตรวจสอบ</button> -->
                     </td>
                   </tr>
-                </tbody>
-                <tbody *ngfor="let item of Items">
-                  <tr>
-                    <td>1
-                      {{item.id}}
-                    </td>
-                    <td>
-                      13/5/2567
-                      {{item.StartDate}}
-                     
-                    </td>
-                    <td>16/5/2567
-                      {{item.endDate}}
-                    </td>
-                    <td>
-                      {{item.location}}
-                      ที่หน้าตึก NT
-                    
-                    </td>
                 </tbody>
               </table>
             </div>
           </div>
-        </div>
-      </div>
-
+          
       <!-- การเพิ่มข้อมูล
             <div class="modal fade" id="insertModel" tabindex="-1" role="dialog"
                 aria-labelledby="myModalLabel" aria-hidden="true">
@@ -232,11 +190,11 @@
                   </div>
                   <div class="col-sm-5">
                     <div class="form-group">
-                      <label for="location">ชื่อ-นามสกุล</label>
-                      <input type="text" id="location" formControlName="fullname" class="form-control"
+                      <label for="fullname">ชื่อ-นามสกุล</label>
+                      <input type="text" id="fullname" formControlName="fullname" class="form-control"
                       placeholder="--กรอกข้อมูล--" />
                       <div *ngFor="let input of personInputs" >
-                        <input type="text" id="location" formControlName="fullname" class="form-control"
+                        <input type="text" id="fullname" formControlName="fullname" class="form-control"
                         placeholder="--กรอกข้อมูล--" />
                       </div>
                   
@@ -272,7 +230,7 @@
                                         placeholder="วันที่เสร็จสิ้น">
                                 </div> -->
                 <div class="form-group">
-                  <label for="location">รายละเอียด</label>
+                  <label for="detail">รายละเอียด</label>
                   <input type="text" id="location" formControlName="detail" class="form-control"
                     placeholder="รายละเอียด" />
                 </div>
