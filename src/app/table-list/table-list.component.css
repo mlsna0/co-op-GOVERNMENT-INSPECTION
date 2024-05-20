@@ -1,0 +1,70 @@
+.modal-lg {
+    max-width: 100%;
+}
+
+.modal-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.modal-body-detail{ 
+    display: flex;
+    justify-content: center;
+    align-items: top;
+    width: 100%;
+
+    
+}
+.card-header{
+    position: relative;
+    background-color: rgb(255, 209, 0);
+}
+.search-table{
+    position: relative;
+    align-items:center ;
+}
+.icon-search{
+    background-color: #fff;
+    width: 35px;
+    height: 35px;
+    border-radius: 20.5px;
+    align-items: center;
+    border: none;
+}
+.icon-search:hover{
+    box-shadow:0 10px 10px 0 #b5b3b3;
+}
+/* .search-table input{
+    padding-left: 12px;
+     
+    background: none;
+    border: none;
+    color: #000000;
+    border-bottom: 1px solid #a1a0a0;
+    transition: border-bottom 0.6s ease;
+    
+} */
+
+/* .search-table input:focus {
+    border: none;
+    border-bottom: 2px solid #000000; /* เส้นใต้สีน้ำเงินเมื่อ focus */
+ 
+/* .search-table input::placeholder{
+     color: #2b2a2a; 
+} */
+
+label{
+    color: black;
+}
+/* 
+.insert-data button{
+   position: relative;
+   left: 1000px;
+} */
+
+/* 
+.insert-data:hover{
+    box-shadow: 0px 5px 12px 0px #fffffa;
+} */
