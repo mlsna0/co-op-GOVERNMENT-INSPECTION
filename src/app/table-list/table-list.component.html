@@ -58,26 +58,26 @@
                     <th class="text-center"><i class="fa fa-gear"></i></th>
                   </tr>
                 </thead>
-                <tbody>
-                  <!--*ngfor="let item of items"-->
+                <tbody *ngFor="let item of itemsTest">
+                  <!---->
                   <tr>
                     <!-- ข้อมูลที่จะดึงจาก services มาใส่ใน tbody นี้นะมีแบบให้แห้แหละ -->
 
                     <td>
-                      1
-                      <!-- {{item.id}} -->
+                      
+                      {{item.id}}
                     </td>
                     <td>
-                      20/5/2567
-                      <!-- {{item.StartDate}} -->
+                    
+                      {{item.startDate}}
                     </td>
                     <td>
-                      20/5/2567
-                      <!-- {{item.endDate}} -->
+                   
+                      {{item.endDate}}
                     </td>
                     <td>
-                      127.0.0.0.1
-                      <!-- {{item.location}} -->
+                   
+                      {{item.location}}
                     </td>
 
                     <td class=" text-center " style="width: 1%; white-space: nowrap;">
@@ -280,7 +280,7 @@
             <div class="modal-body-detail" [ngStyle]="{ width: '60%', height: '297mm' }">
               <!-- เนื้อหาของป๊อปอัพ -->
               <form action method="get">
-                <div class="left-panel">
+                <div class="left-panel" > <!--*ngFor="let item of itemsTest"-->
                   <div class="form-group">
                     <label>ครั้งที่:</label>
                     <!-- <p>{{ item.id }}</p> -->
@@ -300,6 +300,10 @@
                   <div class="form-group">
                     <label>รายละเอียด:</label>
                     <!-- <p>{{ item.detail }}</p> -->
+                  </div>
+                  <div class="form-group">
+                    <label>สถานที่</label>
+                    <!-- <p>{{ item.location }}</p> -->
                   </div>
                   <div class="form-group">
                     <label>รายชื่อผู้รับผิดชอบ:</label>

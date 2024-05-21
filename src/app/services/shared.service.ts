@@ -2,7 +2,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { response } from 'express';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 
 
 @Injectable({
@@ -15,7 +15,12 @@ export class SharedService {
   constructor(private http: HttpClient) { }
 
   getData(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/getData`);
+    return this.http.get(`${this.baseUrl}/getData`).pipe(
+      catchError(error=>{
+        console.error('Error fatching data:',error);
+        throw 'ไม่สามารถดึงข้อมูลได้';
+      })
+    );
   }
 
   postData(data: any): Observable<any> {

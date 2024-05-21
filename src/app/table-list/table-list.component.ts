@@ -54,13 +54,19 @@ export class TableListComponent implements OnInit {
     }); 
   }
   documentImageUrl = 'assets/img/sampleA4-1.png';
+  itemsTest:any[]= [
+    {
+      id:'1', startDate:'20/05/2567',endDate:'26/05/2567',location:'data testing'
+    },
+    {
+      id:'2', startDate:'30/05/2567',endDate:'01/06/2567',location:'data testing'
+    }
 
+  ];
 
   ngOnInit() {
-    // this.http.get<Items>('').subscribe( response =>{
-    //   console.log("respones",response)
 
-    // })
+  
     // this.Form =this.fb.group({
     //   Full_name1: new FormControl(""),
     //   Full_name2: new FormControl(""),
@@ -118,14 +124,16 @@ export class TableListComponent implements OnInit {
 
     this.sv.getData().subscribe(res => {
       console.log("res getData:", res);
+      this.items = res;
+     
     });
 
-    this.sv.postData({
-      key1: "",
-      key2: ""
-    }).subscribe(res => {
-      console.log("res postData:", res);
-    });
+    // this.sv.postData({
+    //   key1: "",
+    //   key2: ""
+    // }).subscribe(res => {
+    //   console.log("res postData:", res);
+    // });
   }
 
  addPersonModel(){
@@ -167,6 +175,7 @@ export class TableListComponent implements OnInit {
     // this.sv.postItemData(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
     //   console.log("res postItemData:", res);
     // });
+  
     this.sv.postDataTest(data).subscribe(res => {
       console.log("res postItemData:", res);
     });
