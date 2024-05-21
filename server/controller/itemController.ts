@@ -2,6 +2,7 @@
   import ViewModel from '../models/viewModel';
   import recordModel from '../models/recordModel';
   import BaseCtrl from './base';
+  
 
   class ItemModelCtrl extends BaseCtrl {
     model = ItemModel;
@@ -46,25 +47,38 @@
       }
     }
 
-    getAll = async (req, res) => {
+    // getAll = async (req, res) => {
+    //   try {
+    //     // Create record object
+    //     const record = await new this.modelRecord({
+    //       record_id: req.body.id,
+    //       record_star_date: req.body.startDate,
+    //       record_end_date: req.body.endDate,
+    //       record_detail: req.body.detail,
+    //       record_location: req.body.location,
+    //       record_topic: req.body.topic,
+    //     }).save();
+    
+    //     // Create view object
+    //     const view = await new this.modelView({
+    //       view_rank: req.body.rank,
+    //       view_full_name: req.body.fullName,
+    //     }).save();
+    
+    //     res.status(201).json({ message: 'Data added successfully' });
+    //   } catch (err) {
+    //     res.status(400).json({ error: err.message });
+    //   }
+    // }
+    getData = async (req, res) => {
       try {
-        // Create record object
-        const record = await new this.modelRecord({
-          record_id: req.body.id,
-          record_star_date: req.body.startDate,
-          record_end_date: req.body.endDate,
-          record_detail: req.body.detail,
-          record_location: req.body.location,
-          record_topic: req.body.topic,
-        }).save();
-    
-        // Create view object
-        const view = await new this.modelView({
-          view_rank: req.body.rank,
-          view_full_name: req.body.fullName,
-        }).save();
-    
-        res.status(201).json({ message: 'Data added successfully' });
+        const records = await this.modelRecord.find();
+        const views = await this.modelView.find();
+  
+        res.status(200).json({
+          records,
+          views,
+        });
       } catch (err) {
         res.status(400).json({ error: err.message });
       }

@@ -15,7 +15,7 @@ export class SharedService {
   constructor(private http: HttpClient) { }
 
   getData(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/getData`);
+    return this.http.get(`${this.baseUrl}/data`); // Adjust endpoint as needed
   }
 
   postData(data: any): Observable<any> {
@@ -59,7 +59,7 @@ export class SharedService {
     return this.http.get(`${this.baseUrl}/searchData?query=${query}`);
   }
   getItems(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/getItems`);
+    return this.http.get<any[]>(`${this.baseUrl}/items`);
   }
   
 }

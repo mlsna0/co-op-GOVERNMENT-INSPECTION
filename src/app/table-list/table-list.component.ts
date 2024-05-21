@@ -14,6 +14,7 @@ import { SharedService } from "../services/shared.service"
 })
 export class TableListComponent implements OnInit {
   people:any[] =[];
+  
   //ListUser: users[] =[];
   Form:FormGroup;
   addRecordForm:FormGroup;
@@ -22,6 +23,7 @@ export class TableListComponent implements OnInit {
   items:any[]= [];
   PersonINT :number = 0;
   personInputs: number[]=[];
+  
 addItemForm: any;
 addDataForm: any;
   constructor(
@@ -43,6 +45,31 @@ addDataForm: any;
     }); 
   }
   
+  ngOnInit() : void {
+    this.Form =this.fb.group({
+      Full_name1: new FormControl(""),
+      Full_name2: new FormControl(""),
+      Full_name3: new FormControl("")
+    })
+    // this.sv.getData().subscribe(data => {
+    //   this.items = data;
+    // });
+    this.fetchData();
+
+    
+
+  }
+  fetchData() {
+    this.sv.getData().subscribe(
+      res => {
+        this.items = res.records; // ใช้ res.records แทน res
+        console.log('Items fetched successfully:', this.items);
+      },
+      error => {
+        console.error('Error fetching items:', error);
+      }
+    );
+  } 
   
   openModal() {
     $('#myModal').modal('show');
@@ -141,28 +168,12 @@ addDataForm: any;
   printPDF(){
 
   }
-  ngOnInit() {
-    this.Form =this.fb.group({
-      Full_name1: new FormControl(""),
-      Full_name2: new FormControl(""),
-      Full_name3: new FormControl("")
-    })
-  }
+  
 
   searchData(data: string) {
     this.sv.searchData(data).subscribe(res => {
       console.log("res searchData:", res);
     });
   }
-  fetchItems() {
-    this.sv.getItems().subscribe(
-      res => {
-        this.items = res;
-        console.log('Items fetched successfully:', this.items);
-      },
-      error => {
-        console.error('Error fetching items:', error);
-      }
-    );
-  }
+ 
 }

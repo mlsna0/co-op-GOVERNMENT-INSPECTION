@@ -19,6 +19,9 @@ function setRoutes(app): void {
   router.route('/itemModel/count').get(itemModelCtrl.count);
   router.route('/itemModel').post(itemModelCtrl.insert);
   // router.route('/postPersonData').post(itemModelCtrl.postItemToView);
+
+  router.route('/data').get(itemModelCtrl.getData);
+
   router.route('/postItemData').post(itemModelCtrl.postItemToView);
   router.route('/itemModel/:id').get(itemModelCtrl.get);
   router.route('/itemModel/:id').put(itemModelCtrl.update);
@@ -32,6 +35,8 @@ function setRoutes(app): void {
   router.route('/recordModel/:id').get(recordModelCtrl.get);
   router.route('/recordModel/:id').put(recordModelCtrl.update);
   router.route('/recordModel/:id').delete(recordModelCtrl.delete);
+
+  
 
   // UserModel routes
   router.route('/userModel').get(userModelCtrl.getAll);
