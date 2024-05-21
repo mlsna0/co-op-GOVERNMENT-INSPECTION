@@ -7,6 +7,7 @@ import { dataflow } from 'googleapis/build/src/apis/dataflow';
 import { SharedService } from "../services/shared.service"
 import { DataTableDirective } from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
+import { Items } from '../../../server/models/itemModel';
 
 
 
@@ -30,6 +31,7 @@ export class TableListComponent implements OnInit {
   addDataForm: any;
   activeButton: string='';
   isTyproActive:boolean = false;
+  isWritteActive:boolean = false;
   typroText: string='';
 
   
@@ -55,6 +57,10 @@ export class TableListComponent implements OnInit {
 
 
   ngOnInit() {
+    // this.http.get<Items>('').subscribe( response =>{
+    //   console.log("respones",response)
+
+    // })
     // this.Form =this.fb.group({
     //   Full_name1: new FormControl(""),
     //   Full_name2: new FormControl(""),
@@ -70,10 +76,10 @@ export class TableListComponent implements OnInit {
       ],
       pagingType: 'full_numbers',
       "language": {
-        "lengthMenu": "แสดง MENU รายการ",
+        "lengthMenu": "แสดง _MENU_ รายการ",
         "search": "ค้นหา"
         ,
-        "info": "แสดงหน้า PAGE จากทั้งหมด PAGES หน้า",
+        "info": "แสดงหน้า _PAGE_ จากทั้งหมด _PAGES_ หน้า",
         "infoEmpty": "แสดง 0 ของ 0 รายการ",
         "zeroRecords": "ไม่พบข้อมูล",
         "paginate": {
@@ -93,13 +99,18 @@ export class TableListComponent implements OnInit {
   }
   setActive(button: string){
     this.activeButton = button;
-  
+    console.log("connented..Active")
     if (button === 'typro'){
       this.isTyproActive =true;
-      console.log("connented..")
+      this.isWritteActive =false;
+      console.log("typro section")
+      
+    }else if(button ==="writte"){
+      this.isTyproActive =false;
+      this.isWritteActive =true;
+      console.log("writte section..")
     }else{
-      this.isTyproActive= false;
-      console.log("close..")
+      console.log("selection error")
     }
   }
   openModal() {
@@ -147,7 +158,7 @@ export class TableListComponent implements OnInit {
   }
   onInsertSummit(data) {
       
-    console.log(data);
+    console.log("onInsertSubmit..?",data);
     // console.log(this.addPersonalForm.value);
     
     // console.log(this.items);

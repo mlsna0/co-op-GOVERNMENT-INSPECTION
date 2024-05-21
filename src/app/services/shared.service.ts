@@ -35,6 +35,7 @@ export class SharedService {
     formData.append("startDate",data.startDate)
     formData.append("topic",data.topic)
     formData.append("detail",data.detail)
+    formData.append("fullname",data.fullname)  //petch add this code
 
     return this.http.post(`${this.baseUrl}/postDataTest/`,formData);
   }

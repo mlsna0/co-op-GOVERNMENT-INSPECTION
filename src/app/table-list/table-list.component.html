@@ -295,7 +295,7 @@
                   </div>
                   <div class="form-group">
                     <label>หัวข้อการตรวจสอบ:</label>
-                    <!-- <p>{{ item.task }}</p> -->
+                    <!-- <p>{{ item.topic }}</p> -->
                   </div>
                   <div class="form-group">
                     <label>รายละเอียด:</label>
@@ -359,15 +359,19 @@
                   [ngStyle]="{ height: '210mm' }">
 
                   <div *ngIf="isTyproActive" class="full-page-textarea-container">
+
+
+
                     <textarea [(ngModel)]="typroText" placeholder="พิมพ์ที่นี้.."
                       class="form-control mt-3 full-page-textarea"></textarea>
+                    
+                  </div>
+                  <div *ngIf="isWritteActive" class="full-page-pdf">
+                    <a > writte section</a>
+
                   </div>
 
-                  <div class="row">
-                    <div class="col">
-                      ผู้ที่ทำการตรวจสอบ
-                    </div>
-                  </div>
+
                 </div>
               </div>
             </div>
