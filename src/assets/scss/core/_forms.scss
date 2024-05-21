@@ -306,7 +306,9 @@ select {
 }
 
 textarea{
-    height: auto !important;
+    height: 500px !important;
+    border: 2px solid black;
+    border-radius: 2px;
     resize: none;
     line-height: $bmd-line-height !important;
 }

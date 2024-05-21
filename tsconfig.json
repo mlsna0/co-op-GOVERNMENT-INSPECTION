@@ -19,5 +19,6 @@
     ],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "useDefineForClassFields": false
   }
 }

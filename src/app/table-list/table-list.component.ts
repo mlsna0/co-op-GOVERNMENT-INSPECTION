@@ -5,6 +5,10 @@ import 'bootstrap';
 import { HttpClient } from '@angular/common/http';
 import { dataflow } from 'googleapis/build/src/apis/dataflow';
 import { SharedService } from "../services/shared.service"
+import { DataTableDirective } from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
+import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
+import { Items } from '../../../server/models/itemModel';
+
 
 
 @Component({
@@ -17,15 +21,21 @@ export class TableListComponent implements OnInit {
   
   //ListUser: users[] =[];
   Form:FormGroup;
+  dtOptions:any ={};
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
 
   items:any[]= [];
   PersonINT :number = 0;
   personInputs: number[]=[];
+  addItemForm: any;
+  addDataForm: any;
+  activeButton: string='';
+  isTyproActive:boolean = false;
+  isWritteActive:boolean = false;
+  typroText: string='';
+
   
-addItemForm: any;
-addDataForm: any;
   constructor(
     private fb:FormBuilder,
     private http:HttpClient,
@@ -44,21 +54,16 @@ addDataForm: any;
       fullname: [''],
     }); 
   }
-  
-  ngOnInit() : void {
-    this.Form =this.fb.group({
-      Full_name1: new FormControl(""),
-      Full_name2: new FormControl(""),
-      Full_name3: new FormControl("")
-    })
-    // this.sv.getData().subscribe(data => {
-    //   this.items = data;
-    // });
-    this.fetchData();
+  documentImageUrl = 'assets/img/sampleA4-1.png';
+  itemsTest:any[]= [
+    {
+      id:'1', startDate:'20/05/2567',endDate:'26/05/2567',location:'data testing'
+    },
+    {
+      id:'2', startDate:'30/05/2567',endDate:'01/06/2567',location:'data testing'
+    }
 
-    
-
-  }
+  ];
   fetchData() {
     this.sv.getData().subscribe(
       res => {
@@ -70,20 +75,78 @@ addDataForm: any;
       }
     );
   } 
+
+
+  ngOnInit() {
+
   
+    this.Form =this.fb.group({
+      Full_name1: new FormControl(""),
+      Full_name2: new FormControl(""),
+      Full_name3: new FormControl("")
+    })
+    this.dtOptions = {
+    
+      columnDefs: [
+        {
+          // targets: [5],
+          // orderable: false
+        }
+      ],
+      pagingType: 'full_numbers',
+      "language": {
+        "lengthMenu": "แสดง _MENU_ รายการ",
+        "search": "ค้นหา"
+        ,
+        "info": "แสดงหน้า _PAGE_ จากทั้งหมด _PAGES_ หน้า",
+        "infoEmpty": "แสดง 0 ของ 0 รายการ",
+        "zeroRecords": "ไม่พบข้อมูล",
+        "paginate": {
+          "first": "หน้าแรก",
+          "last": "หน้าสุดท้าย",
+          "next": "ต่อไป",
+          "previous": "ย้อนกลับ"
+        },
+      }
+    };
+
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+
+    
+  }
+  setActive(button: string){
+    this.activeButton = button;
+    console.log("connented..Active")
+    if (button === 'typro'){
+      this.isTyproActive =true;
+      this.isWritteActive =false;
+      console.log("typro section")
+      
+    }else if(button ==="writte"){
+      this.isTyproActive =false;
+      this.isWritteActive =true;
+      console.log("writte section..")
+    }else{
+      console.log("selection error")
+    }
+  }
   openModal() {
     $('#myModal').modal('show');
 
     this.sv.getData().subscribe(res => {
       console.log("res getData:", res);
+      this.items = res;
+     
     });
 
-    this.sv.postData({
-      key1: "",
-      key2: ""
-    }).subscribe(res => {
-      console.log("res postData:", res);
-    });
+    // this.sv.postData({
+    //   key1: "",
+    //   key2: ""
+    // }).subscribe(res => {
+    //   console.log("res postData:", res);
+    // });
   }
 
  addPersonModel(){
@@ -119,6 +182,8 @@ addDataForm: any;
     // console.log(data);
     console.log(this.addItemForm.value);
     console.log(this.addPersonalForm.value);
+    console.log("onInsertSubmit..?",data);
+    // console.log(this.addPersonalForm.value);
     
     // console.log(this.items);
     // ส่งข้อมูลไปยัง controller

@@ -15,8 +15,8 @@ const Items = mongoose.model('Items', itemSchema);
 export interface Items {
   id: number | null;
   times: number | null;
-  startDate: string;
-  endDate: string;
+  startDate: Date; //petch ปรับเปลี่ยน จาก string เป็น date
+  endDate: Date; //petch ปรับเปลี่ยน จาก string เป็น date
   location: string;
   task: string;
   rank: string;
