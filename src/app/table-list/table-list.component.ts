@@ -25,7 +25,7 @@ export class TableListComponent implements OnInit {
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
 
-  items:any[]= [];
+  items:any= [];
   PersonINT :number = 0;
   personInputs: number[]=[];
   addItemForm: any;
@@ -65,6 +65,7 @@ export class TableListComponent implements OnInit {
 
   ];
   fetchData() {
+    this.fetchData;
     this.sv.getData().subscribe(
       res => {
         this.items = res.records; // ใช้ res.records แทน res
@@ -114,6 +115,12 @@ export class TableListComponent implements OnInit {
       $('[data-toggle="tooltip"]').tooltip()
     })
 
+    this.sv.getData().subscribe(res => {
+      console.log("res getData:", res);
+      this.items = res;
+     
+    });
+
     
   }
   setActive(button: string){
@@ -135,11 +142,7 @@ export class TableListComponent implements OnInit {
   openModal() {
     $('#myModal').modal('show');
 
-    this.sv.getData().subscribe(res => {
-      console.log("res getData:", res);
-      this.items = res;
-     
-    });
+  
 
     // this.sv.postData({
     //   key1: "",
