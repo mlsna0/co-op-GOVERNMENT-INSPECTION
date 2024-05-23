@@ -8,6 +8,7 @@ import { SharedService } from "../services/shared.service"
 import { DataTableDirective } from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Items } from '../../../server/models/itemModel';
+import Swal from 'sweetalert2';
 
 
 
@@ -195,6 +196,18 @@ export class TableListComponent implements OnInit {
       console.log("res postItemData:", res);
     });
 
+     // Close the modal
+     $('#insertModel').modal('hide');
+        
+     // Show success alert
+     $('#insertModel').on('hidden.bs.modal', function () {
+      Swal.fire({
+        title: 'Success!!',
+        text: 'Your data has been submitted successfully.',
+        icon: 'success',
+        confirmButtonText: 'OK'
+    });
+  });
     // if (this.addItemForm.valid) {
     //   this.items.push(this.addItemForm.value);
     //   this.addItemForm.reset();
