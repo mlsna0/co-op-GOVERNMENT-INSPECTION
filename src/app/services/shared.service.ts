@@ -15,9 +15,21 @@ export class SharedService {
   constructor(private http: HttpClient) { }
 
   getData(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/getData`).pipe(
+    return this.http.get(`${this.baseUrl}/data`).pipe(
       catchError(error=>{
         console.error('Error fatching data:',error);
+        throw 'ไม่สามารถดึงข้อมูลได้';
+      })
+    );
+  }
+  getDataById(id: number): Observable<any>{
+    return this.http.get(`${this.baseUrl}/recordModel/${id}`);
+  }
+
+  getAggregatedData(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/aggregateRecordsAndView`).pipe(
+      catchError(error => {
+        console.error('Error fetching aggregated data:', error);
         throw 'ไม่สามารถดึงข้อมูลได้';
       })
     );

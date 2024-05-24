@@ -8,8 +8,14 @@ import { SharedService } from "../services/shared.service"
 import { DataTableDirective } from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Items } from '../../../server/models/itemModel';
+<<<<<<< HEAD
 import Swal from 'sweetalert2';
 
+=======
+import jsPDF from 'jspdf';
+import  html2canvas from 'html2canvas';
+import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
+>>>>>>> d6174eb60349ea79533f8bdb6f522c97f881f844
 
 
 @Component({
@@ -26,7 +32,8 @@ export class TableListComponent implements OnInit {
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
 
-  items:any[]= [];
+  items:any= [];
+  detailItems: any;
   PersonINT :number = 0;
   personInputs: number[]=[];
   addItemForm: any;
@@ -66,6 +73,7 @@ export class TableListComponent implements OnInit {
 
   ];
   fetchData() {
+    this.fetchData;
     this.sv.getData().subscribe(
       res => {
         this.items = res.records; // ใช้ res.records แทน res
@@ -115,6 +123,12 @@ export class TableListComponent implements OnInit {
       $('[data-toggle="tooltip"]').tooltip()
     })
 
+    this.sv.getData().subscribe(res => {
+      console.log("res getData:", res);
+      this.items = res;
+     
+    });
+
     
   }
   setActive(button: string){
@@ -133,22 +147,23 @@ export class TableListComponent implements OnInit {
       console.log("selection error")
     }
   }
-  openModal() {
+
+  //หน้าจอรายละเอียดข้อมูล
+  openModal(recordId: any) {
     $('#myModal').modal('show');
+   
+    this.sv.getDataById(recordId).subscribe(res=>{
+      console.log("getDataById :",res);
+      
+      this.detailItems =res;
+    
+      console.log("it on working.. ")
+    })
 
-    this.sv.getData().subscribe(res => {
-      console.log("res getData:", res);
-      this.items = res;
-     
-    });
-
-    // this.sv.postData({
-    //   key1: "",
-    //   key2: ""
-    // }).subscribe(res => {
-    //   console.log("res postData:", res);
-    // });
   }
+
+
+
 
  addPersonModel(){
   $('#addPersonModel').modal('show');
@@ -243,8 +258,17 @@ export class TableListComponent implements OnInit {
 
   
   }
+  generatePDF(){
+ 
+  }
   printPDF(){
-
+    console.log("working PDF..")
+    const elementToPrint = document.getElementById('myModal');
+    html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
+      const pdf = new jsPDF();
+      pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,297,210);
+      pdf.save('record.pdf')
+    });
   }
   
 

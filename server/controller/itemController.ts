@@ -20,6 +20,7 @@
           record_detail: req.body.detail,
           record_location: req.body.location,
           record_topic: req.body.topic,
+    
         }).save();
   
         const obj1 = await new this.modelView({

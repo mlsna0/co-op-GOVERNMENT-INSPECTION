@@ -58,44 +58,44 @@
                     <th class="text-center"><i class="fa fa-gear"></i></th>
                   </tr>
                 </thead>
-                <tbody *ngFor="let item of itemsTest">
+                <tbody *ngFor="let item of items?.records">
                   <!---->
                   <tr>
                     <!-- ข้อมูลที่จะดึงจาก services มาใส่ใน tbody นี้นะมีแบบให้แห้แหละ -->
 
                     <td>
-                      
-                      {{item.id}}
+
+                      {{item.record_id}}
                     </td>
                     <td>
-                    
-                      {{item.startDate}}
+
+                      {{item.record_star_date | thaidate: "medium"}}
                     </td>
                     <td>
-                   
-                      {{item.endDate}}
+
+                      {{item.record_end_date | thaidate: "medium"}}
                     </td>
                     <td>
-                   
-                      {{item.location}}
+
+                      {{item.record_location}}
                     </td>
 
                     <td class=" text-center " style="width: 1%; white-space: nowrap;">
-
-                      <button (click)="openModal()" class="btn btn-warning" style="border: none; background: none;">
-                        <!--data-toggle="tooltip" data-placement="bottom" title="ดูรายละเอียด"-->
-                        <i class="fa fa-file-text-o" style="color: black;"></i>
+                      <!-- <a href="" (click)="openModal()"><i class="fa fa-file-text-o" ></i></a>&nbsp; -->
+                      <!-- <a href=""  (click)="onRecord()" ><i class="fa fa-pencil-square-o" ></i></a>&nbsp;
+                      <a href=""><i class="fa fa-file-pdf-o" (click)="printPDF()" ></i></a> -->
+                      <button (click)="openModal(item._id)" class="text-primary"
+                        style="border: none; background: none;">
+                        <i class="fa fa-file-text-o  text-primary" style="color: black;"></i>
                       </button>&nbsp;
 
 
-                      <button (click)="onRecord()" class="btn btn-warning"
-                        style="border: none; background: none;"><!--  data-toggle="tooltip" data-placement="top" title="จดบันทึการตรวจสอบ"-->
-                        <!--class="btn btn-danger pull-center"-->
-                        <i class="fa fa-pencil-square-o" style="color: black;"></i>
+                      <button (click)="onRecord()" style="border: none; background: none;" class="text-primary">
+                        <i class="fa fa-pencil-square-o  text-primary" style="color: black;"></i>
                       </button> &nbsp;
 
-                      <button class="btn btn-warning" style="border: none; background: none;">
-                        <i class="fa fa-file-pdf-o" (click)="printPDF()" style="color: black;"></i>
+                      <button style="border: none; background: none;">
+                        <i class="fa fa-file-pdf-o text-primary" (click)="printPDF()" style="color: black;"></i>
                         &nbsp;
                       </button>
                     </td>
@@ -105,8 +105,8 @@
               </table>
             </div>
           </div>
-          
-      <!-- การเพิ่มข้อมูล
+
+          <!-- การเพิ่มข้อมูล
             <div class="modal fade" id="insertModel" tabindex="-1" role="dialog"
                 aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
@@ -144,388 +144,398 @@
                 </div>
             </div>
         -->
-      <!--land insert-->
-      <div class="modal fade" id="insertModel" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header" class="card-header card-header-danger">
+          <!--land insert-->
+          <div class="modal fade" id="insertModel" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header" class="card-header card-header-danger">
 
-              <div class="row">
-                <div class="col-sm">
-                  <h5 class="modal-title" id="addItemModalLabel" style="color: white;">เพิ่มรายการ</h5>
+                  <div class="row">
+                    <div class="col-sm">
+                      <h5 class="modal-title" id="addItemModalLabel" style="color: white;">เพิ่มรายการ</h5>
+                    </div>
+                    <div class="col-sm">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                  </div>
+
                 </div>
-                <div class="col-sm">
+                <div class="modal-body">
+                  <form [formGroup]="addItemForm" (ngSubmit)="onInsertSummit(addItemForm.value)">
+                    <div class="row">
+                      <div class="col-sm-2">
+                        <div class="form-group">
+                          <label for="id" class="form-label">ครั้งที่:</label>
+
+                          <input type="id" id="Date" formControlName="id" class="form-control" placeholder="ครั้งที่" />
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="startDate">วันที่เริ่มตรวจสอบ</label>
+                          <input style="color:rgb(171, 171, 171)" type="date" id="startDate" formControlName="startDate"
+                            class="form-control" placeholder="วันที่เริ่มตรวจสอบ" />
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <label for="endDate">วันที่เสร็จสิ้น</label>
+                          <input style="color:rgb(171, 171, 171)" type="date" id="endDate" formControlName="endDate"
+                            class="form-control" placeholder="วันที่เสร็จสิ้น" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm">
+                        <div class="form-group">
+                          <label for="topic">งานที่ตรวจ</label>
+                          <input type="text" id="topic" formControlName="topic" class="form-control"
+                            placeholder="งานที่ตรวจ" />
+                        </div>
+                      </div>
+                    </div>
+
+
+
+                    <form action method="post" [formGroup]="addPersonalForm">
+                      <div class="row">
+
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label for="rank">ยศ/ตำเเหน่ง</label>
+                            <input type="text" id="rank" formControlName="rank" class="form-control"
+                              placeholder="ยศ/ตำเเหน่ง" />
+                            <div *ngFor="let input of personInputs">
+                              <input type="text" id="rank" formControlName="rank" class="form-control"
+                                placeholder="ยศ/ตำเเหน่ง" />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-5">
+                          <div class="form-group">
+                            <label for="fullname">ชื่อ-นามสกุล</label>
+                            <input type="text" id="fullname" formControlName="fullname" class="form-control"
+                              placeholder="--กรอกข้อมูล--" />
+                            <div *ngFor="let input of personInputs">
+                              <input type="text" id="fullname" formControlName="fullname" class="form-control"
+                                placeholder="--กรอกข้อมูล--" />
+                            </div>
+
+
+
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <button (click)="addPersonInput()" style="border: none; background: none;"><i
+                              class="fa fa-plus"></i></button>
+                        </div>
+
+
+                      </div>
+                    </form>
+
+                    <div class="form-group">
+                      <label for="detail">รายละเอียด</label>
+                      <input type="text" id="detail" formControlName="detail" class="form-control"
+                        placeholder="รายละเอียด" />
+                    </div>
+                    <div class="form-group">
+                      <label for="location">สถานที่</label>
+                      <input type="text" id="location" formControlName="location" class="form-control"
+                        placeholder="สถานที่" readonly>
+                    </div>
+                    <button type="button" class="btn btn-primary" (click)="getCurrentLocation()">เลือก location
+                      ปัจจุบัน</button>
+
+
+
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>บันทึก</button>
+                      <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>
+                        ปิด
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--land Insert end here-->
+          <!-- รายละเอียด-->
+          <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header" style="background: rgb(255, 209, 0)">
+                  <h5 class="modal-title" id="myModalLabel" style="color: white;">รายละเอียด</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-              </div>
-
-            </div>
-            <div class="modal-body">
-              <form [formGroup]="addItemForm" (ngSubmit)="onInsertSummit(addItemForm.value)">
-                <div class="row">
-                  <div class="col-sm-2">
-                    <div class="form-group">
-                      <label for="id" class="form-label">ครั้งที่:</label>
-
-                      <input type="id" id="Date" formControlName="id" class="form-control" placeholder="ครั้งที่" />
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label for="startDate">วันที่เริ่มตรวจสอบ</label>
-                      <input style="color:rgb(171, 171, 171)" type="date" id="startDate" formControlName="startDate"
-                        class="form-control" placeholder="วันที่เริ่มตรวจสอบ" />
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="endDate">วันที่เสร็จสิ้น</label>
-                      <input style="color:rgb(171, 171, 171)" type="date" id="endDate" formControlName="endDate"
-                        class="form-control" placeholder="วันที่เสร็จสิ้น" />
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm">
-                    <div class="form-group">
-                      <label for="topic">งานที่ตรวจ</label>
-                      <input type="text" id="topic" formControlName="topic" class="form-control"
-                        placeholder="งานที่ตรวจ" />
-                    </div>
-                  </div>
-                </div>
-
-
-
-                <form action method="post" [formGroup]="addPersonalForm">
-                  <div class="row">
-
-                    <div class="col-sm-3">
-                      <div class="form-group">
-                        <label for="rank">ยศ/ตำเเหน่ง</label>
-                        <input type="text" id="rank" formControlName="rank" class="form-control"
-                          placeholder="ยศ/ตำเเหน่ง" />
-                        <div *ngFor="let input of personInputs">
-                          <input type="text" id="rank" formControlName="rank" class="form-control"
-                            placeholder="ยศ/ตำเเหน่ง" />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-sm-5">
-                      <div class="form-group">
-                        <label for="fullname">ชื่อ-นามสกุล</label>
-                        <input type="text" id="fullname" formControlName="fullname" class="form-control"
-                          placeholder="--กรอกข้อมูล--" />
-                        <div *ngFor="let input of personInputs">
-                          <input type="text" id="fullname" formControlName="fullname" class="form-control"
-                            placeholder="--กรอกข้อมูล--" />
-                        </div>
-
-
+                <div class="modal-body-detail" [ngStyle]="{ width: '60%', height: '297mm' }">
+                  <!-- เนื้อหาของป๊อปอัพ -->
+                  <form action method="get">
+                    <div class="left-panel "> <!---->
+                      <div class="form-group ">
+                        <label>ครั้งที่: </label>
+                        <p>{{ detailItems?.record_id }}</p>
 
                       </div>
-                    </div>
-                    <div class="col-md-2">
-                      <button (click)="addPersonInput()" style="border: none; background: none;"><i
-                          class="fa fa-plus"></i></button>
-                    </div>
+                      <div class="form-group ">
+                        <label>วันที่เริ่มตรวจสอบ:</label>
+                        <p>{{ detailItems?.record_star_date | thaidate: 'forlog' }}</p>
+                      </div>
+                      <div class="form-group ">
+                        <label>วันที่เสร็จสิ้น:</label>
+                        <p>{{ detailItems?.record_end_date | thaidate: 'forlog' }}</p>
+                      </div>
+                      <div class="form-group">
+                        <label>หัวข้อการตรวจสอบ:</label>
+                        <p>{{ detailItems?.record_topic }}</p>
+                      </div>
 
+                      <div class="form-group">
+                        <label>สถานที่</label>
+                        <p>{{ detailItems?.record_location }}</p>
+                      </div>
 
+                    </div>
+                  </form>
+                  <div class="right-panel">
+                    <form action="">
+                      <div class="form-group">
+                        <label>รายละเอียด:</label>
+                        <p>{{ detailItems?.record_detail }}</p>
+                      </div>
+                    
+                      <div class="form-group">
+                        <label>รายชื่อผู้รับผิดชอบ:</label>
+                        <img [src]="documentImageUrl" alt="A4 Document">
+                        <div *ngFor="let person of items?.views"><!---->
+
+                          <p>{{ person.view_rank }} &nbsp; : &nbsp; {{ person.view_full_name }}</p>
+
+                        </div>
+                      </div>
+                    </form>
                   </div>
-                </form>
-
-                <div class="form-group">
-                  <label for="detail">รายละเอียด</label>
-                  <input type="text" id="detail" formControlName="detail" class="form-control"
-                    placeholder="รายละเอียด" />
                 </div>
-                <div class="form-group">
-                  <label for="location">สถานที่</label>
-                  <input type="text" id="location" formControlName="location" class="form-control" placeholder="สถานที่"
-                    readonly>
-                </div>
-                <button type="button" class="btn btn-primary" (click)="getCurrentLocation()">เลือก location
-                  ปัจจุบัน</button>
-
-
-
                 <div class="modal-footer">
-                  <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>บันทึก</button>
-                  <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>
-                    ปิด
+                  <button type="button" class="btn btn-success pull-center" (click)="detailCommit()">
+                    <i class="fa fa-check"></i>&nbsp; ยืนยัน
+                  </button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    <i class="fa fa-times"></i>&nbsp; ปิด
                   </button>
                 </div>
-              </form>
+              </div>
+            </div>
+          </div>
+          <!--[formGroup]="Form" (ngSubmit)="addPersonCommit(Form.value)" modal อันที่เป็นของ add person หน้าเล็กๆๆ ถูกลบออกนะ-->
+
+          <!-- จดบันทึก-->
+          <div class="modal fade" id="writtenModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header" style="background: rgb(255, 209, 0)">
+                  <h5 style="color: white;" class="modal-title" id="myModalLabel">จดบันทึก</h5>
+
+
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="container">
+                  <div class="row">
+                    <div class="col-sm">
+                      <div class="section">
+                        &nbsp;
+                        <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'typro'}"
+                          (click)="setActive('typro')">
+                          <i class="fa fa-file-word-o"></i>
+                        </button>
+                        &nbsp;
+                        <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'writte'}"
+                          (click)="setActive('writte')">
+                          <i class="fa fa-pencil-square-o"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-md-12" class="modal-body" style="width: 210mm; height: 297mm"
+                      [ngStyle]="{ height: '210mm' }">
+
+                      <div *ngIf="isTyproActive" class="full-page-textarea-container">
+
+
+
+                        <textarea [(ngModel)]="typroText" placeholder="พิมพ์ที่นี้.."
+                          class="form-control mt-3 full-page-textarea"></textarea>
+
+                      </div>
+                      <div *ngIf="isWritteActive" class="full-page-pdf">
+                        <a> writte section</a>
+
+                      </div>
+
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-success pull-center" (click)="recordCommit()">
+                    <i class="fa fa-check"></i>&nbsp; ยืนยัน
+                  </button>
+                  <button type="button" class="btn btn-danger pull-center" data-dismiss="modal">
+                    <i class="fa fa-times"></i>&nbsp; ปิด
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <!--land Insert end here-->
-      <!-- รายละเอียด-->
-      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header" style="background: rgb(255, 209, 0)">
-              <h5 class="modal-title" id="myModalLabel" style="color: white;">รายละเอียด</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body-detail" [ngStyle]="{ width: '60%', height: '297mm' }">
-              <!-- เนื้อหาของป๊อปอัพ -->
-              <form action method="get">
-                <div class="left-panel" > <!--*ngFor="let item of itemsTest"-->
-                  <div class="form-group">
-                    <label>ครั้งที่:</label>
-                    <!-- <p>{{ item.id }}</p> -->
-                  </div>
-                  <div class="form-group">
-                    <label>วันที่เริ่มตรวจสอบ:</label>
-                    <!-- <p>{{ item.startDate | date: 'd/M/yyyy' }}</p> -->
-                  </div>
-                  <div class="form-group">
-                    <label>วันที่เสร็จสิ้น:</label>
-                    <!-- <p>{{ item.endDate | date: 'd/M/yyyy' }}</p> -->
-                  </div>
-                  <div class="form-group">
-                    <label>หัวข้อการตรวจสอบ:</label>
-                    <!-- <p>{{ item.topic }}</p> -->
-                  </div>
-                  <div class="form-group">
-                    <label>รายละเอียด:</label>
-                    <!-- <p>{{ item.detail }}</p> -->
-                  </div>
-                  <div class="form-group">
-                    <label>สถานที่</label>
-                    <!-- <p>{{ item.location }}</p> -->
-                  </div>
-                  <div class="form-group">
-                    <label>รายชื่อผู้รับผิดชอบ:</label>
-                    <!-- <div *ngFor="let person of item.responsiblePeople">
-                      <p>{{ person.rank }} &nbsp; : &nbsp; {{ person.name }}</p>
-                    </div> -->
-                  </div>
-                </div>
-              </form>
-              <div class="right-panel">
-                <img [src]="documentImageUrl" alt="A4 Document">
+
+
+    </div>
+
+    <div class="main-content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header card-header-danger">
+                <h4 class="card-title">Simple Table</h4>
+                <p class="card-category">Here is a subtitle for this table</p>
               </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-success pull-center" (click)="detailCommit()">
-                <i class="fa fa-check"></i>&nbsp; ยืนยัน
-              </button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal">
-                <i class="fa fa-times"></i>&nbsp; ปิด
-              </button>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead class="text-primary">
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Country</th>
+                      <th>City</th>
+                      <th>Salary</th>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>Dakota Rice</td>
+                        <td>Niger</td>
+                        <td>Oud-Turnhout</td>
+                        <td class="text-primary">$36,738</td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>Minerva Hooper</td>
+                        <td>Curaçao</td>
+                        <td>Sinaai-Waas</td>
+                        <td class="text-primary">$23,789</td>
+                      </tr>
+                      <tr>
+                        <td>3</td>
+                        <td>Sage Rodriguez</td>
+                        <td>Netherlands</td>
+                        <td>Baileux</td>
+                        <td class="text-primary">$56,142</td>
+                      </tr>
+                      <tr>
+                        <td>4</td>
+                        <td>Philip Chaney</td>
+                        <td>Korea, South</td>
+                        <td>Overland Park</td>
+                        <td class="text-primary">$38,735</td>
+                      </tr>
+                      <tr>
+                        <td>5</td>
+                        <td>Doris Greene</td>
+                        <td>Malawi</td>
+                        <td>Feldkirchen in Kärnten</td>
+                        <td class="text-primary">$63,542</td>
+                      </tr>
+                      <tr>
+                        <td>6</td>
+                        <td>Mason Porter</td>
+                        <td>Chile</td>
+                        <td>Gloucester</td>
+                        <td class="text-primary">$78,615</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <!--[formGroup]="Form" (ngSubmit)="addPersonCommit(Form.value)" modal อันที่เป็นของ add person หน้าเล็กๆๆ ถูกลบออกนะ-->
-
-      <!-- จดบันทึก-->
-      <div class="modal fade" id="writtenModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header" style="background: rgb(255, 209, 0)">
-              <h5 style="color: white;" class="modal-title" id="myModalLabel">จดบันทึก</h5>
-
-
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="container">
-              <div class="row">
-                <div class="col-sm">
-                  <div class="section">
-                    &nbsp;
-                    <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'typro'}"
-                      (click)="setActive('typro')">
-                      <i class="fa fa-file-word-o"></i>
-                    </button>
-                    &nbsp;
-                    <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'writte'}"
-                      (click)="setActive('writte')">
-                      <i class="fa fa-pencil-square-o"></i>
-                    </button>
-                  </div>
-                </div>
-                <div class="col-md-12" class="modal-body" style="width: 210mm; height: 297mm"
-                  [ngStyle]="{ height: '210mm' }">
-
-                  <div *ngIf="isTyproActive" class="full-page-textarea-container">
-
-
-
-                    <textarea [(ngModel)]="typroText" placeholder="พิมพ์ที่นี้.."
-                      class="form-control mt-3 full-page-textarea"></textarea>
-                    
-                  </div>
-                  <div *ngIf="isWritteActive" class="full-page-pdf">
-                    <a > writte section</a>
-
-                  </div>
-
-
+          <div class="col-md-12">
+            <div class="card card-plain">
+              <div class="card-header card-header-danger">
+                <h4 class="card-title mt-0">Table on Plain Background</h4>
+                <p class="card-category">Here is a subtitle for this table</p>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead class>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Country</th>
+                      <th>City</th>
+                      <th>Salary</th>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>Dakota Rice</td>
+                        <td>Niger</td>
+                        <td>Oud-Turnhout</td>
+                        <td>$36,738</td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>Minerva Hooper</td>
+                        <td>Curaçao</td>
+                        <td>Sinaai-Waas</td>
+                        <td>$23,789</td>
+                      </tr>
+                      <tr>
+                        <td>3</td>
+                        <td>Sage Rodriguez</td>
+                        <td>Netherlands</td>
+                        <td>Baileux</td>
+                        <td>$56,142</td>
+                      </tr>
+                      <tr>
+                        <td>4</td>
+                        <td>Philip Chaney</td>
+                        <td>Korea, South</td>
+                        <td>Overland Park</td>
+                        <td>$38,735</td>
+                      </tr>
+                      <tr>
+                        <td>5</td>
+                        <td>Doris Greene</td>
+                        <td>Malawi</td>
+                        <td>Feldkirchen in Kärnten</td>
+                        <td>$63,542</td>
+                      </tr>
+                      <tr>
+                        <td>6</td>
+                        <td>Mason Porter</td>
+                        <td>Chile</td>
+                        <td>Gloucester</td>
+                        <td>$78,615</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-success pull-center" (click)="recordCommit()">
-                <i class="fa fa-check"></i>&nbsp; ยืนยัน
-              </button>
-              <button type="button" class="btn btn-danger pull-center" data-dismiss="modal">
-                <i class="fa fa-times"></i>&nbsp; ปิด
-              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-<div class="main-content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-header card-header-danger">
-            <h4 class="card-title">Simple Table</h4>
-            <p class="card-category">Here is a subtitle for this table</p>
-          </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table">
-                <thead class="text-primary">
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Country</th>
-                  <th>City</th>
-                  <th>Salary</th>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Dakota Rice</td>
-                    <td>Niger</td>
-                    <td>Oud-Turnhout</td>
-                    <td class="text-primary">$36,738</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Minerva Hooper</td>
-                    <td>Curaçao</td>
-                    <td>Sinaai-Waas</td>
-                    <td class="text-primary">$23,789</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Sage Rodriguez</td>
-                    <td>Netherlands</td>
-                    <td>Baileux</td>
-                    <td class="text-primary">$56,142</td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>Philip Chaney</td>
-                    <td>Korea, South</td>
-                    <td>Overland Park</td>
-                    <td class="text-primary">$38,735</td>
-                  </tr>
-                  <tr>
-                    <td>5</td>
-                    <td>Doris Greene</td>
-                    <td>Malawi</td>
-                    <td>Feldkirchen in Kärnten</td>
-                    <td class="text-primary">$63,542</td>
-                  </tr>
-                  <tr>
-                    <td>6</td>
-                    <td>Mason Porter</td>
-                    <td>Chile</td>
-                    <td>Gloucester</td>
-                    <td class="text-primary">$78,615</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-12">
-        <div class="card card-plain">
-          <div class="card-header card-header-danger">
-            <h4 class="card-title mt-0">Table on Plain Background</h4>
-            <p class="card-category">Here is a subtitle for this table</p>
-          </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <thead class>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Country</th>
-                  <th>City</th>
-                  <th>Salary</th>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Dakota Rice</td>
-                    <td>Niger</td>
-                    <td>Oud-Turnhout</td>
-                    <td>$36,738</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Minerva Hooper</td>
-                    <td>Curaçao</td>
-                    <td>Sinaai-Waas</td>
-                    <td>$23,789</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Sage Rodriguez</td>
-                    <td>Netherlands</td>
-                    <td>Baileux</td>
-                    <td>$56,142</td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>Philip Chaney</td>
-                    <td>Korea, South</td>
-                    <td>Overland Park</td>
-                    <td>$38,735</td>
-                  </tr>
-                  <tr>
-                    <td>5</td>
-                    <td>Doris Greene</td>
-                    <td>Malawi</td>
-                    <td>Feldkirchen in Kärnten</td>
-                    <td>$63,542</td>
-                  </tr>
-                  <tr>
-                    <td>6</td>
-                    <td>Mason Porter</td>
-                    <td>Chile</td>
-                    <td>Gloucester</td>
-                    <td>$78,615</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
