@@ -8,14 +8,11 @@ import { SharedService } from "../services/shared.service"
 import { DataTableDirective } from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Items } from '../../../server/models/itemModel';
-<<<<<<< HEAD
 import Swal from 'sweetalert2';
 
-=======
 import jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
->>>>>>> d6174eb60349ea79533f8bdb6f522c97f881f844
 
 
 @Component({
