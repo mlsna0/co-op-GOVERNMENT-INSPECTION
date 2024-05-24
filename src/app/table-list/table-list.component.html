@@ -94,10 +94,10 @@
                         <i class="fa fa-pencil-square-o  text-primary" style="color: black;"></i>
                       </button> &nbsp;
 
-                      <button style="border: none; background: none;">
-                        <i class="fa fa-file-pdf-o text-primary" (click)="printPDF()" style="color: black;"></i>
+                      <button *ngIf="showPdfButton && confirmed" (click)="printPDF()" style="border: none; background: none;">
+                        <i class="fa fa-file-pdf-o text-primary" style="color: black;"></i>
                         &nbsp;
-                      </button>
+                    </button>
                     </td>
                   </tr>
                 </tbody>
@@ -314,11 +314,10 @@
                       <div class="form-group">
                         <label>รายชื่อผู้รับผิดชอบ:</label>
                         <img [src]="documentImageUrl" alt="A4 Document">
-                        <div *ngFor="let person of items?.views"><!---->
-
-                          <p>{{ person.view_rank }} &nbsp; : &nbsp; {{ person.view_full_name }}</p>
-
-                        </div>
+                      <div *ngFor="let person of items?.views" class="person-details">
+                      <span class="person-rank">{{ person.view_rank }}</span>
+                     <span class="person-fullname">{{ person.view_full_name }}</span>
+                    </div>
                       </div>
                         <!-- เพิ่มปุ่มอัพโหลดรูปภาพและแสดงภาพที่อัพโหลด -->
                         <div class="form-group">
@@ -329,6 +328,7 @@
                           </div>
                           <img [src]="uploadedImageUrl" alt="Uploaded Image" *ngIf="uploadedImageUrl" style="max-width: 100px; max-height: 100px; display: block; margin-top: 10px;">
                         </div>
+                        <img [src]="detailItems?.picher" alt="Confirmed Image" *ngIf="detailItems?.picher" style="max-width: 100px; max-height: 100px; display: block; margin-top: 10px;">
                     </form>
                   </div>
                 </div>
