@@ -6,6 +6,7 @@
     "ng": "ng",
     "start": "ng serve",
     "web-dev": "concurrently \"node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng serve \"",
+    "dev": "concurrently \"mongod\" \"node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng serve \" \"tsc -w -p server\" \"nodemon dist/server/app.js\"",
     "api-dev": "concurrently  \"mongod\" \"tsc -w -p server\" \"nodemon dist/server/app.js\"",
     "build": "ng build",
     "test": "ng test",
