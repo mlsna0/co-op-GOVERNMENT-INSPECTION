@@ -314,10 +314,11 @@
                       <div class="form-group">
                         <label>รายชื่อผู้รับผิดชอบ:</label>
                         <img [src]="documentImageUrl" alt="A4 Document">
-                      <div *ngFor="let person of items?.views" class="person-details">
-                      <span class="person-rank">{{ person.view_rank }}</span>
-                     <span class="person-fullname">{{ person.view_full_name }}</span>
-                    </div>
+                        <div *ngFor="let person of items?.views"><!---->
+
+                          <p>{{ person.view_rank }} &nbsp; : &nbsp; {{ person.view_full_name }}</p>
+
+                        </div>
                       </div>
                         <!-- เพิ่มปุ่มอัพโหลดรูปภาพและแสดงภาพที่อัพโหลด -->
                         <div class="form-group">
@@ -343,6 +344,17 @@
               </div>
             </div>
           </div>
+          <style>
+            .person-details {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 10px;
+            }
+            .person-rank, .person-fullname {
+              flex: 1;
+              text-align: left;
+            }
+          </style>
           <!--[formGroup]="Form" (ngSubmit)="addPersonCommit(Form.value)" modal อันที่เป็นของ add person หน้าเล็กๆๆ ถูกลบออกนะ-->
 
           <!-- จดบันทึก-->

@@ -112,11 +112,3 @@ label{
     margin: 0;
     padding-left: 10px;
   }
-
-  .person-details {
-    display: flex;
-    justify-content: space-between;
-  }
-  .person-rank, .person-fullname {
-    flex: 1;
-  }

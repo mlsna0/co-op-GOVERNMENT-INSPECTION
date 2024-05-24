@@ -58,7 +58,7 @@ export class TableListComponent implements OnInit {
       location: ['',Validators.required],
       topic: ['',Validators.required]
     }); 
-    this.addPersonalForm = this.fb.group({
+    this.addPersonalForm = this.fb.group({  
       rank: ['',Validators.required],
       fullname: ['',Validators.required],
     }); 
@@ -159,7 +159,7 @@ export class TableListComponent implements OnInit {
       console.log("getDataById :",res);
       
       this.detailItems =res;
-    
+      this.detailItems.views = res.views; // ตรวจสอบว่าข้อมูลที่ถูกดึงมาถูกต้อง
       this.items.forEach((item, index) => {
         if (item.id === recordId) {
           item.picher = this.confirmedImageUrl; // เก็บ URL ของรูปภาพที่ยืนยันในฟิลด์ picher
