@@ -39,7 +39,7 @@ export class TableListComponent implements OnInit {
   isTyproActive:boolean = false;
   isWritteActive:boolean = false;
   typroText: string='';
-
+  uploadedImageUrl: string | ArrayBuffer | null = null;
   
   constructor(
     private fb:FormBuilder,
@@ -158,8 +158,24 @@ export class TableListComponent implements OnInit {
     })
 
   }
+  uploadImage(): void {
+    const input = document.getElementById('image-upload') as HTMLInputElement;
+    if (input) {
+      input.click(); // เปิด dialog เพื่ออัพโหลดรูปภาพ
+    }
+  }
 
-
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.uploadedImageUrl = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
 
  addPersonModel(){

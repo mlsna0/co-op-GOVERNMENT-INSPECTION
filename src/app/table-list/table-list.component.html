@@ -274,7 +274,7 @@
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
-                </div>
+                </div>  
                 <div class="modal-body-detail" [ngStyle]="{ width: '60%', height: '297mm' }">
                   <!-- เนื้อหาของป๊อปอัพ -->
                   <form action method="get">
@@ -320,6 +320,15 @@
 
                         </div>
                       </div>
+                        <!-- เพิ่มปุ่มอัพโหลดรูปภาพและแสดงภาพที่อัพโหลด -->
+                        <div class="form-group">
+                          <label for="image-upload">อัพโหลดรูปภาพ:</label>
+                          <div>
+                            <i class="fa fa-upload" style="font-size:24px; cursor: pointer;" (click)="uploadImage()"></i>
+                            <input type="file" id="image-upload" (change)="onFileChange($event)" accept="image/*" style="display: none;">
+                          </div>
+                          <img [src]="uploadedImageUrl" alt="Uploaded Image" *ngIf="uploadedImageUrl" style="max-width: 100px; max-height: 100px; display: block; margin-top: 10px;">
+                        </div>
                     </form>
                   </div>
                 </div>
@@ -402,7 +411,7 @@
 
 
     </div>
-
+<!-- 
     <div class="main-content">
       <div class="container-fluid">
         <div class="row">
@@ -538,4 +547,4 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
