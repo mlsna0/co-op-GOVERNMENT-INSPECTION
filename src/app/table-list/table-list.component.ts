@@ -9,7 +9,8 @@ import { DataTableDirective } from 'angular-datatables'; //petch เพิ่ม
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Items } from '../../../server/models/itemModel';
 
-
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-table-list',
@@ -64,7 +65,14 @@ export class TableListComponent implements OnInit {
     }
 
   ];
+  
   fetchData() {
+   
+  } 
+
+
+  ngOnInit() {
+    
     this.sv.getData().subscribe(
       res => {
         this.items = res.records; // ใช้ res.records แทน res
@@ -74,10 +82,6 @@ export class TableListComponent implements OnInit {
         console.error('Error fetching items:', error);
       }
     );
-  } 
-
-
-  ngOnInit() {
 
   
     this.Form =this.fb.group({
@@ -230,8 +234,34 @@ export class TableListComponent implements OnInit {
 
   
   }
-  printPDF(){
+    
+  printPDF() {  
+    const elementToPrint = document.getElementById('theContent');
+    if (elementToPrint) {
+      html2canvas(elementToPrint, { scale: 2 }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgWidth = 210; // A4 size width in mm
+        const pageHeight = 297; // A4 size height in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
 
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
+
+        pdf.save('การลงตรวจอิเล็กทรอนิค.pdf');
+      });
+    } else {
+      console.error('Element not found!');
+    }
   }
   
 

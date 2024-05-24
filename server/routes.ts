@@ -5,6 +5,7 @@ import RecordModelCtrl from './controller/recordController';
 import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
 import uploadService from './service/uploadservice.service'
+import RecordCtrl from 'controller/uploadController';
 
 
 function setRoutes(app): void {
@@ -13,14 +14,21 @@ function setRoutes(app): void {
   const recordModelCtrl = new RecordModelCtrl();
   const userModelCtrl = new UserModelCtrl();
   const viewModelCtrl = new ViewModelCtrl();
+  const recordCtrl = new RecordCtrl();
+
 
   // ItemModel routes
   router.route('/itemModel').get(itemModelCtrl.getAll);
   router.route('/itemModel/count').get(itemModelCtrl.count);
   router.route('/itemModel').post(itemModelCtrl.insert);
   // router.route('/postPersonData').post(itemModelCtrl.postItemToView);
+  router.route('/getdata').get(itemModelCtrl.getData);
 
-  router.route('/data').get(itemModelCtrl.getData);
+ //ไม่เเน่ใจ
+  router.route('/recordModels').get(recordCtrl.getRecordModels);
+  router.route('/recordModels/:id').get(recordCtrl.getRecordModelByID);
+  router.route('/recordModels/:id/print').get(recordCtrl.printPDF);
+
 
   router.route('/postItemData').post(itemModelCtrl.postItemToView);
   router.route('/itemModel/:id').get(itemModelCtrl.get);
