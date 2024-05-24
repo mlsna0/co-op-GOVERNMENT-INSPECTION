@@ -12,7 +12,7 @@
 .modal-body-detail{ 
     display: flex;
    left: 50%;
-   transform: translateX(-50%);
+   transform: translateX(0,-50%);
    
     width: 100%;
     border: 1px solid #000;
