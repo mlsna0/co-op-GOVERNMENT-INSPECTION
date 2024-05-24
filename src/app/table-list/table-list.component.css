@@ -10,9 +10,10 @@
 }
 
 .modal-body-detail{ 
+  position: relative;
     display: flex;
    left: 50%;
-   transform: translateX(0,-50%);
+   transform: translateX(-50%);
    
     width: 100%;
     border: 1px solid #000;
@@ -46,6 +47,7 @@
 
 
 label{
+ 
     color: black;
 }
 
@@ -87,34 +89,50 @@ label{
 }
 
 .left-panel {
+    position: relative;
     flex: 1;
-    padding: 20px;
+    padding-left: 20px;
     border-right: 1px solid #ddd;
-    width:60%;
+    width:70%;
     height: 100%;
   }
 .right-panel {
-    width: 38%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 60%;
+  height: 150vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative; /* ให้ลูกสามารถจัดตำแหน่งตามคอนเทนเนอร์ได้ */
+  
+   
   }
-
+.right-panelOnTop{
+  position: absolute;
+    top: 0;
+    left: 0;
+}
+.right-panelOnBottom{
+  position: absolute;
+  bottom: 0;
+  right: 25px;
+}
 .right-panel img {
-    width: 20mm;   
+    width: 30mm;   
     height: 20mm;
     border: 1px solid #ddd;
-    justify-content: flex-end;
+    margin-left: 50px;
   }
   .form-group {
     margin-bottom: 10px;
   }
   
   .form-group label {
+    display: inline-block;
     font-weight: bold;
   }
   
   .form-group p {
+    display: inline-block;
     margin: 0;
     padding-left: 10px;
   }

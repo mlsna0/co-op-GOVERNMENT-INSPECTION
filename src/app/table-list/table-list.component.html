@@ -269,13 +269,13 @@
             aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
-                <div class="modal-header" style="background: rgb(255, 209, 0)">
+                <div class="modal-header card-header card-header-danger" style="background: rgb(255, 209, 0)">
                   <h5 class="modal-title" id="myModalLabel" style="color: white;">รายละเอียด</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
-                </div>  
-                <div class="modal-body-detail" [ngStyle]="{ width: '60%', height: '297mm' }">
+                </div>
+                <div id="myDetail" class="modal-body-detail" [ngStyle]="{ width: '210mm', height: '297mm' }">
                   <!-- เนื้อหาของป๊อปอัพ -->
                   <form action method="get">
                     <div class="left-panel "> <!---->
@@ -286,15 +286,11 @@
                       </div>
                       <div class="form-group ">
                         <label>วันที่เริ่มตรวจสอบ:</label>
-                        <p>{{ detailItems?.record_star_date | thaidate: 'forlog' }}</p>
+                        <p>{{ detailItems?.record_star_date | thaidate: 'full' }}</p>
                       </div>
                       <div class="form-group ">
                         <label>วันที่เสร็จสิ้น:</label>
-                        <p>{{ detailItems?.record_end_date | thaidate: 'forlog' }}</p>
-                      </div>
-                      <div class="form-group">
-                        <label>หัวข้อการตรวจสอบ:</label>
-                        <p>{{ detailItems?.record_topic }}</p>
+                        <p>{{ detailItems?.record_end_date | thaidate: 'full' }}</p>
                       </div>
 
                       <div class="form-group">
@@ -306,34 +302,48 @@
                   </form>
                   <div class="right-panel">
                     <form action="">
-                      <div class="form-group">
-                        <label>รายละเอียด:</label>
-                        <p>{{ detailItems?.record_detail }}</p>
-                      </div>
-                    
-                      <div class="form-group">
-                        <label>รายชื่อผู้รับผิดชอบ:</label>
-                        <img [src]="documentImageUrl" alt="A4 Document">
-                        <div *ngFor="let person of items?.views"><!---->
-
-                          <p>{{ person.view_rank }} &nbsp; : &nbsp; {{ person.view_full_name }}</p>
-
-                        </div>
-                      </div>
-                        <!-- เพิ่มปุ่มอัพโหลดรูปภาพและแสดงภาพที่อัพโหลด -->
+                      <div class="right-panelOnTop">
                         <div class="form-group">
-                    
-                          <div>
-                            <i class="fa fa-upload" style="font-size:24px; cursor: pointer;" (click)="uploadImage()"></i>
-                            <input type="file" id="image-upload" (change)="onFileChange($event)" accept="image/*" style="display: none;">
-                          </div>
-                          <img [src]="uploadedImageUrl" alt="Uploaded Image" *ngIf="uploadedImageUrl" style="max-width: 100px; max-height: 100px; display: block; margin-top: 10px;">
+                          <label>หัวข้อการตรวจสอบ:</label>
+                          <p>{{ detailItems?.record_topic }}</p>
                         </div>
+                        <div class="form-group">
+                          <label>รายละเอียด:</label>
+                          <p>{{ detailItems?.record_detail }}</p>
+                        </div>
+                      </div>
+
+                      <div class="right-panelOnBottom">
+                        <div class="form-group">
+                          <label>รายชื่อผู้รับผิดชอบ:</label>
+
+
+
+                          <div *ngFor="let person of items?.views"><!---->
+                            <div>
+                              <div> <!-- เพิ่มปุ่มอัพโหลดรูปภาพและแสดงภาพที่อัพโหลด -->
+                                <i class="fa fa-upload" style="font-size:24px; cursor: pointer;"
+                                  (click)="uploadImage()"></i>
+                                <input type="file" id="image-upload" (change)="onFileChange($event)" accept="image/*"
+                                  style="display: none;">
+                                <img [src]="uploadedImageUrl" alt="Uploaded Image" *ngIf="uploadedImageUrl"
+                                  style="max-width: 100px; max-height: 100px; display: block; margin-top: 10px;">
+                              </div>
+                              <!-- <img [src]="documentImageUrl" alt="A4 Document"> อย่าลบนะอันนี้นะ สำหรับ test รูป -->
+                            </div>
+
+                            <p>{{ person.view_rank }} &nbsp; &nbsp; {{ person.view_full_name }}</p>
+
+                          </div>
+                        </div>
+                      </div>
+
+
                     </form>
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-success pull-center" (click)="detailCommit()">
+                  <button type="button" class="btn btn-success pull-center" (click)="printPDF()">
                     <i class="fa fa-check"></i>&nbsp; ยืนยัน
                   </button>
                   <button type="button" class="btn btn-danger" data-dismiss="modal">
@@ -350,7 +360,7 @@
             aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
-                <div class="modal-header" style="background: rgb(255, 209, 0)">
+                <div class="modal-header card-header card-header-danger" style="background: rgb(255, 209, 0)">
                   <h5 style="color: white;" class="modal-title" id="myModalLabel">จดบันทึก</h5>
 
 
@@ -411,7 +421,7 @@
 
 
     </div>
-<!-- 
+    <!-- 
     <div class="main-content">
       <div class="container-fluid">
         <div class="row">

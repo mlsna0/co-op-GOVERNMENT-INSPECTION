@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormsModule,FormControl,FormBuilder, Validator } from '@angular/forms';
+import { FormGroup, FormsModule,FormControl,FormBuilder, Validators } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
 import { HttpClient } from '@angular/common/http';
@@ -47,17 +47,17 @@ export class TableListComponent implements OnInit {
     private sv:SharedService
   ) { 
     this.addItemForm = this.fb.group({
-      id: [''],
-      startDate: [''],
-      detail:[''],
-      endDate: [''],
-      location: [''],
-      topic: ['']
+      id: ['',Validators.required],
+      startDate: ['',Validators.required],
+      detail:['',Validators.required],
+      endDate: ['',Validators.required],
+      location: ['',Validators.required],
+      topic: ['',Validators.required]
     }); 
     this.addPersonalForm = this.fb.group({
-      rank: [''],
-      fullname: [''],
-    }); 
+      rank: ['',Validators.required],
+      fullname: ['',Validators.required],
+    });
   }
   documentImageUrl = 'assets/img/sampleA4-1.png';
   itemsTest:any[]= [
@@ -213,7 +213,17 @@ export class TableListComponent implements OnInit {
     console.log(this.addPersonalForm.value);
     console.log("onInsertSubmit..?",data);
     // console.log(this.addPersonalForm.value);
-    
+    if (this.addItemForm.invalid || this.addPersonalForm.invalid) {
+      console.log('ฟอร์มไม่ถูกต้อง');
+      // แสดงข้อความแสดงข้อผิดพลาดให้ผู้ใช้ดู
+      Swal.fire({
+        title: 'Error!',
+        text: 'กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
     // console.log(this.items);
     // ส่งข้อมูลไปยัง controller
 
@@ -223,6 +233,8 @@ export class TableListComponent implements OnInit {
     this.sv.postDataTest(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
       console.log("res postItemData:", res);
     });
+    
+  
 
      // Close the modal
      $('#insertModel').modal('hide');
@@ -236,6 +248,7 @@ export class TableListComponent implements OnInit {
         confirmButtonText: 'OK'
     });
   });
+
     // if (this.addItemForm.valid) {
     //   this.items.push(this.addItemForm.value);
     //   this.addItemForm.reset();
@@ -276,10 +289,10 @@ export class TableListComponent implements OnInit {
   }
   printPDF(){
     console.log("working PDF..")
-    const elementToPrint = document.getElementById('myModal');
+    const elementToPrint = document.getElementById('myDetail');
     html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
-      const pdf = new jsPDF();
-      pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,297,210);
+      const pdf = new jsPDF('p','mm','a4');
+      pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
       pdf.save('record.pdf')
     });
   }
