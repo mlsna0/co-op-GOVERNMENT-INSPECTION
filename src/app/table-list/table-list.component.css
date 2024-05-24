@@ -11,9 +11,10 @@
 
 .modal-body-detail{ 
     display: flex;
-
-    align-items: top;
-    width: 100%;
+    justify-content: space-between;
+    padding: 20px;
+    border: 1px solid #000;
+    font-family: 'TH SarabunPSK', sans-serif; /* ใช้ฟอนต์ราชการ */
 
     
 }
@@ -83,22 +84,32 @@ label{
     flex: 1;
     padding: 20px;
     border-right: 1px solid #ddd;
-    width:120mm;
+    width:60%;
     height: 100%;
   }
 .right-panel {
-    flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 20px;
-  margin-left: auto;
+    width: 38%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
 .right-panel img {
-    width: 210mm;
-    height: 297mm;
+    width: 20mm;   
+    height: 20mm;
     border: 1px solid #ddd;
     justify-content: flex-end;
+  }
+  .form-group {
+    margin-bottom: 10px;
+  }
+  
+  .form-group label {
+    font-weight: bold;
+  }
+  
+  .form-group p {
+    margin: 0;
+    padding-left: 10px;
   }
 

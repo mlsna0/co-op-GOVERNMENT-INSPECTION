@@ -5,7 +5,7 @@ import RecordModelCtrl from './controller/recordController';
 import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
 import uploadService from './service/uploadservice.service'
-
+// import AggRecordNViewCon from 'controller/aggRecordNviewController'; //petch edit add this
 
 function setRoutes(app): void {
   const router = express.Router();
@@ -13,6 +13,8 @@ function setRoutes(app): void {
   const recordModelCtrl = new RecordModelCtrl();
   const userModelCtrl = new UserModelCtrl();
   const viewModelCtrl = new ViewModelCtrl();
+
+  // const aggregateRecordsAndView = new AggRecordNViewCon(); //petch edit add this
 
   // ItemModel routes
   router.route('/itemModel').get(itemModelCtrl.getAll);
@@ -55,6 +57,8 @@ function setRoutes(app): void {
   router.route('/viewModel/:id').delete(viewModelCtrl.delete);
 
   
+  //agg $lookup Record and View model routes //petch edit add this
+  // router.route('/aggRecordNview/:id').get(AggRecordNViewCon.get);
 
   app.use('/api', router);
 }

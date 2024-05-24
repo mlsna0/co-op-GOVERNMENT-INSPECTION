@@ -22,6 +22,18 @@ export class SharedService {
       })
     );
   }
+  getDataById(id: number): Observable<any>{
+    return this.http.get(`${this.baseUrl}/recordModel/${id}`);
+  }
+
+  getAggregatedData(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/aggregateRecordsAndView`).pipe(
+      catchError(error => {
+        console.error('Error fetching aggregated data:', error);
+        throw 'ไม่สามารถดึงข้อมูลได้';
+      })
+    );
+  }
 
   postData(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/postData`, data);
