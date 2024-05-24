@@ -94,10 +94,10 @@
                         <i class="fa fa-pencil-square-o" style="color: black;"></i>
                       </button> &nbsp;
 
-                      <button class="btn btn-warning" style="border: none; background: none;">
-                        <i class="fa fa-file-pdf-o" (click)="printPDF()" style="color: black;"></i>
+                      <!-- <button id="theContent" (click)="printPDF()" class="btn btn-warning" style="border: none; background: none;">
+                        <i class="fa fa-file-pdf-o" style="color: black;"></i>
                         &nbsp;
-                      </button>
+                      </button> -->
                     </td>
                   </tr>
                 </tbody>
@@ -316,6 +316,10 @@
               </div>
             </div>
             <div class="modal-footer">
+              <button id="theContent" (click)="printPDF()" class="btn btn-warning" style="border: none; background: none;">
+                <i class="fa fa-file-pdf-o" style="color: black;"></i>
+                &nbsp;
+              </button>
               <button type="button" class="btn btn-success pull-center" (click)="detailCommit()">
                 <i class="fa fa-check"></i>&nbsp; ยืนยัน
               </button>

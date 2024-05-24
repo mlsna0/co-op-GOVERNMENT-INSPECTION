@@ -230,19 +230,27 @@ export class TableListComponent implements OnInit {
 
   }
   recordCommit(){
-    
-
   
   }
     
+  // ngAfterViewInit() {
+  //   // ตรวจสอบว่า DOM ถูกสร้างขึ้นเรียบร้อยแล้ว
+  //   const elementToPrint = document.getElementById('theContent');
+  //   if (elementToPrint) {
+  //     console.log('theContent element is present in the DOM');
+  //   } else {
+  //     console.error('theContent element is not found in the DOM');
+  //   }
+  // }
+
   printPDF() {  
-    const elementToPrint = document.getElementById('theContent');
+    const elementToPrint = document.getElementById('myModal');
     if (elementToPrint) {
       html2canvas(elementToPrint, { scale: 2 }).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF('p', 'mm', 'a4');
-        const imgWidth = 210; // A4 size width in mm
-        const pageHeight = 297; // A4 size height in mm
+        const imgWidth = 297; // A4 size width in mm
+        const pageHeight = 210; // A4 size height in mm
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         let heightLeft = imgHeight;
         let position = 0;

@@ -5,7 +5,7 @@ import RecordModelCtrl from './controller/recordController';
 import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
 import uploadService from './service/uploadservice.service'
-import RecordCtrl from 'controller/uploadController';
+import RecordCtrl from './controller/uploadController';
 
 
 function setRoutes(app): void {
