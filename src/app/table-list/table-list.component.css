@@ -11,12 +11,18 @@
 
 .modal-body-detail{ 
     display: flex;
-    justify-content: space-between;
-    padding: 20px;
+   left: 50%;
+   transform: translateX(0,-50%);
+   
+    width: 100%;
     border: 1px solid #000;
     font-family: 'TH SarabunPSK', sans-serif; /* ใช้ฟอนต์ราชการ */
 
     
+}
+.modal-content{
+  left: 5.5px;
+  justify-content: center;
 }
 .card-header{
     position: relative;
