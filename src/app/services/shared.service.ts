@@ -25,6 +25,7 @@ export class SharedService {
   getDataById(id: number): Observable<any>{
     return this.http.get(`${this.baseUrl}/recordModel/${id}`);
   }
+  
 
   getAggregatedData(): Observable<any> {
     return this.http.get(`${this.baseUrl}/aggregateRecordsAndView`).pipe(
