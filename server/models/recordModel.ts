@@ -7,12 +7,12 @@ const recordSchema = new mongoose.Schema({
   record_detail: { type: String, required: true },
   record_location: { type: String, required: true },
   record_topic: { type: String, required: true },
-  view_full_name: [
-    {
-      rank: { type: String, required: true },
-      fullname: { type: String, required: true }
-    }
-],
+//   view_full_name: [
+//     {
+//       rank: { type: String, required: true },
+//       fullname: { type: String, required: true }
+//     }
+// ],
 viewModelId: { type: mongoose.Schema.Types.ObjectId, ref: 'ViewModel' }
 });
 

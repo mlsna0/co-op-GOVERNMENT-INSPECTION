@@ -37,8 +37,7 @@
           <!-- </div> card-Edit -->
           <div class="card-body">
             <div class="table-responsive">
-              <table width="100%" datatable [dtOptions]="dtOptions"
-                class="table table-border table-hover table-bordered nowrap">
+              <table width="100%" datatable [dtOptions]="dtOptions" class="table table-border table-hover table-bordered nowrap">
                 <thead class="text-primary">
                   <tr>
                     <th>ครั้งที่</th>
@@ -48,36 +47,21 @@
                     <th class="text-center"><i class="fa fa-gear"></i></th>
                   </tr>
                 </thead>
-                <tbody *ngFor="let item of items?.records">
-                  <!---->
-                  <tr>
-                    <!-- ข้อมูลที่จะดึงจาก services มาใส่ใน tbody นี้นะมีแบบให้แห้แหละ -->
-                    <td>
-                      {{item.record_id}}
-                    </td>
-                    <td>
-                      {{item.record_star_date | thaidate: "medium"}}
-                    </td>
-                    <td>
-                      {{item.record_end_date | thaidate: "medium"}}
-                    </td>
-                    <td>
-                      {{item.record_location}}
-                    </td>
-                    <td class=" text-center " style="width: 1%; white-space: nowrap;">
-                      <!-- <a href="" (click)="openModal()"><i class="fa fa-file-text-o" ></i></a>&nbsp; -->
-                      <!-- <a href=""  (click)="onRecord()" ><i class="fa fa-pencil-square-o" ></i></a>&nbsp;
-                      <a href=""><i class="fa fa-file-pdf-o" (click)="printPDF()" ></i></a> -->
-                      <button (click)="openModal(item._id)" class="text-primary"
-                        style="border: none; background: none;">
-                        <i class="fa fa-file-text-o  text-primary" style="color: black;"></i>
+                <tbody>
+                  <tr *ngFor="let item of items">
+                    <td>{{ records.record_id }}</td>
+                    <td>{{ records.record_star_date | thaidate: 'medium' }}</td>
+                    <td>{{ records.record_end_date | thaidate: 'medium' }}</td>
+                    <td>{{ records.record_location }}</td>
+                    <td class="text-center" style="width: 1%; white-space: nowrap;">
+                      <button (click)="openModal(item._id)" class="text-primary" style="border: none; background: none;">
+                        <i class="fa fa-file-text-o text-primary" style="color: black;"></i>
                       </button>&nbsp;
                       <button (click)="onRecord()" style="border: none; background: none;" class="text-primary">
-                        <i class="fa fa-pencil-square-o  text-primary" style="color: black;"></i>
+                        <i class="fa fa-pencil-square-o text-primary" style="color: black;"></i>
                       </button> &nbsp;
                       <button style="border: none; background: none;">
-                        <i class="fa fa-file-pdf-o text-primary" (click)="printPDF()" style="color: black;"></i>
-                        &nbsp;
+                        <i class="fa fa-file-pdf-o text-primary" (click)="printPDF()" style="color: black;"></i>&nbsp;
                       </button>
                     </td>
                   </tr>
@@ -85,6 +69,7 @@
               </table>
             </div>
           </div>
+          
           <!-- การเพิ่มข้อมูล
             <div class="modal fade" id="insertModel" tabindex="-1" role="dialog"
                 aria-labelledby="myModalLabel" aria-hidden="true">
