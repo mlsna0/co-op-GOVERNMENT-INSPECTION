@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormsModule,FormControl,FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
 import { HttpClient } from '@angular/common/http';
@@ -32,7 +32,8 @@ export class TableListComponent implements OnInit {
   items:any= [];
   detailItems: any;
   PersonINT :number = 0;
-  personInputs: number[]=[];
+  personInputs: FormArray;
+
   addItemForm: any;
   addDataForm: any;
   activeButton: string='';
@@ -40,6 +41,7 @@ export class TableListComponent implements OnInit {
   isWritteActive:boolean = false;
   typroText: string='';
   uploadedImageUrl: string | ArrayBuffer | null = null;
+  isLoading: boolean = false;
   
   constructor(
     private fb:FormBuilder,
@@ -52,23 +54,27 @@ export class TableListComponent implements OnInit {
       detail:['',Validators.required],
       endDate: ['',Validators.required],
       location: ['',Validators.required],
-      topic: ['',Validators.required]
+      topic: ['',Validators.required],
+      personal: this.fb.array([])
     }); 
     this.addPersonalForm = this.fb.group({
       rank: ['',Validators.required],
       fullname: ['',Validators.required],
     });
+    
+    this.personInputs = this.addItemForm.get('personal') as FormArray;
+    this.addPersonInput(); // Add initial input group
   }
   documentImageUrl = 'assets/img/sampleA4-1.png';
-  itemsTest:any[]= [
-    {
-      id:'1', startDate:'20/05/2567',endDate:'26/05/2567',location:'data testing'
-    },
-    {
-      id:'2', startDate:'30/05/2567',endDate:'01/06/2567',location:'data testing'
-    }
+  // itemsTest:any[]= [
+  //   {
+  //     id:'1', startDate:'20/05/2567',endDate:'26/05/2567',location:'data testing'
+  //   },
+  //   {
+  //     id:'2', startDate:'30/05/2567',endDate:'01/06/2567',location:'data testing'
+  //   }
 
-  ];
+  // ];
   fetchData() {
     this.fetchData;
     this.sv.getData().subscribe(
@@ -86,11 +92,11 @@ export class TableListComponent implements OnInit {
   ngOnInit() {
 
   
-    this.Form =this.fb.group({
-      Full_name1: new FormControl(""),
-      Full_name2: new FormControl(""),
-      Full_name3: new FormControl("")
-    })
+    // this.Form =this.fb.group({
+    //   Full_name1: new FormControl(""),
+    //   Full_name2: new FormControl(""),
+    //   Full_name3: new FormControl("")
+    // })
     this.dtOptions = {
     
       columnDefs: [
@@ -124,10 +130,11 @@ export class TableListComponent implements OnInit {
       console.log("res getData:", res);
       this.items = res;
      
-    });
-
-    
+    });     
   }
+
+
+
   setActive(button: string){
     this.activeButton = button;
     console.log("connented..Active")
@@ -145,9 +152,11 @@ export class TableListComponent implements OnInit {
     }
   }
 
+
+
   //หน้าจอรายละเอียดข้อมูล
   openModal(recordId: any) {
-    $('#myModal').modal('show');
+    $('#myModal').modal('show');  
    
     this.sv.getDataById(recordId).subscribe(res=>{
       console.log("getDataById :",res);
@@ -158,12 +167,17 @@ export class TableListComponent implements OnInit {
     })
 
   }
+
+
+
   uploadImage(): void {
     const input = document.getElementById('image-upload') as HTMLInputElement;
     if (input) {
       input.click(); // เปิด dialog เพื่ออัพโหลดรูปภาพ
     }
   }
+
+
 
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -172,25 +186,48 @@ export class TableListComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = () => {
         this.uploadedImageUrl = reader.result;
+        this.isLoading = true;
       };
       reader.readAsDataURL(file);
     }
+    
   }
 
 
  addPersonModel(){
   $('#addPersonModel').modal('show');
  }
+
+
  addPersonInput(){
   console.log("connet..")
-  
   this.PersonINT++;
-  this.personInputs = Array(this.PersonINT).fill(1).map((x, i) => i);
+  this.personInputs.push(this.createPersonGroup());
+  // this.personInputs = Array(this.PersonINT).fill(1).map((x, i) => i);
   console.log(this.PersonINT);
+
+  // const add = this.addItemForm.get("personal") as FormArray;
+  // add.push(this.fb.group({
+  //   rank: ['',Validators.required],
+  //   fullname: ['',Validators.required],
+  // }))
   
-
-
  }
+
+
+ //petch สร้างการ Create ของ InputPerson นะ
+ createPersonGroup(): FormGroup {
+  return this.fb.group({
+    rank: ['', Validators.required],
+    fullname: ['', Validators.required]
+  });
+  
+}
+//รับค่าหลายตัว
+get personal(): FormArray {
+  return this.addItemForm.get('personal') as FormArray;
+}
+
  addPersonCommit(value: any) {
   console.log("commit success", value);
   // ส่งข้อมูลไปยัง controller
@@ -198,22 +235,32 @@ export class TableListComponent implements OnInit {
     console.log("res postPersonData:", res);
   });
 }
+
+
   onRecord(){
     $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
    
   }
+
+
+
 //insert
   onInsert(){
     $('#insertModel').modal('show'); 
   }
+
+
+
+
   onInsertSummit(data) {
       
     // console.log(data);
-    console.log(this.addItemForm.value);
-    console.log(this.addPersonalForm.value);
-    console.log("onInsertSubmit..?",data);
+    console.log('Item form:',this.addItemForm.value);
+    console.log('PernalForm : ',this.addPersonalForm.value);
+    console.log('Personal array form : ',this.personal.value)
+    console.log("onInsertSubmit..?data : ",data);
     // console.log(this.addPersonalForm.value);
-    if (this.addItemForm.invalid || this.addPersonalForm.invalid) {
+    if (this.addItemForm.invalid || this.personal.invalid ) {
       console.log('ฟอร์มไม่ถูกต้อง');
       // แสดงข้อความแสดงข้อผิดพลาดให้ผู้ใช้ดู
       Swal.fire({
@@ -224,15 +271,40 @@ export class TableListComponent implements OnInit {
       });
       return;
     }
+ 
+    // }
     // console.log(this.items);
     // ส่งข้อมูลไปยัง controller
 
     // this.sv.postItemData(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
     //   console.log("res postItemData:", res);
     // });
-    this.sv.postDataTest(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
-      console.log("res postItemData:", res);
-    });
+
+    
+    this.sv.postDataTest(this.addItemForm.value).subscribe(res => {
+      console.log("res submitted successfully", res);
+      Swal.fire({
+              title: 'Success!!',
+              text: 'Your data has been submitted successfully.',
+              icon: 'success',
+              confirmButtonText: 'OK'
+      });
+      $('#insertModel').modal('hide');
+      this.addItemForm.reset();
+      this.personInputs.clear(); // Clear FormArray
+      // this.addPersonInput();
+    },
+    error =>{
+      console.error('Error submitting data:', error);
+      Swal.fire({
+            title: 'Error!',
+            text: 'กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+
+    }
+  );
     
   
 
@@ -240,14 +312,17 @@ export class TableListComponent implements OnInit {
      $('#insertModel').modal('hide');
         
      // Show success alert
-     $('#insertModel').on('hidden.bs.modal', function () {
-      Swal.fire({
-        title: 'Success!!',
-        text: 'Your data has been submitted successfully.',
-        icon: 'success',
-        confirmButtonText: 'OK'
-    });
-  });
+  //    $('#insertModel').on('hidden.bs.modal', function () {
+  //     Swal.fire({
+  //       title: 'Success!!',
+  //       text: 'Your data has been submitted successfully.',
+  //       icon: 'success',
+  //       confirmButtonText: 'OK'
+  //   });
+  // });
+  // this.addItemForm.reset();
+
+
 
     // if (this.addItemForm.valid) {
     //   this.items.push(this.addItemForm.value);
@@ -276,17 +351,10 @@ export class TableListComponent implements OnInit {
     }
   }
   //insert end here
-  detailCommit(){
 
-  }
   recordCommit(){
-    
+  }
 
-  
-  }
-  generatePDF(){
- 
-  }
   printPDF(){
     console.log("working PDF..")
     const elementToPrint = document.getElementById('myDetail');

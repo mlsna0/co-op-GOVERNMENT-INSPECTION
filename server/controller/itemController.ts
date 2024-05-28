@@ -22,11 +22,17 @@
           record_topic: req.body.topic,
     
         }).save();
-  
-        const obj1 = await new this.modelView({
-          view_rank: req.body.rank,
-          view_full_name: req.body.fullname,
-        }).save();
+        // req.body.personal.forEach(async (element) => {
+        //   const obj1 = await new this.modelView({
+        //     view_rank: element.rank,
+        //     view_full_name: element.fullname,
+        //   }).save();
+        // });
+        if(req.body.personal){ 
+          let newField = req.body.personal.map( x=> {return { view_rank : x.rank, view_full_name: x.fullname }})
+          let result = await this.modelView.insertMany(newField)
+        }
+        
   
         res.status(200).json("ok");
       } catch (err) {
