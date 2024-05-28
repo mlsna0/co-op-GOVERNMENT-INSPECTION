@@ -15,7 +15,7 @@ export class SharedService {
   constructor(private http: HttpClient) { }
 
   getData(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/getData`).pipe(
+    return this.http.get(`${this.baseUrl}/data`).pipe(
       catchError(error=>{
         console.error('Error fatching data:',error);
         throw 'ไม่สามารถดึงข้อมูลได้';
@@ -43,7 +43,7 @@ export class SharedService {
     return this.http.post(`${this.baseUrl}/postItemData`, data);
   }
 
-  postDataTest(data:any,personal:any){
+  postDataTest(data:any,){
     console.log("DATA : ",data)
     let formData = new FormData
     formData.append("endDate",data.endDate)
@@ -52,10 +52,10 @@ export class SharedService {
     formData.append("startDate",data.startDate)
     formData.append("topic",data.topic)
     formData.append("detail",data.detail)
-    // formData.append("rank",personal.rank)
-    // formData.append("fullname",personal.fullname)  
-
-    return this.http.post(`${this.baseUrl}/postDataTest/`,formData);
+  //   for (let person of personal) {
+  //     formData.append("personal[]", JSON.stringify(person));
+  // }
+    return this.http.post(`${this.baseUrl}/postDataTest/`,data);
   }
 
   postItemData(data: any,personal:any): Observable<any> {

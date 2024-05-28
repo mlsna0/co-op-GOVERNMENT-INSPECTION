@@ -40,7 +40,7 @@ abstract class BaseCtrl {
       res.status(200).json(obj);
     } catch (err) {
       return res.status(500).json({ error: err.message });
-    }
+    } 
   }
 
   // Update by id

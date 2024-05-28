@@ -8,6 +8,7 @@ const recordSchema = new mongoose.Schema({
     record_detail: String,
     record_location: String,
     record_topic: String,
+     
     // record_rank: String,
     // record_full_name: String,  
    

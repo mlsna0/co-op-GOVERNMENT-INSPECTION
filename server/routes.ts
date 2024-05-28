@@ -35,7 +35,7 @@ function setRoutes(app): void {
   router.route('/itemModel').post(itemModelCtrl.insert);
   // router.route('/postPersonData').post(itemModelCtrl.postItemToView);
 
-  router.route('/getData').get(itemModelCtrl.getData);
+  router.route('/data').get(itemModelCtrl.getData);
  
 
   
