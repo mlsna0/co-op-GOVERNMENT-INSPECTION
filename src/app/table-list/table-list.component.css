@@ -1,104 +1,213 @@
 .modal-lg {
-    max-width: 100%;
+  max-width: 100%;
 }
 
 .modal-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
 }
 
-.modal-body-detail{ 
-    display: flex;
+.modal-body-detail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
 
-    align-items: top;
-    width: 100%;
-
-    
-}
-.card-header{
-    position: relative;
-    background-color: rgb(255, 209, 0);
-}
-.search-table{
-    position: relative;
-    align-items:center ;
-}
-.icon-search{
-    background-color: #fff;
-    width: 35px;
-    height: 35px;
-    border-radius: 20.5px;
-    align-items: center;
-    border: none;
-}
-.icon-search:hover{
-    box-shadow:0 10px 10px 0 #b5b3b3;
-}
+  width: 100%;
+  border: 1px solid #000;
+  font-family: 'TH SarabunPSK', sans-serif;
+  /* ใช้ฟอนต์ราชการ */
 
 
-label{
-    color: black;
+}
+
+.modal-content {
+  left: 5.5px;
+  justify-content: center;
+
+}
+
+.card-header {
+  position: relative;
+  background-color: rgb(255, 209, 0);
+}
+
+.search-table {
+  position: relative;
+  align-items: center;
+}
+
+.icon-search {
+  background-color: #fff;
+  width: 35px;
+  height: 35px;
+  border-radius: 20.5px;
+  align-items: center;
+  border: none;
+}
+
+.icon-search:hover {
+  box-shadow: 0 10px 10px 0 #b5b3b3;
+}
+
+
+label {
+
+  color: black;
 }
 
 
 .btn-just-icon.active {
-    background-color: #55b559; /* สีพื้นหลังเมื่อปุ่ม active */
-    color: white; /* สีตัวอักษรเมื่อปุ่ม active */
-  }
+  background-color: #55b559;
+  /* สีพื้นหลังเมื่อปุ่ม active /
+  color: white; / สีตัวอักษรเมื่อปุ่ม active /
+}
 
 .form-control.mt-3 {
-    position: relative;
-  }
+  position: relative;
+}
 .full-page-textarea{
-    width: 100%;
-    height: calc(297mm - 50px); /* 297mm minus some margin for modal padding */
-    border: none;
-    resize: none;
+  width: 100%;
+  height: calc(297mm - 50px); / 297mm minus some margin for modal padding /
+  border: none;
+  resize: none;
 
 }
 .full-page-textarea-container{
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
 
 }
 
 .btn-warning:hover::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color:rgb(255, 209,0); /* สีพื้นหลังที่ต้องการเมื่อ hover */
-    z-index: -1;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color:rgb(255, 209,0); / สีพื้นหลังที่ต้องการเมื่อ hover */
+  z-index: -1;
 }
 
-.left-panel {
-    flex: 1;
-    padding: 20px;
-    border-right: 1px solid #ddd;
-    width:120mm;
-    height: 100%;
-  }
-.right-panel {
-    flex: 1;
+.mainCenter-panel {
+  position: relative;
+  background: #fff;
+  padding: 96px;
+  height: 100%;
+}
+
+.header-topic {
+  position: relative;
+  padding-top: 1px;
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 20px;
-  margin-left: auto;
+  flex-direction: column;
+
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.right-panel {
+  width: 60%;
+  height: 150vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+  /* ให้ลูกสามารถจัดตำแหน่งตามคอนเทนเนอร์ได้ /
+}
+.right-panelOnTop{
+position: absolute;
+  top: 0;
+  left: 0;
+}
+/ .right-panelOnBottom{
+position: relative;
+bottom: 0;
+right: 25px;
+} /
+/ .right-panel img {
+  width: 30mm;
+  height: 20mm;
+  border: 1px solid #ddd;
+  margin-left: 50px;
+} */
+  .form-group {
+    margin-bottom: 10px;
   }
 
-.right-panel img {
-    width: 210mm;
-    height: 297mm;
+  .detail-content {
+    position: relative;
+    margin-top: 60px;
+  }
+
+  .detail-content .form-group label {
+    display: inline-block;
+    font-weight: bold;
+  }
+
+  .detail-content .form-group p {
+    display: inline-block;
+    margin: 0;
+    padding-left: 10px;
+  }
+
+  .date-flex {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .main-detail {
+    position: relative;
+    border-collapse: collapse;
+    /* เพื่อทำให้เส้นขอบรวมกัน /
+  width: 100%;
+  padding: 20px; / เพิ่มระยะห่างบนและล่าง /
+  font-family: 'TH SarabunPSK', sans-serif; / ใช้ฟอนต์ราชการ /
+}
+
+.main-detail th, .main-detail td {
+  border: 1px solid black; / เส้นขอบสีดำ /
+  padding: 5px; / ระยะห่างภายในเซลล์ /
+  text-align: left; / จัดตำแหน่งเนื้อหาให้อยู่ทางซ้าย /
+}
+
+.main-detail th:first-child, .main-detail td:first-child {
+  width: 10%;
+}
+
+.main-detail th:last-child, .main-detail td:last-child {
+  width: 90%;
+}
+.main-detail th {
+  background-color: #f2f2f2; / พื้นหลังสีเทาอ่อนสำหรับหัวตาราง /
+}
+
+.main-detail tr:nth-child(even) {
+  background-color: #f9f9f9; / พื้นหลังสีเทาอ่อนสำหรับแถวคู่ */
+  }
+
+  .sign-content {
+    position: relative;
+    padding-left: 380px;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .sign-content img {
+    width: 30mm;
+    height: 20mm;
     border: 1px solid #ddd;
-    justify-content: flex-end;
-  }
+    margin-left: 58px;
 
+  }

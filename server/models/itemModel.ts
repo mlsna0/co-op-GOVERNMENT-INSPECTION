@@ -8,7 +8,8 @@ const itemSchema = new mongoose.Schema({
   task: { type: String, required: true },
   rank: { type: String, required: true },
   fullName: { type: String, required: true },
-  details: { type: String, required: true }
+  details: { type: String, required: true },
+
 });
 
 const Items = mongoose.model('Items', itemSchema);
@@ -22,6 +23,7 @@ export interface Items {
   rank: string;
   fullName: string;
   details: string;
+  
 }
 
 export default Items;

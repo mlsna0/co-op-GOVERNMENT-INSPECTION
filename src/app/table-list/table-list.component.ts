@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormsModule,FormControl,FormBuilder, Validator } from '@angular/forms';
+import { FormGroup, FormsModule,FormControl,FormBuilder, Validators } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
 import { HttpClient } from '@angular/common/http';
@@ -8,9 +8,12 @@ import { SharedService } from "../services/shared.service"
 import { DataTableDirective } from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Items } from '../../../server/models/itemModel';
+import Swal from 'sweetalert2';
 
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
+
 
 @Component({
   selector: 'app-table-list',
@@ -26,7 +29,8 @@ export class TableListComponent implements OnInit {
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
 
-  items:any[]= [];
+  items:any= [];
+  detailItems: any;
   PersonINT :number = 0;
   personInputs: number[]=[];
   addItemForm: any;
@@ -35,7 +39,7 @@ export class TableListComponent implements OnInit {
   isTyproActive:boolean = false;
   isWritteActive:boolean = false;
   typroText: string='';
-
+  uploadedImageUrl: string | ArrayBuffer | null = null;
   
   constructor(
     private fb:FormBuilder,
@@ -43,17 +47,17 @@ export class TableListComponent implements OnInit {
     private sv:SharedService
   ) { 
     this.addItemForm = this.fb.group({
-      id: [''],
-      startDate: [''],
-      detail:[''],
-      endDate: [''],
-      location: [''],
-      topic: ['']
+      id: ['',Validators.required],
+      startDate: ['',Validators.required],
+      detail:['',Validators.required],
+      endDate: ['',Validators.required],
+      location: ['',Validators.required],
+      topic: ['',Validators.required]
     }); 
     this.addPersonalForm = this.fb.group({
-      rank: [''],
-      fullname: [''],
-    }); 
+      rank: ['',Validators.required],
+      fullname: ['',Validators.required],
+    });
   }
   documentImageUrl = 'assets/img/sampleA4-1.png';
   itemsTest:any[]= [
@@ -67,12 +71,12 @@ export class TableListComponent implements OnInit {
   ];
   
   fetchData() {
-   
   } 
 
 
   ngOnInit() {
     
+    this.fetchData;
     this.sv.getData().subscribe(
       res => {
         this.items = res.records; // ใช้ res.records แทน res
@@ -118,6 +122,12 @@ export class TableListComponent implements OnInit {
       $('[data-toggle="tooltip"]').tooltip()
     })
 
+    this.sv.getData().subscribe(res => {
+      console.log("res getData:", res);
+      this.items = res;
+     
+    });
+
     
   }
   setActive(button: string){
@@ -136,22 +146,39 @@ export class TableListComponent implements OnInit {
       console.log("selection error")
     }
   }
-  openModal() {
+
+  //หน้าจอรายละเอียดข้อมูล
+  openModal(recordId: any) {
     $('#myModal').modal('show');
+   
+    this.sv.getDataById(recordId).subscribe(res=>{
+      console.log("getDataById :",res);
+      
+      this.detailItems =res;
+    
+      console.log("it on working.. ")
+    })
 
-    this.sv.getData().subscribe(res => {
-      console.log("res getData:", res);
-      this.items = res;
-     
-    });
-
-    // this.sv.postData({
-    //   key1: "",
-    //   key2: ""
-    // }).subscribe(res => {
-    //   console.log("res postData:", res);
-    // });
   }
+  uploadImage(): void {
+    const input = document.getElementById('image-upload') as HTMLInputElement;
+    if (input) {
+      input.click(); // เปิด dialog เพื่ออัพโหลดรูปภาพ
+    }
+  }
+
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.uploadedImageUrl = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
 
  addPersonModel(){
   $('#addPersonModel').modal('show');
@@ -188,7 +215,17 @@ export class TableListComponent implements OnInit {
     console.log(this.addPersonalForm.value);
     console.log("onInsertSubmit..?",data);
     // console.log(this.addPersonalForm.value);
-    
+    if (this.addItemForm.invalid || this.addPersonalForm.invalid) {
+      console.log('ฟอร์มไม่ถูกต้อง');
+      // แสดงข้อความแสดงข้อผิดพลาดให้ผู้ใช้ดู
+      Swal.fire({
+        title: 'Error!',
+        text: 'กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
     // console.log(this.items);
     // ส่งข้อมูลไปยัง controller
 
@@ -198,6 +235,21 @@ export class TableListComponent implements OnInit {
     this.sv.postDataTest(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
       console.log("res postItemData:", res);
     });
+    
+  
+
+     // Close the modal
+     $('#insertModel').modal('hide');
+        
+     // Show success alert
+     $('#insertModel').on('hidden.bs.modal', function () {
+      Swal.fire({
+        title: 'Success!!',
+        text: 'Your data has been submitted successfully.',
+        icon: 'success',
+        confirmButtonText: 'OK'
+    });
+  });
 
     // if (this.addItemForm.valid) {
     //   this.items.push(this.addItemForm.value);
@@ -243,33 +295,44 @@ export class TableListComponent implements OnInit {
   //   }
   // }
 
-  printPDF() {  
-    const elementToPrint = document.getElementById('myModal');
-    if (elementToPrint) {
-      html2canvas(elementToPrint, { scale: 2 }).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const imgWidth = 297; // A4 size width in mm
-        const pageHeight = 210; // A4 size height in mm
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        let heightLeft = imgHeight;
-        let position = 0;
+  // printPDF() {  
+  //   const elementToPrint = document.getElementById('myModal');
+  //   if (elementToPrint) {
+  //     html2canvas(elementToPrint, { scale: 2 }).then(canvas => {
+  //       const imgData = canvas.toDataURL('image/png');
+  //       const pdf = new jsPDF('p', 'mm', 'a4');
+  //       const imgWidth = 297; // A4 size width in mm
+  //       const pageHeight = 210; // A4 size height in mm
+  //       const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  //       let heightLeft = imgHeight;
+  //       let position = 0;
 
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+  //       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+  //       heightLeft -= pageHeight;
 
-        while (heightLeft >= 0) {
-          position = heightLeft - imgHeight;
-          pdf.addPage();
-          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-        }
+  //       while (heightLeft >= 0) {
+  //         position = heightLeft - imgHeight;
+  //         pdf.addPage();
+  //         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+  //         heightLeft -= pageHeight;
+  //       }
 
-        pdf.save('การลงตรวจอิเล็กทรอนิค.pdf');
-      });
-    } else {
-      console.error('Element not found!');
-    }
+  //       pdf.save('การลงตรวจอิเล็กทรอนิค.pdf');
+  //     });
+  //   } else {
+  //     console.error('Element not found!');
+  //   }
+  generatePDF(){
+ 
+  }
+  printPDF(){
+    console.log("working PDF..")
+    const elementToPrint = document.getElementById('myDetail');
+    html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
+      const pdf = new jsPDF('p','mm','a4');
+      pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
+      pdf.save('record.pdf')
+    });
   }
   
 

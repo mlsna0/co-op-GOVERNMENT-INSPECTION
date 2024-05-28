@@ -19,6 +19,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
 
 import { DataTablesModule } from "angular-datatables"; //petch เพิ่ม datatables เพื่อใช้ใน tablelist
+import { ThaiDatePipe } from "./../../services/pipe/thaidate.service";
 
 @NgModule({
   imports: [
@@ -43,6 +44,7 @@ import { DataTablesModule } from "angular-datatables"; //petch เพิ่ม d
     MapsComponent,
     NotificationsComponent,
     UpgradeComponent,
+    ThaiDatePipe
   ]
 })
 
