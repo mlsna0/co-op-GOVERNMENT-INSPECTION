@@ -53,32 +53,33 @@ export class SharedService {
     return this.http.post(`${this.baseUrl}/postItemData`, data);
   }
 
-  // postDataTest(data:any,){
-  //   console.log("DATA : ",data)
-  //   let formData = new FormData
-  //   formData.append("endDate",data.endDate)
-  //   formData.append("id",data.id)
-  //   formData.append("location",data.location)
-  //   formData.append("startDate",data.startDate)
-  //   formData.append("topic",data.topic)
-  //   formData.append("detail",data.detail)
-  // //   for (let person of personal) {
-  // //     formData.append("personal[]", JSON.stringify(person));
-  // // }
-  //   return this.http.post(`${this.baseUrl}/postDataTest/`,data);
+  postDataTest(data:any,){
+    console.log("DATA : ",data)
+    let formData = new FormData
+    formData.append("endDate",data.endDate)
+    formData.append("id",data.id)
+    formData.append("location",data.location)
+    formData.append("startDate",data.startDate)
+    formData.append("topic",data.topic)
+    formData.append("detail",data.detail)
+  //   for (let person of personal) {
+  //     formData.append("personal[]", JSON.stringify(person));
   // }
+    return this.http.post(`${this.baseUrl}/postDataTest/`,data);
+  }
 
-  postItemData(data: any): Observable<any> {
-    const formattedData = {
-      id: data.id,
-      startDate: data.startDate,
-      endDate: data.endDate,
-      detail: data.detail,
-      location: data.location,
-      topic: data.topic,
-      fullname: data.personal // เปลี่ยนชื่อฟิลด์จาก personal เป็น fullname
-    };
-    return this.http.post(`${this.baseUrl}/postItemData`, formattedData);
+  postItemData(data: any,personal:any): Observable<any> {
+  
+    // console.log('data in service post item',data);
+    // console.log('personal in service ',personal);
+
+    const formData :any={
+      item: data,
+      personal: personal
+    }
+    console.log("URL ",this.baseUrl)
+    
+    return this.http.post(`${this.baseUrl}/postItemData`,formData);
   }
 
   searchData(query: string): Observable<any> {
@@ -87,5 +88,6 @@ export class SharedService {
   getItems(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/items`);
   }
-
+  
 }
+

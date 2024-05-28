@@ -265,13 +265,17 @@ get personal(): FormArray {
 
 
 
-  onInsertSummit(data: any) {
-    console.log('Item form:', this.addItemForm.value);
-    console.log('PernalForm : ', this.addPersonalForm.value);
-    console.log('Personal array form : ', this.personal.value);
-  
-    if (this.addItemForm.invalid || this.personal.invalid) {
+  onInsertSummit(data) {
+      
+    // console.log(data);
+    console.log('Item form:',this.addItemForm.value);
+    console.log('PernalForm : ',this.addPersonalForm.value);
+    console.log('Personal array form : ',this.personal.value)
+    console.log("onInsertSubmit..?data : ",data);
+    // console.log(this.addPersonalForm.value);
+    if (this.addItemForm.invalid || this.personal.invalid ) {
       console.log('ฟอร์มไม่ถูกต้อง');
+      // แสดงข้อความแสดงข้อผิดพลาดให้ผู้ใช้ดู
       Swal.fire({
         title: 'Error!',
         text: 'กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น.',
@@ -280,34 +284,68 @@ get personal(): FormArray {
       });
       return;
     }
-  
-    const formData = {
-      ...this.addItemForm.value,
-      fullname: this.personal.value // เปลี่ยนชื่อฟิลด์จาก personal เป็น fullname
-    };
-  
-    this.sv.postItemData(formData).subscribe(res => {
+ 
+    // }
+    // console.log(this.items);
+    // ส่งข้อมูลไปยัง controller
+
+    // this.sv.postItemData(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
+    //   console.log("res postItemData:", res);
+    // });
+
+    
+    this.sv.postDataTest(this.addItemForm.value).subscribe(res => {
       console.log("res submitted successfully", res);
       Swal.fire({
-        title: 'Success!!',
-        text: 'Your data has been submitted successfully.',
-        icon: 'success',
-        confirmButtonText: 'OK'
+              title: 'Success!!',
+              text: 'Your data has been submitted successfully.',
+              icon: 'success',
+              confirmButtonText: 'OK'
       });
       $('#insertModel').modal('hide');
       this.addItemForm.reset();
       this.personInputs.clear(); // Clear FormArray
-      this.addPersonInput(); // Add initial input group
+      // this.addPersonInput();
     },
-    error => {
+    error =>{
       console.error('Error submitting data:', error);
       Swal.fire({
-        title: 'Error!',
-        text: 'กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น.',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-    });
+            title: 'Error!',
+            text: 'กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+
+    }
+  );
+    
+  
+
+     // Close the modal
+     $('#insertModel').modal('hide');
+        
+     // Show success alert
+  //    $('#insertModel').on('hidden.bs.modal', function () {
+  //     Swal.fire({
+  //       title: 'Success!!',
+  //       text: 'Your data has been submitted successfully.',
+  //       icon: 'success',
+  //       confirmButtonText: 'OK'
+  //   });
+  // });
+  // this.addItemForm.reset();
+
+
+
+    // if (this.addItemForm.valid) {
+    //   this.items.push(this.addItemForm.value);
+    //   this.addItemForm.reset();
+    //   // console.log(this.items);
+    //   // ส่งข้อมูลไปยัง controller
+    //   this.sv.postItemData(this.items).subscribe(res => {
+    //     console.log("res postItemData:", res);
+    //   });
+    // }
   }
   
   getCurrentLocation() {
@@ -352,4 +390,3 @@ get personal(): FormArray {
   }
  
 }
-
