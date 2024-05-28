@@ -11,7 +11,7 @@ import { Observable, catchError } from 'rxjs';
 export class SharedService {
   // private baseUrl = 'mongodb://127.0.0.1:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private baseUrl = 'http://localhost:3000/api'; // ปรับ URL ให้ตรงกับ API ของคุณ
-
+  private typroText: any = {};
   constructor(private http: HttpClient) { }
 
   getData(): Observable<any> {
@@ -44,33 +44,32 @@ export class SharedService {
     return this.http.post(`${this.baseUrl}/postItemData`, data);
   }
 
-  postDataTest(data:any,){
-    console.log("DATA : ",data)
-    let formData = new FormData
-    formData.append("endDate",data.endDate)
-    formData.append("id",data.id)
-    formData.append("location",data.location)
-    formData.append("startDate",data.startDate)
-    formData.append("topic",data.topic)
-    formData.append("detail",data.detail)
-  //   for (let person of personal) {
-  //     formData.append("personal[]", JSON.stringify(person));
+  // postDataTest(data:any,){
+  //   console.log("DATA : ",data)
+  //   let formData = new FormData
+  //   formData.append("endDate",data.endDate)
+  //   formData.append("id",data.id)
+  //   formData.append("location",data.location)
+  //   formData.append("startDate",data.startDate)
+  //   formData.append("topic",data.topic)
+  //   formData.append("detail",data.detail)
+  // //   for (let person of personal) {
+  // //     formData.append("personal[]", JSON.stringify(person));
+  // // }
+  //   return this.http.post(`${this.baseUrl}/postDataTest/`,data);
   // }
-    return this.http.post(`${this.baseUrl}/postDataTest/`,data);
-  }
 
-  postItemData(data: any,personal:any): Observable<any> {
-  
-    // console.log('data in service post item',data);
-    // console.log('personal in service ',personal);
-
-    const formData :any={
-      item: data,
-      personal: personal
-    }
-    console.log("URL ",this.baseUrl)
-    
-    return this.http.post(`${this.baseUrl}/postItemData`,formData);
+  postItemData(data: any): Observable<any> {
+    const formattedData = {
+      id: data.id,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      detail: data.detail,
+      location: data.location,
+      topic: data.topic,
+      fullname: data.personal // เปลี่ยนชื่อฟิลด์จาก personal เป็น fullname
+    };
+    return this.http.post(`${this.baseUrl}/postItemData`, formattedData);
   }
 
   searchData(query: string): Observable<any> {
@@ -79,5 +78,10 @@ export class SharedService {
   getItems(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/items`);
   }
-  
+  setTyproText(text: string) {
+    this.typroText = text;
+  }
+  getTyproText(): string {
+    return this.typroText;
+  }
 }

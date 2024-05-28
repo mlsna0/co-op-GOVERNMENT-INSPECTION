@@ -1,51 +1,20 @@
 import * as mongoose from 'mongoose';
 
-
 const recordSchema = new mongoose.Schema({
-    record_id: String,
-    record_star_date: Date,
-    record_end_date: Date,
-    record_detail: String,
-    record_location: String,
-    record_topic: String,
-    recordModelId: { type: mongoose.Schema.Types.ObjectId, ref: 'recordModels'}
-    // record_rank: String,
-    // record_full_name: String,  
-   
+  record_id: { type: String, required: true },
+  record_start_date: { type: Date, required: true },
+  record_end_date: { type: Date, required: true },
+  record_detail: { type: String, required: true },
+  record_location: { type: String, required: true },
+  record_topic: { type: String, required: true },
+  view_full_name: [
+    {
+      rank: { type: String, required: true },
+      fullname: { type: String, required: true }
+    }
+],
+viewModelId: { type: mongoose.Schema.Types.ObjectId, ref: 'ViewModel' }
 });
 
-const recordModel = mongoose.model('recordModel', recordSchema);
-// export interface AnnoucementModel {
-//     record_id: String,   
-//     record_star_date: Date,
-//     record_end_date: Date,
-//     record_detail: String,
-//     record_location: String,
-//     record_topic: String,   
-//   }
-export default recordModel;
-
-
-// import { Schema, model, Document } from 'mongoose';
-
-// interface recordMo extends Document {
-//     record_star_date: Date,
-//     record_end_date: Date,
-//     record_detail: String,
-//     record_location: String,
-//     record_topic: String,   
- 
-// }
-
-// const recordSchema = new Schema<recordMo>({
-//     record_star_date: { type: Date, required: true },
-//     record_end_date: { type: Date, required: true },
-//     record_detail: { type: String, required: true },
-//     record_location: { type: String, required: true },
-//     record_topic: { type: String, required: true },
- 
-// });
-
-// const record = model<recordMo>('record', recordSchema);
-// export default record;
-// export type { recordMo };
+const RecordModel = mongoose.model('RecordModel', recordSchema);
+export default RecordModel;

@@ -15,18 +15,28 @@
       try {
         const record = await this.modelRecord.create({
           record_id: req.body.id,
-          record_star_date: req.body.startDate,
+          record_start_date: req.body.startDate,
           record_end_date: req.body.endDate,
           record_detail: req.body.detail,
           record_location: req.body.location,
           record_topic: req.body.topic,
+          // view_full_name: req.body.fullname.map(name => ({
+          //   rank: name.rank,
+          //   fullname: name.fullname
+          // }))
         });
-    
+  
+        // สร้าง view ที่อ้างอิงกับ record ที่สร้าง
         const view = await this.modelView.create({
-          record_id: record._id, // ใช้ _id จาก record ที่สร้างเพื่อเชื่อมโยงกับ view
-          view_rank: req.body.rank,
-          view_full_name: req.body.fullname,
+          record_id: record._id,
+          view_full_name: req.body.fullname.map(name => ({
+            rank: name.rank,
+            fullname: name.fullname
+          }))
         });
+
+        record.viewModelId = view._id;
+        await record.save();
     
         res.status(200).json("ok");
       } catch (err) {
@@ -74,18 +84,25 @@
     // }
     getData = async (req, res) => {
       try {
-        const records = await this.modelRecord.find();
+        const records = await this.modelRecord.find().populate('viewModelId');
       
+        // Then, get the view details for each record
+        const views = await Promise.all(records.map(async (record) => {
+          const viewDetails = await this.modelView.find({ record_id: record._id });
+          return {
+            record,
+            viewDetails
+          };
+        }));
   
         res.status(200).json({
-          records,
-          
+          records: views,
         });
       } catch (err) {
         res.status(400).json({ error: err.message });
       }
     }
-    
   }
+  
 
   export default ItemModelCtrl;

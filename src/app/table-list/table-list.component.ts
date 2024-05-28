@@ -10,9 +10,9 @@ import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพ�
 import { Items } from '../../../server/models/itemModel';
 import Swal from 'sweetalert2';
 
-  import jsPDF from 'jspdf';
-  import  html2canvas from 'html2canvas';
-  import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
+import jsPDF from 'jspdf';
+import  html2canvas from 'html2canvas';
+import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
 
 
 @Component({
@@ -82,9 +82,11 @@ export class TableListComponent implements OnInit {
         this.items = res.records; // ใช้ res.records แทน res
         console.log('Items fetched successfully:', this.items);
       },
-      {
-        id:'2', startDate:'30/05/2567',endDate:'01/06/2567',location:'data testing'
+      error => {
+        console.error('Error fetching items:', error);
       }
+    );
+  } 
 
 
   ngOnInit() {
@@ -117,14 +119,8 @@ export class TableListComponent implements OnInit {
           "next": "ต่อไป",
           "previous": "ย้อนกลับ"
         },
-        error => {
-          console.error('Error fetching items:', error);
-        }
-      );
-    }
-  }
-}
-  
+      }
+    };
 
     $(function () {
       $('[data-toggle="tooltip"]').tooltip()
@@ -134,7 +130,9 @@ export class TableListComponent implements OnInit {
       console.log("res getData:", res);
       this.items = res;
      
-    });     
+    });    
+    this.fetchData();
+    this.typroText = this.sv.getTyproText(); 
   }
 
 
@@ -197,9 +195,6 @@ export class TableListComponent implements OnInit {
     
   }
 
-      $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-      })
 
  addPersonModel(){
   $('#addPersonModel').modal('show');
@@ -259,17 +254,13 @@ get personal(): FormArray {
 
 
 
-  onInsertSummit(data) {
-      
-    // console.log(data);
-    console.log('Item form:',this.addItemForm.value);
-    console.log('PernalForm : ',this.addPersonalForm.value);
-    console.log('Personal array form : ',this.personal.value)
-    console.log("onInsertSubmit..?data : ",data);
-    // console.log(this.addPersonalForm.value);
-    if (this.addItemForm.invalid || this.personal.invalid ) {
+  onInsertSummit(data: any) {
+    console.log('Item form:', this.addItemForm.value);
+    console.log('PernalForm : ', this.addPersonalForm.value);
+    console.log('Personal array form : ', this.personal.value);
+  
+    if (this.addItemForm.invalid || this.personal.invalid) {
       console.log('ฟอร์มไม่ถูกต้อง');
-      // แสดงข้อความแสดงข้อผิดพลาดให้ผู้ใช้ดู
       Swal.fire({
         title: 'Error!',
         text: 'กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น.',
@@ -278,68 +269,34 @@ get personal(): FormArray {
       });
       return;
     }
- 
-    // }
-    // console.log(this.items);
-    // ส่งข้อมูลไปยัง controller
-
-    // this.sv.postItemData(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
-    //   console.log("res postItemData:", res);
-    // });
-
-    
-    this.sv.postDataTest(this.addItemForm.value).subscribe(res => {
+  
+    const formData = {
+      ...this.addItemForm.value,
+      fullname: this.personal.value // เปลี่ยนชื่อฟิลด์จาก personal เป็น fullname
+    };
+  
+    this.sv.postItemData(formData).subscribe(res => {
       console.log("res submitted successfully", res);
       Swal.fire({
-              title: 'Success!!',
-              text: 'Your data has been submitted successfully.',
-              icon: 'success',
-              confirmButtonText: 'OK'
+        title: 'Success!!',
+        text: 'Your data has been submitted successfully.',
+        icon: 'success',
+        confirmButtonText: 'OK'
       });
       $('#insertModel').modal('hide');
       this.addItemForm.reset();
       this.personInputs.clear(); // Clear FormArray
-      // this.addPersonInput();
+      this.addPersonInput(); // Add initial input group
     },
-    error =>{
+    error => {
       console.error('Error submitting data:', error);
       Swal.fire({
-            title: 'Error!',
-            text: 'กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
-
-    }
-  );
-    
-  
-
-     // Close the modal
-     $('#insertModel').modal('hide');
-        
-     // Show success alert
-  //    $('#insertModel').on('hidden.bs.modal', function () {
-  //     Swal.fire({
-  //       title: 'Success!!',
-  //       text: 'Your data has been submitted successfully.',
-  //       icon: 'success',
-  //       confirmButtonText: 'OK'
-  //   });
-  // });
-  // this.addItemForm.reset();
-
-
-
-    // if (this.addItemForm.valid) {
-    //   this.items.push(this.addItemForm.value);
-    //   this.addItemForm.reset();
-    //   // console.log(this.items);
-    //   // ส่งข้อมูลไปยัง controller
-    //   this.sv.postItemData(this.items).subscribe(res => {
-    //     console.log("res postItemData:", res);
-    //   });
-    // }
+        title: 'Error!',
+        text: 'กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    });
   }
   
   getCurrentLocation() {
@@ -360,6 +317,11 @@ get personal(): FormArray {
   //insert end here
 
   recordCommit(){
+    this.sv.setTyproText(this.typroText);
+    // Code to close this modal and open the second modal
+    $('#writtenModel').modal('hide');
+    // $('#myModal').modal('show');
+    
   }
 
   printPDF(){
@@ -380,3 +342,4 @@ get personal(): FormArray {
   }
  
 }
+
