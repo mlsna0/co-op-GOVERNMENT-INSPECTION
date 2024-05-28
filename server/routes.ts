@@ -38,6 +38,7 @@ function setRoutes(app): void {
   router.route('/recordModel/:id').put(recordModelCtrl.update);
   router.route('/recordModel/:id').delete(recordModelCtrl.delete);
 
+  router.route('/viewModel/getViewByRecordId/:id').get(viewModelCtrl.getViewByRecordId);
   
 
   // UserModel routes

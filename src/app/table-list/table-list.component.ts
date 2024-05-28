@@ -30,6 +30,7 @@ export class TableListComponent implements OnInit {
   addPersonalForm:FormGroup;
 
   items:any= [];
+  viewData=[];
   detailItems: any;
   PersonINT :number = 0;
   personInputs: FormArray;
@@ -40,6 +41,7 @@ export class TableListComponent implements OnInit {
   isTyproActive:boolean = false;
   isWritteActive:boolean = false;
   typroText: string='';
+ 
   uploadedImageUrl: string | ArrayBuffer | null = null;
   isLoading: boolean = false;
   
@@ -130,7 +132,8 @@ export class TableListComponent implements OnInit {
       console.log("res getData:", res);
       this.items = res;
      
-    });     
+    });
+    
   }
 
 
@@ -164,8 +167,16 @@ export class TableListComponent implements OnInit {
       this.detailItems =res;
     
       console.log("it on working.. ")
-    })
 
+    })
+    this.sv.getViewByRecordId(recordId).subscribe((res :any)=>{
+      console.log("getDataById :",res);
+      
+      this.viewData = res;
+    
+      console.log("it on working.. ")
+      
+    })
   }
 
 
@@ -239,6 +250,8 @@ get personal(): FormArray {
 
   onRecord(){
     $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
+   
+  
    
   }
 
@@ -353,7 +366,11 @@ get personal(): FormArray {
   //insert end here
 
   recordCommit(){
+    this.sv.setTyproText(this.typroText);
+    // Code to close this modal and open the second modal
+    $('#writtenModel').modal('hide');
   }
+
 
   printPDF(){
     console.log("working PDF..")
