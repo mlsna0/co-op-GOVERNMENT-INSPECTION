@@ -133,7 +133,8 @@
       this.sv.getData().subscribe(res => {
         console.log("res getData:", res);
         this.items = res;
-      
+        this.detailItems = res.details;
+        
       });
 
       
@@ -261,7 +262,7 @@
           text: 'Your data has been submitted successfully.',
           icon: 'success',
           confirmButtonText: 'OK'
-      });
+      })
     });
       // if (this.addItemForm.valid) {
       //   this.items.push(this.addItemForm.value);
@@ -272,7 +273,12 @@
       //     console.log("res postItemData:", res);
       //   });
       // }
-      
+      this.sv.getData().subscribe(res => {
+        console.log("res getData:", res);
+        this.items = res;
+        this.detailItems = res.details;
+        
+      });
     }
     
     // initMap() {

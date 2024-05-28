@@ -13,26 +13,27 @@
       console.log(req.body);
       
       try {
-        const obj = await new this.modelRecord({
+        const record = await this.modelRecord.create({
           record_id: req.body.id,
           record_star_date: req.body.startDate,
           record_end_date: req.body.endDate,
           record_detail: req.body.detail,
           record_location: req.body.location,
           record_topic: req.body.topic,
+        });
     
-        }).save();
-  
-        const obj1 = await new this.modelView({
+        const view = await this.modelView.create({
+          record_id: record._id, // ใช้ _id จาก record ที่สร้างเพื่อเชื่อมโยงกับ view
           view_rank: req.body.rank,
           view_full_name: req.body.fullname,
-        }).save();
-  
+        });
+    
         res.status(200).json("ok");
       } catch (err) {
         return res.status(400).json({ error: err.message });
       }
     }
+    
 
     postDataTest = async (req,res)=>{
       console.log("body : ",req.body)
@@ -74,11 +75,11 @@
     getData = async (req, res) => {
       try {
         const records = await this.modelRecord.find();
-        const views = await this.modelView.find();
+      
   
         res.status(200).json({
           records,
-          views,
+          
         });
       } catch (err) {
         res.status(400).json({ error: err.message });

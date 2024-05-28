@@ -20,9 +20,16 @@
 import * as mongoose from 'mongoose';
 
 const viewSchema = new mongoose.Schema({
+
     view_rank: String,
     view_full_name: String
 });
+
+viewSchema.virtual("recordModels",{
+    ref: 'recordModels',
+    localField: '_id',
+    foreignField: 'viewMedelId'
+})
 
 const ViewModel = mongoose.model('ViewModel', viewSchema);
 
