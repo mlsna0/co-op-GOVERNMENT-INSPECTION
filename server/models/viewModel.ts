@@ -1,19 +1,10 @@
 import * as mongoose from 'mongoose';
 
 const viewSchema = new mongoose.Schema({
-    record_id: { type: mongoose.Schema.Types.ObjectId, ref: 'RecordModel' },
-  view_full_name: [
-    {
-      rank: { type: String, required: true },
-      fullname: { type: String, required: true }
-    }
-  ]
-});
+    view_rank: String,
+    view_full_name: String,
 
-viewSchema.virtual("recordModels", {
-  ref: 'RecordModel',
-  localField: 'record_id',
-  foreignField: '_id'
+    RecordModelId: { type: mongoose.Schema.Types.ObjectId, ref: 'recordModel' }
 });
 
 const ViewModel = mongoose.model('ViewModel', viewSchema);

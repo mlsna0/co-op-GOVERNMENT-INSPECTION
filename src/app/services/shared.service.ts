@@ -11,7 +11,7 @@ import { Observable, catchError } from 'rxjs';
 export class SharedService {
   // private baseUrl = 'mongodb://127.0.0.1:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private baseUrl = 'http://localhost:3000/api'; // ปรับ URL ให้ตรงกับ API ของคุณ
-  private typroText: any = {};
+  private typroText: string;
   constructor(private http: HttpClient) { }
 
   getData(): Observable<any> {
@@ -25,7 +25,9 @@ export class SharedService {
   getDataById(id: number): Observable<any>{
     return this.http.get(`${this.baseUrl}/recordModel/${id}`);
   }
-  
+  getViewByRecordId(record_id){
+    return this.http.get(`${this.baseUrl}/viewModel/getViewByRecordId/${record_id}`);
+  }
 
   getAggregatedData(): Observable<any> {
     return this.http.get(`${this.baseUrl}/aggregateRecordsAndView`).pipe(
@@ -34,6 +36,13 @@ export class SharedService {
         throw 'ไม่สามารถดึงข้อมูลได้';
       })
     );
+  }
+
+  setTyproText(text: string) {
+    this.typroText = text;
+  }
+  getTyproText(): string {
+    return this.typroText;
   }
 
   postData(data: any): Observable<any> {
@@ -78,10 +87,5 @@ export class SharedService {
   getItems(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/items`);
   }
-  setTyproText(text: string) {
-    this.typroText = text;
-  }
-  getTyproText(): string {
-    return this.typroText;
-  }
+
 }

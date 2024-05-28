@@ -1,19 +1,15 @@
 import * as mongoose from 'mongoose';
+import viewSchema from './viewModel' //petch add this
 
 const recordSchema = new mongoose.Schema({
-  record_id: { type: String, required: true },
-  record_start_date: { type: Date, required: true },
-  record_end_date: { type: Date, required: true },
-  record_detail: { type: String, required: true },
-  record_location: { type: String, required: true },
-  record_topic: { type: String, required: true },
-//   view_full_name: [
-//     {
-//       rank: { type: String, required: true },
-//       fullname: { type: String, required: true }
-//     }
-// ],
-viewModelId: { type: mongoose.Schema.Types.ObjectId, ref: 'ViewModel' }
+    record_id: String,
+    record_star_date: Date,
+    record_end_date: Date,
+    record_detail: String,
+    record_location: String,
+    record_topic: String
+     
+   
 });
 
 const RecordModel = mongoose.model('RecordModel', recordSchema);

@@ -274,7 +274,7 @@
                       <div class="sign-content">
                         <div class="form-group">
                           <label>รายชื่อผู้รับผิดชอบ:</label>
-                          <div *ngFor="let person of items?.views"><!---->
+                          <div *ngFor="let person of viewData"><!---->
                             <div>
                               <div> <!-- เพิ่มปุ่มอัพโหลดรูปภาพและแสดงภาพที่อัพโหลด -->
                                 <i class="fa fa-upload" style="font-size:24px; cursor: pointer;" (click)="uploadImage()"
@@ -303,7 +303,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-success pull-center" (click)="printPDF()">
-                    <i class="fa fa-check"></i>&nbsp; ยืนยัน
+                    <i class="fa fa-check" data-toggle="tooltip" title="dowload to PDF"></i>&nbsp; ดาว์โหลด
                   </button>
                   <button type="button" class="btn btn-danger" data-dismiss="modal">
                     <i class="fa fa-times"></i>&nbsp; ปิด
@@ -343,7 +343,10 @@
                     <div class="col-md-12" class="modal-body" style="width: 210mm; height: 297mm"
                       [ngStyle]="{ height: '210mm' }">
                       <div *ngIf="isTyproActive" class="full-page-textarea-container">
-                        <textarea [(ngModel)]="typroText" placeholder="พิมพ์ที่นี้.."
+
+
+                      
+                        <textarea [(ngModel)]="typroText"  placeholder="พิมพ์ที่นี้.."
                           class="form-control mt-3 full-page-textarea"></textarea>
                       </div>
                       <div *ngIf="isWritteActive" class="full-page-pdf">
