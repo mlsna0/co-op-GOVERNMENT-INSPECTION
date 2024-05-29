@@ -41,9 +41,10 @@ export class TableListComponent implements OnInit {
   isTyproActive:boolean = false;
   isWritteActive:boolean = false;
   typroText: string='';
- 
-  uploadedImageUrl: string | ArrayBuffer | null = null;
-  isLoading: boolean = false;
+  uploadedImages: string[] = [];
+  isLoading: boolean[] = [false];
+  // uploadedImageUrl: string | ArrayBuffer | null = null;
+  // isLoading: boolean = false;
   
   constructor(
     private fb:FormBuilder,
@@ -66,7 +67,9 @@ export class TableListComponent implements OnInit {
     
     this.personInputs = this.addItemForm.get('personal') as FormArray;
     this.addPersonInput(); // Add initial input group
+    this.loadViewData();
   }
+  
   documentImageUrl = 'assets/img/sampleA4-1.png';
   // itemsTest:any[]= [
   //   {
@@ -88,6 +91,7 @@ export class TableListComponent implements OnInit {
         console.error('Error fetching items:', error);
       }
     );
+    
   } 
 
 
@@ -178,31 +182,55 @@ export class TableListComponent implements OnInit {
       
     })
   }
+  loadViewData() {
+    this.sv.getItems().subscribe(data => {
+      this.viewData = data;
+      this.isLoading = new Array(data.length).fill(false);
+      this.uploadedImages = new Array(data.length).fill(null);
+    });
+  }
 
-
-
-  uploadImage(): void {
-    const input = document.getElementById('image-upload') as HTMLInputElement;
-    if (input) {
-      input.click(); // เปิด dialog เพื่ออัพโหลดรูปภาพ
+  uploadImage(index: number) {
+    const fileInput = document.getElementById(`image-upload-${index}`) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
     }
   }
 
-
-
-  onFileChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
+  onFileChange(event: any, index: number) {
+    const file = event.target.files[0];
+    if (file) {
+      this.isLoading[index] = true;
       const reader = new FileReader();
-      reader.onload = () => {
-        this.uploadedImageUrl = reader.result;
-        this.isLoading = true;
+      reader.onload = (e: any) => {
+        this.uploadedImages[index] = e.target.result;
+        this.isLoading[index] = false;
       };
       reader.readAsDataURL(file);
     }
-    
   }
+  // uploadImage(): void {
+  //   const input = document.getElementById('image-upload') as HTMLInputElement;
+  //   if (input) {
+  //     input.click(); // เปิด dialog เพื่ออัพโหลดรูปภาพ
+  //   }
+  // }
+
+
+
+  // onFileChange(event: Event): void {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.files && input.files[0]) {
+  //     const file = input.files[0];
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       this.uploadedImageUrl = reader.result;
+  //       this.isLoading = true;
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+    
+  // }
 
 
  addPersonModel(){
@@ -319,6 +347,7 @@ get personal(): FormArray {
     }
   );
     
+  this.fetchData()
   
 
      // Close the modal
