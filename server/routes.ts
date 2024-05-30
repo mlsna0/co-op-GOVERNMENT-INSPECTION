@@ -5,30 +5,17 @@ import RecordModelCtrl from './controller/recordController';
 import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
 import uploadService from './service/uploadservice.service'
-import RecordCtrl from './controller/uploadController';
-import bodyParser from 'body-parser';
-
 // import AggRecordNViewCon from 'controller/aggRecordNviewController'; //petch edit add this
 
-  
 function setRoutes(app): void {
   const router = express.Router();
   const itemModelCtrl = new ItemModelCtrl();
   const recordModelCtrl = new RecordModelCtrl();
   const userModelCtrl = new UserModelCtrl();
   const viewModelCtrl = new ViewModelCtrl();
-  const recordCtrl = new RecordCtrl();
 
-  app.use(bodyParser.json()); 
   // const aggregateRecordsAndView = new AggRecordNViewCon(); //petch edit add this
 
-
-  // app.post('/test-body-parser', (req, res) => {
-  //   console.log('Request Body:', req.body); // Log the request body to check its value
-  //   res.send('Received data: ' + JSON.stringify(req.body)); // Echo back the received data
-  // });
-
-  
   // ItemModel routes
   router.route('/itemModel').get(itemModelCtrl.getAll);
   router.route('/itemModel/count').get(itemModelCtrl.count);
@@ -36,14 +23,6 @@ function setRoutes(app): void {
   // router.route('/postPersonData').post(itemModelCtrl.postItemToView);
 
   router.route('/data').get(itemModelCtrl.getData);
- 
-
-  
- //ไม่เเน่ใจ
-  router.route('/recordModels').get(recordCtrl.getRecordModels);
-  router.route('/recordModels/:id').get(recordCtrl.getRecordModelByID);
-  router.route('/recordModels/:id/print').get(recordCtrl.printPDF);
-
 
   router.route('/postItemData').post(itemModelCtrl.postItemToView);
   router.route('/itemModel/:id').get(itemModelCtrl.get);
@@ -59,6 +38,7 @@ function setRoutes(app): void {
   router.route('/recordModel/:id').put(recordModelCtrl.update);
   router.route('/recordModel/:id').delete(recordModelCtrl.delete);
 
+  router.route('/viewModel/getViewByRecordId/:id').get(viewModelCtrl.getViewByRecordId);
   
 
   // UserModel routes

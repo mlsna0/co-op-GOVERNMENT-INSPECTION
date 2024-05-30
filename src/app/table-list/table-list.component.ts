@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
-
+import { DataTablesModule } from 'angular-datatables';
 
 @Component({
   selector: 'app-table-list',
@@ -30,6 +30,7 @@ export class TableListComponent implements OnInit {
   addPersonalForm:FormGroup;
 
   items:any= [];
+  viewData=[];
   detailItems: any;
   PersonINT :number = 0;
   personInputs: FormArray;
@@ -38,13 +39,15 @@ export class TableListComponent implements OnInit {
   addDataForm: any;
   activeButton: string='';
   isTyproActive:boolean = false;
-  isWritteActive:boolean = false;
+  isWritteActive:boolean = false; 
   typroText: string='';
+ 
   uploadedImageUrl: string | ArrayBuffer | null = null;
   // isLoading: boolean = false;
   uploadedImages: string[] = [];
   isLoading: boolean[] = [];
-
+  shouldRefresh: boolean = false; 
+  
 
   constructor(
     private fb:FormBuilder,
@@ -67,7 +70,7 @@ export class TableListComponent implements OnInit {
     
     this.personInputs = this.addItemForm.get('personal') as FormArray;
     this.addPersonInput(); // Add initial input group
-
+    // this.loadViewData();
   }
   documentImageUrl = 'assets/img/sampleA4-1.png';
   // itemsTest:any[]= [
@@ -92,10 +95,10 @@ export class TableListComponent implements OnInit {
     );
   } 
 
-
+  
   ngOnInit() {
 
-  
+    
     // this.Form =this.fb.group({
     //   Full_name1: new FormControl(""),
     //   Full_name2: new FormControl(""),
@@ -134,7 +137,8 @@ export class TableListComponent implements OnInit {
       console.log("res getData:", res);
       this.items = res;
      
-    });     
+    });
+    
   }
 
 
@@ -156,11 +160,9 @@ export class TableListComponent implements OnInit {
     }
   }
 
-
-
   //หน้าจอรายละเอียดข้อมูล
   openModal(recordId: any) {
-    $('#myModal').modal('show');  
+    $('#myModal').modal('show');
    
     this.sv.getDataById(recordId).subscribe(res=>{
       console.log("getDataById :",res);
@@ -168,30 +170,47 @@ export class TableListComponent implements OnInit {
       this.detailItems =res;
     
       console.log("it on working.. ")
-    })
 
+    })
+    this.sv.getViewByRecordId(recordId).subscribe((res :any)=>{
+      console.log("getDataById :",res);
+      
+      this.viewData = res;
+    
+      console.log("it on working.. ")
+      
+    })
   }
 
-  // uploadImage(): void {
-  //   const input = document.getElementById('image-upload') as HTMLInputElement;
-  //   if (input) {
-  //     input.click(); // เปิด dialog เพื่ออัพโหลดรูปภาพ
-  //   }
+ 
+
+  // loadViewData() {
+  //   this.sv.getItems().subscribe(data => {
+  //     this.viewData = data;
+  //     this.isLoading = new Array(data.length).fill(false);
+  //     this.uploadedImages = new Array(data.length).fill(null);
+  //   });
   // }
 
-  // onFileChange(event: Event): void {
-  //   const input = event.target as HTMLInputElement;
-  //   if (input.files && input.files[0]) {
-  //     const file = input.files[0];
-  //     const reader = new FileReader();
-  //     reader.onload = () => {
-  //       this.uploadedImageUrl = reader.result;
-  //       this.isLoading = true;
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-    
-  // }
+  uploadImage(index: number) {
+    const fileInput = document.getElementById(`image-upload-${index}`) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  onFileChange(event: any, index: number) {
+    const file = event.target.files[0];
+    if (file) {
+      this.isLoading[index] = true;
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.uploadedImages[index] = e.target.result;
+        this.isLoading[index] = false;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
 
  addPersonModel(){
@@ -240,6 +259,8 @@ get personal(): FormArray {
   onRecord(){
     $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
    
+  
+   
   }
 
 
@@ -264,10 +285,10 @@ get personal(): FormArray {
       console.log('ฟอร์มไม่ถูกต้อง');
       // แสดงข้อความแสดงข้อผิดพลาดให้ผู้ใช้ดู
       Swal.fire({
-        title: 'Error!',
+        title: 'ผิดพลาด!',
         text: 'กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น.',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'ตกลง'
       });
       return;
     }
@@ -284,19 +305,24 @@ get personal(): FormArray {
     this.sv.postDataTest(this.addItemForm.value).subscribe(res => {
       console.log("res submitted successfully", res);
       Swal.fire({
-              title: 'Success!!',
-              text: 'Your data has been submitted successfully.',
+              title: 'สำเร็จ!!',
+              text: 'กรอกข้อมูลสำเร็จ',
               icon: 'success',
-              confirmButtonText: 'OK'
+              confirmButtonText: 'ตกลง'
+      }).then(result => {
+        if (result.isConfirmed) {
+          this.refreshPage(); // รีเฟรชหน้าจอเมื่อผู้ใช้กด OK
+        }
       });
       $('#insertModel').modal('hide');
+
       this.addItemForm.reset();
       this.personInputs.clear(); // Clear FormArray
       // this.addPersonInput();
     },
     error =>{
       console.error('Error submitting data:', error);
-      Swal.fire({
+      Swal.fire({ 
             title: 'Error!',
             text: 'กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น.',
             icon: 'error',
@@ -306,10 +332,8 @@ get personal(): FormArray {
     }
   );
     
-  
-
      // Close the modal
-     $('#insertModel').modal('hide');
+    //  $('#insertModel').modal('hide');
         
      // Show success alert
   //    $('#insertModel').on('hidden.bs.modal', function () {
@@ -353,7 +377,11 @@ get personal(): FormArray {
   //insert end here
 
   recordCommit(){
+    this.sv.setTyproText(this.typroText);
+    // Code to close this modal and open the second modal
+    $('#writtenModel').modal('hide');
   }
+
 
   printPDF(){
     console.log("working PDF..")
@@ -365,31 +393,22 @@ get personal(): FormArray {
     });
   }
   
-
   searchData(data: string) {
     this.sv.searchData(data).subscribe(res => {
       console.log("res searchData:", res);
     });
   }
- 
-  uploadImage(index: number) {
-    const fileInput = document.getElementById(`image-upload-${index}`) as HTMLInputElement;
-    if (fileInput) {
-      fileInput.click();
-    }
+
+  closeModal() {
+    // ซ่อนโมดัล
+    $('#insertModel').modal('hide');
+    
+    // รีเฟรชหน้าจอ
+    this.refreshPage();
   }
 
-  onFileChange(event: any, index: number) {
-    const file = event.target.files[0];
-    if (file) {
-      this.isLoading[index] = true;
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.uploadedImages[index] = e.target.result;
-        this.isLoading[index] = false;
-      };
-      reader.readAsDataURL(file);
-    }
+  refreshPage() {
+    window.location.reload();
   }
-  
 }
+

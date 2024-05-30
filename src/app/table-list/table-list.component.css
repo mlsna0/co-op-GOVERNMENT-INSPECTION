@@ -10,12 +10,16 @@
 }
 
 .modal-body-detail{ 
-position: relative;
-  display: flex;
-  flex-direction: column;
-  margin-top:10px;
- left: 50%;
- transform: translateX(-50%);
+  position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-top:10px;
+   left: 50%;
+   transform: translateX(-50%);
+
+    width: 100%;
+    border: 1px solid #000;
+    font-family: 'TH SarabunPSK', sans-serif; /* ใช้ฟอนต์ราชการ */
 
   width: 100%;
   border: 1px solid #000;
@@ -24,9 +28,9 @@ position: relative;
   
 }
 .modal-content{
-left: 5.5px;
-justify-content: center;
-
+  left: 5.5px;
+  justify-content: center;
+  
 }
 .card-header{
   position: relative;
@@ -108,99 +112,125 @@ font-weight: bold;
 text-align: center;
 }
 
-.right-panel {
-width: 60%;
-height: 150vh;
-display: flex;
-flex-direction: column;
-justify-content: space-between;
-position: relative; /* ให้ลูกสามารถจัดตำแหน่งตามคอนเทนเนอร์ได้ */
-
+.mainCenter-panel {
+    position: relative;
+    background: #fff;
+    padding: 96px;
+    height: 100%;
+  }
+.header-topic{
+  position: relative;
+  padding-top: 1px;
+  display: flex;
+  flex-direction: column;
  
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
 }
+
+.right-panel {
+  width: 60%;
+  height: 150vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative; /* ให้ลูกสามารถจัดตำแหน่งตามคอนเทนเนอร์ได้ */
+  
+   
+  }
 .right-panelOnTop{
-position: absolute;
-  top: 0;
-  left: 0;
+  position: absolute;
+    top: 0;
+    left: 0;
 }
 /* .right-panelOnBottom{
-position: relative;
-bottom: 0;
-right: 25px;
+  position: relative;
+  bottom: 0;
+  right: 25px;
 } */
 /* .right-panel img {
-  width: 30mm;   
-  height: 20mm;
-  border: 1px solid #ddd;
-  margin-left: 50px;
-} */
-.form-group {
-  margin-bottom: 10px;
-}
+    width: 30mm;   
+    height: 20mm;
+    border: 1px solid #ddd;
+    margin-left: 50px;
+  } */
+  .form-group {
+    margin-bottom: 10px;
+  }
 
-.detail-content{
-  position: relative;
-  margin-top: 60px;
-}
+  .detail-content{
+    position: relative;
+    margin-top: 60px;
+  }
+  
+  .detail-content .form-group label {
+    display: inline-block;
+    font-weight: bold;
+  }
+  
+  .detail-content .form-group p {
+    display: inline-block;
+    margin: 0;
+    padding-left: 10px;
+  }
 
-.detail-content .form-group label {
-  display: inline-block;
-  font-weight: bold;
-}
-
-.detail-content .form-group p {
-  display: inline-block;
-  margin: 0;
-  padding-left: 10px;
-}
-
-.date-flex{
-  display: flex;
-  justify-content: space-between;
-}
+  .date-flex{
+    display: flex;
+    justify-content: space-between;
+  }
 
 
 
-.main-detail {
-  position: relative;
-  border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
-  width: 100%;
-  padding: 20px; /* เพิ่มระยะห่างบนและล่าง */
-  font-family: 'TH SarabunPSK', sans-serif; /* ใช้ฟอนต์ราชการ */
-}
+  .main-detail {
+    position: relative;
+    border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
+    width: 100%;
+    padding: 20px; /* เพิ่มระยะห่างบนและล่าง */
+    font-family: 'TH SarabunPSK', sans-serif; /* ใช้ฟอนต์ราชการ */
+  }
+  
+  .main-detail th, .main-detail td {
+    border: 1px solid black; /* เส้นขอบสีดำ */
+    padding: 5px; /* ระยะห่างภายในเซลล์ */
+    text-align: left; /* จัดตำแหน่งเนื้อหาให้อยู่ทางซ้าย */
+  }
+  
+  .main-detail th:first-child, .main-detail td:first-child {
+    width: 10%;
+  }
+  
+  .main-detail th:last-child, .main-detail td:last-child {
+    width: 90%;
+  }
+  .main-detail th {
+    background-color: #f2f2f2; /* พื้นหลังสีเทาอ่อนสำหรับหัวตาราง */
+  }
+  
+  .main-detail tr:nth-child(even) {
+    background-color: #f9f9f9; /* พื้นหลังสีเทาอ่อนสำหรับแถวคู่ */
+  }
 
-.main-detail th, .main-detail td {
-  border: 1px solid black; /* เส้นขอบสีดำ */
-  padding: 5px; /* ระยะห่างภายในเซลล์ */
-  text-align: left; /* จัดตำแหน่งเนื้อหาให้อยู่ทางซ้าย */
-}
+  .sign-content{
+    position: relative;
+    padding-left: 380px;
+    text-align: center;
+    margin-top: 20px;
+  }
 
-.main-detail th:first-child, .main-detail td:first-child {
-  width: 10%;
-}
+  .sign-content img{
+    width: 30mm;   
+    height: 20mm;
+    border: 1px solid #ddd;
+    margin-left: 58px;
+   
+  }
+  
+  img {
+    max-width: 100px;
+    max-height: 100px;
+    display: block;
+    margin-top: 10px;
+  }
 
-.main-detail th:last-child, .main-detail td:last-child {
-  width: 90%;
-}
-.main-detail th {
-  background-color: #f2f2f2; /* พื้นหลังสีเทาอ่อนสำหรับหัวตาราง */
-}
-
-.main-detail tr:nth-child(even) {
-  background-color: #f9f9f9; /* พื้นหลังสีเทาอ่อนสำหรับแถวคู่ */
-}
-
-.sign-content{
-  position: relative;
-  padding-left: 380px;
-  text-align: center;
-  margin-top: 20px;
-}
-
-.sign-content img{
-  width: 30mm;   
-  height: 20mm;
-  border: 1px solid #ddd;
-  margin-left: 58px;
  
-}

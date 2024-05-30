@@ -2,7 +2,6 @@ import ItemModel from '../models/itemModel';
 import ViewModel from '../models/viewModel';
 import recordModel from '../models/recordModel';
 import BaseCtrl from './base';
-import Items from '../models/itemModel';
 
 
 class ItemModelCtrl extends BaseCtrl {
@@ -29,9 +28,10 @@ class ItemModelCtrl extends BaseCtrl {
       //     view_full_name: element.fullname,
       //   }).save();
       // });
-      
+      console.log("obj _Id: ",obj._id)
       if(req.body.personal){ 
-        let newField = req.body.personal.map( x=> {return { view_rank : x.rank, view_full_name: x.fullname }})
+        let newField = req.body.personal.map( x=> {return { view_rank : x.rank, view_full_name: x.fullname,RecordModelId: obj._id }});
+
         let result = await this.modelView.insertMany(newField)
       }
       
@@ -83,18 +83,16 @@ class ItemModelCtrl extends BaseCtrl {
     try {
       const records = await this.modelRecord.find();
       const views = await this.modelView.find();
-     
+
       res.status(200).json({
-        records,  
+        records,
         views,
-      
       });
     } catch (err) {
       res.status(400).json({ error: err.message });
     }
   }
-
+  
 }
 
 export default ItemModelCtrl;
-
