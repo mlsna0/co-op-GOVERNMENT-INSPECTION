@@ -354,24 +354,21 @@
                       <div class="sign-content">
                         <div class="form-group">
                           <label>รายชื่อผู้รับผิดชอบ:</label>
-                          <div *ngFor="let person of viewData"><!---->
+                          <div *ngFor="let person of viewData; let i = index">
                             <div>
-                              <div> <!-- เพิ่มปุ่มอัพโหลดรูปภาพและแสดงภาพที่อัพโหลด -->
-                                <i class="fa fa-upload" style="font-size:24px; cursor: pointer;" (click)="uploadImage()"
-                                  *ngIf="!isLoading"></i>
-                                <input type="file" id="image-upload" (change)="onFileChange($event)" accept="image/*"
-                                  style="display: none;">
-                                <img [src]="uploadedImageUrl" alt="Uploaded Image" *ngIf="uploadedImageUrl"
-                                  style="max-width: 100px; max-height: 100px; display: block; margin-top: 10px;">
+                              <div>
+                                <i class="fa fa-upload" style="font-size:24px; cursor: pointer;" 
+                                   (click)="uploadImage(i)" *ngIf="!isLoading[i] && !uploadedImages[i]"></i>
+                                <input type="file" id="image-upload-{{i}}" (change)="onFileChange($event, i)" 
+                                accept="image/" style="display: none;">
+                                <img [src]="uploadedImages[i]" alt="Uploaded Image" *ngIf="uploadedImages[i]" 
+                                     style="max-width: 100px; max-height: 100px; display: block; margin-top: 10px;">
                               </div>
-                              <!-- <img [src]="documentImageUrl" alt="A4 Document"> อย่าลบนะอันนี้นะ สำหรับ test รูป -->
                             </div>
 
                             <p>{{ person.view_rank }} &nbsp; &nbsp; {{ person.view_full_name }}</p>
-
                           </div>
                         </div>
-
                       </div>
 
 

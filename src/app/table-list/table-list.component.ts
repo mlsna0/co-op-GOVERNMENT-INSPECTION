@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -34,21 +35,23 @@ export class TableListComponent implements OnInit {
   detailItems: any;
   PersonINT :number = 0;
   personInputs: FormArray;
-
+  // currentRecordId: string;
   addItemForm: any;
   addDataForm: any;
   activeButton: string='';
   isTyproActive:boolean = false;
   isWritteActive:boolean = false;
   typroText: string='';
- 
+   typroTexts: { [key: string]: string } = {}; 
+  uploadedImages: string[] = [];
   uploadedImageUrl: string | ArrayBuffer | null = null;
-  isLoading: boolean = false;
-  
+  isLoading: boolean[] = [];
+  loadig:boolean = false;
   constructor(
     private fb:FormBuilder,
     private http:HttpClient,
-    private sv:SharedService
+    private sv:SharedService,
+    private router: Router 
   ) { 
     this.addItemForm = this.fb.group({
       id: ['',Validators.required],
@@ -57,7 +60,9 @@ export class TableListComponent implements OnInit {
       endDate: ['',Validators.required],
       location: ['',Validators.required],
       topic: ['',Validators.required],
-      personal: this.fb.array([])
+      personal: this.fb.array([]),
+      
+
     }); 
     this.addPersonalForm = this.fb.group({
       rank: ['',Validators.required],
@@ -66,6 +71,8 @@ export class TableListComponent implements OnInit {
     
     this.personInputs = this.addItemForm.get('personal') as FormArray;
     this.addPersonInput(); // Add initial input group
+    this.loadViewData();
+    
   }
   documentImageUrl = 'assets/img/sampleA4-1.png';
   // itemsTest:any[]= [
@@ -134,6 +141,7 @@ export class TableListComponent implements OnInit {
      
     });
     
+    
   }
 
 
@@ -159,6 +167,7 @@ export class TableListComponent implements OnInit {
 
   //หน้าจอรายละเอียดข้อมูล
   openModal(recordId: any) {
+
     $('#myModal').modal('show');  
    
     this.sv.getDataById(recordId).subscribe(res=>{
@@ -166,7 +175,7 @@ export class TableListComponent implements OnInit {
       
       this.detailItems =res;
     
-      console.log("it on working.. ")
+      console.log("getData: ",res)
 
     })
     this.sv.getViewByRecordId(recordId).subscribe((res :any)=>{
@@ -180,28 +189,32 @@ export class TableListComponent implements OnInit {
   }
 
 
+  loadViewData() {
+    this.sv.getItems().subscribe(data => {
+      this.viewData = data;
+      this.isLoading = new Array(data.length).fill(false);
+      this.uploadedImages = new Array(data.length).fill(null);
+    });
+  }
 
-  uploadImage(): void {
-    const input = document.getElementById('image-upload') as HTMLInputElement;
-    if (input) {
-      input.click(); // เปิด dialog เพื่ออัพโหลดรูปภาพ
+  uploadImage(index: number) {
+    const fileInput = document.getElementById(`image-upload-${index}`) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
     }
   }
 
-
-
-  onFileChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
+  onFileChange(event: any, index: number) {
+    const file = event.target.files[0];
+    if (file) {
+      this.isLoading[index] = true;
       const reader = new FileReader();
-      reader.onload = () => {
-        this.uploadedImageUrl = reader.result;
-        this.isLoading = true;
+      reader.onload = (e: any) => {
+        this.uploadedImages[index] = e.target.result;
+        this.isLoading[index] = false;
       };
       reader.readAsDataURL(file);
     }
-    
   }
 
 
@@ -317,6 +330,8 @@ get personal(): FormArray {
           });
 
     }
+    
+
   );
     
   
@@ -335,8 +350,8 @@ get personal(): FormArray {
   // });
   // this.addItemForm.reset();
 
-
-
+    this.fetchData()
+    
     // if (this.addItemForm.valid) {
     //   this.items.push(this.addItemForm.value);
     //   this.addItemForm.reset();
@@ -364,7 +379,6 @@ get personal(): FormArray {
     }
   }
   //insert end here
-
   recordCommit(){
     this.sv.setTyproText(this.typroText);
     // Code to close this modal and open the second modal
@@ -372,15 +386,22 @@ get personal(): FormArray {
   }
 
 
-  printPDF(){
-    console.log("working PDF..")
+  printPDF = () => {
+    console.log("working PDF..");
     const elementToPrint = document.getElementById('myDetail');
-    html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
-      const pdf = new jsPDF('p','mm','a4');
-      pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
-      pdf.save('record.pdf')
+    html2canvas(elementToPrint, { scale: 2 }).then((canvas) => {
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        pdf.addImage(canvas.toDataURL('image/png'), 'PDF', 0, 0, 210, 297);
+        pdf.save('record.pdf');
+
+        this.closeModal();
     });
-  }
+    this.fetchData()
+}
+
+closeModal = () => {
+    $('#myModal').modal('hide');
+}
   
 
   searchData(data: string) {
