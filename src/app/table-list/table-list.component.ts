@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { dataflow } from 'googleapis/build/src/apis/dataflow';
 import { SharedService } from "../services/shared.service"
 import { DataTableDirective } from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
+import { DataTablesModule } from "angular-datatables"; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Items } from '../../../server/models/itemModel';
 import Swal from 'sweetalert2';
@@ -26,6 +27,7 @@ export class TableListComponent implements OnInit {
   //ListUser: users[] =[];
   Form:FormGroup;
   dtOptions:any ={};
+  dtTrigger: Subject<any> = new Subject(); 
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
 
@@ -37,8 +39,8 @@ export class TableListComponent implements OnInit {
 
   addItemForm: any;
   addDataForm: any;
-  activeButton: string='';
-  isTyproActive:boolean = false;
+  activeButton: string='typro';
+  isTyproActive:boolean = true;
   isWritteActive:boolean = false;
   typroText: string='';
   uploadedImages: string[] = [];
@@ -67,7 +69,7 @@ export class TableListComponent implements OnInit {
     
     this.personInputs = this.addItemForm.get('personal') as FormArray;
     this.addPersonInput(); // Add initial input group
-    this.loadViewData();
+    // this.loadViewData();
   }
   
   documentImageUrl = 'assets/img/sampleA4-1.png';
@@ -95,14 +97,8 @@ export class TableListComponent implements OnInit {
   } 
 
 
-  ngOnInit() {
+  ngOnInit(){
 
-  
-    // this.Form =this.fb.group({
-    //   Full_name1: new FormControl(""),
-    //   Full_name2: new FormControl(""),
-    //   Full_name3: new FormControl("")
-    // })
     this.dtOptions = {
     
       columnDefs: [
@@ -128,9 +124,12 @@ export class TableListComponent implements OnInit {
       }
     };
 
+
     $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
+      $('[data-toggle="tooltip"]').tooltip();
+
+
+    });
 
     this.sv.getData().subscribe(res => {
       console.log("res getData:", res);
@@ -182,13 +181,13 @@ export class TableListComponent implements OnInit {
       
     })
   }
-  loadViewData() {
-    this.sv.getItems().subscribe(data => {
-      this.viewData = data;
-      this.isLoading = new Array(data.length).fill(false);
-      this.uploadedImages = new Array(data.length).fill(null);
-    });
-  }
+  // loadViewData() {
+  //   this.sv.getItems().subscribe(data => {
+  //     this.viewData = data;
+  //     this.isLoading = new Array(data.length).fill(false);
+  //     this.uploadedImages = new Array(data.length).fill(null);
+  //   });
+  // }
 
   uploadImage(index: number) {
     const fileInput = document.getElementById(`image-upload-${index}`) as HTMLInputElement;
@@ -208,6 +207,20 @@ export class TableListComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     }
+
+
+  }
+
+  closeModal() {
+    // ซ่อนโมดัล
+    $('#insertModel').modal('hide');
+
+    // รีเฟรชหน้าจอ
+    this.refreshPage();
+  }
+
+  refreshPage() {
+    window.location.reload();
   }
   // uploadImage(): void {
   //   const input = document.getElementById('image-upload') as HTMLInputElement;
@@ -240,17 +253,29 @@ export class TableListComponent implements OnInit {
 
  addPersonInput(){
   console.log("connet..")
+  if(this.PersonINT<4){
   this.PersonINT++;
   this.personInputs.push(this.createPersonGroup());
   // this.personInputs = Array(this.PersonINT).fill(1).map((x, i) => i);
   console.log(this.PersonINT);
-
+}else{
+  alert("เพิ่มการกรอกข้อมูลผู้ตรวจได้สูงสุด 4 คน");
+}
   // const add = this.addItemForm.get("personal") as FormArray;
   // add.push(this.fb.group({
   //   rank: ['',Validators.required],
   //   fullname: ['',Validators.required],
   // }))
   
+ }
+ deletePersonInput() {
+ ;
+ if(this.PersonINT > 1){
+ this.PersonINT--;
+ this.personInputs.removeAt(this.personInputs.length - 1)
+ 
+ }
+ console.log("person delete: ",this.PersonINT)
  }
 
 
@@ -305,10 +330,10 @@ get personal(): FormArray {
       console.log('ฟอร์มไม่ถูกต้อง');
       // แสดงข้อความแสดงข้อผิดพลาดให้ผู้ใช้ดู
       Swal.fire({
-        title: 'Error!',
-        text: 'กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น.',
+        title: 'เกิดข้อผิดพลาด!',
+        text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'ตกลง'
       });
       return;
     }
@@ -325,10 +350,10 @@ get personal(): FormArray {
     this.sv.postDataTest(this.addItemForm.value).subscribe(res => {
       console.log("res submitted successfully", res);
       Swal.fire({
-              title: 'Success!!',
-              text: 'Your data has been submitted successfully.',
+              title: 'เพิ่มผู้ใช้สำเร็จ!!',
+              text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
               icon: 'success',
-              confirmButtonText: 'OK'
+              confirmButtonText: 'ตกลง'
       });
       $('#insertModel').modal('hide');
       this.addItemForm.reset();
@@ -338,10 +363,10 @@ get personal(): FormArray {
     error =>{
       console.error('Error submitting data:', error);
       Swal.fire({
-            title: 'Error!',
-            text: 'กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น.',
+            title: 'เกิดข้อผิดพลาด!',
+            text: 'การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ',
             icon: 'error',
-            confirmButtonText: 'OK'
+            confirmButtonText: 'ตกลง'
           });
 
     }

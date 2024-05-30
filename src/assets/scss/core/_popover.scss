@@ -1,10 +1,11 @@
 .popover, .tooltip-inner {
     line-height: 1.5em;
-    background: $white-color;
+    background: #555 ; /*$white-color*/
     border: none;
     border-radius: $border-radius-base;
+    animation-delay: 2s;
     @include shadow-8dp();
-    color: $popover-color;
+    color:#fff  ; /*$popover-color*/
 }
 
 

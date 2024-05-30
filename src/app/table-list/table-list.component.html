@@ -61,7 +61,7 @@
                 <tbody *ngFor="let item of items?.records">
                   <!---->
                   <tr>
-                    <!-- ข้อมูลที่จะดึงจาก services มาใส่ใน tbody นี้นะมีแบบให้แห้แหละ -->
+    
 
                     <td>
 
@@ -86,7 +86,7 @@
                       <a href=""><i class="fa fa-file-pdf-o" (click)="printPDF()" ></i></a> -->
                       <button (click)="openModal(item._id)" class="text-primary"
                         style="border: none; background: none;">
-                        <i class="fa fa-file-text-o  text-primary" style="color: black;"></i>
+                        <i data-toggle="tooltip" title="detail" data-placement="top" class="fa fa-file-text-o  text-primary" style="color: black;"></i>
                       </button>&nbsp;
 
 
@@ -210,6 +210,10 @@
                           <button type="button" (click)="addPersonInput()" style="border: none; background: none;">
                             <i class="fa fa-plus"></i>
                           </button>
+                          <button type="button" (click)="deletePersonInput()" style="border: none; background: none;">
+                            <i class="fa fa-minus"></i>
+                          </button>
+                       
                         </div>
 
                       </div>
@@ -230,7 +234,9 @@
                                 <input type="text" id="fullname-{{i}}" formControlName="fullname" class="form-control"
                                   placeholder="--กรอกข้อมูล--" />
                               </div>
+                      
                             </div>
+                    
                           </div>
 
                         </div>
@@ -291,7 +297,7 @@
 
                     <div class="modal-footer">
                       <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>บันทึก</button>
-                      <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>
+                      <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times" (click)="closeModal()"></i>
                         ปิด
                       </button>
                     </div>
@@ -305,7 +311,7 @@
           <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content">
+              <div class="modal-content"  [ngStyle]="{ width: '230mm', height: '327mm' }" >
                 <div class="modal-header card-header card-header-danger" style="background: rgb(255, 209, 0)">
                   <h5 class="modal-title" id="myModalLabel" style="color: white;">รายละเอียด</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -396,10 +402,10 @@
                   </div> -->
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-success pull-center" (click)="printPDF()">
-                    <i class="fa fa-check" data-toggle="tooltip" title="dowload to PDF"></i>&nbsp; ดาว์โหลด
+                  <button  data-toggle="tooltip" title="dowload to PDF" data-placement="top" type="button" class="btn btn-success pull-center" (click)="printPDF()">
+                    <i class="fa fa-download"></i>&nbsp; &nbsp; ดาว์โหลด
                   </button>
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeModal()">
                     <i class="fa fa-times"></i>&nbsp; ปิด
                   </button>
                 </div>
@@ -412,7 +418,7 @@
           <div class="modal fade" id="writtenModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content">
+              <div class="modal-content" [ngStyle]="{ width: '230mm' }">
                 <div class="modal-header card-header card-header-danger" style="background: rgb(255, 209, 0)">
                   <h5 style="color: white;" class="modal-title" id="myModalLabel">จดบันทึก</h5>
 
@@ -423,7 +429,7 @@
                 </div>
                 <div class="container">
                   <div class="row">
-                    <div class="col-sm">
+                    <div class="col-sm-2" style="padding-top: 20px;">
                       <div class="section">
                         &nbsp;
                         <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'typro'}"
@@ -437,19 +443,21 @@
                         </button>
                       </div>
                     </div>
-                    <div class="col-md-12" class="modal-body" style="width: 210mm; height: 297mm"
-                      [ngStyle]="{ height: '210mm' }">
+                    <div class="col-md-12" class="modal-body" style="width: 210mm; padding: 0 20px 0 20px;"
+                      [ngStyle]="{top:0 }">
 
                       <div *ngIf="isTyproActive" class="full-page-textarea-container">
 
 
                       
                         <textarea [(ngModel)]="typroText"  placeholder="พิมพ์ที่นี้.."
-                          class="form-control mt-3 full-page-textarea"></textarea>
+                          class="form-control mt-3 full-page-textarea" ></textarea>
 
                       </div>
                       <div *ngIf="isWritteActive" class="full-page-pdf">
-                        <a> writte section</a>
+                        <div class="writteDraw">
+                          writte is not here
+                        </div>
 
                       </div>
 
@@ -462,7 +470,7 @@
                   <button type="submit" class="btn btn-success pull-center" (click)="recordCommit()">
                     <i class="fa fa-check"></i>&nbsp; ยืนยัน
                   </button>
-                  <button type="button" class="btn btn-danger pull-center" data-dismiss="modal">
+                  <button type="button" class="btn btn-danger pull-center" data-dismiss="modal" (click)="closeModal()">
                     <i class="fa fa-times"></i>&nbsp; ปิด
                   </button>
                 </div>

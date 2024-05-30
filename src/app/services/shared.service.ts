@@ -85,8 +85,8 @@ export class SharedService {
   searchData(query: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/searchData?query=${query}`);
   }
-  getItems(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/items`);
-  }
+  // getItems(): Observable<any[]> {
+  //   return this.http.get<any[]>(`${this.baseUrl}/items`);
+  // }
   
 }
