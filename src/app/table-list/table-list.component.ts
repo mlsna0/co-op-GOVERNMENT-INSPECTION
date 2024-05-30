@@ -48,6 +48,11 @@ export class TableListComponent implements OnInit {
   // uploadedImageUrl: string | ArrayBuffer | null = null;
   // isLoading: boolean = false;
   
+  private canvas: HTMLCanvasElement;
+  private ctx: CanvasRenderingContext2D;
+  penColor: string = 'black';
+  penSize: number = 1;
+//writter box
   constructor(
     private fb:FormBuilder,
     private http:HttpClient,
@@ -139,6 +144,67 @@ export class TableListComponent implements OnInit {
     
   }
 
+  //Writter section
+  ngAfterViewInit() {
+    this.setupCanvas();
+  }
+
+  setupCanvas() {
+    this.canvas = document.getElementById('writteCanvas') as HTMLCanvasElement;
+    this.ctx = this.canvas.getContext('2d');
+    let painting = false;
+
+    this.canvas.width = this.canvas.clientWidth;
+    this.canvas.height = this.canvas.clientHeight;
+
+    const startPosition = (e: MouseEvent) => {
+      painting = true;
+      draw(e);
+    };
+
+    const endPosition = () => {
+      painting = false;
+      this.ctx.beginPath();
+    };
+
+    const draw = (e: MouseEvent) => {
+      if (!painting) return;
+
+      this.ctx.lineWidth = this.penSize; 
+      this.ctx.lineCap = 'round';
+      this.ctx.strokeStyle = this.penColor;
+
+      const rect = this.canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      this.ctx.lineTo(x, y);
+      this.ctx.stroke();
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, y);
+    };
+
+    this.canvas.addEventListener('mousedown', startPosition);
+    this.canvas.addEventListener('mouseup', endPosition);
+    this.canvas.addEventListener('mousemove', draw);
+  }
+
+  changeColor(color: string) {
+    this.penColor = color;
+  }
+
+  changeSize(size: string) {
+    console.log('Pen size before parsing:', size); // Check the size value before parsing
+    this.penSize = parseInt(size, 10);
+    console.log('Pen size after parsing:', this.penSize); // Check the size value after parsing
+  }
+  refreshCanvas() {
+    if (this.ctx) {
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+  }
+
+ //End writter section
 
 
   setActive(button: string){
@@ -155,6 +221,9 @@ export class TableListComponent implements OnInit {
       console.log("writte section..")
     }else{
       console.log("selection error")
+    }
+    if (this.isWritteActive) {
+      setTimeout(() => this.setupCanvas(), 0);
     }
   }
 

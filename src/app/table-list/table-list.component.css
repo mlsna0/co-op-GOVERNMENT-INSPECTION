@@ -8,6 +8,9 @@
     align-items: center;
     
 }
+.dataTables_wrapper .dataTables_filter input{
+  width: 180px;
+}
 .card-body{
 
   font-family: 'TH SarabunPSK', sans-serif; /*ใช้ฟอนต์ราชการ*/
@@ -22,7 +25,7 @@
    transform: translateX(-50%);
     width: 100%;
     border: 1px solid #000;
-    font-family: 'TH SarabunPSK', sans-serif; /* ใช้ฟอนต์ราชการ */
+    font-family: 'TH SarabunPSK', sans-serif;
 
     
 }
@@ -77,6 +80,7 @@ label{
 
 }
 .full-page-textarea-container{
+    margin-top: 20px 0 20px 0;
     width: 100%;
     padding: 10px;
     display: flex;
@@ -89,14 +93,39 @@ label{
 }
 
 .writteDraw{
+  margin: 20px 0 20px 0;
   width: 827px;
   height: 535px; 
   border: none;
   resize: none;
   border: 1px solid black;
   border-radius: 5px;
+  
 
 }
+
+.full-page-canvas {
+  width: 100%;
+  height: 491.3px;
+  /* border: 1px solid black;  */
+  border-radius: 5px;
+  
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  border-bottom: 1px solid #929292;
+}
+
+.toolbar button {
+  margin-right: 5px;
+  padding: 5px 10px;
+  background: none;
+  border: none;
+}
+
+/*end writter draw*/
 .full-page-textarea-container textarea{
   border: 5px;
 }

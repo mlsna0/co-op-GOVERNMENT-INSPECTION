@@ -86,12 +86,12 @@
                       <a href=""><i class="fa fa-file-pdf-o" (click)="printPDF()" ></i></a> -->
                       <button (click)="openModal(item._id)" class="text-primary"
                         style="border: none; background: none;">
-                        <i data-toggle="tooltip" title="detail" data-placement="top" class="fa fa-file-text-o  text-primary" style="color: black;"></i>
+                        <i data-toggle="tooltip" title="ดูรายละเอียด" data-placement="top" class="fa fa-file-text-o  text-primary" style="color: black;"></i>
                       </button>&nbsp;
 
 
                       <button (click)="onRecord()" style="border: none; background: none;" class="text-primary">
-                        <i class="fa fa-pencil-square-o  text-primary" style="color: black;"></i>
+                        <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top" class="fa fa-pencil-square-o  text-primary" style="color: black;"></i>
                       </button> &nbsp;
 
                       <button style="border: none; background: none;">
@@ -402,7 +402,7 @@
                   </div> -->
                 </div>
                 <div class="modal-footer">
-                  <button  data-toggle="tooltip" title="dowload to PDF" data-placement="top" type="button" class="btn btn-success pull-center" (click)="printPDF()">
+                  <button   type="button" class="btn btn-success pull-center" (click)="printPDF()">
                     <i class="fa fa-download"></i>&nbsp; &nbsp; ดาว์โหลด
                   </button>
                   <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeModal()">
@@ -456,7 +456,11 @@
                       </div>
                       <div *ngIf="isWritteActive" class="full-page-pdf">
                         <div class="writteDraw">
-                          writte is not here
+                          <div class="toolbar">
+                            <button (click)="refreshCanvas()">
+                            <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top" class="fa fa-refresh"></i></button>
+                          </div>
+                          <canvas id="writteCanvas" class="full-page-canvas"></canvas>
                         </div>
 
                       </div>
