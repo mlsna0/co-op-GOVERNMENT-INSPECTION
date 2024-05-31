@@ -80,18 +80,56 @@ label{
 
 }
 .full-page-textarea-container{
-    margin-top: 20px 0 20px 0;
-    width: 100%;
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-  
-    border: 1px solid black;
-    border-radius: 5px;
+  margin: 20px 0 20px 0;
+  width: 827px;
+  height: 535px; 
+  border: none;
+  resize: none;
+  border: 1px solid black;
+  border-radius: 5px;
   
 
 }
 
+.headerText{
+  display: flex;
+  border-bottom: 1px solid #929292;
+}
+.headerText button:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 35px;
+  width: 90px;
+}
+/* .headerText button:first-child:hover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e2e2e2;
+  border-radius: 5px;
+  height: 30px;
+  width: 65px;
+} */
+.headerText button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:none;
+  width: 35px;
+  height: 35px;
+  border: none;
+  
+}
+.headerText i:hover{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 25px;
+  background: #e2e2e2;
+  border-radius: 5px;
+}
 .writteDraw{
   margin: 20px 0 20px 0;
   width: 827px;
@@ -111,6 +149,12 @@ label{
   border-radius: 5px;
   
 }
+.full-page-signWritte{
+  width: 40mm;
+  height: 30mm;
+  border-radius: 5px;
+  border: 1px solid black;
+}
 
 .toolbar {
   display: flex;
@@ -126,8 +170,20 @@ label{
 }
 
 /*end writter draw*/
+
+/* .ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px; 
+} */
 .full-page-textarea-container textarea{
-  border: 5px;
+  width: 100%;
+  height: auto; /* ปรับให้ auto หรือกำหนดขนาดที่ต้องการ */
+  min-height: 100px; /* หรือกำหนด min-height */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .btn-warning:hover::after {
@@ -208,21 +264,35 @@ label{
     display: flex;
     justify-content: space-between;
   }
-
+  /*location td*/
+  /* .table-responsive table td:nth-child(4) {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } */
 
 
   .main-detail {
     position: relative;
     border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
-    width: 100%;
+    width: 600px;
+    overflow: auto;
     padding: 20px; /* เพิ่มระยะห่างบนและล่าง */
     font-family: 'TH SarabunPSK', sans-serif; /* ใช้ฟอนต์ราชการ */
   }
-  
+  .main-detail table{
+    max-width: 600px;
+    table-layout: fixed;
+    overflow: auto;
+  }
   .main-detail th, .main-detail td {
+    max-width: 539.29px;
     border: 1px solid black; /* เส้นขอบสีดำ */
     padding: 5px; /* ระยะห่างภายในเซลล์ */
     text-align: left; /* จัดตำแหน่งเนื้อหาให้อยู่ทางซ้าย */
+    word-wrap: break-word;
+    overflow: hidden;
   }
   
   .main-detail th:first-child, .main-detail td:first-child {

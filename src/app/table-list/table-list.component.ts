@@ -147,8 +147,50 @@ export class TableListComponent implements OnInit {
   //Writter section
   ngAfterViewInit() {
     this.setupCanvas();
+    this.setupSignCanvas();
+  }
+  setupSignCanvas() {
+    this.canvas = document.getElementById('writteSignCanvas') as HTMLCanvasElement;
+    this.ctx = this.canvas.getContext('2d');
+    let painting = false;
+
+    this.canvas.width = this.canvas.clientWidth;
+    this.canvas.height = this.canvas.clientHeight;
+
+    const startPosition = (e: MouseEvent) => {
+      painting = true;
+      draw(e);
+    };
+
+    const endPosition = () => {
+      painting = false;
+      this.ctx.beginPath();
+    };
+
+    const draw = (e: MouseEvent) => {
+      if (!painting) return;
+
+      this.ctx.lineWidth = this.penSize; 
+      this.ctx.lineCap = 'round';
+      this.ctx.strokeStyle = this.penColor;
+
+      const rect = this.canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      this.ctx.lineTo(x, y);
+      this.ctx.stroke();
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, y);
+    };
+
+    this.canvas.addEventListener('mousedown', startPosition);
+    this.canvas.addEventListener('mouseup', endPosition);
+    this.canvas.addEventListener('mousemove', draw);
   }
 
+
+//////////////////////////////////////////////////////////////////////
   setupCanvas() {
     this.canvas = document.getElementById('writteCanvas') as HTMLCanvasElement;
     this.ctx = this.canvas.getContext('2d');
@@ -276,7 +318,8 @@ export class TableListComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     }
-
+    this.setupSignCanvas();
+    
 
   }
 

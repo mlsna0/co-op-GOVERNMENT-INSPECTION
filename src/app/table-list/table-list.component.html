@@ -11,7 +11,7 @@
   <div class="row justify-content-end">
     <div class="col-sm-2">
       <div class="insert-data">
-        <button class="btn btn-danger pull-center" (click)="onInsert()">
+        <button class="btn btn-success pull-center" (click)="onInsert()">
           <i class="fa fa-plus"></i> &nbsp;เพิ่มรายการ
         </button>
       </div>
@@ -51,7 +51,7 @@
                 class="table table-border table-hover table-bordered nowrap">
                 <thead class="text-primary">
                   <tr>
-                    <th>ครั้งที่</th>
+                    <th style="width: 5%; white-space: nowrap; text-align: center;">ครั้งที่</th>
                     <th>วันที่เริ่มตรวจสอบ</th>
                     <th>วันที่เสร็จสิ้น</th>
                     <th>สถานที่</th>
@@ -63,24 +63,26 @@
                   <tr>
     
 
-                    <td>
+                    <td  style=" text-align: center;">
 
                       {{item.record_id}}
                     </td>
-                    <td>
+                    <td  style=" white-space: nowrap;">
 
                       {{item.record_star_date | thaidate: "medium"}}
                     </td>
-                    <td>
+                    <td style=" white-space: nowrap;">
 
                       {{item.record_end_date | thaidate: "medium"}}
                     </td>
                     <td>
 
-                      {{item.record_location}}
+                      <div class="ellipsis" [attr.title]="item.record_location" data-toggle="tooltip">
+                        {{item.record_location}}
+                      </div>
                     </td>
 
-                    <td class=" text-center " style="width: 1%; white-space: nowrap;">
+                    <td class=" text-center " style=" white-space: nowrap;">
                       <!-- <a href="" (click)="openModal()"><i class="fa fa-file-text-o" ></i></a>&nbsp; -->
                       <!-- <a href=""  (click)="onRecord()" ><i class="fa fa-pencil-square-o" ></i></a>&nbsp;
                       <a href=""><i class="fa fa-file-pdf-o" (click)="printPDF()" ></i></a> -->
@@ -290,15 +292,16 @@
                       <input type="text" id="location" formControlName="location" class="form-control"
                         placeholder="สถานที่" readonly>
                     </div>
-                    <button type="button" class="btn btn-primary" (click)="getCurrentLocation()">เลือก location
+                    <button type="button" class="btn btn-info" style="background: blue;" (click)="getCurrentLocation()">
+                      <i class="fa fa-location-dot">&nbsp;</i>เลือก location
                       ปัจจุบัน</button>
 
 
 
                     <div class="modal-footer">
-                      <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>บันทึก</button>
+                      <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;บันทึก</button>
                       <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times" (click)="closeModal()"></i>
-                        ปิด
+                        &nbsp; ปิด
                       </button>
                     </div>
                   </form>
@@ -379,6 +382,10 @@
                                 <img [src]="uploadedImages[i]" alt="Uploaded Image" *ngIf="uploadedImages[i]" 
                                      style="max-width: 100px; max-height: 100px; display: block; margin-top: 10px;">
                               </div>
+                              <div class="Writte-sign">
+                                <canvas id="writteSignCanvas" class="full-page-signWritte"></canvas>
+
+                              </div>
                             </div>
 
                             <p>{{ person.view_rank }} &nbsp; &nbsp; {{ person.view_full_name }}</p>
@@ -403,7 +410,7 @@
                 </div>
                 <div class="modal-footer">
                   <button   type="button" class="btn btn-success pull-center" (click)="printPDF()">
-                    <i class="fa fa-download"></i>&nbsp; &nbsp; ดาว์โหลด
+                    <i class="fa fa-download"></i>&nbsp;  ดาว์โหลด
                   </button>
                   <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeModal()">
                     <i class="fa fa-times"></i>&nbsp; ปิด
@@ -447,12 +454,44 @@
                       [ngStyle]="{top:0 }">
 
                       <div *ngIf="isTyproActive" class="full-page-textarea-container">
-
-
-                      
+                        <div class="typroTextBox">
+                        <div class="headerText">
+                          <button aria-label="Preview">การพิมพ์</button>
+                          <button aria-label="Bold">
+                            <i class="fas fa-bold"></i>
+                          </button>
+                          <button  aria-label="Italic">
+                            <i class="fas fa-italic"></i>
+                          </button>
+                          <button aria-label="Strikethrough">
+                            <i class="fas fa-strikethrough"></i>
+                          </button>
+                          <button  aria-label="Code">
+                            <i class="fas fa-code"></i>
+                          </button>
+                          <button  aria-label="Link">
+                            <i class="fas fa-link"></i>
+                          </button>
+                          <button  aria-label="Bullet List">
+                            <i class="fas fa-list-ul"></i>
+                          </button>
+                          <button  aria-label="Numbered List">
+                            <i class="fas fa-list-ol"></i>
+                          </button>
+                          <button  aria-label="Table">
+                            <i class="fas fa-table"></i>
+                          </button>
+                          <button  aria-label="Attachment">
+                            <i class="fas fa-paperclip"></i>
+                          </button>
+                          <button aria-label="Expand">
+                            <i class="fas fa-expand"></i>
+                          </button>
+                        </div>
                         <textarea [(ngModel)]="typroText"  placeholder="พิมพ์ที่นี้.."
-                          class="form-control mt-3 full-page-textarea" ></textarea>
+                          class="form-control  full-page-textarea" ></textarea>
 
+                        </div>
                       </div>
                       <div *ngIf="isWritteActive" class="full-page-pdf">
                         <div class="writteDraw">
@@ -472,10 +511,10 @@
 
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-success pull-center" (click)="recordCommit()">
-                    <i class="fa fa-check"></i>&nbsp; ยืนยัน
+                    <i class="fa fa-check"></i>&nbsp;  ยืนยัน
                   </button>
                   <button type="button" class="btn btn-danger pull-center" data-dismiss="modal" (click)="closeModal()">
-                    <i class="fa fa-times"></i>&nbsp; ปิด
+                    <i class="fa fa-times" ></i>&nbsp;  ปิด
                   </button>
                 </div>
               </div>

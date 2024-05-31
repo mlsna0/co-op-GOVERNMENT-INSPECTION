@@ -20,13 +20,16 @@ import {MatSelectModule} from '@angular/material/select';
 
 import { DataTablesModule } from "angular-datatables"; //petch เพิ่ม datatables เพื่อใช้ใน tablelist
 import { ThaiDatePipe } from "./../../services/pipe/thaidate.service";
-
+import { MatCardModule } from '@angular/material/card'; //petch add
+import { MatIconModule } from '@angular/material/icon'; //petch add
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(AdminLayoutRoutes),
     FormsModule,
     ReactiveFormsModule,
+    MatCardModule, //petch add
+    MatIconModule, //petch add
     MatButtonModule,
     MatRippleModule,
     MatFormFieldModule,
