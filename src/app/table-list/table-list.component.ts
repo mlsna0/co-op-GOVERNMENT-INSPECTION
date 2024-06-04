@@ -15,6 +15,7 @@ import jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
 
+import { ElementRef,ViewChild,ViewChildren } from '@angular/core';
 
 @Component({
   selector: 'app-table-list',
@@ -22,6 +23,7 @@ import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
   styleUrls: ['./table-list.component.css']
 })
 export class TableListComponent implements OnInit {
+  @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
   people:any[] =[];
   
   //ListUser: users[] =[];
@@ -52,6 +54,13 @@ export class TableListComponent implements OnInit {
   private ctx: CanvasRenderingContext2D;
   penColor: string = 'black';
   penSize: number = 1;
+
+  ////////////////////////////
+  isSignModalVisible: boolean[] = [];
+  private canvas2: HTMLCanvasElement;
+  private ctx2: CanvasRenderingContext2D;
+  penColor2: string = 'black';
+  penSize2: number = 1;
 //writter box
   constructor(
     private fb:FormBuilder,
@@ -128,7 +137,7 @@ export class TableListComponent implements OnInit {
         },
       }
     };
-
+    console.log("DataTable Error: ",this.dtOptions)
 
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
@@ -147,49 +156,82 @@ export class TableListComponent implements OnInit {
   //Writter section
   ngAfterViewInit() {
     this.setupCanvas();
-    this.setupSignCanvas();
+    // this.setupSignCanvas(index: number);
   }
-  setupSignCanvas() {
-    this.canvas = document.getElementById('writteSignCanvas') as HTMLCanvasElement;
-    this.ctx = this.canvas.getContext('2d');
-    let painting = false;
+  setupSignCanvas(index: number) {
+    this.canvas2 = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
+    if (this.canvas2) {
+      this.ctx2 = this.canvas2.getContext('2d');
+      let painting = false;
 
-    this.canvas.width = this.canvas.clientWidth;
-    this.canvas.height = this.canvas.clientHeight;
+      this.canvas2.width = this.canvas2.clientWidth;
+      this.canvas2.height = this.canvas2.clientHeight;
 
-    const startPosition = (e: MouseEvent) => {
-      painting = true;
-      draw(e);
-    };
+      const startPosition = (e: MouseEvent) => {
+        painting = true;
+        draw(e);
+      };
 
-    const endPosition = () => {
-      painting = false;
-      this.ctx.beginPath();
-    };
+      const endPosition = () => {
+        painting = false;
+        if (this.ctx2) { // Ensure ctx2 is not undefined
+          this.ctx2.beginPath();
+        }
+      };
 
-    const draw = (e: MouseEvent) => {
-      if (!painting) return;
+      const draw = (e: MouseEvent) => {
+        if (!painting) return;
 
-      this.ctx.lineWidth = this.penSize; 
-      this.ctx.lineCap = 'round';
-      this.ctx.strokeStyle = this.penColor;
+        if (this.ctx2) { // Ensure ctx2 is not undefined
+          this.ctx2.lineWidth = this.penSize2;
+          this.ctx2.lineCap = 'round';
+          this.ctx2.strokeStyle = this.penColor2;
 
-      const rect = this.canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+          const rect = this.canvas2.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
 
-      this.ctx.lineTo(x, y);
-      this.ctx.stroke();
-      this.ctx.beginPath();
-      this.ctx.moveTo(x, y);
-    };
+          this.ctx2.lineTo(x, y);
+          this.ctx2.stroke();
+          this.ctx2.beginPath();
+          this.ctx2.moveTo(x, y);
+        }
+      };
 
-    this.canvas.addEventListener('mousedown', startPosition);
-    this.canvas.addEventListener('mouseup', endPosition);
-    this.canvas.addEventListener('mousemove', draw);
+      this.canvas2.addEventListener('mousedown', startPosition);
+      this.canvas2.addEventListener('mouseup', endPosition);
+      this.canvas2.addEventListener('mousemove', draw);
+
+      console.log('Sign canvas setup complete');
+    } else {
+      console.error('Sign canvas element not found', this.canvas2);
+    }
+  }
+  openSignModal(index: number){
+    this.isSignModalVisible[index] = true;
+    setTimeout(() => {
+      if (this.writteSignElement) {
+        this.setupSignCanvas(index);
+        const writteSignElement = this.writteSignElement.nativeElement as HTMLElement;
+        writteSignElement.style.display = 'flex';
+        console.log("Setup activate or not: ",this.setupSignCanvas)
+      } else {
+        console.error('writteSignElement is null or undefined',this.writteSignElement);
+      }
+    }, 0);  
+    console.log("it openSign status : ",this.isSignModalVisible)
   }
 
-
+saveSignature() {
+    if (this.canvas2) {
+      const dataURL = this.canvas2.toDataURL();
+      // Here you can handle the signature image dataURL as needed
+      console.log(dataURL);
+      $('#SignModal').modal('hide');
+    } else {
+      console.error('Canvas element not found');
+    }
+  }
 //////////////////////////////////////////////////////////////////////
   setupCanvas() {
     this.canvas = document.getElementById('writteCanvas') as HTMLCanvasElement;
@@ -246,6 +288,8 @@ export class TableListComponent implements OnInit {
     }
   }
 
+
+
  //End writter section
 
 
@@ -289,8 +333,12 @@ export class TableListComponent implements OnInit {
       this.viewData = res;
     
       console.log("it on working.. ")
+     
       
-    })
+    });
+    
+  
+  
   }
   // loadViewData() {
   //   this.sv.getItems().subscribe(data => {
@@ -318,7 +366,7 @@ export class TableListComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     }
-    this.setupSignCanvas();
+    
     
 
   }
@@ -471,6 +519,7 @@ get personal(): FormArray {
       this.addItemForm.reset();
       this.personInputs.clear(); // Clear FormArray
       // this.addPersonInput();
+      this.refreshPage();
     },
     error =>{
       console.error('Error submitting data:', error);
@@ -489,29 +538,8 @@ get personal(): FormArray {
 
      // Close the modal
      $('#insertModel').modal('hide');
-        
-     // Show success alert
-  //    $('#insertModel').on('hidden.bs.modal', function () {
-  //     Swal.fire({
-  //       title: 'Success!!',
-  //       text: 'Your data has been submitted successfully.',
-  //       icon: 'success',
-  //       confirmButtonText: 'OK'
-  //   });
-  // });
-  // this.addItemForm.reset();
-
-
-
-    // if (this.addItemForm.valid) {
-    //   this.items.push(this.addItemForm.value);
-    //   this.addItemForm.reset();
-    //   // console.log(this.items);
-    //   // ส่งข้อมูลไปยัง controller
-    //   this.sv.postItemData(this.items).subscribe(res => {
-    //     console.log("res postItemData:", res);
-    //   });
-    // }
+    
+      
   }
   
   getCurrentLocation() {

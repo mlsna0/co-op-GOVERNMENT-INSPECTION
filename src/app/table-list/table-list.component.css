@@ -31,7 +31,8 @@
 }
 
 .modal-content{
- 
+
+  max-height: 1235.9px;
   left: 50%;
   transform: translateX(-50%);
   justify-content: center;
@@ -93,14 +94,14 @@ label{
 
 .headerText{
   display: flex;
-  border-bottom: 1px solid #929292;
+  border-bottom: 1px solid #c1c1c1;
 }
 .headerText button:first-child {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  font-family: 'TH SarabunPSK', sans-serif;
+  
   height: 35px;
-  width: 90px;
+  width: auto;
 }
 /* .headerText button:first-child:hover {
   display: flex;
@@ -149,12 +150,47 @@ label{
   border-radius: 5px;
   
 }
+.openSignModal{
+  position: relative;
+  margin-left: 40px;
+  align-items: center;
+  padding-left: 50px;
+  display: flex;
+  width: 40mm;
+  height: 30mm;
+  border: 2px dashed orange;
+  background: repeating-linear-gradient(-45deg,  rgb(253, 216, 4) 4px, transparent,  transparent 10px );
+  border-radius: 5px;
+  border-style:dashed ;
+  opacity: 0.5;
+  text-align: center;
+  cursor: pointer;
+
+}
+.Writte-sign {
+  position: absolute;
+ 
+  display: flex; /* Hidden by default */
+  top: 0;
+  left: 39.5px;
+  width: 100%;
+  height: 30mm;
+  background-color: rgb(255, 254, 254); /* Semi-transparent background */
+  z-index: 1000; /* Higher than other content */
+ 
+}
+
+
+
 .full-page-signWritte{
+ 
   width: 40mm;
   height: 30mm;
   border-radius: 5px;
   border: 1px solid black;
+  z-index: 1001;
 }
+
 
 .toolbar {
   display: flex;
@@ -202,6 +238,7 @@ label{
     background: #fff;
     padding: 96px;
     height: 100%;
+    max-height: 297mm;
   }
 .header-topic{
   position: relative;
@@ -240,9 +277,9 @@ label{
     border: 1px solid #ddd;
     margin-left: 50px;
   } */
-  .form-group {
+  /* .form-group {
     margin-bottom: 10px;
-  }
+  } */
 
   .detail-content{
     position: relative;
@@ -313,8 +350,14 @@ label{
   .sign-content{
     position: relative;
     padding-left: 380px;
+    
     text-align: center;
     margin-top: 20px;
+  }
+  .UploadContentBox{
+    position: relative;
+    align-items: center;
+    justify-content: center;
   }
 
   .sign-content img{

@@ -22,6 +22,7 @@ import { DataTablesModule } from "angular-datatables"; //petch เพิ่ม d
 import { ThaiDatePipe } from "./../../services/pipe/thaidate.service";
 import { MatCardModule } from '@angular/material/card'; //petch add
 import { MatIconModule } from '@angular/material/icon'; //petch add
+
 @NgModule({
   imports: [
     CommonModule,
@@ -36,7 +37,8 @@ import { MatIconModule } from '@angular/material/icon'; //petch add
     MatInputModule,
     MatSelectModule,
     MatTooltipModule,
-    DataTablesModule
+    DataTablesModule,
+
   ],
   declarations: [
     DashboardComponent,
