@@ -25,7 +25,7 @@ function setRoutes(app): void {
   router.route('/data').get(itemModelCtrl.getData);
 
   router.route('/postItemData').post(itemModelCtrl.postItemToView);
-  router.route('/itemModel/:id').get(itemModelCtrl.get);
+  router.route('/itemModel/:id').get(itemModelCtrl.get)
   router.route('/itemModel/:id').put(itemModelCtrl.update);
   router.route('/itemModel/:id').delete(itemModelCtrl.delete);
   router.route('/postDataTest').post(uploadService.none(),itemModelCtrl.postItemToView)
@@ -65,3 +65,4 @@ function setRoutes(app): void {
 }
 
 export default setRoutes;
+

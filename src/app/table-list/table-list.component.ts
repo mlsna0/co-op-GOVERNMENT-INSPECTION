@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation  } from '@angular/core';
 import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
@@ -6,26 +6,39 @@ import { HttpClient } from '@angular/common/http';
 import { dataflow } from 'googleapis/build/src/apis/dataflow';
 import { SharedService } from "../services/shared.service"
 import { DataTableDirective } from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
+import { DataTablesModule } from "angular-datatables"; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Items } from '../../../server/models/itemModel';
 import Swal from 'sweetalert2';
-
 import jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
-import { DataTablesModule } from 'angular-datatables';
+import { AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+
 
 @Component({
   selector: 'app-table-list',
   templateUrl: './table-list.component.html',
-  styleUrls: ['./table-list.component.css']
+  styleUrls: ['./table-list.component.css'],
+  // encapsulation: ViewEncapsulation.None
 })
 export class TableListComponent implements OnInit {
+  @ViewChild('writteCanvas', { static: false }) canvasRef: ElementRef<HTMLCanvasElement>;
+  private ctx: CanvasRenderingContext2D;
+  private painting: boolean = false;
+  private penSize: number = 5;
+  private penColor: string = '#000000';
+  public activeButton: string = ''; 
+  public isTyproActive: boolean = false;
+  public isWritteActive: boolean = false;
+
+
+
   people:any[] =[];
-  
   //ListUser: users[] =[];
   Form:FormGroup;
   dtOptions:any ={};
+  dtTrigger: Subject<any> = new Subject(); 
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
 
@@ -37,22 +50,27 @@ export class TableListComponent implements OnInit {
 
   addItemForm: any;
   addDataForm: any;
-  activeButton: string='';
-  isTyproActive:boolean = false;
-  isWritteActive:boolean = false; 
+  // activeButton: string='typro';
+  // isTyproActive:boolean = true;
+  // isWritteActive:boolean = false;
   typroText: string='';
- 
-  uploadedImageUrl: string | ArrayBuffer | null = null;
-  // isLoading: boolean = false;
   uploadedImages: string[] = [];
-  isLoading: boolean[] = [];
-  shouldRefresh: boolean = false; 
-  
+  isLoading: boolean[] = [false];
+  canvas: any;
+  // ctx: any;
+  // penSize: number = 1;
+  // penColor: string = 'black';
 
+  // uploadedImageUrl: string | ArrayBuffer | null = null;
+  // isLoading: boolean = false;
+ 
+  
+  
   constructor(
     private fb:FormBuilder,
     private http:HttpClient,
-    private sv:SharedService
+    private sv:SharedService,
+
   ) { 
     this.addItemForm = this.fb.group({
       id: ['',Validators.required],
@@ -72,6 +90,69 @@ export class TableListComponent implements OnInit {
     this.addPersonInput(); // Add initial input group
     // this.loadViewData();
   }
+
+  ngAfterViewInit() {
+    if (this.isWritteActive) {
+      this.setupCanvas();
+    }
+  }
+
+  setupCanvas() {
+    const canvas = this.canvasRef.nativeElement;
+    this.ctx = canvas.getContext('2d');
+
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+
+    const startPosition = (e: MouseEvent) => {
+      this.painting = true;
+      this.draw(e);
+    };
+
+    const endPosition = () => {
+      this.painting = false;
+      this.ctx.beginPath();
+    };
+
+    const draw = (e: MouseEvent) => {
+      if (!this.painting) return;
+
+      this.ctx.lineWidth = this.penSize;
+      this.ctx.lineCap = 'round';
+      this.ctx.strokeStyle = this.penColor;
+
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      this.ctx.lineTo(x, y);
+      this.ctx.stroke();
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, y);
+    };
+
+    canvas.addEventListener('mousedown', startPosition);
+    canvas.addEventListener('mouseup', endPosition);
+    canvas.addEventListener('mousemove', draw);
+  }
+  draw(e: MouseEvent) {
+    throw new Error('Method not implemented.');
+  }
+
+  changeColor(color: string) {
+    this.penColor = color;
+  }
+
+  changeSize(size: string) {
+    this.penSize = parseInt(size, 10);
+  }
+
+  refreshCanvas() {
+    if (this.ctx) {
+      this.ctx.clearRect(0, 0, this.canvasRef.nativeElement.width, this.canvasRef.nativeElement.height);
+    }
+  }
+  
   documentImageUrl = 'assets/img/sampleA4-1.png';
   // itemsTest:any[]= [
   //   {
@@ -93,17 +174,13 @@ export class TableListComponent implements OnInit {
         console.error('Error fetching items:', error);
       }
     );
+    
   } 
 
-  
-  ngOnInit() {
 
-    
-    // this.Form =this.fb.group({
-    //   Full_name1: new FormControl(""),
-    //   Full_name2: new FormControl(""),
-    //   Full_name3: new FormControl("")
-    // })
+  ngOnInit(){
+
+    this.initializeTooltips();
     this.dtOptions = {
     
       columnDefs: [
@@ -115,11 +192,10 @@ export class TableListComponent implements OnInit {
       pagingType: 'full_numbers',
       "language": {
         "lengthMenu": "แสดง _MENU_ รายการ",
-        "search": "ค้นหา"
-        ,
+        "search": "ค้นหา",
         "info": "แสดงหน้า _PAGE_ จากทั้งหมด _PAGES_ หน้า",
         "infoEmpty": "แสดง 0 ของ 0 รายการ",
-        "zeroRecords": "ไม่พบข้อมูล",
+        // "zeroRecords": "ไม่พบข้อมูล",
         "paginate": {
           "first": "หน้าแรก",
           "last": "หน้าสุดท้าย",
@@ -129,9 +205,12 @@ export class TableListComponent implements OnInit {
       }
     };
 
+
     $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
+      $('[data-toggle="tooltip"]').tooltip();
+
+
+    });
 
     this.sv.getData().subscribe(res => {
       console.log("res getData:", res);
@@ -141,28 +220,33 @@ export class TableListComponent implements OnInit {
     
   }
 
+      setActive(button: string){
+        this.activeButton = button;
+        console.log("connented..Active")
+        if (button === 'typro'){
+          this.isTyproActive =true;
+          this.isWritteActive =false;
+          console.log("typro section")
+          
+        }else if(button ==="writte"){
+          this.isTyproActive =false;
+          this.isWritteActive =true;
+          console.log("writte section..")
+
+          if (this.isWritteActive) {    
+            setTimeout(() => this.setupCanvas(), 0);
+          }
+
+        }else{
+          console.log("selection error")
+        }
+      }
 
 
-  setActive(button: string){
-    this.activeButton = button;
-    console.log("connented..Active")
-    if (button === 'typro'){
-      this.isTyproActive =true;
-      this.isWritteActive =false;
-      console.log("typro section")
-      
-    }else if(button ==="writte"){
-      this.isTyproActive =false;
-      this.isWritteActive =true;
-      console.log("writte section..")
-    }else{
-      console.log("selection error")
-    }
-  }
 
   //หน้าจอรายละเอียดข้อมูล
   openModal(recordId: any) {
-    $('#myModal').modal('show');
+    $('#myModal').modal('show');  
    
     this.sv.getDataById(recordId).subscribe(res=>{
       console.log("getDataById :",res);
@@ -181,9 +265,6 @@ export class TableListComponent implements OnInit {
       
     })
   }
-
- 
-
   // loadViewData() {
   //   this.sv.getItems().subscribe(data => {
   //     this.viewData = data;
@@ -210,7 +291,42 @@ export class TableListComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     }
+
   }
+
+  closeModal() {
+    // ซ่อนโมดัล
+    $('#insertModel').modal('hide');
+
+    // รีเฟรชหน้าจอ
+    this.refreshPage();
+  }
+
+  refreshPage() {
+    window.location.reload();
+  }
+  // uploadImage(): void {
+  //   const input = document.getElementById('image-upload') as HTMLInputElement;
+  //   if (input) {
+  //     input.click(); // เปิด dialog เพื่ออัพโหลดรูปภาพ
+  //   }
+  // }
+
+
+
+  // onFileChange(event: Event): void {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.files && input.files[0]) {
+  //     const file = input.files[0];
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       this.uploadedImageUrl = reader.result;
+  //       this.isLoading = true;
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+    
+  // }
 
 
  addPersonModel(){
@@ -220,17 +336,29 @@ export class TableListComponent implements OnInit {
 
  addPersonInput(){
   console.log("connet..")
+  if(this.PersonINT<4){
   this.PersonINT++;
   this.personInputs.push(this.createPersonGroup());
   // this.personInputs = Array(this.PersonINT).fill(1).map((x, i) => i);
   console.log(this.PersonINT);
-
+}else{
+  alert("เพิ่มการกรอกข้อมูลผู้ตรวจได้สูงสุด 4 คน");
+}
   // const add = this.addItemForm.get("personal") as FormArray;
   // add.push(this.fb.group({
   //   rank: ['',Validators.required],
   //   fullname: ['',Validators.required],
   // }))
   
+ }
+ deletePersonInput() {
+ ;
+ if(this.PersonINT > 1){
+ this.PersonINT--;
+ this.personInputs.removeAt(this.personInputs.length - 1)
+ 
+ }
+ console.log("person delete: ",this.PersonINT)
  }
 
 
@@ -240,7 +368,6 @@ export class TableListComponent implements OnInit {
     rank: ['', Validators.required],
     fullname: ['', Validators.required]
   });
-  
 }
 //รับค่าหลายตัว
 get personal(): FormArray {
@@ -258,20 +385,13 @@ get personal(): FormArray {
 
   onRecord(){
     $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
-   
-  
-   
+
   }
-
-
 
 //insert
   onInsert(){
     $('#insertModel').modal('show'); 
   }
-
-
-
 
   onInsertSummit(data) {
       
@@ -285,8 +405,8 @@ get personal(): FormArray {
       console.log('ฟอร์มไม่ถูกต้อง');
       // แสดงข้อความแสดงข้อผิดพลาดให้ผู้ใช้ดู
       Swal.fire({
-        title: 'ผิดพลาด!',
-        text: 'กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น.',
+        title: 'เกิดข้อผิดพลาด!',
+        text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง',
         icon: 'error',
         confirmButtonText: 'ตกลง'
       });
@@ -305,35 +425,33 @@ get personal(): FormArray {
     this.sv.postDataTest(this.addItemForm.value).subscribe(res => {
       console.log("res submitted successfully", res);
       Swal.fire({
-              title: 'สำเร็จ!!',
-              text: 'กรอกข้อมูลสำเร็จ',
+              title: 'เพิ่มผู้ใช้สำเร็จ!!',
+              text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
               icon: 'success',
               confirmButtonText: 'ตกลง'
-      }).then(result => {
-        if (result.isConfirmed) {
-          this.refreshPage(); // รีเฟรชหน้าจอเมื่อผู้ใช้กด OK
-        }
       });
       $('#insertModel').modal('hide');
-
       this.addItemForm.reset();
       this.personInputs.clear(); // Clear FormArray
       // this.addPersonInput();
     },
     error =>{
       console.error('Error submitting data:', error);
-      Swal.fire({ 
-            title: 'Error!',
-            text: 'กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น.',
+      Swal.fire({
+            title: 'เกิดข้อผิดพลาด!',
+            text: 'การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ',
             icon: 'error',
-            confirmButtonText: 'OK'
+            confirmButtonText: 'ตกลง'
           });
 
     }
   );
     
+  this.fetchData()
+  
+
      // Close the modal
-    //  $('#insertModel').modal('hide');
+     $('#insertModel').modal('hide');
         
      // Show success alert
   //    $('#insertModel').on('hidden.bs.modal', function () {
@@ -382,15 +500,14 @@ get personal(): FormArray {
     $('#writtenModel').modal('hide');
   }
 
-
   printPDF(){
     console.log("working PDF..")
     const elementToPrint = document.getElementById('myDetail');
     html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
       const pdf = new jsPDF('p','mm','a4');
       pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
-      pdf.save('record.pdf')
-    });
+      pdf.save('การลงตรวจอิเล็กทรอนิค.pdf')
+    });   
   }
   
   searchData(data: string) {
@@ -398,17 +515,10 @@ get personal(): FormArray {
       console.log("res searchData:", res);
     });
   }
-
-  closeModal() {
-    // ซ่อนโมดัล
-    $('#insertModel').modal('hide');
-    
-    // รีเฟรชหน้าจอ
-    this.refreshPage();
-  }
-
-  refreshPage() {
-    window.location.reload();
+  q
+  initializeTooltips() {
+    setTimeout(() => {
+      ($('[data-toggle="tooltip"]') as any).tooltip();
+    }, 500);
   }
 }
-

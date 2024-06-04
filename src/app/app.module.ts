@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { TableListComponent } from './table-list/table-list.component';
 import { SharedService } from "./services/shared.service";
-import { DataTablesModule } from "angular-datatables";
+// import { DataTablesModule } from "angular-datatables"; //ลองทำตามที่ chatบอก ไม่ work
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -19,7 +19,7 @@ import { DataTablesModule } from "angular-datatables";
     ComponentsModule,
     RouterModule,
     AppRoutingModule,
-    DataTablesModule,
+    // DataTablesModule
   ],
   declarations: [
     AppComponent,

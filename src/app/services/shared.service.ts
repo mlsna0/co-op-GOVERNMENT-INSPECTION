@@ -9,9 +9,6 @@ import { Observable, catchError } from 'rxjs';
   providedIn: 'root'
 })
 export class SharedService {
-  open(modalContent: any, arg1: { ariaLabelledBy: string; }) {
-    throw new Error('Method not implemented.');
-  }
   // private baseUrl = 'mongodb://127.0.0.1:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private baseUrl = 'http://localhost:3000/api'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private typroText: string;
@@ -88,9 +85,8 @@ export class SharedService {
   searchData(query: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/searchData?query=${query}`);
   }
-  getItems(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/items`);
-  }
+  // getItems(): Observable<any[]> {
+  //   return this.http.get<any[]>(`${this.baseUrl}/items`);
+  // }
   
 }
-
