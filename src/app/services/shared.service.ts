@@ -22,6 +22,14 @@ export class SharedService {
       })
     );
   }
+  getRecord():Observable<any>{
+    return this.http.get(`${this.baseUrl}/recordModel`).pipe(
+      catchError(error=>{
+        console.error('Error fatching data:',error);
+        throw 'ไม่สามารถดึงข้อมูลได้';
+      })
+    );
+  }
   getDataById(id: number): Observable<any>{
     return this.http.get(`${this.baseUrl}/recordModel/${id}`);
   }

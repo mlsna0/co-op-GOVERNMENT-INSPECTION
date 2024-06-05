@@ -15,7 +15,8 @@ import jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
 
-import { ElementRef,ViewChild,ViewChildren } from '@angular/core';
+import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
+
 
 @Component({
   selector: 'app-table-list',
@@ -96,31 +97,22 @@ export class TableListComponent implements OnInit {
   //   }
 
   // ];
-  fetchData() {
-    this.fetchData;
-    this.sv.getData().subscribe(
-      res => {
-        this.items = res.records; // ใช้ res.records แทน res
-        console.log('Items fetched successfully:', this.items);
-      },
-      error => {
-        console.error('Error fetching items:', error);
-      }
-    );
-    
-  } 
+ 
 
-
+  applyStyle(command: string) {
+    document.execCommand(command, false, null);
+    console.log("applyStyle: ",document)
+  }
   ngOnInit(){
 
     this.dtOptions = {
     
-      columnDefs: [
-        {
-          // targets: [5],
-          // orderable: false
-        }
-      ],
+      // columnDefs: [
+      //   {
+      //     // targets: [5],
+      //     // orderable: false
+      //   }
+      // ],
       pagingType: 'full_numbers',
       "language": {
         "lengthMenu": "แสดง _MENU_ รายการ",
@@ -137,7 +129,7 @@ export class TableListComponent implements OnInit {
         },
       }
     };
-    console.log("DataTable Error: ",this.dtOptions)
+    console.log("DataTable : ",this.dtOptions)
 
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
@@ -146,12 +138,46 @@ export class TableListComponent implements OnInit {
     });
 
     this.sv.getData().subscribe(res => {
-      console.log("res getData:", res);
+      console.log("res getRecord:", res);
       this.items = res;
      
     });
     
+    // this.fetchData()
+
   }
+
+  // fetchData() {
+  //   this.sv.getData().subscribe(
+  //     res => {
+  //       this.items = res.records;
+  //       this.dtTrigger.next(null); // แจ้งเตือน DataTable ว่ามีข้อมูลใหม่
+  //       console.log('Items fetched successfully:', this.items);
+  //     },
+  //     error => {
+  //       console.error('Error fetching items:', error);
+  //     }
+  //   );
+  // }
+
+  // ngOnDestroy() {
+  //   this.dtTrigger.unsubscribe();
+  // }
+
+  // fetchData() {
+  //   this.fetchData;
+  //   this.sv.getData().subscribe(
+  //     res => {
+  //       this.items = res.records; // ใช้ res.records แทน res
+  //       console.log('Items fetched successfully:', this.items);
+  //     },
+  //     error => {
+  //       console.error('Error fetching items:', error);
+  //     }
+  //   );
+    
+  // } 
+ 
 
   //Writter section
   ngAfterViewInit() {
@@ -177,6 +203,7 @@ export class TableListComponent implements OnInit {
         if (this.ctx2) { // Ensure ctx2 is not undefined
           this.ctx2.beginPath();
         }
+        this.canvas2.style.border="none";
       };
 
       const draw = (e: MouseEvent) => {
@@ -220,6 +247,11 @@ export class TableListComponent implements OnInit {
       }
     }, 0);  
     console.log("it openSign status : ",this.isSignModalVisible)
+  }
+  refreshSignCanvas(index: number){
+    if(this.ctx2){
+      this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
+    }
   }
 
 saveSignature() {
@@ -533,7 +565,7 @@ get personal(): FormArray {
     }
   );
     
-  this.fetchData()
+  // this.fetchData()
   
 
      // Close the modal
@@ -572,7 +604,7 @@ get personal(): FormArray {
     html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
       const pdf = new jsPDF('p','mm','a4');
       pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
-      pdf.save('record.pdf')
+      pdf.save('การลงตรวจสอบ.pdf')
     });
   }
   
