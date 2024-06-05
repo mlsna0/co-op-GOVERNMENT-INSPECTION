@@ -216,6 +216,11 @@ label{
   text-overflow: ellipsis;
   max-width: 150px; 
 } */
+.placeholder::before {
+  content: attr(placeholder);
+  color: gray;
+  font-style: italic;
+}
 .full-page-textarea-container textarea{
   width: 100%;
   height: auto; /* ปรับให้ auto หรือกำหนดขนาดที่ต้องการ */
@@ -371,3 +376,17 @@ label{
     margin-left: 58px;
    
   }
+  /* .dataTables_wrapper .dataTables_paginate .paginate_button {
+    box-sizing: border-box;
+    display: inline-block;
+    min-width: 1.5em;
+    padding: 2px !important;
+    margin-left: 2px;
+    text-align: center;
+    text-decoration: none !important;
+    cursor: pointer;
+    color: inherit !important;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    background: transparent;
+  } */

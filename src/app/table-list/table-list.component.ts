@@ -614,20 +614,21 @@ get personal(): FormArray {
   }
 
 /////////////////////////////// formatFont Edit
-toggleTypro() {
-  this.isTyproActive = true;
-  this.isWritteActive = false;
-  this.activeButton = 'typro';
-  console.log("toggleTypro : ",this.toggleTypro)
+typroHolder:string="พิมที่นี้...";
+formatText(command: string) {
+  document.execCommand(command, false, null);
+  this.updateTyproText();
 }
 
-toggleWritte() {
-  this.isTyproActive = false;
-  this.isWritteActive = true;
-  this.activeButton = 'writte';
+onInput(event: any): void {
+  this.typroText = event.target.innerHTML;
 }
-  formatText(command: string) {
-    document.execCommand(command, false, null);
+
+updateTyproText(): void {
+  const editableDiv = document.querySelector('.form-control.full-page-textarea');
+  if (editableDiv) {
+    this.typroText = (editableDiv as HTMLElement).innerHTML;
   }
+}
  
 }

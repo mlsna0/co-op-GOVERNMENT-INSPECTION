@@ -1,11 +1,7 @@
 <!--สิ่งที่ติดปัญหาอยู่และยังไม่ได้แก้ไข
   1.templat datatable ไม่สามารถดึงได้มาใช้งานได่้
-  2.ยังไม่ได้เชื่อมค่อกับระบบฐานข้อมูล
-  3.ยังไม่ได้สร้าง services
-  4.ยังไม่ได้ดึง ข้อมูลมาแสดงผล
-  5.ยังไม่ได้สร้าง ระบบ เขียน และการมีคำสั่งของ pdf
-  6.การพิมพ์ยังไม่ได้ทำเพิ่มได้แต่แบบที่เห็น
-  7.ส่วนของ "tooltip" เรียกใช่งานจาก bootstrap ไม่ได้ tooltip คือ เมื่อเอาเมาส์ไปที่ปุ่มแล้วมันจะขึ้นข้อความขึ้นมานะอย่าง "ดูรายละเอียด"
+  2.ส่วนของ "tooltip" เรียกใช่งานจาก bootstrap ไม่ได้ tooltip คือ เมื่อเอาเมาส์ไปที่ปุ่มแล้วมันจะขึ้นข้อความขึ้นมานะอย่าง "ดูรายละเอียด"
+  3.style ของ tooltip ใช้ได้แค่ในตัวของ modal ถึงใช้ได้แต่ไม่สามารถมีการทำงานในแบบที่ต้องการได้ ตำแหน่งเริ่มต้นของ
 -->
 <div class="main-content">
   <div class="row justify-content-end">
@@ -30,15 +26,7 @@
             <p class="card-category"></p>
             <!-- <div class="btnBar">
               <form class="navbar-form">
-                <span class="bmd-form-group">
-                  <div class="input-group no-border">
-                    <input type="text" value class="form-control" placeholder="Search..." />
-                    <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
-                      <i class="material-icons">search</i>
-                      <div class="ripple-container"></div>
-                    </button>
-                  </div>
-                </span>
+      
               </form> -->
             <!-- (click)="searchData(myInputSearch.value)" -->
             <!-- </div> -->
@@ -336,7 +324,7 @@
                         <tbody>
                           <tr>
                             <td>{{detailItems?.record_id}}/{{detailItems?.record_star_date | thaidate :'year'}}</td>
-                            <td>{{ typroText }}</td>
+                            <td [innerHTML]="typroText"></td>
                           </tr>
                         </tbody>
                       </table>
@@ -425,13 +413,13 @@
                     <div class="col-sm-2" style="padding-top: 20px;">
                       <div class="section">
                         &nbsp;
-                        <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'typro'}"
-                          (click)="setActive('typro')">
+                        <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'typro'}" 
+                          (click)="setActive('typro')"><!-- data-toggle="tooltip" title="การพิมพ์ข้อความ" data-placement="top" -->
                           <i class="fa fa-file-word-o"></i>
                         </button>
                         &nbsp;
-                        <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'writte'}"
-                          (click)="setActive('writte')">
+                        <button  class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'writte'}"
+                          (click)="setActive('writte')"><!--data-toggle="tooltip" title="การเขียน" data-placement="top"-->
                           <i class="fa fa-pencil-square-o"></i>
                         </button>
                       </div>
@@ -443,36 +431,27 @@
                         <div class="typroTextBox">
                           <div class="headerText">
                             <button aria-label="Preview">การพิมพ์ข้อความ</button>
-                            <button (click)="formatText('bold')">
+                            <button  (click)="formatText('bold')" aria-label="bold">
                               <i class="fas fa-bold"></i>
                             </button>
-                            <button aria-label="Italic">
+                            <button (click)="formatText('italic')" aria-label="Italic">
                               <i class="fas fa-italic"></i>
                             </button>
-                            <button aria-label="Strikethrough">
+                            <button (click)="formatText('strikeThrough')" aria-label="Strikethrough">
                               <i class="fas fa-strikethrough"></i>
                             </button>
-                            <button aria-label="Link">
-                              <i class="fas fa-link"></i>
-                            </button>
-                            <button aria-label="Bullet List">
+                            <button  (click)="formatText('insertUnorderedList')" aria-label="Bullet List">
                               <i class="fas fa-list-ul"></i>
                             </button>
-                            <button aria-label="Numbered List">
+                            <button  (click)="formatText('insertOrderedList')"  aria-label="Numbered List">
                               <i class="fas fa-list-ol"></i>
                             </button>
-                            <button aria-label="Table">
-                              <i class="fas fa-table"></i>
-                            </button>
-                            <button aria-label="Attachment">
-                              <i class="fas fa-paperclip"></i>
-                            </button>
-                            <button aria-label="Expand">
-                              <i class="fas fa-expand"></i>
-                            </button>
+                          
+                         
+                           
                           </div>
-                          <textarea [(ngModel)]="typroText" placeholder="พิมพ์ที่นี้.."
-                            class="form-control  full-page-textarea"></textarea>
+                          <div  contenteditable="true" [(ngModel)]="typroText"  [class.placeholder]="!typroHolder" 
+                            class="form-control  full-page-textarea" ></div>
 
                         </div>
                       </div>
