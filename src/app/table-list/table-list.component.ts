@@ -25,6 +25,7 @@ import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
 })
 export class TableListComponent implements OnInit {
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
+  @ViewChild('textArea') textArea: ElementRef;
   people:any[] =[];
   
   //ListUser: users[] =[];
@@ -99,10 +100,7 @@ export class TableListComponent implements OnInit {
   // ];
  
 
-  applyStyle(command: string) {
-    document.execCommand(command, false, null);
-    console.log("applyStyle: ",document)
-  }
+ 
   ngOnInit(){
 
     this.dtOptions = {
@@ -613,6 +611,23 @@ get personal(): FormArray {
     this.sv.searchData(data).subscribe(res => {
       console.log("res searchData:", res);
     });
+  }
+
+/////////////////////////////// formatFont Edit
+toggleTypro() {
+  this.isTyproActive = true;
+  this.isWritteActive = false;
+  this.activeButton = 'typro';
+  console.log("toggleTypro : ",this.toggleTypro)
+}
+
+toggleWritte() {
+  this.isTyproActive = false;
+  this.isWritteActive = true;
+  this.activeButton = 'writte';
+}
+  formatText(command: string) {
+    document.execCommand(command, false, null);
   }
  
 }
