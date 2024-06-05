@@ -2396,17 +2396,17 @@ fieldset:disabled a.btn {
 
 .btn-info {
   color: #ffffff;
-  background-color: #00bcd4;
+  background-color: #0000ff; /*#00bcd4*/
   border-color: #00bcd4;
   -webkit-box-shadow: none;
           box-shadow: none; }
   .btn-info:hover {
     color: #ffffff;
-    background-color: #009aae;
-    border-color: #008fa1; }
+    background-color: #000096;/*009aae*/
+    border-color: #00004b; } /*#008fa1;*/
   .btn-info:focus, .btn-info.focus {
-    -webkit-box-shadow: none, 0 0 0 0.2rem rgba(0, 188, 212, 0.5);
-            box-shadow: none, 0 0 0 0.2rem rgba(0, 188, 212, 0.5); }
+    -webkit-box-shadow: none, 0 0 0 0.2rem , #000096;/*rgba(0, 188, 212, 0.5)*/
+            box-shadow: none, 0 0 0 0.2rem ,#000096; }/*rgba(0, 188, 212, 0.5)*/
   .btn-info.disabled, .btn-info:disabled {
     color: #ffffff;
     background-color: #00bcd4;

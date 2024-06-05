@@ -8,7 +8,13 @@
   align-items: center;
   
 }
+.dataTables_wrapper .dataTables_filter input{
+width: 180px;
+}
+.card-body{
 
+font-family: 'TH SarabunPSK', sans-serif; /*ใช้ฟอนต์ราชการ*/
+}
 .modal-body-detail{ 
 position: relative;
   display: flex;
@@ -19,17 +25,14 @@ position: relative;
  transform: translateX(-50%);
   width: 100%;
   border: 1px solid #000;
-  font-family: 'TH SarabunPSK', sans-serif; /* ใช้ฟอนต์ราชการ */
+  font-family: 'TH SarabunPSK', sans-serif;
 
   
 }
-.card-body{
 
-  font-family: 'TH SarabunPSK', sans-serif; /*ใช้ฟอนต์ราชการ*/
-  }
-  
 .modal-content{
 
+max-height: 1235.9px;
 left: 50%;
 transform: translateX(-50%);
 justify-content: center;
@@ -78,18 +81,7 @@ label{
 
 }
 .full-page-textarea-container{
-  width: 100%;
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-
-  border: 1px solid black;
-  border-radius: 5px;
-
-
-}
-
-.writteDraw{
+margin: 20px 0 20px 0;
 width: 827px;
 height: 535px; 
 border: none;
@@ -97,9 +89,137 @@ resize: none;
 border: 1px solid black;
 border-radius: 5px;
 
+
 }
+
+.headerText{
+display: flex;
+border-bottom: 1px solid #c1c1c1;
+}
+.headerText button:first-child {
+display: flex;
+font-family: 'TH SarabunPSK', sans-serif;
+
+height: 35px;
+width: auto;
+}
+/* .headerText button:first-child:hover {
+display: flex;
+align-items: center;
+justify-content: center;
+background: #e2e2e2;
+border-radius: 5px;
+height: 30px;
+width: 65px;
+} */
+.headerText button{
+display: flex;
+align-items: center;
+justify-content: center;
+background:none;
+width: 35px;
+height: 35px;
+border: none;
+
+}
+.headerText i:hover{
+display: flex;
+align-items: center;
+justify-content: center;
+width: 30px;
+height: 25px;
+background: #e2e2e2;
+border-radius: 5px;
+}
+.writteDraw{
+margin: 20px 0 20px 0;
+width: 827px;
+height: 535px; 
+border: none;
+resize: none;
+border: 1px solid black;
+border-radius: 5px;
+
+
+}
+
+.full-page-canvas {
+width: 100%;
+height: 491.3px;
+/* border: 1px solid black;  */
+border-radius: 5px;
+
+}
+.openSignModal{
+position: relative;
+margin-left: 40px;
+align-items: center;
+padding-left: 50px;
+display: flex;
+width: 40mm;
+height: 30mm;
+border: 2px dashed orange;
+background: repeating-linear-gradient(-45deg,  rgb(253, 216, 4) 4px, transparent,  transparent 10px );
+border-radius: 5px;
+border-style:dashed ;
+opacity: 0.5;
+text-align: center;
+cursor: pointer;
+
+}
+.Writte-sign {
+position: absolute;
+
+display: flex; /* Hidden by default */
+top: 0;
+left: 39.5px;
+width: 100%;
+height: 30mm;
+background-color: rgb(255, 254, 254); /* Semi-transparent background */
+z-index: 1000; /* Higher than other content */
+
+}
+
+
+
+.full-page-signWritte{
+
+width: 40mm;
+height: 30mm;
+border-radius: 5px;
+border: 1px solid black;
+z-index: 1001;
+}
+
+
+.toolbar {
+display: flex;
+justify-content: flex-end;
+border-bottom: 1px solid #929292;
+}
+
+.toolbar button {
+margin-right: 5px;
+padding: 5px 10px;
+background: none;
+border: none;
+}
+
+/*end writter draw*/
+
+/* .ellipsis {
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+max-width: 150px; 
+} */
 .full-page-textarea-container textarea{
-border: 5px;
+width: 100%;
+height: auto; /* ปรับให้ auto หรือกำหนดขนาดที่ต้องการ */
+min-height: 100px; /* หรือกำหนด min-height */
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
 }
 
 .btn-warning:hover::after {
@@ -118,6 +238,7 @@ border: 5px;
   background: #fff;
   padding: 96px;
   height: 100%;
+  max-height: 297mm;
 }
 .header-topic{
 position: relative;
@@ -156,9 +277,9 @@ right: 25px;
   border: 1px solid #ddd;
   margin-left: 50px;
 } */
-.form-group {
+/* .form-group {
   margin-bottom: 10px;
-}
+} */
 
 .detail-content{
   position: relative;
@@ -180,21 +301,35 @@ right: 25px;
   display: flex;
   justify-content: space-between;
 }
-
+/*location td*/
+/* .table-responsive table td:nth-child(4) {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+} */
 
 
 .main-detail {
   position: relative;
   border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
-  width: 100%;
+  width: 600px;
+  overflow: auto;
   padding: 20px; /* เพิ่มระยะห่างบนและล่าง */
   font-family: 'TH SarabunPSK', sans-serif; /* ใช้ฟอนต์ราชการ */
 }
-
+.main-detail table{
+  max-width: 600px;
+  table-layout: fixed;
+  overflow: auto;
+}
 .main-detail th, .main-detail td {
+  max-width: 539.29px;
   border: 1px solid black; /* เส้นขอบสีดำ */
   padding: 5px; /* ระยะห่างภายในเซลล์ */
   text-align: left; /* จัดตำแหน่งเนื้อหาให้อยู่ทางซ้าย */
+  word-wrap: break-word;
+  overflow: hidden;
 }
 
 .main-detail th:first-child, .main-detail td:first-child {
@@ -215,8 +350,14 @@ right: 25px;
 .sign-content{
   position: relative;
   padding-left: 380px;
+  
   text-align: center;
   margin-top: 20px;
+}
+.UploadContentBox{
+  position: relative;
+  align-items: center;
+  justify-content: center;
 }
 
 .sign-content img{
@@ -225,23 +366,10 @@ right: 25px;
   
   margin-left: 58px;
 
-  .full-page-canvas {
-    width: 100%;
-    height: 100%;
-    border: 1px solid black; /* เพิ่มเพื่อดูขอบเขตของแคนวาส */
-}
-
-.toolbar {
-    margin-bottom: 10px;
-}
-
-.toolbar button {
-    margin-right: 5px;
-    padding: 5px 10px;
-}
-
-.custom-table td, .custom-table th {
-  padding: 4px !important; /* Force the reduced padding */
-}
-
+  .editor {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 100px;
+  }
+ 
 }

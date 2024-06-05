@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
@@ -10,31 +10,26 @@ import { DataTablesModule } from "angular-datatables"; //petch เพิ่ม�
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Items } from '../../../server/models/itemModel';
 import Swal from 'sweetalert2';
+
 import jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
-import { AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 
+import { ElementRef,ViewChild,ViewChildren } from '@angular/core';
 
 @Component({
   selector: 'app-table-list',
   templateUrl: './table-list.component.html',
-  styleUrls: ['./table-list.component.css'],
-  // encapsulation: ViewEncapsulation.None
+  styleUrls: ['./table-list.component.css']
 })
 export class TableListComponent implements OnInit {
-  @ViewChild('writteCanvas', { static: false }) canvasRef: ElementRef<HTMLCanvasElement>;
-  private ctx: CanvasRenderingContext2D;
-  private painting: boolean = false;
-  private penSize: number = 5;
-  private penColor: string = '#000000';
-  public activeButton: string = ''; 
-  public isTyproActive: boolean = false;
-  public isWritteActive: boolean = false;
+  @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
+  @ViewChild('textArea') textArea: ElementRef;
 
 
 
   people:any[] =[];
+  
   //ListUser: users[] =[];
   Form:FormGroup;
   dtOptions:any ={};
@@ -47,30 +42,33 @@ export class TableListComponent implements OnInit {
   detailItems: any;
   PersonINT :number = 0;
   personInputs: FormArray;
-
   addItemForm: any;
   addDataForm: any;
-  // activeButton: string='typro';
-  // isTyproActive:boolean = true;
-  // isWritteActive:boolean = false;
+  activeButton: string='typro';
+  isTyproActive:boolean = true;
+  isWritteActive:boolean = false;
   typroText: string='';
   uploadedImages: string[] = [];
   isLoading: boolean[] = [false];
-  canvas: any;
-  // ctx: any;
-  // penSize: number = 1;
-  // penColor: string = 'black';
-
   // uploadedImageUrl: string | ArrayBuffer | null = null;
   // isLoading: boolean = false;
- 
   
-  
+  private canvas: HTMLCanvasElement;
+  private ctx: CanvasRenderingContext2D;
+  penColor: string = 'black';
+  penSize: number = 1;
+
+  ////////////////////////////
+  isSignModalVisible: boolean[] = [];
+  private canvas2: HTMLCanvasElement;
+  private ctx2: CanvasRenderingContext2D;
+  penColor2: string = 'black';
+  penSize2: number = 1;
+//writter box
   constructor(
     private fb:FormBuilder,
     private http:HttpClient,
-    private sv:SharedService,
-
+    private sv:SharedService
   ) { 
     this.addItemForm = this.fb.group({
       id: ['',Validators.required],
@@ -89,68 +87,6 @@ export class TableListComponent implements OnInit {
     this.personInputs = this.addItemForm.get('personal') as FormArray;
     this.addPersonInput(); // Add initial input group
     // this.loadViewData();
-  }
-
-  ngAfterViewInit() {
-    if (this.isWritteActive) {
-      this.setupCanvas();
-    }
-  }
-
-  setupCanvas() {
-    const canvas = this.canvasRef.nativeElement;
-    this.ctx = canvas.getContext('2d');
-
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
-
-    const startPosition = (e: MouseEvent) => {
-      this.painting = true;
-      this.draw(e);
-    };
-
-    const endPosition = () => {
-      this.painting = false;
-      this.ctx.beginPath();
-    };
-
-    const draw = (e: MouseEvent) => {
-      if (!this.painting) return;
-
-      this.ctx.lineWidth = this.penSize;
-      this.ctx.lineCap = 'round';
-      this.ctx.strokeStyle = this.penColor;
-
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      this.ctx.lineTo(x, y);
-      this.ctx.stroke();
-      this.ctx.beginPath();
-      this.ctx.moveTo(x, y);
-    };
-
-    canvas.addEventListener('mousedown', startPosition);
-    canvas.addEventListener('mouseup', endPosition);
-    canvas.addEventListener('mousemove', draw);
-  }
-  draw(e: MouseEvent) {
-    throw new Error('Method not implemented.');
-  }
-
-  changeColor(color: string) {
-    this.penColor = color;
-  }
-
-  changeSize(size: string) {
-    this.penSize = parseInt(size, 10);
-  }
-
-  refreshCanvas() {
-    if (this.ctx) {
-      this.ctx.clearRect(0, 0, this.canvasRef.nativeElement.width, this.canvasRef.nativeElement.height);
-    }
   }
   
   documentImageUrl = 'assets/img/sampleA4-1.png';
@@ -180,7 +116,6 @@ export class TableListComponent implements OnInit {
 
   ngOnInit(){
 
-    this.initializeTooltips();
     this.dtOptions = {
     
       columnDefs: [
@@ -192,10 +127,11 @@ export class TableListComponent implements OnInit {
       pagingType: 'full_numbers',
       "language": {
         "lengthMenu": "แสดง _MENU_ รายการ",
-        "search": "ค้นหา",
+        "search": "ค้นหา"
+        ,
         "info": "แสดงหน้า _PAGE_ จากทั้งหมด _PAGES_ หน้า",
         "infoEmpty": "แสดง 0 ของ 0 รายการ",
-        // "zeroRecords": "ไม่พบข้อมูล",
+        "zeroRecords": "ไม่พบข้อมูล",
         "paginate": {
           "first": "หน้าแรก",
           "last": "หน้าสุดท้าย",
@@ -204,7 +140,7 @@ export class TableListComponent implements OnInit {
         },
       }
     };
-
+    console.log("DataTable Error: ",this.dtOptions)
 
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
@@ -212,35 +148,176 @@ export class TableListComponent implements OnInit {
 
     });
 
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+
     this.sv.getData().subscribe(res => {
       console.log("res getData:", res);
       this.items = res;
      
     });
-    
   }
 
-      setActive(button: string){
-        this.activeButton = button;
-        console.log("connented..Active")
-        if (button === 'typro'){
-          this.isTyproActive =true;
-          this.isWritteActive =false;
-          console.log("typro section")
-          
-        }else if(button ==="writte"){
-          this.isTyproActive =false;
-          this.isWritteActive =true;
-          console.log("writte section..")
+  //Writter section
+  ngAfterViewInit() {
+    this.setupCanvas();
+    // this.setupSignCanvas(index: number);
+  }
+  setupSignCanvas(index: number) {
+    this.canvas2 = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
+    if (this.canvas2) {
+      this.ctx2 = this.canvas2.getContext('2d');
+      let painting = false;
 
-          if (this.isWritteActive) {    
-            setTimeout(() => this.setupCanvas(), 0);
-          }
+      this.canvas2.width = this.canvas2.clientWidth;
+      this.canvas2.height = this.canvas2.clientHeight;
 
-        }else{
-          console.log("selection error")
+      const startPosition = (e: MouseEvent) => {
+        painting = true;
+        draw(e);
+      };
+
+      const endPosition = () => {
+        painting = false;
+        if (this.ctx2) { // Ensure ctx2 is not undefined
+          this.ctx2.beginPath();
         }
+      };
+
+      const draw = (e: MouseEvent) => {
+        if (!painting) return;
+
+        if (this.ctx2) { // Ensure ctx2 is not undefined
+          this.ctx2.lineWidth = this.penSize2;
+          this.ctx2.lineCap = 'round';
+          this.ctx2.strokeStyle = this.penColor2;
+
+          const rect = this.canvas2.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          this.ctx2.lineTo(x, y);
+          this.ctx2.stroke();
+          this.ctx2.beginPath();
+          this.ctx2.moveTo(x, y);
+        }
+      };
+
+      this.canvas2.addEventListener('mousedown', startPosition);
+      this.canvas2.addEventListener('mouseup', endPosition);
+      this.canvas2.addEventListener('mousemove', draw);
+
+      console.log('Sign canvas setup complete');
+    } else {
+      console.error('Sign canvas element not found', this.canvas2);
+    }
+  }
+  openSignModal(index: number){
+    this.isSignModalVisible[index] = true;
+    setTimeout(() => {
+      if (this.writteSignElement) {
+        this.setupSignCanvas(index);
+        const writteSignElement = this.writteSignElement.nativeElement as HTMLElement;
+        writteSignElement.style.display = 'flex';
+        console.log("Setup activate or not: ",this.setupSignCanvas)
+      } else {
+        console.error('writteSignElement is null or undefined',this.writteSignElement);
       }
+    }, 0);  
+    console.log("it openSign status : ",this.isSignModalVisible)
+  }
+
+saveSignature() {
+    if (this.canvas2) {
+      const dataURL = this.canvas2.toDataURL();
+      // Here you can handle the signature image dataURL as needed
+      console.log(dataURL);
+      $('#SignModal').modal('hide');
+    } else {
+      console.error('Canvas element not found');
+    }
+  }
+//////////////////////////////////////////////////////////////////////
+  setupCanvas() {
+    this.canvas = document.getElementById('writteCanvas') as HTMLCanvasElement;
+    this.ctx = this.canvas.getContext('2d');
+    let painting = false;
+
+    this.canvas.width = this.canvas.clientWidth;
+    this.canvas.height = this.canvas.clientHeight;
+
+    const startPosition = (e: MouseEvent) => {
+      painting = true;
+      draw(e);
+    };
+
+    const endPosition = () => {
+      painting = false;
+      this.ctx.beginPath();
+    };
+
+    const draw = (e: MouseEvent) => {
+      if (!painting) return;
+
+      this.ctx.lineWidth = this.penSize; 
+      this.ctx.lineCap = 'round';
+      this.ctx.strokeStyle = this.penColor;
+
+      const rect = this.canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      this.ctx.lineTo(x, y);
+      this.ctx.stroke();
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, y);
+    };
+
+    this.canvas.addEventListener('mousedown', startPosition);
+    this.canvas.addEventListener('mouseup', endPosition);
+    this.canvas.addEventListener('mousemove', draw);
+  }
+
+  changeColor(color: string) {
+    this.penColor = color;
+  }
+
+  changeSize(size: string) {
+    console.log('Pen size before parsing:', size); // Check the size value before parsing
+    this.penSize = parseInt(size, 10);
+    console.log('Pen size after parsing:', this.penSize); // Check the size value after parsing
+  }
+  refreshCanvas() {
+    if (this.ctx) {
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+  }
+
+
+
+ //End writter section
+
+
+  setActive(button: string){
+    this.activeButton = button;
+    console.log("connented..Active")
+    if (button === 'typro'){
+      this.isTyproActive =true;
+      this.isWritteActive =false;
+      console.log("typro section")
+      
+    }else if(button ==="writte"){
+      this.isTyproActive =false;
+      this.isWritteActive =true;
+      console.log("writte section..")
+    }else{
+      console.log("selection error")
+    }
+    if (this.isWritteActive) {
+      setTimeout(() => this.setupCanvas(), 0);
+    }
+  }
 
 
 
@@ -262,8 +339,12 @@ export class TableListComponent implements OnInit {
       this.viewData = res;
     
       console.log("it on working.. ")
+     
       
-    })
+    });
+    
+  
+  
   }
   // loadViewData() {
   //   this.sv.getItems().subscribe(data => {
@@ -291,6 +372,8 @@ export class TableListComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     }
+    
+    
 
   }
 
@@ -368,6 +451,7 @@ export class TableListComponent implements OnInit {
     rank: ['', Validators.required],
     fullname: ['', Validators.required]
   });
+  
 }
 //รับค่าหลายตัว
 get personal(): FormArray {
@@ -385,8 +469,10 @@ get personal(): FormArray {
 
   onRecord(){
     $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
-
+   
   }
+
+
 
 //insert
   onInsert(){
@@ -394,7 +480,6 @@ get personal(): FormArray {
   }
 
   onInsertSummit(data) {
-      
     // console.log(data);
     console.log('Item form:',this.addItemForm.value);
     console.log('PernalForm : ',this.addPersonalForm.value);
@@ -421,7 +506,6 @@ get personal(): FormArray {
     //   console.log("res postItemData:", res);
     // });
 
-    
     this.sv.postDataTest(this.addItemForm.value).subscribe(res => {
       console.log("res submitted successfully", res);
       Swal.fire({
@@ -434,6 +518,7 @@ get personal(): FormArray {
       this.addItemForm.reset();
       this.personInputs.clear(); // Clear FormArray
       // this.addPersonInput();
+      this.refreshPage();
     },
     error =>{
       console.error('Error submitting data:', error);
@@ -443,7 +528,6 @@ get personal(): FormArray {
             icon: 'error',
             confirmButtonText: 'ตกลง'
           });
-
     }
   );
     
@@ -452,29 +536,7 @@ get personal(): FormArray {
 
      // Close the modal
      $('#insertModel').modal('hide');
-        
-     // Show success alert
-  //    $('#insertModel').on('hidden.bs.modal', function () {
-  //     Swal.fire({
-  //       title: 'Success!!',
-  //       text: 'Your data has been submitted successfully.',
-  //       icon: 'success',
-  //       confirmButtonText: 'OK'
-  //   });
-  // });
-  // this.addItemForm.reset();
-
-
-
-    // if (this.addItemForm.valid) {
-    //   this.items.push(this.addItemForm.value);
-    //   this.addItemForm.reset();
-    //   // console.log(this.items);
-    //   // ส่งข้อมูลไปยัง controller
-    //   this.sv.postItemData(this.items).subscribe(res => {
-    //     console.log("res postItemData:", res);
-    //   });
-    // }
+     
   }
   
   getCurrentLocation() {
@@ -500,14 +562,15 @@ get personal(): FormArray {
     $('#writtenModel').modal('hide');
   }
 
+
   printPDF(){
     console.log("working PDF..")
     const elementToPrint = document.getElementById('myDetail');
     html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
-      const pdf = new jsPDF('p','mm','a4');
+      const pdf = new jsPDF('p','mm','a4'); 
       pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
-      pdf.save('การลงตรวจอิเล็กทรอนิค.pdf')
-    });   
+      pdf.save('การลงตรวจจอิเล็กทรอนิค.pdf')
+    });
   }
   
   searchData(data: string) {
@@ -515,10 +578,21 @@ get personal(): FormArray {
       console.log("res searchData:", res);
     });
   }
-  q
-  initializeTooltips() {
-    setTimeout(() => {
-      ($('[data-toggle="tooltip"]') as any).tooltip();
-    }, 500);
+
+  toggleTypro() {
+    this.isTyproActive = true;
+    this.isWritteActive = false;
+    this.activeButton = 'typro';
   }
+
+  toggleWritte() {
+    this.isTyproActive = false;
+    this.isWritteActive = true;
+    this.activeButton = 'writte';  
+  }
+
+  formatText(command: string) {
+    document.execCommand(command, false, null);
+  }
+ 
 }

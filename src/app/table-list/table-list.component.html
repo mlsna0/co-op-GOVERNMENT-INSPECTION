@@ -11,7 +11,7 @@
   <div class="row justify-content-end">
     <div class="col-sm-2">
       <div class="insert-data">
-        <button class="btn btn-danger pull-center" (click)="onInsert()">
+        <button class="btn btn-success pull-center" (click)="onInsert()">
           <i class="fa fa-plus"></i> &nbsp;เพิ่มรายการ
         </button>
       </div>
@@ -45,39 +45,58 @@
           </div>
 
           <!-- </div> card-Edit -->
+
           <div class="card-body">
-            <div class="table-responsive">  
+            <div class="table-responsive">
               <table width="100%" datatable [dtOptions]="dtOptions"
                 class="table table-border table-hover table-bordered nowrap">
                 <thead class="text-primary">
                   <tr>
-                    <th style="text-align: center;">ครั้งที่</th>
-                    <th style="text-align: center;">วันที่เริ่ม</th>
-                    <th style="text-align: center;">วันที่เสร็จสิ้น</th>
-                    <th style="text-align: center;">สถานที่</th>
-                    <th class="text-center" style="padding: 2px;"><i class="fa fa-gear"></i></th>
+                    <th style="width: 2%; white-space: nowrap; text-align: center;">ครั้งที่</th>
+                    <th>วันที่เริ่มตรวจสอบ</th>
+                    <th>วันที่เสร็จสิ้น</th>
+                    <th>สถานที่</th>
+                    <th class="text-center"><i class="fa fa-gear"></i></th>
                   </tr>
                 </thead>
                 <tbody *ngFor="let item of items?.records">
                   <!---->
                   <tr>
-                    <td>{{item.record_id}}</td>
-                    <td>{{item.record_star_date | thaidate: "medium"}}</td>
-                    <td>{{item.record_end_date | thaidate: "medium"}}</td>
-                    <td>{{item.record_location}}</td>
 
-                    <td class=" text-center " style="width: 1%; white-space: nowrap;">
+
+                    <td style=" text-align: center;">
+
+                      {{item.record_id}}
+                    </td>
+                    <td style=" white-space: nowrap;">
+
+                      {{item.record_star_date | thaidate: "medium"}}
+                    </td>
+                    <td style=" white-space: nowrap;">
+
+                      {{item.record_end_date | thaidate: "medium"}}
+                    </td>
+                    <td style=" white-space: nowrap;">
+
+                      <div class="ellipsis" [attr.title]="item.record_location" data-toggle="tooltip">
+                        {{item.record_location}}
+                      </div>
+                    </td>
+
+                    <td class=" text-center " style=" width:1% ;white-space: nowrap;">
                       <!-- <a href="" (click)="openModal()"><i class="fa fa-file-text-o" ></i></a>&nbsp; -->
                       <!-- <a href=""  (click)="onRecord()" ><i class="fa fa-pencil-square-o" ></i></a>&nbsp;
                       <a href=""><i class="fa fa-file-pdf-o" (click)="printPDF()" ></i></a> -->
                       <button (click)="openModal(item._id)" class="text-primary"
                         style="border: none; background: none;">
-                        <i data-toggle="tooltip" title="detail" data-placement="top" class="fa fa-file-text-o  text-primary" style="color: black;"></i>
+                        <i data-toggle="tooltip" title="ดูรายละเอียด" data-placement="top"
+                          class="fa fa-file-text-o  text-primary" style="color: black;"></i>
                       </button>&nbsp;
 
 
                       <button (click)="onRecord()" style="border: none; background: none;" class="text-primary">
-                        <i class="fa fa-pencil-square-o  text-primary" style="color: black;"></i>
+                        <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top"
+                          class="fa fa-pencil-square-o  text-primary" style="color: black;"></i>
                       </button> &nbsp;
 
                       <button style="border: none; background: none;">
@@ -89,8 +108,8 @@
                 </tbody>
 
               </table>
-              </div>
             </div>
+          </div>
 
           <!-- การเพิ่มข้อมูล
             <div class="modal fade" id="insertModel" tabindex="-1" role="dialog"
@@ -177,93 +196,60 @@
                     <div class="row">
                       <div class="col-sm">
                         <div class="form-group">
-                          <label for="topic">งานที่ตรวจ</label>
+                          <label for="topic">หัวข้อการตรวจสอบ</label>
                           <input type="text" id="topic" formControlName="topic" class="form-control"
-                            placeholder="งานที่ตรวจ" />
+                            placeholder="หัวข้อการตรวจสอบ" />
                         </div>
                       </div>
                     </div>
 
                     <!-- <form action method="post" [formGroup]="addPersonalForm"> -->
-                      <div class="row inputLabel">
-                        <div class="col-sm-3">
-                          <label for="rank">ยศ/ตำแหน่ง</label>
-                        </div>
-                        <div class="col-sm-5">
-                          <label for="fullname">ชื่อ-นามสกุล</label>
-                        </div>
-                        <div class="col-md-2">
-                          <button type="button" (click)="addPersonInput()" style="border: none; background: none;">
-                            <i class="fa fa-plus"></i>
-                          </button>
-                          <button type="button" (click)="deletePersonInput()" style="border: none; background: none;">
-                            <i class="fa fa-minus"></i>
-                          </button>
-                       
-                        </div>
+                    <div class="row inputLabel">
+                      <div class="col-sm-3">
+                        <label for="rank">ยศ/ตำแหน่ง</label>
+                      </div>
+                      <div class="col-sm-5">
+                        <label for="fullname">ชื่อ-นามสกุล</label>
+                      </div>
+                      <div class="col-md-2">
+                        <button type="button" (click)="addPersonInput()" style="border: none; background: none;">
+                          <i class="fa fa-plus"></i>
+                        </button>
+                        <button type="button" (click)="deletePersonInput()" style="border: none; background: none;">
+                          <i class="fa fa-minus"></i>
+                        </button>
 
                       </div>
-                      <!-- formArrayName="personal" -->
-                      <div >
-                        <div *ngFor="let person of addItemForm.get('personal')['controls']; let i = index" [formGroup]="addItemForm">
-                          <div class="row mx-0" [formGroup]="person" >
-                            <div class="col-sm-3">
-                              <div class="form-group">
-  
-                                <input type="text" id="rank-{{i}}" formControlName="rank" class="form-control"
-                                  placeholder="ยศ/ตำแหน่ง" />
-                              </div>
-                            </div>
-                            <div class="col-sm-5">
-                              <div class="form-group">
-  
-                                <input type="text" id="fullname-{{i}}" formControlName="fullname" class="form-control"
-                                  placeholder="--กรอกข้อมูล--" />
-                              </div>
-                      
-                            </div>
-                    
-                          </div>
 
-                        </div>
+                    </div>
+                    <!-- formArrayName="personal" -->
+                    <div>
+                      <div *ngFor="let person of addItemForm.get('personal')['controls']; let i = index"
+                        [formGroup]="addItemForm">
+                        <div class="row mx-0" [formGroup]="person">
+                          <div class="col-sm-3">
+                            <div class="form-group">
 
-                      </div>
-                    <!-- </form> -->
-                    <!-- <form action method="post" [formGroup]="addPersonalForm">
-                      <div class="row">
-
-                        <div class="col-sm-3">
-                          <div class="form-group">
-                            <label for="rank">ยศ/ตำเเหน่ง</label>
-                            <input type="text" id="rank" formControlName="rank" class="form-control"
-                              placeholder="ยศ/ตำเเหน่ง" />
-                            <div *ngFor="let input of personInputs">
-                              <input type="text" id="rank" formControlName="rank" class="form-control"
-                                placeholder="ยศ/ตำเเหน่ง" />
+                              <input type="text" id="rank-{{i}}" formControlName="rank" class="form-control"
+                                placeholder="ยศ/ตำแหน่ง" />
                             </div>
                           </div>
-                        </div>
-                        <div class="col-sm-5">
-                          <div class="form-group">
-                            <label for="fullname">ชื่อ-นามสกุล</label>
-                            <input type="text" id="fullname" formControlName="fullname" class="form-control"
-                              placeholder="--กรอกข้อมูล--" />
-                            <div *ngFor="let input of personInputs">
-                              <input type="text" id="fullname" formControlName="fullname" class="form-control"
+                          <div class="col-sm-5">
+                            <div class="form-group">
+
+                              <input type="text" id="fullname-{{i}}" formControlName="fullname" class="form-control"
                                 placeholder="--กรอกข้อมูล--" />
                             </div>
 
-
-
                           </div>
-                        </div>
-                        <div class="col-md-2">
-                          <button (click)="addPersonInput()" style="border: none; background: none;"><i
-                              class="fa fa-plus"></i></button>
-                        </div>
 
+                        </div>
 
                       </div>
+
+                    </div>
+                    <!-- </form> -->
+                    <!-- <form action method="post" [formGroup]="addPersonalForm">
                     </form> -->
 
                     <div class="form-group">
@@ -276,15 +262,17 @@
                       <input type="text" id="location" formControlName="location" class="form-control"
                         placeholder="สถานที่" readonly>
                     </div>
-                    <button type="button" class="btn btn-primary" (click)="getCurrentLocation()">เลือก location
+                    <button type="button" class="btn btn-info" style="background: blue;" (click)="getCurrentLocation()">
+                      <i class="fa fa-location-dot">&nbsp;</i>เลือก location
                       ปัจจุบัน</button>
 
 
 
                     <div class="modal-footer">
-                      <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>บันทึก</button>
-                      <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times" (click)="closeModal()"></i>
-                        ปิด
+                      <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;บันทึก</button>
+                      <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"
+                          (click)="closeModal()"></i>
+                        &nbsp; ปิด
                       </button>
                     </div>
                   </form>
@@ -297,7 +285,7 @@
           <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content"  [ngStyle]="{ width: '230mm', height: '327mm' }" >
+              <div class="modal-content" [ngStyle]="{ width: '230mm', height: '327mm' }">
                 <div class="modal-header card-header card-header-danger" style="background: rgb(255, 209, 0)">
                   <h5 class="modal-title" id="myModalLabel" style="color: white;">รายละเอียด</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -314,6 +302,7 @@
                         <p>{{ detailItems?.record_topic }}</p>
 
                       </div>
+
                       <div class="detail-content">
                         <div class="date-flex">
                           <div class="form-group start-date">
@@ -347,39 +336,43 @@
                         <tbody>
                           <tr>
                             <td>{{detailItems?.record_id}}/{{detailItems?.record_star_date | thaidate :'year'}}</td>
-                            <td>{{ typroText }}</td>
+                            <td [innerHTML]="typroText"></td>
                           </tr>
                         </tbody>
                       </table>
 
 
-                        <div class="sign-content">
-                          <div class="form-group">
-                            <label>รายชื่อผู้รับผิดชอบ:</label>
-                            <div *ngFor="let person of viewData; let i = index">
-                              <div>
-                                <div>
-                                  <i class="fa fa-upload" style="font-size:24px; cursor: pointer;" 
-                                    (click)="uploadImage(i)" *ngIf="!isLoading[i] && !uploadedImages[i]"></i>
-                                  <input type="file" id="image-upload-{{i}}" (change)="onFileChange($event, i)" accept="image/" style="display: none;">
-                                  <img [src]="uploadedImages[i]" alt="Uploaded Image" *ngIf="uploadedImages[i]" 
-                                      style="max-width: 100px; max-height: 100px; display: block; margin-top: 10px;">
-                                    </div>
-                                    <!-- <div *ngIf="isWritteActive" class="full-page-pdf">
-                                      <div class="toolbar">
-                                        <button (click)="changeColor('black')">Black</button>
-                                        <button (click)="changeColor('red')">Red</button>
-                                        <button (click)="changeColor('blue')">Blue</button>
-                                        <button (click)="refreshCanvas(i)">Refresh</button>
-                                      </div>
-                                      <canvas #writteCanvas class="full-page-canvas"></canvas>
-                                    </div> -->
-                                    
-                                  </div>
-                              <p>{{ person.view_rank }} &nbsp; &nbsp; {{ person.view_full_name }}</p>
+                      <div class="sign-content">
+                        <div class="form-group">
+                          <label>รายชื่อผู้รับผิดชอบ:</label>
+                          <div *ngFor="let person of viewData; let i = index">
+                            <div class="UploadContentBox">
+                              <!-- <div>
+                                <i class="fa fa-upload" style="font-size:24px; cursor: pointer;"
+                                  (click)="uploadImage(i)" *ngIf="!isLoading[i] && !uploadedImages[i]"></i>
+                                <input type="file" id="image-upload-{{i}}" (change)="onFileChange($event, i)"
+                                  accept="image/" style="display: none;">
+                                <img [src]="uploadedImages[i]" alt="Uploaded Image" *ngIf="uploadedImages[i]"
+                                  style="max-width: 100px; max-height: 100px; display: block; margin-top: 10px;">
+                              </div> -->
+                              <div class="openSignModal" (click)="openSignModal(i)">
+                                <p>คลิกเพื่อเซ็น</p>
+                                
+                              </div>
+                              <!-- Sign modal -->       
+                              <div class="Writte-sign"  #writteSignElement id="SignModal-{{i}}" *ngIf="isSignModalVisible[i]">
+                                <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error someting with
+                                  canvas</canvas>
+                              </div>
+                    
+
                             </div>
-                          </div>  
+                            <div class="text-content" [ngClass]="{'owner': person.isOwner}">
+                            <a>{{ person.view_rank }} &nbsp; &nbsp; {{ person.view_full_name }} </a>
+                          </div>
+                          </div>
                         </div>
+                      </div>
 
 
                     </div>
@@ -390,24 +383,24 @@
                   
                       </div>
 
-                     
-
-
                     </form>
                   </div> -->
                 </div>
                 <div class="modal-footer">
-                  <button  data-toggle="tooltip" title="dowload to PDF" data-placement="top" type="button" class="btn btn-success pull-center" (click)="printPDF()">
-                    <i class="fa fa-download"></i>&nbsp; &nbsp; ดาว์โหลด
+                  <button type="button"    class="btn btn-success pull-center" (click)="printPDF()" >
+                    <i class="fa fa-download"></i>&nbsp; ดาว์โหลด
                   </button>
-                  <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeModal()">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeModal()" >
                     <i class="fa fa-times"></i>&nbsp; ปิด
                   </button>
                 </div>
               </div>
             </div>
           </div>
+
+
           <!--[formGroup]="Form" (ngSubmit)="addPersonCommit(Form.value)" modal อันที่เป็นของ add person หน้าเล็กๆๆ ถูกลบออกนะ-->
+        
 
           <!-- จดบันทึก-->
           <div class="modal fade" id="writtenModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -416,7 +409,7 @@
               <div class="modal-content" [ngStyle]="{ width: '230mm' }">
                 <div class="modal-header card-header card-header-danger" style="background: rgb(255, 209, 0)">
                   <h5 style="color: white;" class="modal-title" id="myModalLabel">จดบันทึก</h5>
-                  
+
 
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -432,25 +425,66 @@
                           <i class="fa fa-file-word-o"></i>
                         </button>
                         &nbsp;
-                        <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'writte'}" (click)="setActive('writte')">
+                        <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'writte'}"
+                          (click)="setActive('writte')">
                           <i class="fa fa-pencil-square-o"></i>
                         </button>
-                        </div>
-                        </div>
-                        <div class="col-md-12" class="modal-body" style="width: 210mm; padding: 0 20px 0 20px;" [ngStyle]="{top:0 }">
-                          <div *ngIf="isTyproActive" class="full-page-textarea-container">
-                            <textarea [(ngModel)]="typroText" placeholder="พิมพ์ที่นี้.." class="form-control mt-3 full-page-textarea"></textarea>
+                      </div>
+                    </div>
+                    <div class="col-md-12" class="modal-body" style="width: 210mm; padding: 0 20px 0 20px;"
+                      [ngStyle]="{top:0 }">
+
+                      <div *ngIf="isTyproActive" class="full-page-textarea-container">
+                        <div class="typroTextBox">
+                          <div class="headerText">
+                            <button aria-label="Preview">การพิมพ์ข้อความ</button>
+                            <button (click)="formatText('bold')">
+                              <i class="fas fa-bold"></i>
+                            </button>
+                            <button (click)="formatText('italic')" aria-label="Italic">
+                              <i class="fas fa-italic"></i>
+                            </button>
+                            <button (click)="formatText('strikeThrough')" aria-label="Strikethrough">
+                              <i class="fas fa-strikethrough"></i>
+                            </button>
+                            <button aria-label="Link">
+                              <i class="fas fa-link"></i>
+                            </button>
+                            <button aria-label="Bullet List">
+                              <i class="fas fa-list-ul"></i>
+                            </button>
+                            <button aria-label="Numbered List">
+                              <i class="fas fa-list-ol"></i>
+                            </button>
+                            <button aria-label="Table">
+                              <i class="fas fa-table"></i>
+                            </button>
+                            <button aria-label="Attachment">
+                              <i class="fas fa-paperclip"></i>
+                            </button>
+                            <button aria-label="Expand">
+                              <i class="fas fa-expand"></i>
+                            </button>
                           </div>
-                          <div *ngIf="isWritteActive" class="full-page-pdf">
-                            <div class="toolbar">
-                              <button (click)="changeColor('black')">Black</button>
-                              <button (click)="changeColor('red')">Red</button>
-                              <button (click)="changeColor('blue')">Blue</button>
-                              <button (click)="refreshCanvas()">Refresh</button>
-                            </div>
-                            <canvas #writteCanvas class="full-page-canvas"></canvas>
-                          </div>
+                          <div contenteditable="true" #textArea class="form-control full-page-textarea"></div>
                         </div>
+                      </div>
+                      <div *ngIf="isWritteActive" class="full-page-pdf">
+                        <div class="writteDraw">
+                          <div class="toolbar">
+                            <button (click)="refreshCanvas()">
+                              <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top"
+                                class="fa fa-refresh"></i></button>
+                          </div>
+                          <canvas id="writteCanvas" class="full-page-canvas"></canvas>
+                        </div>
+
+                      </div>
+
+
+                    </div>
+                  </div>
+                </div>
 
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-success pull-center" (click)="recordCommit()">
@@ -461,7 +495,6 @@
                   </button>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>
