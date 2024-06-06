@@ -27,7 +27,7 @@ export class TableListComponent implements OnInit {
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
   @ViewChild('textArea') textArea: ElementRef;
   people:any[] =[];
-  
+  typroHolder:string="พิมที่นี้...";
   //ListUser: users[] =[];
   Form:FormGroup;
   dtOptions:any ={};
@@ -182,6 +182,8 @@ export class TableListComponent implements OnInit {
     this.setupCanvas();
     // this.setupSignCanvas(index: number);
   }
+
+
   setupSignCanvas(index: number) {
     this.canvas2 = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
     if (this.canvas2) {
@@ -234,6 +236,7 @@ export class TableListComponent implements OnInit {
   }
   openSignModal(index: number){
     this.isSignModalVisible[index] = true;
+    
     setTimeout(() => {
       if (this.writteSignElement) {
         this.setupSignCanvas(index);
@@ -246,11 +249,11 @@ export class TableListComponent implements OnInit {
     }, 0);  
     console.log("it openSign status : ",this.isSignModalVisible)
   }
-  refreshSignCanvas(index: number){
-    if(this.ctx2){
-      this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
-    }
-  }
+  // refreshSignCanvas(index: number){
+  //   if(this.ctx2){
+  //     this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
+  //   }
+  // }
 
 saveSignature() {
     if (this.canvas2) {
@@ -614,7 +617,7 @@ get personal(): FormArray {
   }
 
 /////////////////////////////// formatFont Edit
-typroHolder:string="พิมที่นี้...";
+
 formatText(command: string) {
   document.execCommand(command, false, null);
   this.updateTyproText();

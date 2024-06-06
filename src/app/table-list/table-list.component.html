@@ -324,7 +324,7 @@
                         <tbody>
                           <tr>
                             <td>{{detailItems?.record_id}}/{{detailItems?.record_star_date | thaidate :'year'}}</td>
-                            <td [innerHTML]="typroText"></td>
+                            <td [innerHTML]="typroText"> {{typroText}} </td>
                           </tr>
                         </tbody>
                       </table>
@@ -351,9 +351,9 @@
                               <div class="Writte-sign"  #writteSignElement id="SignModal-{{i}}" *ngIf="isSignModalVisible[i]">
                                 <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error someting with
                                   canvas</canvas>
-                                  <button (click)="refreshSignCanvas(i)"  style="border: none; background: none;">
+                                  <!-- <button (click)="refreshSignCanvas(i)"  style="border: none; background: none;">
                                     <i data-toggle="tooltip" title="ลบ" data-placement="top"
-                                      class="fa fa-refresh"></i></button>
+                                      class="fa fa-refresh"></i></button> -->
                               </div>
                     
 
@@ -431,7 +431,7 @@
                         <div class="typroTextBox">
                           <div class="headerText">
                             <button aria-label="Preview">การพิมพ์ข้อความ</button>
-                            <button  (click)="formatText('bold')" aria-label="bold">
+                            <!-- <button  (click)="formatText('bold')" aria-label="bold">
                               <i class="fas fa-bold"></i>
                             </button>
                             <button (click)="formatText('italic')" aria-label="Italic">
@@ -445,21 +445,23 @@
                             </button>
                             <button  (click)="formatText('insertOrderedList')"  aria-label="Numbered List">
                               <i class="fas fa-list-ol"></i>
-                            </button>
+                            </button> -->
                           
                          
                            
                           </div>
-                          <div  contenteditable="true" [(ngModel)]="typroText"  [class.placeholder]="!typroHolder" 
-                            class="form-control  full-page-textarea" ></div>
+                          <textarea contenteditable="true" [(ngModel)]="typroText" placeholder="พิมพ์ที่นี่... "
+                            class="form-control  full-page-textarea" >&nbsp;&nbsp;</textarea>
+                        
 
                         </div>
                       </div>
                       <div *ngIf="isWritteActive" class="full-page-pdf">
                         <div class="writteDraw">
                           <div class="toolbar">
+                            <div>การเขียน</div>
                             <button (click)="refreshCanvas()">
-                              <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top"
+                              <i data-toggle="tooltip" title="ล้างหน้ากระดาษ" data-placement="top"
                                 class="fa fa-refresh"></i></button>
                           </div>
                           <canvas id="writteCanvas" class="full-page-canvas"></canvas>

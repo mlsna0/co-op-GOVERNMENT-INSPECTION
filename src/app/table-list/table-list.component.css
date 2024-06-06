@@ -171,8 +171,8 @@ label{
   box-shadow: 0 14px 20px -12px rgb(253, 216, 4), 0 4px 15px 0px rgba(211, 211, 211, 0.12), 0 2px 5px -5px rgb(253, 216, 4);
   opacity: 0.9;
 }
-.Writte-sign {
-  position: absolute;
+.Writte-sign{
+  position: absolute; /*[ng-reflect-writteSignElement]*/
   left: 50px;
   display: flex; /* Hidden by default */
   top: 0;
@@ -197,7 +197,9 @@ label{
 
 .toolbar {
   display: flex;
-  justify-content: flex-end;
+  padding: 0 1px 0 6px ;
+  align-items: center;
+  justify-content: space-between;
   border-bottom: 1px solid #929292;
 }
 
