@@ -5,6 +5,7 @@ import RecordModelCtrl from './controller/recordController';
 import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
 import uploadService from './service/uploadservice.service'
+// import DetailModelCtrl from 'controller/detailController';
 // import AggRecordNViewCon from 'controller/aggRecordNviewController'; //petch edit add this
 
 function setRoutes(app): void {
@@ -13,6 +14,7 @@ function setRoutes(app): void {
   const recordModelCtrl = new RecordModelCtrl();
   const userModelCtrl = new UserModelCtrl();
   const viewModelCtrl = new ViewModelCtrl();
+  // const detailModelCtrl = new DetailModelCtrl();
 
   // const aggregateRecordsAndView = new AggRecordNViewCon(); //petch edit add this
 
@@ -23,8 +25,11 @@ function setRoutes(app): void {
   // router.route('/postPersonData').post(itemModelCtrl.postItemToView);
 
   router.route('/data').get(itemModelCtrl.getData);
+  router.route('/record/updateContent').put(itemModelCtrl.updateRecordContent);
 
   router.route('/postItemData').post(itemModelCtrl.postItemToView);
+  router.route('/postTyproText').post(itemModelCtrl.postItemToView);
+  // router.route('/postAddDetail').post(itemModelCtrl.addDetail);
   router.route('/itemModel/:id').get(itemModelCtrl.get);
   router.route('/itemModel/:id').put(itemModelCtrl.update);
   router.route('/itemModel/:id').delete(itemModelCtrl.delete);

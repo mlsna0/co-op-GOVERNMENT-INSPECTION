@@ -38,11 +38,19 @@ export class SharedService {
     );
   }
 
-  setTyproText(text: string) {
-    this.typroText = text;
+  postTyproText(data: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/postTyproText`, data);
   }
-  getTyproText(): string {
-    return this.typroText;
+  getTyproText(record_id){
+    return this.http.get(`${this.baseUrl}/dtModel/getTyproText/${record_id}`);
+  }
+  updateRecordContent(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/record/updateContent`, data).pipe(
+      catchError(error => {
+        console.error('Error updating record content:', error);
+        throw 'ไม่สามารถอัปเดตข้อมูลได้';
+      })
+    );
   }
 
   postData(data: any): Observable<any> {

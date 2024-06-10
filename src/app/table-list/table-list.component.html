@@ -81,8 +81,8 @@
                       </button>&nbsp;
 
 
-                      <button (click)="onRecord()" style="border: none; background: none;" class="text-primary">
-                        <i class="fa fa-pencil-square-o  text-primary" style="color: black;"></i>
+                      <button (click)="onRecord(item._id)" style="border: none; background: none;" class="text-primary">
+                        <i class="fa fa-pencil-square-o text-primary" style="color: black;"></i>
                       </button> &nbsp;
 
                       <button style="border: none; background: none;">
@@ -450,18 +450,17 @@
                 </div>
 
                 <div class="modal-footer">
-                  <button type="submit" class="btn btn-success pull-center" (click)="recordCommit()">
+                  <button type="submit" class="btn btn-success pull-center" (click)="recordCommit(item._id)">
                     <i class="fa fa-check"></i>&nbsp; ยืนยัน
                   </button>
                   <button type="button" class="btn btn-danger pull-center" data-dismiss="modal">
                     <i class="fa fa-times"></i>&nbsp; ปิด
                   </button>
                 </div>
-              </div>
             </div>
           </div>
         </div>
       </div>
 
 
-    </div>
+    </div>  

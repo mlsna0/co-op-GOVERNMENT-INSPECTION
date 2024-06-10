@@ -14,6 +14,7 @@ import jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
 import { Router } from '@angular/router';
+import { content } from 'html2canvas/dist/types/css/property-descriptors/content';
 
 
 @Component({
@@ -32,7 +33,7 @@ export class TableListComponent implements OnInit {
 
   items:any= [];
   viewData=[];
-  detailItems: any;
+  detailItems: any = {}; 
   PersonINT :number = 0;
   personInputs: FormArray;
   // currentRecordId: string;
@@ -47,6 +48,8 @@ export class TableListComponent implements OnInit {
   uploadedImageUrl: string | ArrayBuffer | null = null;
   isLoading: boolean[] = [];
   loadig:boolean = false;
+item: any;
+records: any;
   constructor(
     private fb:FormBuilder,
     private http:HttpClient,
@@ -60,6 +63,7 @@ export class TableListComponent implements OnInit {
       endDate: ['',Validators.required],
       location: ['',Validators.required],
       topic: ['',Validators.required],
+      content:[''],
       personal: this.fb.array([]),
       
 
@@ -167,26 +171,30 @@ export class TableListComponent implements OnInit {
 
   //หน้าจอรายละเอียดข้อมูล
   openModal(recordId: any) {
-
-    $('#myModal').modal('show');  
-   
-    this.sv.getDataById(recordId).subscribe(res=>{
-      console.log("getDataById :",res);
-      
-      this.detailItems =res;
-    
-      console.log("getData: ",res)
-
-    })
-    this.sv.getViewByRecordId(recordId).subscribe((res :any)=>{
-      console.log("getDataById :",res);
-      
-      this.viewData = res;
-    
-      console.log("it on working.. ")
-      
-    })
+    $('#myModal').modal('show');
+  
+    this.sv.getDataById(recordId).subscribe(
+      res => {
+        console.log("getDataById response:", res);
+        this.detailItems = res;
+        console.log("detailItems set to:", this.detailItems);
+      },
+      error => {
+        console.error("Error fetching data by ID:", error);
+      }
+    );
+  
+    this.sv.getViewByRecordId(recordId).subscribe(
+      (res: any) => {
+        console.log("getViewByRecordId response:", res);
+        this.viewData = res;
+      },
+      error => {
+        console.error("Error fetching view data by record ID:", error);
+      }
+    );
   }
+  
 
 
   loadViewData() {
@@ -379,12 +387,51 @@ get personal(): FormArray {
     }
   }
   //insert end here
-  recordCommit(){
-    this.sv.setTyproText(this.typroText);
-    // Code to close this modal and open the second modal
-    $('#writtenModel').modal('hide');
+  recordCommit(recordId: any) {
+    if (!recordId) {
+      console.error("ID is undefined");
+      Swal.fire({
+        title: 'Error!',
+        text: 'ID is undefined.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+  
+    console.log("Record ID being committed:", recordId);
+  
+    const recordData = {
+      content: this.typroText,
+      id: recordId
+    };
+  
+    this.sv.updateRecordContent(recordData).subscribe(
+      response => {
+        console.log('บันทึกข้อมูลเรียบร้อย', response);
+        Swal.fire({
+          title: 'Success!!',
+          text: 'Your data has been updated successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+        $('#writtenModel').modal('hide');
+        this.typroText = ''; // Clear the input field
+        this.fetchData(); // Refresh data if needed
+      },
+      error => {
+        console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
+    );
   }
-
+  
+  
 
   printPDF = () => {
     console.log("working PDF..");
