@@ -43,6 +43,7 @@ export class TableListComponent implements OnInit {
   isTyproActive:boolean = false;
   isWritteActive:boolean = false;
   typroText: string='';
+  selectedRecordId: any;
    typroTexts: { [key: string]: string } = {}; 
   uploadedImages: string[] = [];
   uploadedImageUrl: string | ArrayBuffer | null = null;
@@ -77,6 +78,7 @@ records: any;
     this.addPersonInput(); // Add initial input group
     this.loadViewData();
     
+    
   }
   documentImageUrl = 'assets/img/sampleA4-1.png';
   // itemsTest:any[]= [
@@ -89,17 +91,32 @@ records: any;
 
   // ];
   fetchData() {
-    this.fetchData;
     this.sv.getData().subscribe(
       res => {
-        this.items = res.records; // ใช้ res.records แทน res
-        console.log('Items fetched successfully:', this.items);
+        console.log('Response from getData:', res); // ตรวจสอบข้อมูลที่ได้รับ
+        this.items = Array.isArray(res.records) ? res.records : []; // ตรวจสอบให้แน่ใจว่า res.records เป็น array
+        console.log('Items:', this.items); // ตรวจสอบข้อมูลที่เก็บใน items
       },
       error => {
         console.error('Error fetching items:', error);
       }
     );
-  } 
+  }
+  // onRecord(recordId: any) {
+  //   if (!recordId) {
+  //     console.error("ID is undefined");
+  //     Swal.fire({
+  //       title: 'Error!',
+  //       text: 'ID is undefined.',
+  //       icon: 'error',
+  //       confirmButtonText: 'OK'
+  //     });
+  //     return;
+  //   }
+    
+  //   this.selectedItem = this.items.find(item => item._id === recordId);
+  //   $('#writtenModel').modal('show');
+  // }
 
 
   ngOnInit() {
@@ -133,8 +150,9 @@ records: any;
           "previous": "ย้อนกลับ"
         },
       }
+     
     };
-
+    this.fetchData()
     $(function () {
       $('[data-toggle="tooltip"]').tooltip()
     })
@@ -156,7 +174,8 @@ records: any;
     if (button === 'typro'){
       this.isTyproActive =true;
       this.isWritteActive =false;
-      console.log("typro section")
+     
+      console.log("typro section", this.items)
       
     }else if(button ==="writte"){
       this.isTyproActive =false;
@@ -171,28 +190,29 @@ records: any;
 
   //หน้าจอรายละเอียดข้อมูล
   openModal(recordId: any) {
-    $('#myModal').modal('show');
+    this.selectedRecordId = recordId;
+    $('#myModal').modal('show');  
+   
+    this.sv.getDataById(recordId).subscribe(res=>{
+      console.log("getDataById :",res);
+      
+      this.detailItems =res;
+    
+      console.log("it on working.. ")
+
+    })
+    this.sv.getViewByRecordId(recordId).subscribe((res :any)=>{
+      console.log("getDataById :",res);
+      
+      this.viewData = res;
+    
+      console.log("it on working.. ")
+     
+      
+    });
+    
   
-    this.sv.getDataById(recordId).subscribe(
-      res => {
-        console.log("getDataById response:", res);
-        this.detailItems = res;
-        console.log("detailItems set to:", this.detailItems);
-      },
-      error => {
-        console.error("Error fetching data by ID:", error);
-      }
-    );
   
-    this.sv.getViewByRecordId(recordId).subscribe(
-      (res: any) => {
-        console.log("getViewByRecordId response:", res);
-        this.viewData = res;
-      },
-      error => {
-        console.error("Error fetching view data by record ID:", error);
-      }
-    );
   }
   
 
@@ -269,7 +289,7 @@ get personal(): FormArray {
 }
 
 
-  onRecord(){
+  onRecord(recordId: any){
     $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
    
   
@@ -430,8 +450,7 @@ get personal(): FormArray {
       }
     );
   }
-  
-  
+
 
   printPDF = () => {
     console.log("working PDF..");
