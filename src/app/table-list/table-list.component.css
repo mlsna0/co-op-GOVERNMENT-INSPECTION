@@ -36,6 +36,7 @@
   left: 50%;
   transform: translateX(-50%);
   justify-content: center;
+   font-family: 'TH SarabunPSK', sans-serif;
   
 }
 .card-header{
@@ -75,7 +76,7 @@ label{
   }
 .full-page-textarea{
     width: 100%;
-    height: calc(297mm - 50px); /* 297mm minus some margin for modal padding */
+    height: calc(190mm - 50px); /* 297mm minus some margin for modal padding */
     border: none;
     resize: none;
 
@@ -83,13 +84,21 @@ label{
 .full-page-textarea-container{
   margin: 20px 0 20px 0;
   width: 827px;
-  height: 535px; 
+  height: 460px; 
   border: none;
   resize: none;
   border: 1px solid black;
   border-radius: 5px;
   
 
+}
+.full-page-textarea-container textarea{
+  width: 100%;
+  height:111.5mm !important; /* ปรับให้ auto หรือกำหนดขนาดที่ต้องการ */
+  min-height: 100px; /* หรือกำหนด min-height */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .headerText{
@@ -134,7 +143,7 @@ label{
 .writteDraw{
   margin: 20px 0 20px 0;
   width: 827px;
-  height: 535px; 
+  height: 460px; 
   border: none;
   resize: none;
   border: 1px solid black;
@@ -145,7 +154,7 @@ label{
 
 .full-page-canvas {
   width: 100%;
-  height: 491.3px;
+  height: 460.3px;
   /* border: 1px solid black;  */
   border-radius: 5px;
   
@@ -212,25 +221,12 @@ label{
 
 /*end writter draw*/
 
-/* .ellipsis {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 150px; 
-} */
 .placeholder::before {
   content: attr(placeholder);
   color: gray;
   font-style: italic;
 }
-.full-page-textarea-container textarea{
-  width: 100%;
-  height: auto; /* ปรับให้ auto หรือกำหนดขนาดที่ต้องการ */
-  min-height: 100px; /* หรือกำหนด min-height */
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
+
 
 .btn-warning:hover::after {
     content: '';
@@ -378,7 +374,98 @@ label{
     margin-left: 58px;
    
   }
-  /* .dataTables_wrapper .dataTables_paginate .paginate_button {
+  .position-relative {
+    position: relative;
+  }
+  .border-error {
+    position: absolute;
+    top:15px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 350px;
+    margin: 2px;
+    background-color: white;
+    color: red;
+    font-size: 0.875em;
+    text-align: left;
+    pointer-events: none;
+    border-radius: 5px;
+   z-index: 1;
+  
+  }
+  .box-validate{
+    border: 1px solid red;
+    border-radius: 5px;
+  }
+  .box-validate + .text-validate .border-error {
+    display: block;
+  }
+
+  .border-errorPersonFullname{
+    position: absolute;
+    top:-15px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 150px;
+    margin: 2px;
+    background-color: rgb(255, 255, 255);
+    color: red;
+    font-size: 0.875em;
+    text-align: left;
+    pointer-events: none;
+    border-radius: 5px;
+  }
+  .border-errorPersonRank{
+    position: absolute;
+    top:-15px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 30px;
+    margin: 2px;
+    width: auto;
+    background-color: rgb(255, 255, 255);
+    color: red;
+    font-size: 0.875em;
+    text-align: left;
+    pointer-events: none;
+    border-radius: 5px;
+  }
+
+  .border-errorLocation {
+    position: absolute;
+    top:10px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 350px;
+    margin: 2px;
+    /* background-color: white; */
+    color: red;
+    font-size: 0.875em;
+    text-align: left;
+    pointer-events: none;
+    border-radius: 5px;
+   z-index: 1;
+  
+  }
+  .text-validate{
+   
+  color: red;
+}
+ /*icon hover*/
+ /* .MadalIcon{
+  position: relative;
+ }
+ .ModalIcon:hover{
+  position: relative;
+  background-color: rgb(255, 219, 61);
+ } */
+  :host ::ng-deep .btn-add{
+    color: #fff;
+    background-color: #000cb8e2;/*#000dc2ef*/
+    border-color: #00087c9f;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 212, 0.42), 0 3px 1px -2px rgba(0, 0, 212, 0.42), 0 1px 5px 0 rgba(0, 0, 212, 0.42);
+
+  }
+  :host ::ng-deep .btn-add:hover{
+    background-color: #000cb8e2; 
+    border-color: #00087c9f;
+    box-shadow: 0 14px 26px -12px rgba(0, 0, 212, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 212, 0.42);
+  }
+ 
+
+  :host ::ng-deep .dataTables_wrapper .dataTables_paginate .paginate_button {
     box-sizing: border-box;
     display: inline-block;
     min-width: 1.5em;
@@ -391,4 +478,40 @@ label{
     border: 1px solid transparent;
     border-radius: 2px;
     background: transparent;
-  } */
+  }
+  :host ::ng-deep .page-link{
+    position: relative;
+      display: block;
+      padding: 0.5rem 0.75rem;
+      margin-left: 0;
+      line-height: 1.25;
+      color: #000000;
+      background-color:white ;/*rgb(255, 219, 61)*/
+      border: 0 solid #dee2e6;
+      font-family: 'TH SarabunPSK', sans-serif;
+      opacity: 0.9;
+
+  }:host ::ng-deep .page-link:hover{
+    position: relative;
+      display: flex;
+      padding: 0.5rem 0.75rem;
+      margin-left: 0;
+      line-height: 1.25;
+      color: black;
+      background-color: rgb(255, 219, 61);
+      border: 0 solid #dee2e6;
+      box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 244, 54, 0.4);
+      font-family: 'TH SarabunPSK', sans-serif;
+      opacity: 1;
+  }
+
+  :host ::ng-deep .page-item.active .page-link {
+    z-index: 3;
+    color: black;
+    background-color: rgb(255, 209, 0);
+    border-color: rgb(232, 189, 0);
+    border-radius: 3px;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 244, 54, 0.4);
+    opacity: 1;
+    
+}

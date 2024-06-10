@@ -16,6 +16,7 @@ import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
 
 import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
+import moment from 'moment';
 
 
 @Component({
@@ -26,11 +27,14 @@ import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
 export class TableListComponent implements OnInit {
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
   @ViewChild('textArea') textArea: ElementRef;
+
+  startDate: string;
   people:any[] =[];
   typroHolder:string="พิมที่นี้...";
   //ListUser: users[] =[];
+
   Form:FormGroup;
-  dtOptions:any ={};
+  dtOptions: DataTables.Settings ={};
   dtTrigger: Subject<any> = new Subject(); 
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
@@ -86,6 +90,8 @@ export class TableListComponent implements OnInit {
     this.personInputs = this.addItemForm.get('personal') as FormArray;
     this.addPersonInput(); // Add initial input group
     // this.loadViewData();
+
+    this.setTodaysDate();
   }
   
   documentImageUrl = 'assets/img/sampleA4-1.png';
@@ -144,6 +150,14 @@ export class TableListComponent implements OnInit {
     // this.fetchData()
 
   }
+  setTodaysDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+    const formattedDate = `${day}-${month}-${year}`;
+    this.addItemForm.get('startDate').setValue(formattedDate);
+  }
 
   // fetchData() {
   //   this.sv.getData().subscribe(
@@ -178,7 +192,7 @@ export class TableListComponent implements OnInit {
  
 
   //Writter section
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.setupCanvas();
     // this.setupSignCanvas(index: number);
   }
@@ -349,7 +363,11 @@ saveSignature() {
 
 
   //หน้าจอรายละเอียดข้อมูล
-  openModal(recordId: any) {
+  openDetailModal(recordId: any) {
+    $('#myModal').modal({
+      backdrop: 'static', // Prevent closing when clicking outside
+      keyboard: false     // Prevent closing with keyboard (Esc key)
+    });
     $('#myModal').modal('show');  
    
     this.sv.getDataById(recordId).subscribe(res=>{
@@ -461,6 +479,8 @@ saveSignature() {
   // }))
   
  }
+
+
  deletePersonInput() {
  ;
  if(this.PersonINT > 1){
@@ -471,6 +491,21 @@ saveSignature() {
  console.log("person delete: ",this.PersonINT)
  }
 
+ canAddPerson(): boolean {
+  const lastPerson = this.personInputs.at(this.personInputs.length - 1) as FormGroup;
+  return lastPerson.valid;
+}
+
+//  validateAllFormFields(formGroup: FormGroup) {
+//     Object.keys(formGroup.controls).forEach(field => {
+//       const control = formGroup.get(field);
+//       if (control instanceof FormGroup || control instanceof FormArray) {
+//         this.validateAllFormFields(control);
+//       } else {
+//         control.markAsTouched({ onlySelf: true });
+//       }
+//     });
+//   }
 
  //petch สร้างการ Create ของ InputPerson นะ
  createPersonGroup(): FormGroup {
@@ -495,8 +530,12 @@ get personal(): FormArray {
 
 
   onRecord(){
+    $('#writtenModel').modal({
+      backdrop: 'static', // Prevent closing when clicking outside
+      keyboard: false     // Prevent closing with keyboard (Esc key)
+    });
     $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
-   
+  
   
    
   }
@@ -504,8 +543,22 @@ get personal(): FormArray {
 
 
 //insert
-  onInsert(){
-    $('#insertModel').modal('show'); 
+  onInsertModal():void{
+
+  const nextId = this.items.records.length + 1;
+  const currentDate = moment().format('YYYY-MM-DD');
+
+  this.addItemForm.patchValue({
+    id: nextId,
+    startDate: currentDate
+  });
+
+    $('#insertModel').modal({
+      backdrop: 'static', // Prevent closing when clicking outside
+      keyboard: false     // Prevent closing with keyboard (Esc key)
+    });
+    $('#insertModel').modal('show');
+    
   }
 
 
@@ -552,7 +605,7 @@ get personal(): FormArray {
       this.addItemForm.reset();
       this.personInputs.clear(); // Clear FormArray
       // this.addPersonInput();
-      this.refreshPage();
+      // this.refreshPage();
     },
     error =>{
       console.error('Error submitting data:', error);
@@ -635,3 +688,4 @@ updateTyproText(): void {
 }
  
 }
+
