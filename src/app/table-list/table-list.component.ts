@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray,AbstractControl } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
 import { HttpClient } from '@angular/common/http';
@@ -337,7 +337,7 @@ saveSignature() {
 
 
 
- //End writter section
+ //End writter section////////////////////////////////////////////////////////////////////////////////////
 
 
   setActive(button: string){
@@ -418,10 +418,18 @@ saveSignature() {
       reader.readAsDataURL(file);
     }
     
-    
-
   }
 
+  onRecord(wRecord: any){
+    $('#writtenModel').modal({
+      backdrop: 'static', // Prevent closing when clicking outside
+      keyboard: false     // Prevent closing with keyboard (Esc key)
+    });
+    $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
+  
+  
+   
+  }
   closeModal() {
     // ซ่อนโมดัล
     $('#insertModel').modal('hide');
@@ -529,16 +537,7 @@ get personal(): FormArray {
 }
 
 
-  onRecord(){
-    $('#writtenModel').modal({
-      backdrop: 'static', // Prevent closing when clicking outside
-      keyboard: false     // Prevent closing with keyboard (Esc key)
-    });
-    $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
-  
-  
-   
-  }
+
 
 
 
@@ -575,6 +574,21 @@ get personal(): FormArray {
     if (this.addItemForm.invalid || this.personal.invalid ) {
       console.log('ฟอร์มไม่ถูกต้อง');
       // แสดงข้อความแสดงข้อผิดพลาดให้ผู้ใช้ดู
+      let invalidFields = [];
+        Object.keys(this.addItemForm.controls).forEach(key => {
+            if (this.addItemForm.controls[key].invalid) {
+                invalidFields.push(this.getFieldLabel(key));
+            }
+        });
+
+        (this.personal as FormArray).controls.forEach((person: AbstractControl, index: number) => {
+          let personGroup = person as FormGroup;
+          Object.keys(personGroup.controls).forEach(key => {
+              if (personGroup.controls[key].invalid) {
+                  invalidFields.push(`Personal field ${index + 1} - ${this.getFieldLabel(key)}`);
+              }
+          });
+        });
       Swal.fire({
         title: 'เกิดข้อผิดพลาด!',
         text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง',
@@ -600,12 +614,16 @@ get personal(): FormArray {
               text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
               icon: 'success',
               confirmButtonText: 'ตกลง'
+      }).then((result)=>{
+        if (result.isConfirmed){
+          this.refreshPage();
+        }
       });
       $('#insertModel').modal('hide');
       this.addItemForm.reset();
       this.personInputs.clear(); // Clear FormArray
       // this.addPersonInput();
-      // this.refreshPage();
+     
     },
     error =>{
       console.error('Error submitting data:', error);
@@ -620,14 +638,26 @@ get personal(): FormArray {
   );
     
   // this.fetchData()
-  
-
      // Close the modal
      $('#insertModel').modal('hide');
-    
       
   }
   
+  getFieldLabel(fieldName: string): string {
+    const fieldLabels = {
+        id: 'ครั้งที่',
+        startDate: 'วันที่เริ่มตรวจสอบ',
+        endDate: 'วันที่เสร็จสิ้น',
+        topic: 'หัวข้อการตรวจสอบ',
+        personal: 'บุคคล',
+        rank: 'ยศ/ตำแหน่ง',
+        fullname: 'ชื่อ-นามสกุล',
+        detail: 'รายละเอียด',
+        location: 'สถานที่'
+    };
+    return fieldLabels[fieldName] || fieldName;
+}
+
   getCurrentLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
