@@ -14,6 +14,8 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
+import { Router } from '@angular/router';
+import { content } from 'html2canvas/dist/types/css/property-descriptors/content';
 
 import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
 import moment from 'moment';
@@ -41,10 +43,10 @@ export class TableListComponent implements OnInit {
 
   items:any= [];
   viewData=[];
-  detailItems: any;
+  detailItems: any = {}; 
   PersonINT :number = 0;
   personInputs: FormArray;
-
+  // currentRecordId: string;
   addItemForm: any;
   addDataForm: any;
   activeButton: string='typro';
@@ -68,10 +70,17 @@ export class TableListComponent implements OnInit {
   penColor2: string = 'black';
   penSize2: number = 1;
 //writter box
+  selectedRecordId: any;
+   typroTexts: { [key: string]: string } = {}; 
+  uploadedImageUrl: string | ArrayBuffer | null = null;
+  loadig:boolean = false;
+item: any;
+records: any;
   constructor(
     private fb:FormBuilder,
     private http:HttpClient,
-    private sv:SharedService
+    private sv:SharedService,
+    private router: Router 
   ) { 
     this.addItemForm = this.fb.group({
       id: ['',Validators.required],
@@ -80,7 +89,10 @@ export class TableListComponent implements OnInit {
       endDate: ['',Validators.required],
       location: ['',Validators.required],
       topic: ['',Validators.required],
-      personal: this.fb.array([])
+      content:[''],
+      personal: this.fb.array([]),
+      
+
     }); 
     this.addPersonalForm = this.fb.group({
       rank: ['',Validators.required],
@@ -92,6 +104,9 @@ export class TableListComponent implements OnInit {
     // this.loadViewData();
 
     this.setTodaysDate();
+  
+    
+    
   }
   
   documentImageUrl = 'assets/img/sampleA4-1.png';
@@ -132,6 +147,7 @@ export class TableListComponent implements OnInit {
           "previous": "ย้อนกลับ"
         },
       }
+     
     };
     console.log("DataTable : ",this.dtOptions)
 
@@ -346,7 +362,8 @@ saveSignature() {
     if (button === 'typro'){
       this.isTyproActive =true;
       this.isWritteActive =false;
-      console.log("typro section")
+     
+      console.log("typro section", this.items)
       
     }else if(button ==="writte"){
       this.isTyproActive =false;
@@ -368,7 +385,8 @@ saveSignature() {
       backdrop: 'static', // Prevent closing when clicking outside
       keyboard: false     // Prevent closing with keyboard (Esc key)
     });
-    $('#myModal').modal('show');  
+    this.selectedRecordId = recordId;
+    
    
     this.sv.getDataById(recordId).subscribe(res=>{
       console.log("getDataById :",res);
@@ -391,6 +409,10 @@ saveSignature() {
   
   
   }
+  
+
+
+
   // loadViewData() {
   //   this.sv.getItems().subscribe(data => {
   //     this.viewData = data;
@@ -417,10 +439,9 @@ saveSignature() {
       };
       reader.readAsDataURL(file);
     }
-    
   }
 
-  onRecord(wRecord: any){
+  onRecord(recordId: any){
     $('#writtenModel').modal({
       backdrop: 'static', // Prevent closing when clicking outside
       keyboard: false     // Prevent closing with keyboard (Esc key)
@@ -539,8 +560,6 @@ get personal(): FormArray {
 
 
 
-
-
 //insert
   onInsertModal():void{
 
@@ -635,6 +654,8 @@ get personal(): FormArray {
           });
 
     }
+    
+
   );
     
   // this.fetchData()
@@ -674,24 +695,63 @@ get personal(): FormArray {
     }
   }
   //insert end here
-
-  recordCommit(){
-    this.sv.setTyproText(this.typroText);
-    // Code to close this modal and open the second modal
-    $('#writtenModel').modal('hide');
+  recordCommit(recordId: any) {
+    if (!recordId) {
+      console.error("ID is undefined");
+      Swal.fire({
+        title: 'Error!',
+        text: 'ID is undefined.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+  
+    console.log("Record ID being committed:", recordId);
+  
+    const recordData = {
+      content: this.typroText,
+      id: recordId
+    };
+  
+    this.sv.updateRecordContent(recordData).subscribe(
+      response => {
+        console.log('บันทึกข้อมูลเรียบร้อย', response);
+        Swal.fire({
+          title: 'Success!!',
+          text: 'Your data has been updated successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+        $('#writtenModel').modal('hide');
+        this.typroText = ''; // Clear the input field
+        // this.fetchData(); // Refresh data if needed
+      },
+      error => {
+        console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
+    );
   }
 
 
-  printPDF(){
-    console.log("working PDF..")
+  printPDF = () => {
+    console.log("working PDF..");
     const elementToPrint = document.getElementById('myDetail');
     html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
       const pdf = new jsPDF('p','mm','a4');
       pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
       pdf.save('การลงตรวจสอบ.pdf')
     });
-  }
-  
+    // this.fetchData()
+}
+
+
 
   searchData(data: string) {
     this.sv.searchData(data).subscribe(res => {

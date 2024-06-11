@@ -11,7 +11,7 @@ import { Observable, catchError } from 'rxjs';
 export class SharedService {
   // private baseUrl = 'mongodb://127.0.0.1:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private baseUrl = 'http://localhost:3000/api'; // ปรับ URL ให้ตรงกับ API ของคุณ
-  private typroText: string;
+  private typroText: string = '';
   constructor(private http: HttpClient) { }
 
   getData(): Observable<any> {
@@ -46,11 +46,19 @@ export class SharedService {
     );
   }
 
-  setTyproText(text: string) {
-    this.typroText = text;
+  postTyproText(data: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/postTyproText`, data);
   }
-  getTyproText(): string {
-    return this.typroText;
+  getTyproText(record_id){
+    return this.http.get(`${this.baseUrl}/dtModel/getTyproText/${record_id}`);
+  }
+  updateRecordContent(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/record/updateContent`, data).pipe(
+      catchError(error => {
+        console.error('Error updating record content:', error);
+        throw 'ไม่สามารถอัปเดตข้อมูลได้';
+      })
+    );
   }
 
   postData(data: any): Observable<any> {
@@ -98,3 +106,4 @@ export class SharedService {
   // }
   
 }
+
