@@ -71,6 +71,7 @@ export class TableListComponent implements OnInit {
   penSize2: number = 1;
 //writter box
   selectedRecordId: any;
+  ContentRecordID:any;
    typroTexts: { [key: string]: string } = {}; 
   uploadedImageUrl: string | ArrayBuffer | null = null;
   loadig:boolean = false;
@@ -441,15 +442,66 @@ saveSignature() {
     }
   }
 
+//////////////////////////////////////////////////////////////////////
+
   onRecord(recordId: any){
+    this.ContentRecordID = recordId;
+    console.log("onRecord modal getID",this.ContentRecordID)
+
     $('#writtenModel').modal({
       backdrop: 'static', // Prevent closing when clicking outside
       keyboard: false     // Prevent closing with keyboard (Esc key)
     });
     $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
   
+  }
+
+
+  recordCommit() {
+    console.log("this.ContentRecordID :",this.ContentRecordID);
+    
+     //recordId = this.selectedRecordId ;
+    if (!this.ContentRecordID) {
+      console.error("ID is undefined");
+      Swal.fire({
+        title: 'Error!',
+        text: 'ID is undefined.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
   
-   
+    console.log("Record ID being committed:", this.ContentRecordID);
+  
+    const recordData = {
+      content: this.typroText,
+      id: this.ContentRecordID
+    };
+  
+    this.sv.updateRecordContent(recordData).subscribe(
+      response => {
+        console.log('บันทึกข้อมูลเรียบร้อย', response);
+        Swal.fire({
+          title: 'Success!!',
+          text: 'Your data has been updated successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+        $('#writtenModel').modal('hide');
+        this.typroText = ''; // Clear the input field
+        // this.fetchData(); // Refresh data if needed
+      },
+      error => {
+        console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
+    );
   }
   closeModal() {
     // ซ่อนโมดัล
@@ -695,49 +747,7 @@ get personal(): FormArray {
     }
   }
   //insert end here
-  recordCommit(recordId: any) {
-    if (!recordId) {
-      console.error("ID is undefined");
-      Swal.fire({
-        title: 'Error!',
-        text: 'ID is undefined.',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-      return;
-    }
   
-    console.log("Record ID being committed:", recordId);
-  
-    const recordData = {
-      content: this.typroText,
-      id: recordId
-    };
-  
-    this.sv.updateRecordContent(recordData).subscribe(
-      response => {
-        console.log('บันทึกข้อมูลเรียบร้อย', response);
-        Swal.fire({
-          title: 'Success!!',
-          text: 'Your data has been updated successfully.',
-          icon: 'success',
-          confirmButtonText: 'OK'
-        });
-        $('#writtenModel').modal('hide');
-        this.typroText = ''; // Clear the input field
-        // this.fetchData(); // Refresh data if needed
-      },
-      error => {
-        console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
-        Swal.fire({
-          title: 'Error!',
-          text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
-      }
-    );
-  }
 
 
   printPDF = () => {
