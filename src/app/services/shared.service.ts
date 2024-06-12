@@ -2,20 +2,24 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { response } from 'express';
 import { environment } from '../../environments/environment';
-import { Observable, catchError } from 'rxjs';
+import { Observable, Subject, catchError } from 'rxjs';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
-  getItems() {
-    throw new Error('Method not implemented.');
-  }
+
   // private baseUrl = 'mongodb://127.0.0.1:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private baseUrl = 'http://localhost:3000/api'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private typroText: string;
   constructor(private http: HttpClient) { }
+  private refreshSubject = new Subject<void>();
+  refresh$ = this.refreshSubject.asObservable();
+
+  triggerRefresh() {
+    this.refreshSubject.next();
+  }
 
   getData(): Observable<any> {
     return this.http.get(`${this.baseUrl}/data`).pipe(
@@ -25,6 +29,16 @@ export class SharedService {
       })
     );
   }
+
+  getRecord():Observable<any>{
+    return this.http.get(`${this.baseUrl}/recordModel`).pipe(
+      catchError(error=>{
+        console.error('Error fatching data:',error);
+        throw 'ไม่สามารถดึงข้อมูลได้';
+      })
+    );
+  }
+  
   getDataById(id: number): Observable<any>{
     return this.http.get(`${this.baseUrl}/recordModel/${id}`);
   }
@@ -44,6 +58,7 @@ export class SharedService {
   setTyproText(text: string) {
     this.typroText = text;
   }
+
   getTyproText(): string {
     return this.typroText;
   }
@@ -65,6 +80,7 @@ export class SharedService {
     formData.append("startDate",data.startDate)
     formData.append("topic",data.topic)
     formData.append("detail",data.detail)
+    formData.append("note",data.detail)
   //   for (let person of personal) {
   //     formData.append("personal[]", JSON.stringify(person));
   // }
@@ -80,6 +96,7 @@ export class SharedService {
       item: data,
       personal: personal
     }
+    
     console.log("URL ",this.baseUrl)
     
     return this.http.post(`${this.baseUrl}/postItemData`,formData);
@@ -91,5 +108,13 @@ export class SharedService {
   // getItems(): Observable<any[]> {
   //   return this.http.get<any[]>(`${this.baseUrl}/items`);
   // }
+
+  getItems(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/items`);
+  }
+
+  getNoteById(id: number): Observable<any>{
+    return this.http.get(`${this.baseUrl}/recordModel/getNoteById/${id}`);
+  }
   
 }

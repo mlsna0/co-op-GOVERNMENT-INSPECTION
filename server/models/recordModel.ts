@@ -8,7 +8,8 @@ const recordSchema = new mongoose.Schema({
     record_end_date: Date,
     record_detail: String,
     record_location: String,
-    record_topic: String
+    record_topic: String,
+  
 });
 
 const recordModel = mongoose.model('recordModel', recordSchema);

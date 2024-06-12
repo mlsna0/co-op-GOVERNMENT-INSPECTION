@@ -14,12 +14,16 @@
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
-            
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
             "assets": [
               "src/assets",
-              "src/favicon.ico"
+              "src/favicon.ico",
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets/",
+                "output": "/assets/"
+              }
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
@@ -30,7 +34,6 @@
               "node_modules/bootstrap-icons/font/bootstrap-icons.css",
               "node_modules/datatables.net-bs5/css/dataTables.bootstrap5.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.css"
-             
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
@@ -167,9 +170,8 @@
         }
       }
     }
-   
   },
- "defaultProject": "material-dashboard-angular",
+  "defaultProject": "material-dashboard-angular",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
@@ -177,7 +179,6 @@
     },
     "@schematics/angular:directive": {
       "prefix": "app"
-      
     }
   },
   "cli": {

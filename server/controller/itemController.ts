@@ -11,7 +11,6 @@ class ItemModelCtrl extends BaseCtrl {
 
   postItemToView = async (req, res) => {
     console.log(req.body);
-    
     try {
       const obj = await new this.modelRecord({
         record_id: req.body.id,
@@ -20,7 +19,7 @@ class ItemModelCtrl extends BaseCtrl {
         record_detail: req.body.detail,
         record_location: req.body.location,
         record_topic: req.body.topic,
-  
+        record_note: req.body.note
       }).save();
       // req.body.personal.forEach(async (element) => {
       //   const obj1 = await new this.modelView({
@@ -34,8 +33,6 @@ class ItemModelCtrl extends BaseCtrl {
 
         let result = await this.modelView.insertMany(newField)
       }
-      
-
       res.status(200).json("ok");
     } catch (err) {
       return res.status(400).json({ error: err.message });

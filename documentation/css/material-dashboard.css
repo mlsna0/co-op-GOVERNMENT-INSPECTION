@@ -4069,7 +4069,7 @@ tbody.collapse.show {
 .page-link {
   position: relative;
   display: block;
-  padding: 0.5rem 0.75rem;
+  padding: 2px; /*0.5rem 0.75rem;*/
   margin-left: 0;
   line-height: 1.25;
   color: rgb(226, 222, 207);

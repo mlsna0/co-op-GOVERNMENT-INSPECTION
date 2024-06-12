@@ -4,6 +4,7 @@ import ItemModelCtrl from './controller/itemController';
 import RecordModelCtrl from './controller/recordController';
 import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
+// import NoteModelCtrl from 'controller/noteController';
 import uploadService from './service/uploadservice.service'
 // import AggRecordNViewCon from 'controller/aggRecordNviewController'; //petch edit add this
 
@@ -13,7 +14,7 @@ function setRoutes(app): void {
   const recordModelCtrl = new RecordModelCtrl();
   const userModelCtrl = new UserModelCtrl();
   const viewModelCtrl = new ViewModelCtrl();
-
+  // const noteModelCtrl = new NoteModelCtrl();
   // const aggregateRecordsAndView = new AggRecordNViewCon(); //petch edit add this
 
   // ItemModel routes
@@ -39,7 +40,20 @@ function setRoutes(app): void {
   router.route('/recordModel/:id').delete(recordModelCtrl.delete);
 
   router.route('/viewModel/getViewByRecordId/:id').get(viewModelCtrl.getViewByRecordId);
-  
+  router.route('/recordModel/getViewByRecordId/ :id').get(recordModelCtrl.get);
+
+  // NoteModel routes
+  // router.route('/noteModel').get(NoteModelCtrl.getAll);
+  // router.route('/noteModel/count').get(NoteModelCtrl.count);
+  // router.route('/noteModel').post(NoteModelCtrl.insert);
+  // router.route('/noteModel/:id').get(NoteModelCtrl.get);
+  // router.route('/noteModel/:id').put(NoteModelCtrl.update);
+  // router.route('/noteModel/:id').delete(NoteModelCtrl.delete);
+
+  // router.route('/noteModel/getNoteByRecordId/:id').get(NoteModelCtrl.getViewByRecordId);
+
+  // router.route('/noteModel/getNoteByRecordId/:id').get(noteModelCtrl.getNoteByRecordId);
+
 
   // UserModel routes
   router.route('/userModel').get(userModelCtrl.getAll);

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2, HostListener, QueryList  } from '@angular/core';
 import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
@@ -15,7 +15,10 @@ import jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
 
-import { ElementRef,ViewChild,ViewChildren } from '@angular/core';
+import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import moment from 'moment';
+
 
 @Component({
   selector: 'app-table-list',
@@ -25,9 +28,7 @@ import { ElementRef,ViewChild,ViewChildren } from '@angular/core';
 export class TableListComponent implements OnInit {
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
   @ViewChild('textArea') textArea: ElementRef;
-
-
-
+  
   people:any[] =[];
   
   //ListUser: users[] =[];
@@ -36,7 +37,6 @@ export class TableListComponent implements OnInit {
   dtTrigger: Subject<any> = new Subject(); 
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
-
   items:any= [];
   viewData=[];
   detailItems: any;
@@ -44,6 +44,9 @@ export class TableListComponent implements OnInit {
   personInputs: FormArray;
   addItemForm: any;
   addDataForm: any;
+
+  addNoteForm : any;
+
   activeButton: string='typro';
   isTyproActive:boolean = true;
   isWritteActive:boolean = false;
@@ -57,18 +60,26 @@ export class TableListComponent implements OnInit {
   private ctx: CanvasRenderingContext2D;
   penColor: string = 'black';
   penSize: number = 1;
-
+  
   ////////////////////////////
   isSignModalVisible: boolean[] = [];
   private canvas2: HTMLCanvasElement;
   private ctx2: CanvasRenderingContext2D;
   penColor2: string = 'black';
   penSize2: number = 1;
+  showForm: boolean = false;
+  event: Event;
+  showPDF: boolean = false;
+
+
 //writter box
   constructor(
     private fb:FormBuilder,
-    private http:HttpClient,
-    private sv:SharedService
+    private http:HttpClient,  
+    private sv:SharedService,
+    private cdr: ChangeDetectorRef,
+    private renderer: Renderer2, 
+    private el: ElementRef
   ) { 
     this.addItemForm = this.fb.group({
       id: ['',Validators.required],
@@ -99,31 +110,16 @@ export class TableListComponent implements OnInit {
   //   }
 
   // ];
-  fetchData() {
-    this.fetchData;
-    this.sv.getData().subscribe(
-      res => {
-        this.items = res.records; // ใช้ res.records แทน res
-        console.log('Items fetched successfully:', this.items);
-      },
-      error => {
-        console.error('Error fetching items:', error);
-      }
-    );
-    
-  } 
-
-
+ 
   ngOnInit(){
-
     this.dtOptions = {
     
-      columnDefs: [
-        {
-          // targets: [5],
-          // orderable: false
-        }
-      ],
+      // columnDefs: [
+      //   {
+      //     // targets: [5],
+      //     // orderable: false
+      //   }
+      // ],
       pagingType: 'full_numbers',
       "language": {
         "lengthMenu": "แสดง _MENU_ รายการ",
@@ -140,24 +136,53 @@ export class TableListComponent implements OnInit {
         },
       }
     };
-    console.log("DataTable Error: ",this.dtOptions)
-
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip();
-
-
-    });
+    console.log("DataTable : ",this.dtOptions)
 
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });
 
     this.sv.getData().subscribe(res => {
-      console.log("res getData:", res);
+      console.log("res getRecord:", res);
       this.items = res;
      
     });
+    
+    // this.fetchData()
+
   }
+
+  // fetchData() {
+  //   this.sv.getData().subscribe(
+  //     res => {
+  //       this.items = res.records;
+  //       this.dtTrigger.next(null); // แจ้งเตือน DataTable ว่ามีข้อมูลใหม่
+  //       console.log('Items fetched successfully:', this.items);
+  //     },
+  //     error => {
+  //       console.error('Error fetching items:', error);
+  //     }
+  //   );
+  // }
+
+  // ngOnDestroy() {
+  //   this.dtTrigger.unsubscribe();
+  // }
+
+  // fetchData() {
+  //   this.fetchData;
+  //   this.sv.getData().subscribe(
+  //     res => {
+  //       this.items = res.records; // ใช้ res.records แทน res
+  //       console.log('Items fetched successfully:', this.items);
+  //     },
+  //     error => {
+  //       console.error('Error fetching items:', error);
+  //     }
+  //   );
+    
+  // } 
+ 
 
   //Writter section
   ngAfterViewInit() {
@@ -183,6 +208,7 @@ export class TableListComponent implements OnInit {
         if (this.ctx2) { // Ensure ctx2 is not undefined
           this.ctx2.beginPath();
         }
+        this.canvas2.style.border="none";
       };
 
       const draw = (e: MouseEvent) => {
@@ -213,8 +239,11 @@ export class TableListComponent implements OnInit {
       console.error('Sign canvas element not found', this.canvas2);
     }
   }
+
   openSignModal(index: number){
+
     this.isSignModalVisible[index] = true;
+    
     setTimeout(() => {
       if (this.writteSignElement) {
         this.setupSignCanvas(index);
@@ -226,6 +255,11 @@ export class TableListComponent implements OnInit {
       }
     }, 0);  
     console.log("it openSign status : ",this.isSignModalVisible)
+  }
+  refreshSignCanvas(index: number){
+    if(this.ctx2){
+      this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
+    }
   }
 
 saveSignature() {
@@ -294,10 +328,7 @@ saveSignature() {
     }
   }
 
-
-
  //End writter section
-
 
   setActive(button: string){
     this.activeButton = button;
@@ -323,8 +354,17 @@ saveSignature() {
 
   //หน้าจอรายละเอียดข้อมูล
   openModal(recordId: any) {
-    $('#myModal').modal('show');  
-   
+
+    const modal = $('#myModal');
+    const modalBody = modal.find('.modal-body');
+
+    modal.modal({
+        backdrop: 'static', // Prevent closing when clicking outside
+        keyboard: false     // Prevent closing with keyboard (Esc key)
+    });
+  
+    
+
     this.sv.getDataById(recordId).subscribe(res=>{
       console.log("getDataById :",res);
       
@@ -339,12 +379,13 @@ saveSignature() {
       this.viewData = res;
     
       console.log("it on working.. ")
-     
       
     });
-    
-  
-  
+    this.sv.triggerRefresh();
+    window.location.reload();
+$('#myModal').modal('show');  
+   
+
   }
   // loadViewData() {
   //   this.sv.getItems().subscribe(data => {
@@ -467,20 +508,40 @@ get personal(): FormArray {
 }
 
 
-  onRecord(){
-    $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
-   
-  }
+onRecord(recordId: any) {
 
+  $('#writtenModel').modal({
+    backdrop: 'static', // Prevent closing when clicking outside
+    keyboard: false     // Prevent closing with keyboard (Esc key)
+  });
 
+  $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
+ 
+}
 
 //insert
-  onInsert(){
-    $('#insertModel').modal('show'); 
-  }
+  // onInsert(){
+  //   $('#insertModel').modal('show'); 
+  // }
 
   onInsertSummit(data) {
-    // console.log(data);
+
+    // const newItem = {
+    //   record_id: data.id,
+    //   record_star_date: data.startDate,
+    //   record_end_date: data.endDate,
+    //   record_location: data.location,
+    //   record_detail: data.detail,
+    //   record_topic: data.topic,
+    //   fullname: data.personal,
+    //   rank: data.personal,
+    // };
+    // if (!this.items.records) {
+    //   this.items.records = [];
+    // }
+    // this.items.records.unshift(data);
+  
+
     console.log('Item form:',this.addItemForm.value);
     console.log('PernalForm : ',this.addPersonalForm.value);
     console.log('Personal array form : ',this.personal.value)
@@ -518,7 +579,10 @@ get personal(): FormArray {
       this.addItemForm.reset();
       this.personInputs.clear(); // Clear FormArray
       // this.addPersonInput();
-      this.refreshPage();
+
+      // Trigger change detection
+      this.cdr.detectChanges();
+      // this.refreshPage();
     },
     error =>{
       console.error('Error submitting data:', error);
@@ -529,10 +593,11 @@ get personal(): FormArray {
             confirmButtonText: 'ตกลง'
           });
     }
+    
   );
     
-  this.fetchData()
-  
+  // this.fetchData()
+
 
      // Close the modal
      $('#insertModel').modal('hide');
@@ -569,7 +634,7 @@ get personal(): FormArray {
     html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
       const pdf = new jsPDF('p','mm','a4'); 
       pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
-      pdf.save('การลงตรวจจอิเล็กทรอนิค.pdf')
+      pdf.save('การลงตรวจสอบ.pdf')
     });
   }
   
@@ -579,20 +644,74 @@ get personal(): FormArray {
     });
   }
 
-  toggleTypro() {
-    this.isTyproActive = true;
-    this.isWritteActive = false;
-    this.activeButton = 'typro';
-  }
+/////////////////////////////// formatFont Edit
+typroHolder:string="พิมที่นี้...";
+formatText(command: string) {
+  document.execCommand(command, false, null);
+  this.updateTyproText();
+}
 
-  toggleWritte() {
-    this.isTyproActive = false;
-    this.isWritteActive = true;
-    this.activeButton = 'writte';  
-  }
+onInput(event: any): void {
+  this.typroText = event.target.innerHTML;
+}
 
-  formatText(command: string) {
-    document.execCommand(command, false, null);
+updateTyproText(): void {
+  const editableDiv = document.querySelector('.form-control.full-page-textarea');
+  if (editableDiv) {
+    this.typroText = (editableDiv as HTMLElement).innerHTML;
   }
- 
+}
+
+
+loadItems(): void {
+  this.sv.getItems().subscribe((data) => {
+    this.items = data;
+  });
+}
+
+// onRecord(recordId: any): void {
+//   $('#writtenModel').modal('show');
+//   this.sv.getNoteById(recordId).subscribe(res=>{
+//     console.log("getNoteById :",res);
+    
+//     this.detailItems = res;
+  
+//     console.log("it on working.. ")
+
+//     })
+//     this.sv.getViewByRecordId(recordId).subscribe((res :any)=>{
+//       console.log("getDataById :",res);
+      
+//       this.viewData = res;
+    
+//       console.log("it on working.. ")
+      
+//     });
+//   }
+
+
+openInsertModal(): void {
+  const nextId = this.items.records.length + 1;
+  const currentDate = moment().format('YYYY-MM-DD');
+
+  this.addItemForm.patchValue({
+    id: nextId,
+    startDate: currentDate
+  });
+  
+  $('#insertModel').modal({
+    backdrop: 'static', // Prevent closing when clicking outside
+    keyboard: false     // Prevent closing with keyboard (Esc key)
+  });
+  $('#insertModel').modal('show');
+  
+}
+// PDFshow() {
+//   this.showPDF = true;
+// }
+
+// addNewItem(data: any) {
+//   this.items.unshift(data);
+// }
+
 }

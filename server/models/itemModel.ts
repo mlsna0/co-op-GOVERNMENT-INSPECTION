@@ -9,7 +9,8 @@ const itemSchema = new mongoose.Schema({
   rank: { type: String, required: true },
   fullName: { type: String, required: true },
   details: { type: String, required: true },
-  viewData: { type: mongoose.Schema.Types.ObjectId, ref: 'ViewModel' }
+  viewData: { type: mongoose.Schema.Types.ObjectId, ref: 'ViewModel' },
+  note: { type: String, required: true },
 });
 
 const Items = mongoose.model('Items', itemSchema);
@@ -27,7 +28,7 @@ export interface Items {
     view_rank: string;
     view_full_name: string;
   };
-  
+  note: string;
 }
 
 export default Items;

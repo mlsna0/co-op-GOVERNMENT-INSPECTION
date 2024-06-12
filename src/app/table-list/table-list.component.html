@@ -1,17 +1,13 @@
 <!--สิ่งที่ติดปัญหาอยู่และยังไม่ได้แก้ไข
   1.templat datatable ไม่สามารถดึงได้มาใช้งานได่้
-  2.ยังไม่ได้เชื่อมค่อกับระบบฐานข้อมูล
-  3.ยังไม่ได้สร้าง services
-  4.ยังไม่ได้ดึง ข้อมูลมาแสดงผล
-  5.ยังไม่ได้สร้าง ระบบ เขียน และการมีคำสั่งของ pdf
-  6.การพิมพ์ยังไม่ได้ทำเพิ่มได้แต่แบบที่เห็น
-  7.ส่วนของ "tooltip" เรียกใช่งานจาก bootstrap ไม่ได้ tooltip คือ เมื่อเอาเมาส์ไปที่ปุ่มแล้วมันจะขึ้นข้อความขึ้นมานะอย่าง "ดูรายละเอียด"
+  2.ส่วนของ "tooltip" เรียกใช่งานจาก bootstrap ไม่ได้ tooltip คือ เมื่อเอาเมาส์ไปที่ปุ่มแล้วมันจะขึ้นข้อความขึ้นมานะอย่าง "ดูรายละเอียด"
+  3.style ของ tooltip ใช้ได้แค่ในตัวของ modal ถึงใช้ได้แต่ไม่สามารถมีการทำงานในแบบที่ต้องการได้ ตำแหน่งเริ่มต้นของ
 -->
 <div class="main-content">
   <div class="row justify-content-end">
     <div class="col-sm-2">
       <div class="insert-data">
-        <button class="btn btn-success pull-center" (click)="onInsert()">
+        <button class="btn btn-success pull-center" (click)="openInsertModal()">
           <i class="fa fa-plus"></i> &nbsp;เพิ่มรายการ
         </button>
       </div>
@@ -30,15 +26,7 @@
             <p class="card-category"></p>
             <!-- <div class="btnBar">
               <form class="navbar-form">
-                <span class="bmd-form-group">
-                  <div class="input-group no-border">
-                    <input type="text" value class="form-control" placeholder="Search..." />
-                    <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
-                      <i class="material-icons">search</i>
-                      <div class="ripple-container"></div>
-                    </button>
-                  </div>
-                </span>
+      
               </form> -->
             <!-- (click)="searchData(myInputSearch.value)" -->
             <!-- </div> -->
@@ -50,18 +38,19 @@
             <div class="table-responsive">
               <table width="100%" datatable [dtOptions]="dtOptions"
                 class="table table-border table-hover table-bordered nowrap">
-                <thead class="text-primary">
+                <thead class="text-primary" style="color: #000;">
                   <tr>
-                    <th style="width: 2%; white-space: nowrap; text-align: center;">ครั้งที่</th>
-                    <th>วันที่เริ่มตรวจสอบ</th>
-                    <th>วันที่เสร็จสิ้น</th>
-                    <th>สถานที่</th>
-                    <th class="text-center"><i class="fa fa-gear"></i></th>
+                    <th style="width: 2%; white-space: nowrap; text-align: center; color: #000; ">ครั้งที่</th>
+                    <th style="width: 2%; white-space: nowrap; text-align: center; color: #000; ">วันที่เริ่มตรวจสอบ
+                    </th>
+                    <th style="width: 2%; white-space: nowrap; text-align: center; color: #000; ">วันที่เสร็จสิ้น</th>
+                    <th style="width: 2%; white-space: nowrap; text-align: center; color: #000; ">สถานที่</th>
+                    <th style="color: #000; " class="text-center"><i class="fa fa-gear"></i></th>
                   </tr>
                 </thead>
-                <tbody *ngFor="let item of items?.records">
+                <tbody>
                   <!---->
-                  <tr>
+                  <tr *ngFor="let item of items?.records">
 
 
                     <td style=" text-align: center;">
@@ -89,25 +78,27 @@
                       <a href=""><i class="fa fa-file-pdf-o" (click)="printPDF()" ></i></a> -->
                       <button (click)="openModal(item._id)" class="text-primary"
                         style="border: none; background: none;">
-                        <i data-toggle="tooltip" title="ดูรายละเอียด" data-placement="top"
-                          class="fa fa-file-text-o  text-primary" style="color: black;"></i>
+                        <i data-toggle="tooltip" title="ดูรายละเอียด" data-placement="top" class="fa fa-file-text-o "
+                          style="color: black;"></i>
                       </button>&nbsp;
 
 
                       <button (click)="onRecord()" style="border: none; background: none;" class="text-primary">
-                        <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top"
-                          class="fa fa-pencil-square-o  text-primary" style="color: black;"></i>
+                        <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top" class="fa fa-pencil-square-o "
+                          style="color: black;"></i>
                       </button> &nbsp;
 
                       <button style="border: none; background: none;">
-                        <i class="fa fa-file-pdf-o text-primary" (click)="printPDF()" style="color: black;"></i>
+                        <i class="fa fa-file-pdf-o " (click)="PDFshow()" style="color: black;"></i>
                         &nbsp;
                       </button>
                     </td>
                   </tr>
                 </tbody>
-
               </table>
+            </div>
+            <div class="pdf-viewer" *ngIf="showPDF">
+              <ngx-extended-pdf-viewer [src]="'assets/example.pdf'" useBrowserLocale="true"></ngx-extended-pdf-viewer>
             </div>
           </div>
 
@@ -166,7 +157,6 @@
                       </button>
                     </div>
                   </div>
-
                 </div>
                 <div class="modal-body">
                   <form [formGroup]="addItemForm" (ngSubmit)="onInsertSummit(addItemForm.value)">
@@ -174,8 +164,7 @@
                       <div class="col-sm-2">
                         <div class="form-group">
                           <label for="id" class="form-label">ครั้งที่:</label>
-
-                          <input type="id" id="Date" formControlName="id" class="form-control" placeholder="ครั้งที่" />
+                          <input type="id" id="id" formControlName="id" class="form-control" placeholder="ครั้งที่" />
                         </div>
                       </div>
                       <div class="col-sm-4">
@@ -336,7 +325,8 @@
                         <tbody>
                           <tr>
                             <td>{{detailItems?.record_id}}/{{detailItems?.record_star_date | thaidate :'year'}}</td>
-                            <td [innerHTML]="typroText"></td>
+                            <!-- <td [innerHTML]="typroText"></td> -->
+                            <td> {{typroText}} </td>
                           </tr>
                         </tbody>
                       </table>
@@ -356,20 +346,20 @@
                                   style="max-width: 100px; max-height: 100px; display: block; margin-top: 10px;">
                               </div> -->
                               <div class="openSignModal" (click)="openSignModal(i)">
-                                <p>คลิกเพื่อเซ็น</p>
+                                <a>คลิกเพื่อเซ็น</a>
                                 
                               </div>
-                              <!-- Sign modal -->       
-                              <div class="Writte-sign"  #writteSignElement id="SignModal-{{i}}" *ngIf="isSignModalVisible[i]">
+                              <!-- Sign modal -->
+                              <div class="Writte-sign" #writteSignElement id="SignModal-{{i}}"
+                                *ngIf="isSignModalVisible[i]">
                                 <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error someting with
                                   canvas</canvas>
+                                <button (click)="refreshSignCanvas(i)" style="border: none; background: none;">
+                                  <i data-toggle="tooltip" title="ลบ" data-placement="top"
+                                    class="fa fa-refresh"></i></button>
                               </div>
-                    
-
                             </div>
-                            <div class="text-content" [ngClass]="{'owner': person.isOwner}">
-                            <a>{{ person.view_rank }} &nbsp; &nbsp; {{ person.view_full_name }} </a>
-                          </div>
+                            <a>( {{ person.view_rank }} &nbsp; &nbsp; {{ person.view_full_name }} )</a>
                           </div>
                         </div>
                       </div>
@@ -383,14 +373,17 @@
                   
                       </div>
 
+                     
+
+
                     </form>
                   </div> -->
                 </div>
                 <div class="modal-footer">
-                  <button type="button"    class="btn btn-success pull-center" (click)="printPDF()" >
+                  <button type="button" class="btn btn-success pull-center" (click)="printPDF()">
                     <i class="fa fa-download"></i>&nbsp; ดาว์โหลด
                   </button>
-                  <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeModal()" >
+                  <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeModal()">
                     <i class="fa fa-times"></i>&nbsp; ปิด
                   </button>
                 </div>
@@ -400,7 +393,7 @@
 
 
           <!--[formGroup]="Form" (ngSubmit)="addPersonCommit(Form.value)" modal อันที่เป็นของ add person หน้าเล็กๆๆ ถูกลบออกนะ-->
-        
+
 
           <!-- จดบันทึก-->
           <div class="modal fade" id="writtenModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -421,12 +414,12 @@
                       <div class="section">
                         &nbsp;
                         <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'typro'}"
-                          (click)="setActive('typro')">
+                          (click)="setActive('typro')"><!-- data-toggle="tooltip" title="การพิมพ์ข้อความ" data-placement="top" -->
                           <i class="fa fa-file-word-o"></i>
                         </button>
                         &nbsp;
                         <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'writte'}"
-                          (click)="setActive('writte')">
+                          (click)="setActive('writte')"><!--data-toggle="tooltip" title="การเขียน" data-placement="top"-->
                           <i class="fa fa-pencil-square-o"></i>
                         </button>
                       </div>
@@ -438,35 +431,12 @@
                         <div class="typroTextBox">
                           <div class="headerText">
                             <button aria-label="Preview">การพิมพ์ข้อความ</button>
-                            <button (click)="formatText('bold')">
-                              <i class="fas fa-bold"></i>
-                            </button>
-                            <button (click)="formatText('italic')" aria-label="Italic">
-                              <i class="fas fa-italic"></i>
-                            </button>
-                            <button (click)="formatText('strikeThrough')" aria-label="Strikethrough">
-                              <i class="fas fa-strikethrough"></i>
-                            </button>
-                            <button aria-label="Link">
-                              <i class="fas fa-link"></i>
-                            </button>
-                            <button aria-label="Bullet List">
-                              <i class="fas fa-list-ul"></i>
-                            </button>
-                            <button aria-label="Numbered List">
-                              <i class="fas fa-list-ol"></i>
-                            </button>
-                            <button aria-label="Table">
-                              <i class="fas fa-table"></i>
-                            </button>
-                            <button aria-label="Attachment">
-                              <i class="fas fa-paperclip"></i>
-                            </button>
-                            <button aria-label="Expand">
-                              <i class="fas fa-expand"></i>
-                            </button>
+
                           </div>
-                          <div contenteditable="true" #textArea class="form-control full-page-textarea"></div>
+                          <textarea contenteditable="true" [formGroup]="addItemForm"
+                            (ngSubmit)="onInsertSummit(addNoteForm.value)"
+                            class="form-control  full-page-textarea"></textarea>
+
                         </div>
                       </div>
                       <div *ngIf="isWritteActive" class="full-page-pdf">
@@ -478,10 +448,7 @@
                           </div>
                           <canvas id="writteCanvas" class="full-page-canvas"></canvas>
                         </div>
-
                       </div>
-
-
                     </div>
                   </div>
                 </div>
@@ -502,140 +469,4 @@
 
 
     </div>
-    <!-- 
-    <div class="main-content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="card">
-              <div class="card-header card-header-danger">
-                <h4 class="card-title">Simple Table</h4>
-                <p class="card-category">Here is a subtitle for this table</p>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table">
-                    <thead class="text-primary">
-                      <th>ID</th>
-                      <th>Name</th>
-                      <th>Country</th>
-                      <th>City</th>
-                      <th>Salary</th>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>Dakota Rice</td>
-                        <td>Niger</td>
-                        <td>Oud-Turnhout</td>
-                        <td class="text-primary">$36,738</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>Minerva Hooper</td>
-                        <td>Curaçao</td>
-                        <td>Sinaai-Waas</td>
-                        <td class="text-primary">$23,789</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>Sage Rodriguez</td>
-                        <td>Netherlands</td>
-                        <td>Baileux</td>
-                        <td class="text-primary">$56,142</td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>Philip Chaney</td>
-                        <td>Korea, South</td>
-                        <td>Overland Park</td>
-                        <td class="text-primary">$38,735</td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>Doris Greene</td>
-                        <td>Malawi</td>
-                        <td>Feldkirchen in Kärnten</td>
-                        <td class="text-primary">$63,542</td>
-                      </tr>
-                      <tr>
-                        <td>6</td>
-                        <td>Mason Porter</td>
-                        <td>Chile</td>
-                        <td>Gloucester</td>
-                        <td class="text-primary">$78,615</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-12">
-            <div class="card card-plain">
-              <div class="card-header card-header-danger">
-                <h4 class="card-title mt-0">Table on Plain Background</h4>
-                <p class="card-category">Here is a subtitle for this table</p>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table table-hover">
-                    <thead class>
-                      <th>ID</th>
-                      <th>Name</th>
-                      <th>Country</th>
-                      <th>City</th>
-                      <th>Salary</th>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>Dakota Rice</td>
-                        <td>Niger</td>
-                        <td>Oud-Turnhout</td>
-                        <td>$36,738</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>Minerva Hooper</td>
-                        <td>Curaçao</td>
-                        <td>Sinaai-Waas</td>
-                        <td>$23,789</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>Sage Rodriguez</td>
-                        <td>Netherlands</td>
-                        <td>Baileux</td>
-                        <td>$56,142</td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>Philip Chaney</td>
-                        <td>Korea, South</td>
-                        <td>Overland Park</td>
-                        <td>$38,735</td>
-                      </tr>
-                      <tr>
-                        <td>5</td>
-                        <td>Doris Greene</td>
-                        <td>Malawi</td>
-                        <td>Feldkirchen in Kärnten</td>
-                        <td>$63,542</td>
-                      </tr>
-                      <tr>
-                        <td>6</td>
-                        <td>Mason Porter</td>
-                        <td>Chile</td>
-                        <td>Gloucester</td>
-                        <td>$78,615</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>x
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
+   
