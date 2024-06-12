@@ -92,7 +92,7 @@ records: any;
       topic: ['',Validators.required],
       content:[''],
       filename: [''],
-      data: [''],
+      data_: [''],
       contentType: [''],
        personal: this.fb.array([]),
       

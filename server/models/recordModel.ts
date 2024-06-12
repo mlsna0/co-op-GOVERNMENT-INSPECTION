@@ -12,7 +12,7 @@ const recordSchema = new mongoose.Schema({
     pdfs: [
       {
         record_filename: String,
-        record_data: Buffer,
+        record_data_: Buffer,
         record_contentType: String
       }
     ]
