@@ -36,7 +36,7 @@ export class TableListComponent implements OnInit {
   //ListUser: users[] =[];
 
   Form:FormGroup;
-  dtOptions: DataTables.Settings ={};
+  dtOptions: any ={};
   dtTrigger: Subject<any> = new Subject(); 
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
@@ -91,7 +91,10 @@ records: any;
       location: ['',Validators.required],
       topic: ['',Validators.required],
       content:[''],
-      personal: this.fb.array([]),
+      filename: [''],
+      data: [''],
+      contentType: [''],
+       personal: this.fb.array([]),
       
 
     }); 

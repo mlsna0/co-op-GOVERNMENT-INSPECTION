@@ -1,9 +1,14 @@
 import ItemModel from '../models/itemModel';
 import ViewModel from '../models/viewModel';
 import recordModel from '../models/recordModel';
+import multer from 'multer';
+import { Request, Response } from 'express';
 // import DetailModel from 'models/detailModel';
 import BaseCtrl from './base';
+import { buffer } from 'stream/consumers';
 
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage }).single('pdf');
 
 class ItemModelCtrl extends BaseCtrl {
   model = ItemModel;
@@ -11,41 +16,47 @@ class ItemModelCtrl extends BaseCtrl {
   modelRecord = recordModel;
   // modelDetail = DetailModel
 
-
-  postItemToView = async (req, res) => {
-    console.log(req.body);
-    
-    try {
-      const obj = await new this.modelRecord({
-        record_id: req.body.id,
-        record_star_date: req.body.startDate,
-        record_end_date: req.body.endDate,
-        record_detail: req.body.detail,
-        record_location: req.body.location,
-        record_topic: req.body.topic,
-        record_content: req.body.content,
-
   
-      }).save();
-      // req.body.personal.forEach(async (element) => {
-      //   const obj1 = await new this.modelView({
-      //     view_rank: element.rank,
-      //     view_full_name: element.fullname,
-      //   }).save();
-      // });
-      console.log("obj _Id: ",obj._id)
-      if(req.body.personal){ 
-        let newField = req.body.personal.map( x=> {return { view_rank : x.rank, view_full_name: x.fullname,RecordModelId: obj._id }});
-
-        let result = await this.modelView.insertMany(newField)
-      }
+    postItemToView = async (req, res) => {
+      console.log(req.body);
       
+      try {
+        const obj = await new this.modelRecord({
+          record_id: req.body.id,
+          record_star_date: req.body.startDate,
+          record_end_date: req.body.endDate,
+          record_detail: req.body.detail,
+          record_location: req.body.location,
+          record_topic: req.body.topic,
+          record_content: req.body.content,
+          pdfs: [
+            {
+              record_filename: req.body.filename,
+              record_data_: Buffer.from(req.body.data_, 'base64'),
+              record_contentType: req.body.contentType
+            }
+          ]
+    
+        }).save();
+        // req.body.personal.forEach(async (element) => {
+        //   const obj1 = await new this.modelView({
+        //     view_rank: element.rank,
+        //     view_full_name: element.fullname,
+        //   }).save();
+        // });
+        console.log("obj _Id: ",obj._id)
+        if(req.body.personal){ 
+          let newField = req.body.personal.map( x=> {return { view_rank : x.rank, view_full_name: x.fullname,RecordModelId: obj._id }});
 
-      res.status(200).json("ok");
-    } catch (err) {
-      return res.status(400).json({ error: err.message });
+          let result = await this.modelView.insertMany(newField)
+        }
+        
+
+        res.status(200).json("ok");
+      } catch (err) {
+        return res.status(400).json({ error: err.message });
+      }
     }
-  }
   
 //   addDetail = async (req, res) => {
 //     console.log("Adding detail: ", req.body);
@@ -54,7 +65,7 @@ class ItemModelCtrl extends BaseCtrl {
 //             detail_dt: req.body.detail_dt,
 //             RecordModelId: req.body.RecordModelId
 //         });
-//         const savedDetail = await detail.save();
+//         const savedDetai  l = await detail.save();
 //         res.status(201).json(savedDetail);
 //     } catch (err) {
 //         res.status(400).json({ error: err.message });
@@ -128,6 +139,24 @@ updateRecordContent = async (req, res) => {
       res.status(400).json({ error: err.message });
     }
   }
+  
+  getPDF = async (req: Request, res: Response) => {
+    try {
+      const { id, pdfIndex } = req.params;
+      const record = await this.modelRecord.findById(id);
+
+      if (!record || !record.pdfs[pdfIndex]) {
+        return res.status(404).send('File not found');
+      }
+
+      const pdf = record.pdfs[pdfIndex];
+      res.contentType(pdf.contentType);
+      res.send(pdf.data);
+    } catch (err) {
+      res.status(500).send('Internal Server Error');
+    }
+  };
+
   
 }
 
