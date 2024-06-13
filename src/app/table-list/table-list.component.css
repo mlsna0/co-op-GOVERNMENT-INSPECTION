@@ -21,17 +21,22 @@
 }
 
 .searchLocation{
-  color: #ff9e2c;
-  background-color: #fff3e4;
-    border: 1px solid rgba(0, 0, 0, 0);
-    border-radius: 5px;
-    padding: 4px 8px;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.333em;
-    display: inline-block;
+  color: #343dff;
+  background-color: transparent;
+  border: 0.5px solid rgb(0, 0, 0);
+  border-radius: 3px;
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.333em;
+  display: inline-block;
+  align-items: center;
   font-family: 'TH SarabunPSK', sans-serif; 
  
+}
+.searchLocation:hover{
+  background: #dddfff;
+  z-index: 30;
 }
 
 .modal-body-detail{ 
@@ -148,6 +153,7 @@ label{
   width: 35px;
   height: 35px;
   border: none;
+  
   
 }
 .headerText i:hover{

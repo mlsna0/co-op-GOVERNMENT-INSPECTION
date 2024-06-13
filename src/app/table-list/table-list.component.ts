@@ -165,13 +165,10 @@ records: any;
       this.loading = false;
     });
     
-    // location 
-   
-
-    // เรียกใช้บริการ Geocoding
 
     
   }
+  //parsetLatLang คือการทำงานเกี่ยวกับการแยก lat และ long ให้เป็นสองส่วน แล้วเก็บไปที่ตัวแปร lat ,lng 12/06
   parseLatLng(location: string): [number, number] {
     const latMatch = location.match(/Lat:\s*([0-9.]+)/);
     const lngMatch = location.match(/Lng:\s*([0-9.]+)/);
@@ -179,7 +176,8 @@ records: any;
     const lng = lngMatch ? parseFloat(lngMatch[1]) : 0;
     return [lat, lng];
   }
-
+ 
+  //
   searchLocation(local:any){
     console.log("searchLocation : ",local)
     const [lat, lng] = this.parseLatLng(local);
