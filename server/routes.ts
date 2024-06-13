@@ -4,8 +4,8 @@ import ItemModelCtrl from './controller/itemController';
 import RecordModelCtrl from './controller/recordController';
 import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
-// import NoteModelCtrl from 'controller/noteController';
 import uploadService from './service/uploadservice.service'
+// import DetailModelCtrl from 'controller/detailController';
 // import AggRecordNViewCon from 'controller/aggRecordNviewController'; //petch edit add this
 
 function setRoutes(app): void {
@@ -14,7 +14,8 @@ function setRoutes(app): void {
   const recordModelCtrl = new RecordModelCtrl();
   const userModelCtrl = new UserModelCtrl();
   const viewModelCtrl = new ViewModelCtrl();
-  // const noteModelCtrl = new NoteModelCtrl();
+  // const detailModelCtrl = new DetailModelCtrl();
+
   // const aggregateRecordsAndView = new AggRecordNViewCon(); //petch edit add this
 
   // ItemModel routes
@@ -24,9 +25,12 @@ function setRoutes(app): void {
   // router.route('/postPersonData').post(itemModelCtrl.postItemToView);
 
   router.route('/data').get(itemModelCtrl.getData);
+  router.route('/record/updateContent').put(itemModelCtrl.updateRecordContent);
 
   router.route('/postItemData').post(itemModelCtrl.postItemToView);
-  router.route('/itemModel/:id').get(itemModelCtrl.get)
+  router.route('/postTyproText').post(itemModelCtrl.postItemToView);
+  // router.route('/postAddDetail').post(itemModelCtrl.addDetail);
+  router.route('/itemModel/:id').get(itemModelCtrl.get);
   router.route('/itemModel/:id').put(itemModelCtrl.update);
   router.route('/itemModel/:id').delete(itemModelCtrl.delete);
   router.route('/postDataTest').post(uploadService.none(),itemModelCtrl.postItemToView)
@@ -40,20 +44,7 @@ function setRoutes(app): void {
   router.route('/recordModel/:id').delete(recordModelCtrl.delete);
 
   router.route('/viewModel/getViewByRecordId/:id').get(viewModelCtrl.getViewByRecordId);
-  router.route('/recordModel/getViewByRecordId/ :id').get(recordModelCtrl.get);
-
-  // NoteModel routes
-  // router.route('/noteModel').get(NoteModelCtrl.getAll);
-  // router.route('/noteModel/count').get(NoteModelCtrl.count);
-  // router.route('/noteModel').post(NoteModelCtrl.insert);
-  // router.route('/noteModel/:id').get(NoteModelCtrl.get);
-  // router.route('/noteModel/:id').put(NoteModelCtrl.update);
-  // router.route('/noteModel/:id').delete(NoteModelCtrl.delete);
-
-  // router.route('/noteModel/getNoteByRecordId/:id').get(NoteModelCtrl.getViewByRecordId);
-
-  // router.route('/noteModel/getNoteByRecordId/:id').get(noteModelCtrl.getNoteByRecordId);
-
+  
 
   // UserModel routes
   router.route('/userModel').get(userModelCtrl.getAll);

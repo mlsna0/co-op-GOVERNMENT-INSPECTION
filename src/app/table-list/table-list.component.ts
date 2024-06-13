@@ -1,5 +1,5 @@
-import { Component, OnInit, Renderer2, HostListener, QueryList  } from '@angular/core';
-import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray,AbstractControl } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
 import { HttpClient } from '@angular/common/http';
@@ -14,10 +14,12 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
+import { Router } from '@angular/router';
+import { content } from 'html2canvas/dist/types/css/property-descriptors/content';
 
 import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import moment from 'moment';
+import { DomSanitizer,SafeHtml } from '@angular/platform-browser';
 
 
 @Component({
@@ -28,25 +30,26 @@ import moment from 'moment';
 export class TableListComponent implements OnInit {
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
   @ViewChild('textArea') textArea: ElementRef;
-  
+
+  startDate: string;
   people:any[] =[];
-  
+  typroHolder:string="พิมที่นี้...";
   //ListUser: users[] =[];
+
   Form:FormGroup;
-  dtOptions:any ={};
+  dtOptions: any;
   dtTrigger: Subject<any> = new Subject(); 
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
+
   items:any= [];
   viewData=[];
-  detailItems: any;
+  detailItems: any = {}; 
   PersonINT :number = 0;
   personInputs: FormArray;
+  // currentRecordId: string;
   addItemForm: any;
   addDataForm: any;
-
-  addNoteForm : any;
-
   activeButton: string='typro';
   isTyproActive:boolean = true;
   isWritteActive:boolean = false;
@@ -60,26 +63,31 @@ export class TableListComponent implements OnInit {
   private ctx: CanvasRenderingContext2D;
   penColor: string = 'black';
   penSize: number = 1;
-  
+
   ////////////////////////////
   isSignModalVisible: boolean[] = [];
   private canvas2: HTMLCanvasElement;
   private ctx2: CanvasRenderingContext2D;
   penColor2: string = 'black';
   penSize2: number = 1;
-  showForm: boolean = false;
-  event: Event;
-  showPDF: boolean = false;
-
-
 //writter box
+  selectedRecordId: any;
+  ContentRecordID:any;
+   typroTexts: { [key: string]: string } = {}; 
+  uploadedImageUrl: string | ArrayBuffer | null = null;
+  loadig:boolean = false;
+  item: any;
+  records: any;
+  initialFontSize: number = 14;
+  
+
+
   constructor(
     private fb:FormBuilder,
-    private http:HttpClient,  
+    private http:HttpClient,
     private sv:SharedService,
-    private cdr: ChangeDetectorRef,
-    private renderer: Renderer2, 
-    private el: ElementRef
+    private router: Router,
+    private sanitizer: DomSanitizer,
   ) { 
     this.addItemForm = this.fb.group({
       id: ['',Validators.required],
@@ -88,7 +96,10 @@ export class TableListComponent implements OnInit {
       endDate: ['',Validators.required],
       location: ['',Validators.required],
       topic: ['',Validators.required],
-      personal: this.fb.array([])
+      content:[''],
+      personal: this.fb.array([]),
+      
+
     }); 
     this.addPersonalForm = this.fb.group({
       rank: ['',Validators.required],
@@ -98,6 +109,11 @@ export class TableListComponent implements OnInit {
     this.personInputs = this.addItemForm.get('personal') as FormArray;
     this.addPersonInput(); // Add initial input group
     // this.loadViewData();
+
+    this.setTodaysDate();
+  
+    
+    
   }
   
   documentImageUrl = 'assets/img/sampleA4-1.png';
@@ -111,7 +127,10 @@ export class TableListComponent implements OnInit {
 
   // ];
  
+
+ 
   ngOnInit(){
+
     this.dtOptions = {
     
       // columnDefs: [
@@ -135,11 +154,14 @@ export class TableListComponent implements OnInit {
           "previous": "ย้อนกลับ"
         },
       }
+     
     };
     console.log("DataTable : ",this.dtOptions)
 
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
+
+
     });
 
     this.sv.getData().subscribe(res => {
@@ -150,6 +172,14 @@ export class TableListComponent implements OnInit {
     
     // this.fetchData()
 
+  }
+  setTodaysDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+    const formattedDate = `${day}-${month}-${year}`;
+    this.addItemForm.get('startDate').setValue(formattedDate);
   }
 
   // fetchData() {
@@ -185,10 +215,12 @@ export class TableListComponent implements OnInit {
  
 
   //Writter section
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.setupCanvas();
     // this.setupSignCanvas(index: number);
   }
+
+
   setupSignCanvas(index: number) {
     this.canvas2 = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
     if (this.canvas2) {
@@ -239,9 +271,7 @@ export class TableListComponent implements OnInit {
       console.error('Sign canvas element not found', this.canvas2);
     }
   }
-
   openSignModal(index: number){
-
     this.isSignModalVisible[index] = true;
     
     setTimeout(() => {
@@ -256,11 +286,11 @@ export class TableListComponent implements OnInit {
     }, 0);  
     console.log("it openSign status : ",this.isSignModalVisible)
   }
-  refreshSignCanvas(index: number){
-    if(this.ctx2){
-      this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
-    }
-  }
+  // refreshSignCanvas(index: number){
+  //   if(this.ctx2){
+  //     this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
+  //   }
+  // }
 
 saveSignature() {
     if (this.canvas2) {
@@ -328,7 +358,10 @@ saveSignature() {
     }
   }
 
- //End writter section
+
+
+ //End writter section////////////////////////////////////////////////////////////////////////////////////
+
 
   setActive(button: string){
     this.activeButton = button;
@@ -336,7 +369,8 @@ saveSignature() {
     if (button === 'typro'){
       this.isTyproActive =true;
       this.isWritteActive =false;
-      console.log("typro section")
+     
+      console.log("typro section", this.items)
       
     }else if(button ==="writte"){
       this.isTyproActive =false;
@@ -353,18 +387,14 @@ saveSignature() {
 
 
   //หน้าจอรายละเอียดข้อมูล
-  openModal(recordId: any) {
-
-    const modal = $('#myModal');
-    const modalBody = modal.find('.modal-body');
-
-    modal.modal({
-        backdrop: 'static', // Prevent closing when clicking outside
-        keyboard: false     // Prevent closing with keyboard (Esc key)
+  openDetailModal(recordId: any) {
+    $('#myModal').modal({
+      backdrop: 'static', // Prevent closing when clicking outside
+      keyboard: false     // Prevent closing with keyboard (Esc key)
     });
-  
+    this.selectedRecordId = recordId;
     
-
+   
     this.sv.getDataById(recordId).subscribe(res=>{
       console.log("getDataById :",res);
       
@@ -379,14 +409,17 @@ saveSignature() {
       this.viewData = res;
     
       console.log("it on working.. ")
+     
       
     });
-    this.sv.triggerRefresh();
-    window.location.reload();
-$('#myModal').modal('show');  
-   
-
+    
+  
+  
   }
+  
+
+
+
   // loadViewData() {
   //   this.sv.getItems().subscribe(data => {
   //     this.viewData = data;
@@ -413,11 +446,79 @@ $('#myModal').modal('show');
       };
       reader.readAsDataURL(file);
     }
-    
-    
-
   }
 
+//////////////////////////////////////////////////////////////////////
+
+onRecord(recordId: any) {
+  this.ContentRecordID = recordId;
+  console.log("onRecord modal getID", this.ContentRecordID);
+
+  // ดึงข้อมูลจาก server
+  this.sv.getDataById(recordId).subscribe(res => {
+    console.log("getDataById :", res);
+    this.detailItems = res;
+    
+    // ตั้งค่า typroText ให้เป็น record_content จาก detailItems
+    this.typroText = this.detailItems.record_content;
+    
+    // เปิด modal
+    $('#writtenModel').modal({
+      backdrop: 'static', // ป้องกันการปิดเมื่อคลิกด้านนอก
+      keyboard: false     // ป้องกันการปิดด้วยแป้นพิมพ์ (เช่น ปุ่ม Esc)
+    });
+    $('#writtenModel').modal('show');
+  });
+}
+
+
+
+  recordCommit() {
+    console.log("this.ContentRecordID :",this.ContentRecordID);
+    
+     //recordId = this.selectedRecordId ;
+    if (!this.ContentRecordID) {
+      console.error("ID is undefined");
+      Swal.fire({
+        title: 'Error!',
+        text: 'ID is undefined.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+  
+    console.log("Record ID being committed:", this.ContentRecordID);
+  
+    const recordData = {
+      content: this.typroText,
+      id: this.ContentRecordID
+    };
+  
+    this.sv.updateRecordContent(recordData).subscribe(
+      response => {
+        console.log('บันทึกข้อมูลเรียบร้อย', response);
+        Swal.fire({
+          title: 'Success!!',
+          text: 'Your data has been updated successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+        $('#writtenModel').modal('hide');
+        this.typroText = ''; // Clear the input field
+        // this.fetchData(); // Refresh data if needed
+      },
+      error => {
+        console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
+    );
+  }
   closeModal() {
     // ซ่อนโมดัล
     $('#insertModel').modal('hide');
@@ -475,6 +576,8 @@ $('#myModal').modal('show');
   // }))
   
  }
+
+
  deletePersonInput() {
  ;
  if(this.PersonINT > 1){
@@ -485,6 +588,21 @@ $('#myModal').modal('show');
  console.log("person delete: ",this.PersonINT)
  }
 
+ canAddPerson(): boolean {
+  const lastPerson = this.personInputs.at(this.personInputs.length - 1) as FormGroup;
+  return lastPerson.valid;
+}
+
+//  validateAllFormFields(formGroup: FormGroup) {
+//     Object.keys(formGroup.controls).forEach(field => {
+//       const control = formGroup.get(field);
+//       if (control instanceof FormGroup || control instanceof FormArray) {
+//         this.validateAllFormFields(control);
+//       } else {
+//         control.markAsTouched({ onlySelf: true });
+//       }
+//     });
+//   }
 
  //petch สร้างการ Create ของ InputPerson นะ
  createPersonGroup(): FormGroup {
@@ -508,40 +626,33 @@ get personal(): FormArray {
 }
 
 
-onRecord(recordId: any) {
 
-  $('#writtenModel').modal({
-    backdrop: 'static', // Prevent closing when clicking outside
-    keyboard: false     // Prevent closing with keyboard (Esc key)
-  });
-
-  $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
- 
-}
 
 //insert
-  // onInsert(){
-  //   $('#insertModel').modal('show'); 
-  // }
+  onInsertModal():void{
+
+  const nextId = this.items.records.length + 1;
+  const currentDate = moment().format('YYYY-MM-DD');
+
+  this.addItemForm.patchValue({
+    id: nextId,
+    startDate: currentDate
+  });
+
+    $('#insertModel').modal({
+      backdrop: 'static', // Prevent closing when clicking outside
+      keyboard: false     // Prevent closing with keyboard (Esc key)
+    });
+    $('#insertModel').modal('show');
+    
+  }
+
+
+
 
   onInsertSummit(data) {
-
-    // const newItem = {
-    //   record_id: data.id,
-    //   record_star_date: data.startDate,
-    //   record_end_date: data.endDate,
-    //   record_location: data.location,
-    //   record_detail: data.detail,
-    //   record_topic: data.topic,
-    //   fullname: data.personal,
-    //   rank: data.personal,
-    // };
-    // if (!this.items.records) {
-    //   this.items.records = [];
-    // }
-    // this.items.records.unshift(data);
-  
-
+      
+    // console.log(data);
     console.log('Item form:',this.addItemForm.value);
     console.log('PernalForm : ',this.addPersonalForm.value);
     console.log('Personal array form : ',this.personal.value)
@@ -550,6 +661,21 @@ onRecord(recordId: any) {
     if (this.addItemForm.invalid || this.personal.invalid ) {
       console.log('ฟอร์มไม่ถูกต้อง');
       // แสดงข้อความแสดงข้อผิดพลาดให้ผู้ใช้ดู
+      let invalidFields = [];
+        Object.keys(this.addItemForm.controls).forEach(key => {
+            if (this.addItemForm.controls[key].invalid) {
+                invalidFields.push(this.getFieldLabel(key));
+            }
+        });
+
+        (this.personal as FormArray).controls.forEach((person: AbstractControl, index: number) => {
+          let personGroup = person as FormGroup;
+          Object.keys(personGroup.controls).forEach(key => {
+              if (personGroup.controls[key].invalid) {
+                  invalidFields.push(`Personal field ${index + 1} - ${this.getFieldLabel(key)}`);
+              }
+          });
+        });
       Swal.fire({
         title: 'เกิดข้อผิดพลาด!',
         text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง',
@@ -567,6 +693,7 @@ onRecord(recordId: any) {
     //   console.log("res postItemData:", res);
     // });
 
+    
     this.sv.postDataTest(this.addItemForm.value).subscribe(res => {
       console.log("res submitted successfully", res);
       Swal.fire({
@@ -574,15 +701,16 @@ onRecord(recordId: any) {
               text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
               icon: 'success',
               confirmButtonText: 'ตกลง'
+      }).then((result)=>{
+        if (result.isConfirmed){
+          this.refreshPage();
+        }
       });
       $('#insertModel').modal('hide');
       this.addItemForm.reset();
       this.personInputs.clear(); // Clear FormArray
       // this.addPersonInput();
-
-      // Trigger change detection
-      this.cdr.detectChanges();
-      // this.refreshPage();
+     
     },
     error =>{
       console.error('Error submitting data:', error);
@@ -592,18 +720,33 @@ onRecord(recordId: any) {
             icon: 'error',
             confirmButtonText: 'ตกลง'
           });
+
     }
     
+
   );
     
   // this.fetchData()
-
-
      // Close the modal
      $('#insertModel').modal('hide');
-     
+      
   }
   
+  getFieldLabel(fieldName: string): string {
+    const fieldLabels = {
+        id: 'ครั้งที่',
+        startDate: 'วันที่เริ่มตรวจสอบ',
+        endDate: 'วันที่เสร็จสิ้น',
+        topic: 'หัวข้อการตรวจสอบ',
+        personal: 'บุคคล',
+        rank: 'ยศ/ตำแหน่ง',
+        fullname: 'ชื่อ-นามสกุล',
+        detail: 'รายละเอียด',
+        location: 'สถานที่'
+    };
+    return fieldLabels[fieldName] || fieldName;
+}
+
   getCurrentLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -620,24 +763,22 @@ onRecord(recordId: any) {
     }
   }
   //insert end here
-
-  recordCommit(){
-    this.sv.setTyproText(this.typroText);
-    // Code to close this modal and open the second modal
-    $('#writtenModel').modal('hide');
-  }
+  
 
 
-  printPDF(){
-    console.log("working PDF..")
+  printPDF = () => {
+    console.log("working PDF..");
     const elementToPrint = document.getElementById('myDetail');
     html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
-      const pdf = new jsPDF('p','mm','a4'); 
+      const pdf = new jsPDF('p','mm','a4');
       pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
       pdf.save('การลงตรวจสอบ.pdf')
     });
-  }
-  
+    // this.fetchData()
+}
+
+
+
   searchData(data: string) {
     this.sv.searchData(data).subscribe(res => {
       console.log("res searchData:", res);
@@ -645,16 +786,52 @@ onRecord(recordId: any) {
   }
 
 /////////////////////////////// formatFont Edit
-typroHolder:string="พิมที่นี้...";
-formatText(command: string) {
-  document.execCommand(command, false, null);
-  this.updateTyproText();
-}
 
-onInput(event: any): void {
-  this.typroText = event.target.innerHTML;
-}
+formatText(command: string): void {
+    document.execCommand(command, false, '');
+    this.updateTyproText();
+  }
 
+  onInput(event: Event): void {
+    const target = event.target as HTMLElement;
+    this.typroText = target.innerHTML;
+  }
+
+  updateFontSize(): void {
+    const fontElements = document.getElementsByTagName('font');
+    for (let i = 0; i < fontElements.length; i++) {
+      const element = fontElements[i] as HTMLElement; // Cast to HTMLElement
+      const size = element.getAttribute('size');
+      if (size) {
+        switch (size) {
+          case '1':
+            element.style.fontSize = '8px';
+            break;
+          case '2':
+            element.style.fontSize = '10px';
+            break;
+          case '3':
+            element.style.fontSize = '12px';
+            break;
+          case '4':
+            element.style.fontSize = '14px';
+            break;
+          case '5':
+            element.style.fontSize = '18px';
+            break;
+          case '6':
+            element.style.fontSize = '24px';
+            break;
+          case '7':
+            element.style.fontSize = '36px';
+            break;
+        }
+        element.removeAttribute('size');
+      }
+    }
+    this.updateTyproText();
+  }
+  
 updateTyproText(): void {
   const editableDiv = document.querySelector('.form-control.full-page-textarea');
   if (editableDiv) {
@@ -662,56 +839,56 @@ updateTyproText(): void {
   }
 }
 
+changeFontSize(event: Event): void {
+  const target = event.target as HTMLSelectElement;
+  const fontSize = target.value;
+  const selection = window.getSelection();
+  if (!selection.rangeCount) return;
 
-loadItems(): void {
-  this.sv.getItems().subscribe((data) => {
-    this.items = data;
-  });
+  const range = selection.getRangeAt(0);
+  const span = document.createElement('span');
+  span.style.fontSize = this.mapFontSize(fontSize);
+  range.surroundContents(span);
+  this.updateTyproText();
 }
 
-// onRecord(recordId: any): void {
-//   $('#writtenModel').modal('show');
-//   this.sv.getNoteById(recordId).subscribe(res=>{
-//     console.log("getNoteById :",res);
-    
-//     this.detailItems = res;
-  
-//     console.log("it on working.. ")
-
-//     })
-//     this.sv.getViewByRecordId(recordId).subscribe((res :any)=>{
-//       console.log("getDataById :",res);
-      
-//       this.viewData = res;
-    
-//       console.log("it on working.. ")
-      
-//     });
-//   }
-
-
-openInsertModal(): void {
-  const nextId = this.items.records.length + 1;
-  const currentDate = moment().format('YYYY-MM-DD');
-
-  this.addItemForm.patchValue({
-    id: nextId,
-    startDate: currentDate
-  });
-  
-  $('#insertModel').modal({
-    backdrop: 'static', // Prevent closing when clicking outside
-    keyboard: false     // Prevent closing with keyboard (Esc key)
-  });
-  $('#insertModel').modal('show');
-  
+mapFontSize(size: string): string {
+  switch (size) {
+    case '1':
+      return '8px';
+    case '2':
+      return '10px';
+    case '3':
+      return '12px';
+    case '4':
+      return '14px';
+    case '5':
+      return '18px';
+    case '6':
+      return '24px';
+    case '7':
+      return '36px';
+    default:
+      return '14px'; // Default size
+  }
 }
-// PDFshow() {
-//   this.showPDF = true;
-// }
 
-// addNewItem(data: any) {
-//   this.items.unshift(data);
-// }
+getSafeHtml(content: string): SafeHtml {
+return this.sanitizer.bypassSecurityTrustHtml(content);
+}
+
+editContent() {
+this.typroText = this.detailItems.record_content;
+this.isTyproActive = true; // เปิดการแก้ไข
+}
+
+loadContent() {
+// การดึงข้อมูลจากฐานข้อมูลมาแสดง (ตัวอย่าง)
+this.detailItems = {
+  record_content: ' '
+};
+}
+ ///////////////////เเบ่งหน้า///////////////////////////////////
+ 
 
 }

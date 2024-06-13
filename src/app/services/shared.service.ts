@@ -2,24 +2,17 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { response } from 'express';
 import { environment } from '../../environments/environment';
-import { Observable, Subject, catchError } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
-
   // private baseUrl = 'mongodb://127.0.0.1:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private baseUrl = 'http://localhost:3000/api'; // ปรับ URL ให้ตรงกับ API ของคุณ
-  private typroText: string;
+  private typroText: string = '';
   constructor(private http: HttpClient) { }
-  private refreshSubject = new Subject<void>();
-  refresh$ = this.refreshSubject.asObservable();
-
-  triggerRefresh() {
-    this.refreshSubject.next();
-  }
 
   getData(): Observable<any> {
     return this.http.get(`${this.baseUrl}/data`).pipe(
@@ -29,7 +22,6 @@ export class SharedService {
       })
     );
   }
-
   getRecord():Observable<any>{
     return this.http.get(`${this.baseUrl}/recordModel`).pipe(
       catchError(error=>{
@@ -38,7 +30,6 @@ export class SharedService {
       })
     );
   }
-  
   getDataById(id: number): Observable<any>{
     return this.http.get(`${this.baseUrl}/recordModel/${id}`);
   }
@@ -55,12 +46,19 @@ export class SharedService {
     );
   }
 
-  setTyproText(text: string) {
-    this.typroText = text;
+  postTyproText(data: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/postTyproText`, data);
   }
-
-  getTyproText(): string {
-    return this.typroText;
+  getTyproText(record_id){
+    return this.http.get(`${this.baseUrl}/dtModel/getTyproText/${record_id}`);
+  }
+  updateRecordContent(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/record/updateContent`, data).pipe(
+      catchError(error => {
+        console.error('Error updating record content:', error);
+        throw 'ไม่สามารถอัปเดตข้อมูลได้';
+      })
+    );
   }
 
   postData(data: any): Observable<any> {
@@ -80,7 +78,6 @@ export class SharedService {
     formData.append("startDate",data.startDate)
     formData.append("topic",data.topic)
     formData.append("detail",data.detail)
-    formData.append("note",data.detail)
   //   for (let person of personal) {
   //     formData.append("personal[]", JSON.stringify(person));
   // }
@@ -96,7 +93,6 @@ export class SharedService {
       item: data,
       personal: personal
     }
-    
     console.log("URL ",this.baseUrl)
     
     return this.http.post(`${this.baseUrl}/postItemData`,formData);
@@ -108,13 +104,5 @@ export class SharedService {
   // getItems(): Observable<any[]> {
   //   return this.http.get<any[]>(`${this.baseUrl}/items`);
   // }
-
-  getItems(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/items`);
-  }
-
-  getNoteById(id: number): Observable<any>{
-    return this.http.get(`${this.baseUrl}/recordModel/getNoteById/${id}`);
-  }
   
 }
