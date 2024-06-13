@@ -115,7 +115,8 @@ updateRecordContent = async (req, res) => {
   // }
   getData = async (req, res) => {
     try {
-      const records = await this.modelRecord.find();
+      const records = await this.modelRecord.find() // การจัดเรียงลำดับที่ฐานข้อมูล
+      records.sort((a:any, b:any) => { return b.record_id - a.record_id})
       const views = await this.modelView.find();
       // const details = await this.modelDetail.find();
 

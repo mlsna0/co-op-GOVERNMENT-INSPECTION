@@ -4,7 +4,8 @@ import $ from "jquery";
 import 'bootstrap';
 import { HttpClient } from '@angular/common/http';
 import { dataflow } from 'googleapis/build/src/apis/dataflow';
-import { SharedService } from "../services/shared.service"
+import { SharedService } from "../services/shared.service";
+import { GeocodingServiceService } from '../services/geocodingService/geocoding-service.service'; //พยายามแก้ไข location
 import { DataTableDirective } from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { DataTablesModule } from "angular-datatables"; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
@@ -43,10 +44,12 @@ export class TableListComponent implements OnInit {
 
   items:any= [];
   viewData=[];
+  location: string;
   detailItems: any = {}; 
   PersonINT :number = 0;
   personInputs: FormArray;
   // currentRecordId: string;
+  
   addItemForm: any;
   addDataForm: any;
   activeButton: string='typro';
@@ -74,14 +77,15 @@ export class TableListComponent implements OnInit {
   ContentRecordID:any;
    typroTexts: { [key: string]: string } = {}; 
   uploadedImageUrl: string | ArrayBuffer | null = null;
-  loadig:boolean = false;
+  loading:boolean = false;
 item: any;
 records: any;
   constructor(
     private fb:FormBuilder,
     private http:HttpClient,
     private sv:SharedService,
-    private router: Router 
+    private router: Router,
+    private geocodingService: GeocodingServiceService 
   ) { 
     this.addItemForm = this.fb.group({
       id: ['',Validators.required],
@@ -104,29 +108,22 @@ records: any;
     this.addPersonInput(); // Add initial input group
     // this.loadViewData();
 
-    this.setTodaysDate();
+  
   
     
     
   }
   
   documentImageUrl = 'assets/img/sampleA4-1.png';
-  // itemsTest:any[]= [
-  //   {
-  //     id:'1', startDate:'20/05/2567',endDate:'26/05/2567',location:'data testing'
-  //   },
-  //   {
-  //     id:'2', startDate:'30/05/2567',endDate:'01/06/2567',location:'data testing'
-  //   }
 
-  // ];
  
 
  
   ngOnInit(){
-
+    this.loading = true; //เป็นการตรวจ
     this.dtOptions = {
-    
+      order:[0],
+      //ordering: false,
       // columnDefs: [
       //   {
       //     // targets: [5],
@@ -161,33 +158,33 @@ records: any;
     this.sv.getData().subscribe(res => {
       console.log("res getRecord:", res);
       this.items = res;
-     
+      this.loading = false;
+
+    },(err) => {
+      console.log("err : ",err);
+      this.loading = false;
     });
     
-    // this.fetchData()
+    // location 
+   
 
+    // เรียกใช้บริการ Geocoding
+
+    
   }
-  setTodaysDate() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = today.getDate().toString().padStart(2, '0');
-    const formattedDate = `${day}-${month}-${year}`;
-    this.addItemForm.get('startDate').setValue(formattedDate);
+  parseLatLng(location: string): [number, number] {
+    const latMatch = location.match(/Lat:\s*([0-9.]+)/);
+    const lngMatch = location.match(/Lng:\s*([0-9.]+)/);
+    const lat = latMatch ? parseFloat(latMatch[1]) : 0;
+    const lng = lngMatch ? parseFloat(lngMatch[1]) : 0;
+    return [lat, lng];
   }
 
-  // fetchData() {
-  //   this.sv.getData().subscribe(
-  //     res => {
-  //       this.items = res.records;
-  //       this.dtTrigger.next(null); // แจ้งเตือน DataTable ว่ามีข้อมูลใหม่
-  //       console.log('Items fetched successfully:', this.items);
-  //     },
-  //     error => {
-  //       console.error('Error fetching items:', error);
-  //     }
-  //   );
-  // }
+  searchLocation(local:any){
+    console.log("searchLocation : ",local)
+    const [lat, lng] = this.parseLatLng(local);
+    window.open(`https://www.google.com/maps?q=(${lat},${lng})` , "_blank");
+  }
 
   // ngOnDestroy() {
   //   this.dtTrigger.unsubscribe();
@@ -464,10 +461,10 @@ saveSignature() {
     if (!this.ContentRecordID) {
       console.error("ID is undefined");
       Swal.fire({
-        title: 'Error!',
-        text: 'ID is undefined.',
+        title: 'เกิดข้อผิดพลาด!',
+        text: 'ไม่มีข้อมูล ID ส่งมา',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'ตกลง'
       });
       return;
     }
@@ -483,22 +480,26 @@ saveSignature() {
       response => {
         console.log('บันทึกข้อมูลเรียบร้อย', response);
         Swal.fire({
-          title: 'Success!!',
-          text: 'Your data has been updated successfully.',
+          title: 'บันทึกข้อมูลสำเสร็จ!!',
+          text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
           icon: 'success',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'ตกลง'
+        }).then((result)=>{
+          if (result.isConfirmed){
+            this.refreshPage();
+          }
         });
         $('#writtenModel').modal('hide');
         this.typroText = ''; // Clear the input field
-        // this.fetchData(); // Refresh data if needed
+  
       },
       error => {
         console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
         Swal.fire({
-          title: 'Error!',
+          title: 'เกิดข้อผิดพลาด!',
           text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'ตกลง'
         });
       }
     );
@@ -620,7 +621,8 @@ get personal(): FormArray {
 
   this.addItemForm.patchValue({
     id: nextId,
-    startDate: currentDate
+    startDate: currentDate,
+    endDate: currentDate
   });
 
     $('#insertModel').modal({
