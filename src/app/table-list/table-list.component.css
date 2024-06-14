@@ -245,6 +245,7 @@ font-style: italic;
   padding: 96px;
   height: 100%;
   max-height: 297mm;
+  
 }
 .header-topic{
 position: relative;
@@ -290,6 +291,7 @@ right: 25px;
 .detail-content{
   position: relative;
   margin-top: 60px;
+  
 }
 
 .detail-content .form-group label {
@@ -321,7 +323,6 @@ right: 25px;
   border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
   width: 600px;
   overflow: auto;
-  padding: 20px; /* เพิ่มระยะห่างบนและล่าง */
   font-family: 'TH SarabunPSK', sans-serif; /* ใช้ฟอนต์ราชการ */
   box-sizing: border-box;
 }
@@ -531,34 +532,34 @@ background-color: rgb(255, 219, 61);
 @media print {
   .main-detail {
     width: 100%;
-    page-break-inside: avoid;
+    page-break-inside: avoid; /* ป้องกันการแบ่งหน้าภายใน .main-detail */
   }
 
   .main-detail table {
     width: 100%;
-    page-break-inside: auto;
+    page-break-inside: auto; /* อนุญาตให้แบ่งหน้าภายในตาราง */
   }
 
   .main-detail th, .main-detail td {
-    word-wrap: break-word;
+    word-wrap: break-word; /* แบ่งคำเมื่อข้อมูลยาวเกินขอบเขต */
   }
 
   .main-detail th:first-child, .main-detail td:first-child {
-    width: 10%;
+    width: 10%; /* กำหนดความกว้างของคอลัมน์แรก */
   }
 
   .main-detail th:last-child, .main-detail td:last-child {
-    width: 90%;
+    width: 90%; /* กำหนดความกว้างของคอลัมน์สุดท้าย */
   }
 
   .main-detail tr {
-    page-break-inside: avoid;
-    page-break-after: auto;
+    page-break-inside: avoid; /* ป้องกันการแบ่งหน้าภายในแถว */
+    page-break-after: auto; /* สั่งให้แบ่งหน้าหลังจากแถว */
   }
 
   @page {
-    size: A4;
-    margin: 20mm;
+    size: A4; /* กำหนดขนาดกระดาษ A4 */
+    margin: 20px; /* กำหนดขอบกระดาษ */
   }
 }
 
