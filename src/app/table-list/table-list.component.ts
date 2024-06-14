@@ -16,7 +16,7 @@ import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
 import { Router } from '@angular/router';
 import { content } from 'html2canvas/dist/types/css/property-descriptors/content';
-
+import { environment } from 'environments/environment';
 import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
 import moment from 'moment';
 
@@ -870,15 +870,18 @@ showPDF(id: string) {
   if (!id) {
     console.error('ID is undefined');
     return;
-  }
+  } 
 
-  const pdfPath = `../img/${id}.pdf`; // แก้ไขวงเล็บเกิน
-  console.log('PDF Path:', pdfPath);
+  // const pdfPath = `../img/${id}`; // แก้ไขวงเล็บเกิน
+  const pdfPath = environment.URL_UPLOAD_IMG + id; // แก้ไขวงเล็บเกิน
+  console.log('pdfPath:', pdfPath);
 
   this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(pdfPath);
   console.log('Sanitized PDF Path:', this.pdfSrc);
+  window.open(pdfPath,'_blank')
 
-  $('#showpdf').modal('show');
+
+  // $('#showpdf').modal('show');
 }
 
 closePDF() {
