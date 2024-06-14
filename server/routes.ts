@@ -4,7 +4,8 @@ import ItemModelCtrl from './controller/itemController';
 import RecordModelCtrl from './controller/recordController';
 import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
-import uploadService from './service/uploadservice.service'
+import uploadService from './service/uploadservice.service';
+// import PdfCtrl from './controller/pdfController';
 // import DetailModelCtrl from 'controller/detailController';
 // import AggRecordNViewCon from 'controller/aggRecordNviewController'; //petch edit add this
 
@@ -14,6 +15,7 @@ function setRoutes(app): void {
   const recordModelCtrl = new RecordModelCtrl();
   const userModelCtrl = new UserModelCtrl();
   const viewModelCtrl = new ViewModelCtrl();
+  // const pdfCtrl = new PdfCtrl();
   // const detailModelCtrl = new DetailModelCtrl();
 
   // const aggregateRecordsAndView = new AggRecordNViewCon(); //petch edit add this
@@ -24,8 +26,13 @@ function setRoutes(app): void {
   router.route('/itemModel').post(itemModelCtrl.insert);
   // router.route('/postPersonData').post(itemModelCtrl.postItemToView);
 
+  router.route('/record/savepdf').put(itemModelCtrl.savePDF);
+  router.route('/pdf/:id').get(itemModelCtrl.getPDF);
   router.route('/data').get(itemModelCtrl.getData);
+  // router.route('/pdf').get(itemModelCtrl.getPDF);
+
   router.route('/record/updateContent').put(itemModelCtrl.updateRecordContent);
+  // router.route('/record/updatePDF').put(itemModelCtrl.updateRecordPDF);
 
   router.route('/postItemData').post(itemModelCtrl.postItemToView);
   router.route('/postTyproText').post(itemModelCtrl.postItemToView);

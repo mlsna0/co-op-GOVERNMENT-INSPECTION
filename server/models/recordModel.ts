@@ -8,10 +8,15 @@ const recordSchema = new mongoose.Schema({
     record_detail: String,
     record_location: String,
     record_topic: String,
-    record_content: String
-     
-   
-});
+    record_content: String,
+    // pdfs: [
+    //   {
+        record_filename: String,
+    //     record_data_: Buffer,
+    //     record_contentType: String
+    //   }
+    // ]
+  });
 
 const RecordModel = mongoose.model('RecordModel', recordSchema);
 export default RecordModel;
