@@ -85,11 +85,11 @@
                       </button>
 
                       <button style="border: none; background: none; color: black;">
-                        <i class="fa fa-file-pdf-o PDF" (click)="printPDF()" ></i>
+                        <i class="fa fa-file-pdf-o PDF" (click)="showPDF(item.id)" ></i>
 
-                      </button>
+                      </button> 
                     </td>
-                  </tr>
+                  </tr> 
                 </tbody>
 
               </table>
@@ -418,8 +418,8 @@
                   <button type="button" class="btn btn-success pull-center" (click)="printPDF()">
                     <i class="fa fa-download"></i>&nbsp; ดาว์โหลด
                   </button>
-                  <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeModal()">
-                    <i class="fa fa-times"></i>&nbsp; ปิด
+                  <button type="button" class="btn btn-danger" (click)="saveRCPDF()">
+                    <i class="fa fa-times"></i>&nbsp; บันทึก
                   </button>
                 </div>
               </div>
@@ -514,5 +514,28 @@
               </div>
             </div>
           </div>
+
+
+          <div class="modal fade" id="showpdf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content" [ngStyle]="{ width: '230mm', height: '327mm' }">
+                <!-- <div class="modal-header card-header card-header-danger" style="background: rgb(255, 209, 0)">
+                  <h5 class="modal-title" id="myModalLabel" style="color: white;">รายละเอียด</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div> -->
+                <div id="myDetail" class="modal-body-detail" [ngStyle]="{ width: '210mm', height: '297mm' }">
+                  <iframe [src]="pdfSrc" type="application/pdf" width="100%" height="100%"></iframe>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" (click)="closePDF()">
+                    <i class="fa fa-times"></i>&nbsp; ปิด
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
 
     </div>  
