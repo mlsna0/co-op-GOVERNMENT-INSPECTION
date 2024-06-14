@@ -64,7 +64,7 @@ width: 180px;
     border: 1px solid #000;
     font-family: "Sarabun", sans-serif;
     max-height:297mm ;
-    overflow: auto;  
+    /* overflow: auto;   */
 }
 
 .modal-content{
