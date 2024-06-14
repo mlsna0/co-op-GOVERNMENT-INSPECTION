@@ -1,15 +1,15 @@
 .modal-lg {
-    max-width: 100%;
+  max-width: 100%;
 }
 
 .modal-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
 }
 .dataTables_wrapper .dataTables_filter input{
-  width: 180px;
+width: 180px;
 }
 .card-body{
   font-weight: 400;
@@ -77,70 +77,70 @@
   
 }
 .card-header{
-    position: relative;
-    background-color: rgb(255, 209, 0);
+  position: relative;
+  background-color: rgb(255, 209, 0);
 }
 .search-table{
-    position: relative;
-    align-items:center ;
+  position: relative;
+  align-items:center ;
 }
 .icon-search{
-    background-color: #fff;
-    width: 35px;
-    height: 35px;
-    border-radius: 20.5px;
-    align-items: center;
-    border: none;
+  background-color: #fff;
+  width: 35px;
+  height: 35px;
+  border-radius: 20.5px;
+  align-items: center;
+  border: none;
 }
 .icon-search:hover{
-    box-shadow:0 10px 10px 0 #b5b3b3;
+  box-shadow:0 10px 10px 0 #b5b3b3;
 }
 
 
 label{
- 
-    color: black;
+
+  color: black;
 }
 
 
 .btn-just-icon.active {
-    background-color: #55b559; /* สีพื้นหลังเมื่อปุ่ม active */
-    color: white; /* สีตัวอักษรเมื่อปุ่ม active */
-  }
+  background-color: #55b559; /* สีพื้นหลังเมื่อปุ่ม active */
+  color: white; /* สีตัวอักษรเมื่อปุ่ม active */
+}
 
 .form-control.mt-3 {
-    position: relative;
-  }
+  position: relative;
+}
 .full-page-textarea{
-    width: 100%;
-    height: calc(190mm - 50px); /* 297mm minus some margin for modal padding */
-    border: none;
-    resize: none;
+  width: 100%;
+  height: calc(190mm - 50px); /* 297mm minus some margin for modal padding */
+  border: none;
+  resize: none;
 
 }
 .full-page-textarea-container{
-  margin: 20px 0 20px 0;
-  width: 827px;
-  height: 460px; 
-  border: none;
-  resize: none;
-  border: 1px solid black;
-  border-radius: 5px;
-  
+margin: 20px 0 20px 0;
+width: 827px;
+height: 460px; 
+border: none;
+resize: none;
+border: 1px solid black;
+border-radius: 5px;
+
 
 }
 .full-page-textarea-container textarea{
-  width: 100%;
-  height:111.5mm !important; /* ปรับให้ auto หรือกำหนดขนาดที่ต้องการ */
-  min-height: 100px; /* หรือกำหนด min-height */
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+width: 100%;
+height:111.5mm !important; /* ปรับให้ auto หรือกำหนดขนาดที่ต้องการ */
+min-height: 100px; /* หรือกำหนด min-height */
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
 }
 
 .headerText{
-  display: flex;
-  border-bottom: 1px solid #c1c1c1;
+display: flex;
+border-bottom: 1px solid #c1c1c1;
 }
 .headerText button:first-child {
   display: flex;
@@ -150,13 +150,13 @@ label{
   width: auto;
 }
 /* .headerText button:first-child:hover {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #e2e2e2;
-  border-radius: 5px;
-  height: 30px;
-  width: 65px;
+display: flex;
+align-items: center;
+justify-content: center;
+background: #e2e2e2;
+border-radius: 5px;
+height: 30px;
+width: 65px;
 } */
 .headerText button{
   display: flex;
@@ -170,13 +170,13 @@ label{
   
 }
 .headerText i:hover{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 25px;
-  background: #e2e2e2;
-  border-radius: 5px;
+display: flex;
+align-items: center;
+justify-content: center;
+width: 30px;
+height: 25px;
+background: #e2e2e2;
+border-radius: 5px;
 }
 
 
@@ -194,136 +194,137 @@ label{
 }
 /*/////////////////////////////////////*/
 .writteDraw{
-  margin: 20px 0 20px 0;
-  width: 827px;
-  height: 460px; 
-  border: none;
-  resize: none;
-  border: 1px solid black;
-  border-radius: 5px;
-  
+margin: 20px 0 20px 0;
+width: 827px;
+height: 460px; 
+border: none;
+resize: none;
+border: 1px solid black;
+border-radius: 5px;
+
 
 }
 
 .full-page-canvas {
-  width: 100%;
-  height: 460.3px;
-  /* border: 1px solid black;  */
-  border-radius: 5px;
-  
+width: 100%;
+height: 460.3px;
+/* border: 1px solid black;  */
+border-radius: 5px;
+
 }
 .openSignModal{
-  position: relative;
+position: relative;
 
-  display: flex;
-  width: 30mm;
-  height: 20mm;
-  border: 2px dashed orange;
-  background: repeating-linear-gradient(-45deg,  rgb(253, 216, 4) 4px, transparent,  transparent 10px );
-  border-radius: 5px;
-  border-style:dashed ;
-  opacity: 0.5;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.3s;
+display: flex;
+width: 30mm;
+height: 20mm;
+border: 2px dashed orange;
+background: repeating-linear-gradient(-45deg,  rgb(253, 216, 4) 4px, transparent,  transparent 10px );
+border-radius: 5px;
+border-style:dashed ;
+opacity: 0.5;
+justify-content: center;
+align-items: center;
+text-align: center;
+cursor: pointer;
+transition: 0.3s;
 }
 .openSignModal:hover{
-  box-shadow: 0 14px 20px -12px rgb(253, 216, 4), 0 4px 15px 0px rgba(211, 211, 211, 0.12), 0 2px 5px -5px rgb(253, 216, 4);
-  opacity: 0.9;
+box-shadow: 0 14px 20px -12px rgb(253, 216, 4), 0 4px 15px 0px rgba(211, 211, 211, 0.12), 0 2px 5px -5px rgb(253, 216, 4);
+opacity: 0.9;
 }
 .Writte-sign{
-  position: absolute; /*[ng-reflect-writteSignElement]*/
-  left: 50px;
-  display: flex; /* Hidden by default */
-  top: 0;
-  width: 100%;
-  height: 20mm;
-  background-color: rgb(255, 254, 254); /* Semi-transparent background */
-  z-index: 1000; /* Higher than other content */
- 
+position: absolute; /*[ng-reflect-writteSignElement]*/
+left: 50px;
+display: flex; /* Hidden by default */
+top: 0;
+width: 100%;
+height: 20mm;
+background-color: rgb(255, 254, 254); /* Semi-transparent background */
+z-index: 1000; /* Higher than other content */
+
 }
 
 
 
 .full-page-signWritte{
- 
-  width: 30mm;
-  height: 20mm;
-  border-radius: 5px;
-  border: 1px solid black;
-  z-index: 1001;
+
+width: 30mm;
+height: 20mm;
+border-radius: 5px;
+border: 1px solid black;
+z-index: 1001;
 }
 
 
 .toolbar {
-  display: flex;
-  padding: 0 1px 0 6px ;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #929292;
+display: flex;
+padding: 0 1px 0 6px ;
+align-items: center;
+justify-content: space-between;
+border-bottom: 1px solid #929292;
 }
 
 .toolbar button {
-  margin-right: 5px;
-  padding: 5px 10px;
-  background: none;
-  border: none;
+margin-right: 5px;
+padding: 5px 10px;
+background: none;
+border: none;
 }
 
 /*end writter draw*/
 
 .placeholder::before {
-  content: attr(placeholder);
-  color: gray;
-  font-style: italic;
+content: attr(placeholder);
+color: gray;
+font-style: italic;
 }
 
 
 .btn-warning:hover::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color:rgb(255, 209,0); /* สีพื้นหลังที่ต้องการเมื่อ hover */
-    z-index: -1;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color:rgb(255, 209,0); /* สีพื้นหลังที่ต้องการเมื่อ hover */
+  z-index: -1;
 }
 
 .mainCenter-panel {
-    position: relative;
-    background: #fff;
-    padding: 96px;
-    height: 100%;
-    max-height: 297mm;
-  }
-.header-topic{
   position: relative;
-  padding-top: 1px;
-  display: flex;
-  flex-direction: column;
- 
-  font-size: 16px;
-  font-weight: bold;
-  text-align: center;
+  background: #fff;
+  padding: 96px;
+  height: 100%;
+  max-height: 297mm;
+  
+}
+.header-topic{
+position: relative;
+padding-top: 1px;
+display: flex;
+flex-direction: column;
+
+font-size: 16px;
+font-weight: bold;
+text-align: center;
 }
 
 .right-panel {
-  width: 60%;
-  height: 150vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: relative; /* ให้ลูกสามารถจัดตำแหน่งตามคอนเทนเนอร์ได้ */
-  
-   
-  }
+width: 60%;
+height: 150vh;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+position: relative; /* ให้ลูกสามารถจัดตำแหน่งตามคอนเทนเนอร์ได้ */
+
+ 
+}
 .right-panelOnTop{
-  position: absolute;
-    top: 0;
-    left: 0;
+position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .page{
@@ -334,37 +335,36 @@ label{
   margin: 10mm 0;
 }
 /* .right-panelOnBottom{
-  position: relative;
-  bottom: 0;
-  right: 25px;
+position: relative;
+bottom: 0;
+right: 25px;
 } */
 /* .right-panel img {
-    width: 30mm;   
-    height: 20mm;
-    border: 1px solid #ddd;
-    margin-left: 50px;
-  } */
-  /* .form-group {
-    margin-bottom: 10px;
-  } */
+  width: 30mm;   
+  height: 20mm;
+  border: 1px solid #ddd;
+  margin-left: 50px;
+} */
+/* .form-group {
+  margin-bottom: 10px;
+} */
 
-  .detail-content{
-    position: relative;
-    margin-top: 60px;
-  }
-  
-  .detail-content .form-group label {
+.detail-content{
+  position: relative;
+  margin-top: 60px;
+}  
+.detail-content .form-group label {
     display: inline-block;
     font-weight: bold;
   }
   
-  .detail-content .form-group p {
+.detail-content .form-group p {
     display: inline-block;
     margin: 0;
     padding-left: 10px;
   }
 
-  .date-flex{
+.date-flex{
     display: flex;
     justify-content: space-between;
   }
@@ -377,7 +377,7 @@ label{
   } */
 
 
-  .main-detail {
+.main-detail {
     position: relative;
     border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
     width: 600px;
@@ -387,14 +387,14 @@ label{
     font-family: "Sarabun", sans-serif; /* 'TH SarabunPSK', sans-serif;ใช้ฟอนต์ราชการ */
     border: 0.5 solid black;
   }
-  .main-detail table{
+.main-detail table{
     max-width: 600px;
     max-height:700px;
     table-layout: fixed;
     overflow: auto;
     
   }
-  .main-detail th, .main-detail td {
+.main-detail th, .main-detail td {
     max-width: 539.29px;
     max-height:700px;
     border: 1px solid black; /* เส้นขอบสีดำ */
@@ -404,49 +404,49 @@ label{
     overflow: hidden;
   }
   
-  .main-detail th:first-child, .main-detail td:first-child {
+.main-detail th:first-child, .main-detail td:first-child {
     width: 10%;
   }
   
-  .main-detail th:last-child, .main-detail td:last-child {
+.main-detail th:last-child, .main-detail td:last-child {
     width: 90%;
   }
-  .main-detail th {
+.main-detail th {
     background-color: #f2f2f2; /* พื้นหลังสีเทาอ่อนสำหรับหัวตาราง */
   }
   
-  .main-detail tr:nth-child(even) {
+.main-detail tr:nth-child(even) {
     background-color: #f9f9f9; /* พื้นหลังสีเทาอ่อนสำหรับแถวคู่ */
   }
 
-  .sign-content{
+.sign-content{
     position: relative;
     padding-left: 380px;
     
     text-align: center;
     margin-top: 20px;
   }
-  .UploadContentBox{
+.UploadContentBox{
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  .sign-content img{
+.sign-content img{
     width: 30mm;   
     height: 20mm;
     
     margin-left: 58px;
    
   }
-  .position-relative {
+.position-relative {
     position: relative;
   }
-  .form-group input{
+.form-group input{
     border-radius: 5px;
   }
-  .border-error {
+.border-error {
     position: absolute;
     bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
     left: 0px;
@@ -460,14 +460,14 @@ label{
    z-index: 1;
   
   }
-  .box-validate{
+.box-validate{
     border: 1px solid red;
     border-radius: 5px;
   }
-  .box-validate + .text-validate .border-error {
+.box-validate + .text-validate .border-error {
     display: block;
   }
-  .border-errorInDex{
+.border-errorInDex{
     position: absolute;
     bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
     left: 0px;
@@ -482,7 +482,7 @@ label{
    z-index: 1;
 
   }
-  .border-errorPersonFullname{
+.border-errorPersonFullname{
     position: absolute;
     bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
     left: 0px;
@@ -494,7 +494,7 @@ label{
     pointer-events: none;
     border-radius: 5px;
   }
-  .border-errorPersonRank{
+.border-errorPersonRank{
     position: absolute;
     bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
     left:0px;
@@ -508,7 +508,7 @@ label{
     border-radius: 5px;
   }
 
-  .border-errorLocation {
+.border-errorLocation {
     position: absolute;
     bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
     left: 0px;
@@ -522,7 +522,7 @@ label{
    z-index: 1;
   
   }
-  .text-validate{
+.text-validate{
    
   color: red;
 }
@@ -552,7 +552,7 @@ label{
   }
  
  
-  :host ::ng-deep .dataTables_wrapper .dataTables_paginate .paginate_button {
+:host ::ng-deep .dataTables_wrapper .dataTables_paginate .paginate_button {
     box-sizing: border-box;
     display: inline-block;
     min-width: 1.5em;
@@ -566,7 +566,7 @@ label{
     border-radius: 2px;
     background: transparent;
   }
-  :host ::ng-deep .page-link{
+:host ::ng-deep .page-link{
     position: relative;
       display: block;
       padding: 0.5rem 0.75rem;
@@ -579,7 +579,8 @@ label{
       opacity: 0.9;
       border-radius: 2px ;
 
-  }:host ::ng-deep .page-link:hover{
+  }
+  :host ::ng-deep .page-link:hover{
     position: relative;
       display: flex;
       padding: 0.5rem 0.75rem;
@@ -617,4 +618,38 @@ label{
   height: auto;
   white-space: nowrap;
   font-family: "Sarabun", sans-serif !important; 
+}
+
+@media print {
+  .main-detail {
+    width: 100%;
+    page-break-inside: avoid; /* ป้องกันการแบ่งหน้าภายใน .main-detail */
+  }
+
+  .main-detail table {
+    width: 100%;
+    page-break-inside: auto; /* อนุญาตให้แบ่งหน้าภายในตาราง */
+  }
+
+  .main-detail th, .main-detail td {
+    word-wrap: break-word; /* แบ่งคำเมื่อข้อมูลยาวเกินขอบเขต */
+  }
+
+  .main-detail th:first-child, .main-detail td:first-child {
+    width: 10%; /* กำหนดความกว้างของคอลัมน์แรก */
+  }
+
+  .main-detail th:last-child, .main-detail td:last-child {
+    width: 90%; /* กำหนดความกว้างของคอลัมน์สุดท้าย */
+  }
+
+  .main-detail tr {
+    page-break-inside: avoid; /* ป้องกันการแบ่งหน้าภายในแถว */
+    page-break-after: auto; /* สั่งให้แบ่งหน้าหลังจากแถว */
+  }
+
+  @page {
+    size: A4; /* กำหนดขนาดกระดาษ A4 */
+    margin: 20px; /* กำหนดขอบกระดาษ */
+  }
 }

@@ -38,7 +38,7 @@ export class TableListComponent implements OnInit {
   //ListUser: users[] =[];
   pdfDataDict: { [key: string]: string } = {};
   Form:FormGroup;
-  dtOptions: any ={};
+  dtOptions: any ={}; //datatable.setting ={}
   dtTrigger: Subject<any> = new Subject(); 
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
@@ -77,12 +77,18 @@ export class TableListComponent implements OnInit {
 //writter box
   selectedRecordId: any;
   ContentRecordID:any;
-   typroTexts: { [key: string]: string } = {}; 
+  typroTexts: { [key: string]: string } = {}; 
   uploadedImageUrl: string | ArrayBuffer | null = null;
   loading:boolean = false;
-item: any;
-records: any;
-pdfSrc: SafeResourceUrl;
+  item: any;
+  records: any;
+  pdfSrc: SafeResourceUrl;
+  loadig:boolean = false;
+  
+  initialFontSize: number = 14;
+  
+
+
   constructor(
     private fb:FormBuilder,
     private http:HttpClient,
@@ -446,17 +452,27 @@ saveSignature() {
 
 //////////////////////////////////////////////////////////////////////
 
-  onRecord(recordId: any){
-    this.ContentRecordID = recordId;
-    console.log("onRecord modal getID",this.ContentRecordID)
+onRecord(recordId: any) {
+  this.ContentRecordID = recordId;
+  console.log("onRecord modal getID", this.ContentRecordID);
 
+  // ดึงข้อมูลจาก server
+  this.sv.getDataById(recordId).subscribe(res => {
+    console.log("getDataById :", res);
+    this.detailItems = res;
+    
+    // ตั้งค่า typroText ให้เป็น record_content จาก detailItems
+    this.typroText = this.detailItems.record_content;
+    
+    // เปิด modal
     $('#writtenModel').modal({
-      backdrop: 'static', // Prevent closing when clicking outside
-      keyboard: false     // Prevent closing with keyboard (Esc key)
+      backdrop: 'static', // ป้องกันการปิดเมื่อคลิกด้านนอก
+      keyboard: false     // ป้องกันการปิดด้วยแป้นพิมพ์ (เช่น ปุ่ม Esc)
     });
-    $('#writtenModel').modal('show'); // ใช้ jQuery เปิด modal
-  
-  }
+    $('#writtenModel').modal('show');
+  });
+}
+
 
 
   recordCommit() {
@@ -757,172 +773,92 @@ get personal(): FormArray {
   
 
 
-  printPDF = () => {
-    console.log("working PDF..");
-    const elementToPrint = document.getElementById('myDetail');
-    // html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
-    //   const pdf = new jsPDF('p','mm','a4');
-    //   pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
-    //   pdf.save('การลงตรวจสอบ.pdf')
-    // });
-    if (elementToPrint) {
-      html2canvas(elementToPrint, { scale: 2 }).then((canvas) => {
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        const imgData = canvas.toDataURL('image/png');
-        const imgProps = pdf.getImageProperties(imgData);
-        const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-        let position = 0;
-        let remainingHeight = canvas.height;
-        let canvasHeight = canvas.height;
-
-        while (remainingHeight > 0) {
-          const pageCanvas = document.createElement('canvas');
-          pageCanvas.width = canvas.width;
-          pageCanvas.height = Math.min(remainingHeight, canvasHeight);
-
-          const ctx = pageCanvas.getContext('2d');
-          if (ctx) {
-            ctx.drawImage(canvas, 0, position, canvas.width, pageCanvas.height, 0, 0, canvas.width, pageCanvas.height);
-
-            const pageImgData = pageCanvas.toDataURL('image/png');
-            if (position !== 0) {
-              pdf.addPage();
-            }
-            pdf.addImage(pageImgData, 'PNG', 0, 0, pdfWidth, (pdfWidth * pageCanvas.height) / pageCanvas.width);
-          }
-
-          position += pageCanvas.height;
-          remainingHeight -= pageCanvas.height;
-        }
-
-        pdf.save('การลงตรวจสอบ.pdf');
-      }).catch((error) => {
-        console.error("Error generating PDF: ", error);
-      });
-    } else {
-      console.error("Element to print not found!");
-    }
-  }
-
-    // this.fetchData()
-
-//   html2canvas(elementToPrint, { scale: 2 }).then((canvas) => {
-//     const pdf = new jsPDF('p', 'mm', 'a4');
-//     pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297); // Change 'PDF' to 'PNG'
-
-//     // Convert the PDF to Base64
-//     pdf.output('dataurlnewwindow'); // Display the PDF in a new window to check its size
-
-//     // Create JSON data
-//     const pdfData = {
-//       id: formValue.id,
-//       filename: 'การลงตรวจสอบ.pdf',
-//       data_: pdf.output('datauristring'), // Send the PDF directly without splitting
-//       contentType: 'application/pdf'
-//     };
-
-//     // Send the JSON data to the server using PdfService
-//     this.sv.updateRecordPDF(pdfData).subscribe(
-//       (response) => {
-//         console.log('PDF updated in database successfully.');
-//         // Navigate to another route
-//         this.router.navigate(['/next-route']); // Adjust the path as needed
-//       },
-//       (error) => {
-//         console.error('Failed to update PDF in database.', error);
-//       }
-//     );
-//   });
+//   printPDF = () => {
+//     console.log("working PDF..");
+//     const elementToPrint = document.getElementById('myDetail');
+//     html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
+//       const pdf = new jsPDF('p','mm','a4');
+//       pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
+//       pdf.save('การลงตรวจสอบ.pdf')
+//     });
+//     // this.fetchData()
 // }
 
-displayPDF(pdfFilename: string) {
-  // Retrieve the Base64 data of the PDF from the dictionary
-  const pdfBase64 = this.pdfDataDict[pdfFilename];
-
-  if (pdfBase64) {
-    // Create an anchor element to trigger the PDF download
-    const link = document.createElement('a');
-    link.href = pdfBase64;
-    link.download = pdfFilename;
-    link.target = '_blank';
-
-    // Trigger the download programmatically
-    link.click();
-  } else {
-    console.error(`PDF '${pdfFilename}' not found in dictionary.`);
-  }
-}
-
-saveRCPDF = () => {
-  console.log("Updating PDF in dictionary...");
+printPDF = () => {
+  console.log("working PDF..");
   const elementToPrint = document.getElementById('myDetail');
+  const A4_WIDTH = 210;  // Width of A4 in mm
+  const A4_HEIGHT = 297; // Height of A4 in mm
+  const canvasScale = 2; // Scale factor for higher resolution canvas
 
-  if (!elementToPrint) {
-    console.error('Element to print not found');
-    return;
-  }
+  const options = {
+      scale: canvasScale,
+      height: elementToPrint.scrollHeight,
+      windowHeight: elementToPrint.scrollHeight
+  };
 
-  html2canvas(elementToPrint, { scale: 2 }).then((canvas) => {
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const imgData = canvas.toDataURL('image/png');
+  html2canvas(elementToPrint, options).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      
+      const imgWidth = A4_WIDTH;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-    const pdfWidth = 210; // A4 width in mm
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+      const bottomMargin = 10; // ขอบล่างของ PDF ที่ต้องการเว้นว่าง (มิลลิเมตร)
+      const textOffset = 5; // การเลื่อนข้อความลงมา (มิลลิเมตร)
+      
 
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      while (heightLeft > 0) {
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          pdf.text(' ', A4_WIDTH / 2, A4_HEIGHT - bottomMargin - textOffset, { align: 'center' });
+          heightLeft -= A4_HEIGHT;
 
-    // Convert the PDF to Blob
-    const pdfBlob = pdf.output('blob');
+          if (heightLeft > 0) {
+              pdf.addPage();
+          }
+          position -= A4_HEIGHT;
+      }
 
-    // Create FormData to send the PDF to backend
-    const formData = new FormData();
-    const pdfFilename = 'การลงตรวจสอบ.pdf'; // Change to the desired filename
-    formData.append('id', this.selectedRecordId); // Adjust the ID as needed
-    formData.append('pdf', pdfBlob, pdfFilename);
-
-    // Check if `this.sv.savePDF` exists and is a function
-    if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
-      // Send the PDF to the backend
-      this.sv.savePDF(formData).subscribe(
-        response => {
-          console.log('PDF saved successfully:', response);
-        },
-        error => {
-          console.error('Error saving PDF:', error);
-        }
-      );
-    } else {
-      console.error('savePDF function is not defined or not a function');
-    }
-  }).catch((error) => {
-    console.error('Error generating PDF:', error);
+      pdf.save('การลงตรวจสอบ.pdf');
   });
-  
-  $('#myModal').modal('hide');
 }
 
-showPDF(id: string) {
-  if (!id) {
-    console.error('ID is undefined');
-    return;
-  }
+// printPDF = () => {
+//   console.log("working PDF..");
+//   const elementToPrint = document.getElementById('myDetail');
+//   const A4_WIDTH = 210;  // ความกว้างของ A4 ในมิลลิเมตร
+//   const A4_HEIGHT = 297; // ความสูงของ A4 ในมิลลิเมตร
+//   const bottomMargin = 10; // ขอบล่างของกระดาษที่ต้องการให้ว่างไว้ (มิลลิเมตร)
 
-  const pdfPath = `../img/${id}.pdf`; // แก้ไขวงเล็บเกิน
-  console.log('PDF Path:', pdfPath);
+//   // กำหนด options สำหรับ html2canvas
+//   const options = {
+//     scale: 2, // ปรับขนาด Canvas ให้มีความละเอียดสูง
+//     windowHeight: elementToPrint.scrollHeight + bottomMargin, // ความสูงทั้งหมดของหน้าต้องรวมขอบล่างด้วย
+//   };
 
-  this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(pdfPath);
-  console.log('Sanitized PDF Path:', this.pdfSrc);
+//   html2canvas(elementToPrint, options).then((canvas) => {
+//     const imgData = canvas.toDataURL('image/png');
+//     const pdf = new jsPDF('p', 'mm', 'a4');
 
-  $('#showpdf').modal('show');
-}
+//     let imgWidth = A4_WIDTH;
+//     let imgHeight = (canvas.height * imgWidth) / canvas.width;
+//     let position = 0;
 
-closePDF() {
-  // Logic to close the PDF modal
-  $('#showpdf').modal('hide');
-}
+//     while (position < imgHeight) {
+//       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+
+//       position += A4_HEIGHT; // เลื่อนตำแหน่งลงหน้าถัดไป
+
+//       if (position < imgHeight) {
+//         pdf.addPage(); // เพิ่มหน้าใหม่เมื่อยังไม่สามารถแสดงหมดได้ในหน้าเดียว
+//       }
+//     }
+
+//     pdf.save('การลงตรวจสอบ.pdf');
+//   });
+// }
 
   searchData(data: string) {
     this.sv.searchData(data).subscribe(res => {
@@ -932,51 +868,51 @@ closePDF() {
 
 /////////////////////////////// formatFont Edit
 
-formatText(command: string) {
-  document.execCommand(command, false, null);
-  this.updateTyproText();
-}
-
-onInput(event: Event): void {
-  const target = event.target as HTMLElement;
-  this.typroText = target.innerHTML;
-}
-
-updateFontSize(): void {
-  const fontElements = document.getElementsByTagName('font');
-  for (let i = 0; i < fontElements.length; i++) {
-    const element = fontElements[i] as HTMLElement; // Cast to HTMLElement
-    const size = element.getAttribute('size');
-    if (size) {
-      switch (size) {
-        case '1':
-          element.style.fontSize = '8px';
-          break;
-        case '2':
-          element.style.fontSize = '10px';
-          break;
-        case '3':
-          element.style.fontSize = '12px';
-          break;
-        case '4':
-          element.style.fontSize = '14px';
-          break;
-        case '5':
-          element.style.fontSize = '18px';
-          break;
-        case '6':
-          element.style.fontSize = '24px';
-          break;
-        case '7':
-          element.style.fontSize = '36px';
-          break;
-      }
-      element.removeAttribute('size');
-    }
+formatText(command: string): void {
+    document.execCommand(command, false, '');
+    this.updateTyproText();
   }
-  this.updateTyproText();
-}
 
+  onInput(event: Event): void {
+    const target = event.target as HTMLElement;
+    this.typroText = target.innerHTML;
+  }
+
+  updateFontSize(): void {
+    const fontElements = document.getElementsByTagName('font');
+    for (let i = 0; i < fontElements.length; i++) {
+      const element = fontElements[i] as HTMLElement; // Cast to HTMLElement
+      const size = element.getAttribute('size');
+      if (size) {
+        switch (size) {
+          case '1':
+            element.style.fontSize = '8px';
+            break;
+          case '2':
+            element.style.fontSize = '10px';
+            break;
+          case '3':
+            element.style.fontSize = '12px';
+            break;
+          case '4':
+            element.style.fontSize = '14px';
+            break;
+          case '5':
+            element.style.fontSize = '18px';
+            break;
+          case '6':
+            element.style.fontSize = '24px';
+            break;
+          case '7':
+            element.style.fontSize = '36px';
+            break;
+        }
+        element.removeAttribute('size');
+      }
+    }
+    this.updateTyproText();
+  }
+  
 updateTyproText(): void {
   const editableDiv = document.querySelector('.form-control.full-page-textarea');
   if (editableDiv) {
@@ -1033,4 +969,12 @@ loadContent() {
     }
  
 }
+
+
+
+
+
+ ///////////////////เเบ่งหน้า///////////////////////////////////
+ 
+
 

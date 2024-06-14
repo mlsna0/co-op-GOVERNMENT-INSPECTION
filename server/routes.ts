@@ -77,3 +77,4 @@ function setRoutes(app): void {
 }
 
 export default setRoutes;
+

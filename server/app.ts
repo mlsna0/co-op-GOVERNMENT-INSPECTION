@@ -101,4 +101,74 @@ async function main(): Promise<void> {
   });
 }
 
+
+
+// document.addEventListener('DOMContentLoaded', () => {
+//   const personForm = document.getElementById('personForm') as HTMLFormElement;
+//   const recordForm = document.getElementById('recordForm') as HTMLFormElement;
+//   const personsList = document.getElementById('personsList') as HTMLUListElement;
+//   const recordsList = document.getElementById('recordsList') as HTMLUListElement;
+
+//   personForm.addEventListener('submit', async (e) => {
+//       e.preventDefault();
+//       const rank = (document.getElementById('rank') as HTMLInputElement).value;
+//       const firstName = (document.getElementById('firstName') as HTMLInputElement).value;
+//       const lastName = (document.getElementById('lastName') as HTMLInputElement).value;
+
+//       const response = await fetch('/api/persons', {
+//           method: 'POST',
+//           headers: { 'Content-Type': 'application/json' },
+//           body: JSON.stringify({ rank, firstName, lastName })
+//       });
+
+//       const person = await response.json();
+//       const li = document.createElement('li');
+//       li.textContent = `${person.rank} ${person.firstName} ${person.lastName}`;
+//       personsList.appendChild(li);
+
+//       personForm.reset();
+//   });
+
+//   recordForm.addEventListener('submit', async (e) => {
+//       e.preventDefault();
+//       const data = (document.getElementById('data') as HTMLTextAreaElement).value;
+//       const personIds = (document.getElementById('personIds') as HTMLInputElement).value.split(',').map(id => id.trim());
+
+//       const response = await fetch('/api/records', {
+//           method: 'POST',
+//           headers: { 'Content-Type': 'application/json' },
+//           body: JSON.stringify({ data, personIds })
+//       });
+
+//       const record = await response.json();
+//       const li = document.createElement('li');
+//       li.textContent = `Data: ${record.data}, Persons: ${record.persons.map((p: any) => `${p.rank} ${p.firstName} ${p.lastName}`).join(', ')}`;
+//       recordsList.appendChild(li);
+
+//       recordForm.reset();
+//   });
+
+//   // Fetch existing persons
+//   fetch('/api/persons')
+//       .then(response => response.json())
+//       .then(persons => {
+//           persons.forEach((person: any) => {
+//               const li = document.createElement('li');
+//               li.textContent = `${person.rank} ${person.firstName} ${person.lastName}`;
+//               personsList.appendChild(li);
+//           });
+//       });
+
+//   // Fetch existing records
+//   fetch('/api/records')
+//       .then(response => response.json())
+//       .then(records => {
+//           records.forEach((record: any) => {
+//               const li = document.createElement('li');
+//               li.textContent = `Data: ${record.data}, Persons: ${record.persons.map((p: any) => `${p.rank} ${p.firstName} ${p.lastName}`).join(', ')}`;
+//               recordsList.appendChild(li);
+//           });
+//       });
+// });
+
 main().catch(console.error);

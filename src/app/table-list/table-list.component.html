@@ -53,7 +53,7 @@
                 </thead>
                 <tbody>
                   <!---->
-                  <tr *ngFor="let item of items?.records">
+                  <tr *ngFor="let item of items?.records" >
 
 
                     <td style=" text-align: center;">
@@ -86,9 +86,8 @@
                       </button>
 
 
-                      <button (click)="onRecord(item._id)" style="border: none; background: none; color: black;" >
-                        <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top"
-                          class="fa fa-pencil-square-o  Record" ></i>
+                      <button (click)="onRecord(item._id)" style="border: none; background: none; color: black;">
+                        <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top" class="fa fa-pencil-square-o Record"></i>
                       </button>
 
                       <button style="border: none; background: none; color: black;">
@@ -338,8 +337,8 @@
                           <p>{{ detailItems?.record_location }}</p>
                         </div>
                       </div>
-                    
-                      <table class="main-detail">
+                      <div class="main-detail">
+                      <table>
                         <thead>
                           <tr>
                             <th>ครั้งที่</th>
@@ -354,7 +353,7 @@
                           </tr>
                         </tbody>
                       </table>
-
+                    </div>
 
                       <div class="sign-content">
                         <div class="form-group">
@@ -407,6 +406,10 @@
                   </div> -->
                 </div>
                 <div class="modal-footer">
+                  <!-- <button type="button" class="btn btn-success pull-center" (click)="printPDF()">
+                    <i class="fa fa-download"></i>&nbsp; ดาว์โหลด
+                  </button> -->
+
                   <button type="button" class="btn btn-success pull-center" (click)="printPDF()">
                     <i class="fa fa-download"></i>&nbsp; ดาว์โหลด
                   </button>
@@ -473,10 +476,10 @@
                             <button (click)="formatText('strikeThrough')" aria-label="Strikethrough">
                               <i class="fas fa-strikethrough"></i>
                             </button>
-                            <button  (click)="formatText('insertUnorderedList')" aria-label="Bullet List">
+                            <button (click)="formatText('insertUnorderedList')" aria-label="Bullet List">
                               <i class="fas fa-list-ul"></i>
                             </button>
-                            <button  (click)="formatText('insertOrderedList')"  aria-label="Numbered List">
+                            <button (click)="formatText('insertOrderedList')" aria-label="Numbered List">
                               <i class="fas fa-list-ol"></i>
                             </button>
                             <button (click)="formatText('justifyLeft')" aria-label="Align Left">
@@ -488,17 +491,11 @@
                             <button (click)="formatText('justifyRight')" aria-label="Align Right">
                               <i class="fas fa-align-right"></i>
                             </button>
-
-
-
                           </div>
-                          <!-- <textarea contenteditable="true" [(ngModel)]="typroText" placeholder="พิมพ์ที่นี่... "
-                            class="form-control  full-page-textarea">&nbsp;&nbsp;</textarea> -->
-                            <div contenteditable="true" [(ngModel)]="typroText" class="form-control full-page-textarea div-container"
-                            (input)="onInput($event)" [style.fontSize.px]="initialFontSize"> 
-                            <div [innerHTML]="detailItems?.record_content"></div>
-                        </div>
-
+                          <div contenteditable="true" [(ngModel)]="typroText" class="form-control full-page-textarea div-container"
+                          (input)="onInput($event)" [style.fontSize.px]="initialFontSize"> 
+                          <div [innerHTML]="detailItems?.record_content"></div>
+                      </div>
 
                         </div>
                       </div>

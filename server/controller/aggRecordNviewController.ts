@@ -32,3 +32,23 @@
 // }
 
 // export default AggRecordNViewCon;
+
+
+// import { Request, Response } from 'express';
+// import recordModel from '../models/recordModel';
+// import { Person } from '../models/person';
+
+// export class AggRecordNViewController {
+
+//     model = recordModel;
+
+//     public async getAggregatedData(req: Request, res: Response): Promise<void> {
+//         try {
+//             const records = await this.model.find().populate('personIds').exec(); // Use populate if referencing persons
+
+//             res.json(records);
+//         } catch (error) {
+//             res.status(500).send(error.message);
+//         }
+//     }
+// }
