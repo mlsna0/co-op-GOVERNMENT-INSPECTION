@@ -60,6 +60,26 @@ export class SharedService {
       })
     );
   }
+  savePDF(data: FormData): Observable<any> {
+    console.log('Data:',data);
+    
+    return this.http.put(`${this.baseUrl}/record/savepdf`, data).pipe(
+      catchError(error => {
+        console.error('Error saving PDF:', error);
+        throw 'ไม่สามารถบันทึก PDF ได้';
+      })
+    );
+  }
+  getPDF(id: string): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/pdf/${id}`, { responseType: 'blob' }).pipe(
+      catchError(error => {
+        console.error('Error fetching PDF:', error);
+        throw 'ไม่สามารถดึง PDF ได้';
+      })
+    );
+  }
+  
+  
 
   postData(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/postData`, data);

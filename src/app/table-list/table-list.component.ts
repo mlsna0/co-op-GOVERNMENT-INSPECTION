@@ -11,7 +11,7 @@ import { DataTablesModule } from "angular-datatables"; //petch เพิ่ม�
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Items } from '../../../server/models/itemModel';
 import Swal from 'sweetalert2';
-
+import { SafeResourceUrl } from '@angular/platform-browser';
 import jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
@@ -28,6 +28,7 @@ import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and s
   styleUrls: ['./table-list.component.css']
 })
 export class TableListComponent implements OnInit {
+  [x: string]: any;
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
   @ViewChild('textArea') textArea: ElementRef;
 
@@ -35,13 +36,13 @@ export class TableListComponent implements OnInit {
   people:any[] =[];
   typroHolder:string="พิมที่นี้...";
   //ListUser: users[] =[];
-
+  pdfDataDict: { [key: string]: string } = {};
   Form:FormGroup;
-  dtOptions: DataTables.Settings ={};
+  dtOptions: any ={};
   dtTrigger: Subject<any> = new Subject(); 
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
-
+  public pdfUrl: SafeResourceUrl;
   items:any= [];
   viewData=[];
   Submitted:boolean =false;
@@ -81,6 +82,7 @@ export class TableListComponent implements OnInit {
   loading:boolean = false;
 item: any;
 records: any;
+pdfSrc: SafeResourceUrl;
   constructor(
     private fb:FormBuilder,
     private http:HttpClient,
@@ -97,7 +99,10 @@ records: any;
       location: ['',Validators.required],
       topic: ['',Validators.required],
       content:[''],
-      personal: this.fb.array([]),
+      filename: [''],
+      // data_: [''],
+      // contentType: [''],
+       personal: this.fb.array([]),
       
 
     }); 
@@ -804,8 +809,120 @@ get personal(): FormArray {
 
     // this.fetchData()
 
+//   html2canvas(elementToPrint, { scale: 2 }).then((canvas) => {
+//     const pdf = new jsPDF('p', 'mm', 'a4');
+//     pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297); // Change 'PDF' to 'PNG'
 
+//     // Convert the PDF to Base64
+//     pdf.output('dataurlnewwindow'); // Display the PDF in a new window to check its size
 
+//     // Create JSON data
+//     const pdfData = {
+//       id: formValue.id,
+//       filename: 'การลงตรวจสอบ.pdf',
+//       data_: pdf.output('datauristring'), // Send the PDF directly without splitting
+//       contentType: 'application/pdf'
+//     };
+
+//     // Send the JSON data to the server using PdfService
+//     this.sv.updateRecordPDF(pdfData).subscribe(
+//       (response) => {
+//         console.log('PDF updated in database successfully.');
+//         // Navigate to another route
+//         this.router.navigate(['/next-route']); // Adjust the path as needed
+//       },
+//       (error) => {
+//         console.error('Failed to update PDF in database.', error);
+//       }
+//     );
+//   });
+// }
+
+displayPDF(pdfFilename: string) {
+  // Retrieve the Base64 data of the PDF from the dictionary
+  const pdfBase64 = this.pdfDataDict[pdfFilename];
+
+  if (pdfBase64) {
+    // Create an anchor element to trigger the PDF download
+    const link = document.createElement('a');
+    link.href = pdfBase64;
+    link.download = pdfFilename;
+    link.target = '_blank';
+
+    // Trigger the download programmatically
+    link.click();
+  } else {
+    console.error(`PDF '${pdfFilename}' not found in dictionary.`);
+  }
+}
+
+saveRCPDF = () => {
+  console.log("Updating PDF in dictionary...");
+  const elementToPrint = document.getElementById('myDetail');
+
+  if (!elementToPrint) {
+    console.error('Element to print not found');
+    return;
+  }
+
+  html2canvas(elementToPrint, { scale: 2 }).then((canvas) => {
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const imgData = canvas.toDataURL('image/png');
+
+    const pdfWidth = 210; // A4 width in mm
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+    // Convert the PDF to Blob
+    const pdfBlob = pdf.output('blob');
+
+    // Create FormData to send the PDF to backend
+    const formData = new FormData();
+    const pdfFilename = 'การลงตรวจสอบ.pdf'; // Change to the desired filename
+    formData.append('id', this.selectedRecordId); // Adjust the ID as needed
+    formData.append('pdf', pdfBlob, pdfFilename);
+
+    // Check if `this.sv.savePDF` exists and is a function
+    if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
+      // Send the PDF to the backend
+      this.sv.savePDF(formData).subscribe(
+        response => {
+          console.log('PDF saved successfully:', response);
+        },
+        error => {
+          console.error('Error saving PDF:', error);
+        }
+      );
+    } else {
+      console.error('savePDF function is not defined or not a function');
+    }
+  }).catch((error) => {
+    console.error('Error generating PDF:', error);
+  });
+  
+  $('#myModal').modal('hide');
+}
+
+showPDF(id: string) {
+  if (!id) {
+    console.error('ID is undefined');
+    return;
+  }
+
+  const pdfPath = `../img/${id}.pdf`; // แก้ไขวงเล็บเกิน
+  console.log('PDF Path:', pdfPath);
+
+  this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(pdfPath);
+  console.log('Sanitized PDF Path:', this.pdfSrc);
+
+  $('#showpdf').modal('show');
+}
+
+closePDF() {
+  // Logic to close the PDF modal
+  $('#showpdf').modal('hide');
+}
 
   searchData(data: string) {
     this.sv.searchData(data).subscribe(res => {
