@@ -12,32 +12,45 @@
   width: 180px;
 }
 .card-body{
-  font-weight: 100;
+  font-weight: 400;
   border: none;
-  font-family: 'TH SarabunPSK', sans-serif; 
+  font-family:"Sarabun", sans-serif;
+  font-style: normal;
+  font-size: 16px;
 }
 .card-body tbody{
   font-size: 14px;
 }
 
 .searchLocation{
-  color: #343dff;
-  background-color: transparent;
-  border: 0.5px solid rgb(0, 0, 0);
-  border-radius: 3px;
+  /* color: #343dff; */
+  /* background-color: transparent; */
+  /* border: 0.5px solid rgb(0, 0, 0); */
+  /* border-radius: 3px;
   padding: 4px 8px;
   font-size: 14px;
   font-weight: 500;
   line-height: 1.333em;
+  display: inline-block; */
+  color: #ff5a65;
+  background-color: #ffeff0;
+  border: 0.5px solid rgba(0, 0, 0, 0);
+  border-radius: 32px;
+  /* border-radius: 3px; */
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.333em;
   display: inline-block;
   align-items: center;
-  font-family: 'TH SarabunPSK', sans-serif; 
+  font-weight: 400;
+  font-family: "Sarabun", sans-serif;
  
 }
-.searchLocation:hover{
+/* .searchLocation:hover{
   background: #dddfff;
   z-index: 30;
-}
+} */
 
 .modal-body-detail{ 
   position: relative;
@@ -49,9 +62,9 @@
    transform: translateX(-50%);
     width: 100%;
     border: 1px solid #000;
-    font-family: 'TH SarabunPSK', sans-serif;
-
-    
+    font-family: "Sarabun", sans-serif;
+    max-height:297mm ;
+    overflow: auto;  
 }
 
 .modal-content{
@@ -60,7 +73,7 @@
   left: 50%;
   transform: translateX(-50%);
   justify-content: center;
-  font-family: 'TH SarabunPSK', sans-serif;
+  font-family: "Sarabun", sans-serif;
   
 }
 .card-header{
@@ -131,7 +144,7 @@ label{
 }
 .headerText button:first-child {
   display: flex;
-  font-family: 'TH SarabunPSK', sans-serif;
+  font-family: "Sarabun", sans-serif;
   
   height: 35px;
   width: auto;
@@ -165,6 +178,21 @@ label{
   background: #e2e2e2;
   border-radius: 5px;
 }
+
+
+.FontSizeBox{
+  position: relative;
+  display: flex;
+  margin-top: 8.5px;
+  align-items: center;
+  text-align: center;
+  border-radius: 5px;
+  height: 20px;
+  width: 60px;
+  font-family: "Sarabun", sans-serif;
+
+}
+/*/////////////////////////////////////*/
 .writteDraw{
   margin: 20px 0 20px 0;
   width: 827px;
@@ -297,6 +325,14 @@ label{
     top: 0;
     left: 0;
 }
+
+.page{
+  width: 100%;
+  min-height: 297mm;
+  page-break-after: always;
+  page-break-inside: avoid;
+  margin: 10mm 0;
+}
 /* .right-panelOnBottom{
   position: relative;
   bottom: 0;
@@ -345,17 +381,22 @@ label{
     position: relative;
     border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
     width: 600px;
+    height: auto;
     overflow: auto;
     padding: 20px; /* เพิ่มระยะห่างบนและล่าง */
-    font-family: 'TH SarabunPSK', sans-serif; /* ใช้ฟอนต์ราชการ */
+    font-family: "Sarabun", sans-serif; /* 'TH SarabunPSK', sans-serif;ใช้ฟอนต์ราชการ */
+    border: 0.5 solid black;
   }
   .main-detail table{
     max-width: 600px;
+    max-height:700px;
     table-layout: fixed;
     overflow: auto;
+    
   }
   .main-detail th, .main-detail td {
     max-width: 539.29px;
+    max-height:700px;
     border: 1px solid black; /* เส้นขอบสีดำ */
     padding: 5px; /* ระยะห่างภายในเซลล์ */
     text-align: left; /* จัดตำแหน่งเนื้อหาให้อยู่ทางซ้าย */
@@ -407,10 +448,10 @@ label{
   }
   .border-error {
     position: absolute;
-    top:15px;  /* ให้ข้อความอยู่ใต้ input */
-    left: 350px;
+    bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 0px;
     margin: 2px;
-    background-color: white;
+    background-color: transparent;
     color: red;
     font-size: 0.875em;
     text-align: left;
@@ -426,13 +467,27 @@ label{
   .box-validate + .text-validate .border-error {
     display: block;
   }
+  .border-errorInDex{
+    position: absolute;
+    bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 0px;
+    margin: 2px;
+    width: 600px;
+    background-color: transparent;
+    color: red;
+    font-size: 0.875em;
+    text-align: left;
+    pointer-events: none;
+    border-radius: 5px;
+   z-index: 1;
 
+  }
   .border-errorPersonFullname{
     position: absolute;
-    top:-15px;  /* ให้ข้อความอยู่ใต้ input */
-    left: 150px;
+    bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 0px;
     margin: 2px;
-    background-color: rgb(255, 255, 255);
+    background-color: transparent;
     color: red;
     font-size: 0.875em;
     text-align: left;
@@ -441,11 +496,11 @@ label{
   }
   .border-errorPersonRank{
     position: absolute;
-    top:-15px;  /* ให้ข้อความอยู่ใต้ input */
-    left: 30px;
+    bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
+    left:0px;
     margin: 2px;
     width: auto;
-    background-color: rgb(255, 255, 255);
+    background-color: transparent;
     color: red;
     font-size: 0.875em;
     text-align: left;
@@ -455,8 +510,8 @@ label{
 
   .border-errorLocation {
     position: absolute;
-    top:10px;  /* ให้ข้อความอยู่ใต้ input */
-    left: 350px;
+    bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 0px;
     margin: 2px;
     /* background-color: white; */
     color: red;
@@ -487,6 +542,7 @@ label{
     background-color: #0d6efd;/*#000dc2ef*/
     border-color: #00087c9f;
     box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd;
+    font-family: "Sarabun", sans-serif;
 
   }
   :host ::ng-deep .btn-add:hover{
@@ -519,8 +575,9 @@ label{
       color: #000000;
       background-color:white ;/*rgb(255, 219, 61)*/
       border: 0 solid #dee2e6;
-      font-family: 'TH SarabunPSK', sans-serif;
+      font-family: "Sarabun", sans-serif;
       opacity: 0.9;
+      border-radius: 2px ;
 
   }:host ::ng-deep .page-link:hover{
     position: relative;
@@ -532,7 +589,7 @@ label{
       background-color: rgb(255, 219, 61);
       border: 0 solid #dee2e6;
       box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 244, 54, 0.4);
-      font-family: 'TH SarabunPSK', sans-serif;
+      font-family: "Sarabun", sans-serif;
       opacity: 1;
   }
 
@@ -545,4 +602,19 @@ label{
     box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 244, 54, 0.4);
     opacity: 1;
     
+}
+
+
+:host ::ng-deep .card .card-header .card-title{
+  font-family: "Sarabun", sans-serif;
+}
+:host ::ng-deep .sidebar .nav p {
+  margin: 0;
+  line-height: 30px;
+  font-size: 14px;
+  position: relative;
+  display: block;
+  height: auto;
+  white-space: nowrap;
+  font-family: "Sarabun", sans-serif !important; 
 }

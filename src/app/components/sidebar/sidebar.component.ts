@@ -6,10 +6,11 @@ declare interface RouteInfo {
     title: string;
     icon: string;
     class: string;
+    style: string;
 }
 export const ROUTES: RouteInfo[] = [
    
-    { path: '/table-list', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '' },
+    { path: '/table-list', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '', style:'font-family: "Sarabun", sans-serif;' },
     // { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '' },
     // { path: '/user-profile', title: 'User Profile',  icon:'person', class: '' },
     // { path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' },
