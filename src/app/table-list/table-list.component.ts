@@ -110,16 +110,11 @@ export class TableListComponent implements OnInit {
       topic: ['',Validators.required],
       content:[''],
       filename: [''],
-      postcode: ['',Validators.required],
-      province: ['',Validators.required],
-      district: ['',Validators.required],   
-      subDistrict: ['',Validators.required],
-      address: ['',Validators.required],
-      place:['', Validators.required],    
+      place:['',Validators.required],
       // data_: [''],
       // contentType: [''],
        personal: this.fb.array([]),
-
+      
 
     }); 
     this.addPersonalForm = this.fb.group({
@@ -136,7 +131,7 @@ export class TableListComponent implements OnInit {
     
     
   }
-    
+  
   documentImageUrl = 'assets/img/sampleA4-1.png';
 
  
@@ -701,7 +696,7 @@ get personal(): FormArray {
       });
       return;
     }
- 
+   
     // }
     // console.log(this.items);
     // ส่งข้อมูลไปยัง controller
@@ -808,7 +803,7 @@ saveRCPDF = () => {
     const imgData = canvas.toDataURL('image/png');
 
     const pdfWidth = 210; // A4 width in mm
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    const pdfHeight = 297 ;//(canvas.height * pdfWidth) / canvas.width
 
     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
 
@@ -859,6 +854,7 @@ showPDF(id: string) {
 
   // $('#showpdf').modal('show');
 }
+
 
 //     while (position < imgHeight) {
 //       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
