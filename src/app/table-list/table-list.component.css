@@ -2,49 +2,41 @@
   max-width: 100%;
 }
 
+:host ::ng-deep .card-header .card-header-danger .modal-title{
+  font-family: "Sarabun", sans-serif !important; 
+}
+
 .modal-body {
   display: flex;
   justify-content: center;
   align-items: center;
-  
+  font-family: "Sarabun", sans-serif;
 }
 .dataTables_wrapper .dataTables_filter input{
 width: 180px;
 }
 .card-body{
-  font-weight: 400;
+  font-weight: 300;
   border: none;
-  font-family:"Sarabun", sans-serif;
-  font-style: normal;
-  font-size: 16px;
+  font-family: 'Sarabun', sans-serif; 
 }
 .card-body tbody{
   font-size: 14px;
 }
 
 .searchLocation{
-  /* color: #343dff; */
-  /* background-color: transparent; */
-  /* border: 0.5px solid rgb(0, 0, 0); */
-  /* border-radius: 3px;
-  padding: 4px 8px;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.333em;
-  display: inline-block; */
-  color: #ff5a65;
-  background-color: #ffeff0;
-  border: 0.5px solid rgba(0, 0, 0, 0);
+  color: #ff9e2c;
+  border: 0px solid transparent;
+  background-color: #fff3e4;
   border-radius: 32px;
-  /* border-radius: 3px; */
   padding: 4px 8px;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: 12px;
+  font-weight: 300;
   line-height: 1.333em;
   display: inline-block;
   align-items: center;
-  font-weight: 400;
-  font-family: "Sarabun", sans-serif;
+  font-size: 14px;
+  font-family:  'Sarabun', sans-serif; 
  
 }
 /* .searchLocation:hover{
@@ -61,7 +53,8 @@ width: 180px;
    left: 50%;
    transform: translateX(-50%);
     width: 100%;
-    border: 1px solid #000;
+    height: 297mm;
+    border: 0.2px solid #000;
     font-family: "Sarabun", sans-serif;
     max-height:297mm ;
     /* overflow: auto;   */
@@ -116,6 +109,7 @@ label{
   height: calc(190mm - 50px); /* 297mm minus some margin for modal padding */
   border: none;
   resize: none;
+  font-family: "Sarabun", sans-serif;
 
 }
 .full-page-textarea-container{
@@ -126,9 +120,8 @@ border: none;
 resize: none;
 border: 1px solid black;
 border-radius: 5px;
-
-
 }
+
 .full-page-textarea-container textarea{
 width: 100%;
 height:111.5mm !important; /* ปรับให้ auto หรือกำหนดขนาดที่ต้องการ */
@@ -138,16 +131,35 @@ border: 1px solid #ccc;
 border-radius: 5px;
 }
 
+.div-container {
+  width: 100%;
+  height: 420px; /* ตั้งค่าความสูงตามที่คุณต้องการ */
+  overflow: auto;
+  padding: 15px;
+  border-bottom-left-radius: 5px; 
+  border-bottom-right-radius: 5px;
+}
 .headerText{
 display: flex;
 border-bottom: 1px solid #c1c1c1;
 }
 .headerText button:first-child {
   display: flex;
-  font-family: "Sarabun", sans-serif;
+  font-family:  'Sarabun', sans-serif;
   
   height: 35px;
   width: auto;
+  border-right: 1px solid #c1c1c1;
+}
+.FontSizeBox{
+  margin-left: 10px;
+  margin-top:5px ;
+display: flex;
+align-items: center;
+justify-content: center;
+  border-radius: 5px;
+  width: 30px;
+  height: 25px;
 }
 /* .headerText button:first-child:hover {
 display: flex;
@@ -166,6 +178,7 @@ width: 65px;
   width: 35px;
   height: 35px;
   border: none;
+  margin-left: 10px;
   
   
 }
@@ -180,20 +193,8 @@ border-radius: 5px;
 }
 
 
-.FontSizeBox{
-  position: relative;
-  display: flex;
-  margin-top: 8.5px;
-  align-items: center;
-  text-align: center;
-  border-radius: 5px;
-  height: 20px;
-  width: 60px;
-  font-family: "Sarabun", sans-serif;
-
-}
-/*/////////////////////////////////////*/
 .writteDraw{
+  display: block;
 margin: 20px 0 20px 0;
 width: 827px;
 height: 460px; 
@@ -298,7 +299,6 @@ font-style: italic;
   padding: 96px;
   height: 100%;
   max-height: 297mm;
-  
 }
 .header-topic{
 position: relative;
@@ -325,14 +325,6 @@ position: relative; /* ให้ลูกสามารถจัดตำแห
 position: absolute;
   top: 0;
   left: 0;
-}
-
-.page{
-  width: 100%;
-  min-height: 297mm;
-  page-break-after: always;
-  page-break-inside: avoid;
-  margin: 10mm 0;
 }
 /* .right-panelOnBottom{
 position: relative;
@@ -381,22 +373,17 @@ right: 25px;
     position: relative;
     border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
     width: 600px;
-    height: auto;
     overflow: auto;
     padding: 20px; /* เพิ่มระยะห่างบนและล่าง */
-    font-family: "Sarabun", sans-serif; /* 'TH SarabunPSK', sans-serif;ใช้ฟอนต์ราชการ */
-    border: 0.5 solid black;
+    font-family:  'Sarabun', sans-serif; /* ใช้ฟอนต์ราชการ */
   }
 .main-detail table{
     max-width: 600px;
-    max-height:700px;
     table-layout: fixed;
     overflow: auto;
-    
   }
 .main-detail th, .main-detail td {
     max-width: 539.29px;
-    max-height:700px;
     border: 1px solid black; /* เส้นขอบสีดำ */
     padding: 5px; /* ระยะห่างภายในเซลล์ */
     text-align: left; /* จัดตำแหน่งเนื้อหาให้อยู่ทางซ้าย */
@@ -484,10 +471,10 @@ right: 25px;
   }
 .border-errorPersonFullname{
     position: absolute;
-    bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
+    bottom:-15px;  /* ให้ข้อความอยู่ใต้ input */
     left: 0px;
     margin: 2px;
-    background-color: transparent;
+    background-color: rgb(255, 255, 255);
     color: red;
     font-size: 0.875em;
     text-align: left;
@@ -497,7 +484,7 @@ right: 25px;
 .border-errorPersonRank{
     position: absolute;
     bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
-    left:0px;
+    left: 0px;
     margin: 2px;
     width: auto;
     background-color: transparent;
@@ -531,7 +518,7 @@ right: 25px;
 :host ::ng-deep .close{
   float: right;
     font-size: 1.5rem;
-    font-weight: 500;
+    font-weight: 300;
     line-height: 1;
     color: white ; /*#000000*/
     text-shadow: 0 1px 0 #ffffff;
@@ -539,16 +526,15 @@ right: 25px;
 }
   :host ::ng-deep .btn-add{
     color: #fff;
-    background-color: #0d6efd;/*#000dc2ef*/
+    background-color: #24a0ed;/*#000dc2ef  */
     border-color: #00087c9f;
     box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd;
-    font-family: "Sarabun", sans-serif;
 
   }
   :host ::ng-deep .btn-add:hover{
-    background-color: #0d6efd; 
+    background-color: #24a0ed; 
     border-color: #00087c9f;
-    /* box-shadow: 0 14px 14px -12px #0d6dfd93, 0 4px 14px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px #0d6dfd93; */
+    /* box-shadow: 0 14px 14px -12px #24a0ed51, 0 4px 14px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px #24a0ed51; */
   }
  
  
@@ -575,9 +561,8 @@ right: 25px;
       color: #000000;
       background-color:white ;/*rgb(255, 219, 61)*/
       border: 0 solid #dee2e6;
-      font-family: "Sarabun", sans-serif;
+      font-family:  'Sarabun', sans-serif;
       opacity: 0.9;
-      border-radius: 2px ;
 
   }
   :host ::ng-deep .page-link:hover{
@@ -590,7 +575,7 @@ right: 25px;
       background-color: rgb(255, 219, 61);
       border: 0 solid #dee2e6;
       box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 244, 54, 0.4);
-      font-family: "Sarabun", sans-serif;
+      font-family:  'Sarabun', sans-serif;
       opacity: 1;
   }
 
@@ -619,37 +604,46 @@ right: 25px;
   white-space: nowrap;
   font-family: "Sarabun", sans-serif !important; 
 }
+:host ::ng-deep .form-check, label {
+  font-size: 14px;
+  line-height: 1.42857;
+  color: #000000;
+  font-weight: 400;
+}
 
 @media print {
+  #myDetail{
+    border: none;
+  }
   .main-detail {
     width: 100%;
-    page-break-inside: avoid; /* ป้องกันการแบ่งหน้าภายใน .main-detail */
+    page-break-inside: avoid;
   }
 
   .main-detail table {
     width: 100%;
-    page-break-inside: auto; /* อนุญาตให้แบ่งหน้าภายในตาราง */
+    page-break-inside: auto;
   }
 
   .main-detail th, .main-detail td {
-    word-wrap: break-word; /* แบ่งคำเมื่อข้อมูลยาวเกินขอบเขต */
+    word-wrap: break-word;
   }
 
   .main-detail th:first-child, .main-detail td:first-child {
-    width: 10%; /* กำหนดความกว้างของคอลัมน์แรก */
+    width: 10%;
   }
 
   .main-detail th:last-child, .main-detail td:last-child {
-    width: 90%; /* กำหนดความกว้างของคอลัมน์สุดท้าย */
+    width: 90%;
   }
 
   .main-detail tr {
-    page-break-inside: avoid; /* ป้องกันการแบ่งหน้าภายในแถว */
-    page-break-after: auto; /* สั่งให้แบ่งหน้าหลังจากแถว */
+    page-break-inside: avoid;
+    page-break-after: auto;
   }
 
   @page {
-    size: A4; /* กำหนดขนาดกระดาษ A4 */
-    margin: 20px; /* กำหนดขอบกระดาษ */
+    size: A4;
+    margin: 20mm;
   }
 }

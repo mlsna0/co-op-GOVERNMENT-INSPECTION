@@ -22,6 +22,7 @@ import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
 import moment from 'moment';
 import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
 
+
 @Component({
   selector: 'app-table-list',
   templateUrl: './table-list.component.html',
@@ -43,6 +44,8 @@ export class TableListComponent implements OnInit {
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
   public pdfUrl: SafeResourceUrl;
+
+  
   items:any= [];
   viewData=[];
   Submitted:boolean =false;
@@ -96,6 +99,7 @@ export class TableListComponent implements OnInit {
     private router: Router,
     private geocodingService: GeocodingServiceService,
     private sanitizer: DomSanitizer,
+
   ) { 
     this.addItemForm = this.fb.group({
       id: ['',Validators.required],
@@ -106,12 +110,16 @@ export class TableListComponent implements OnInit {
       topic: ['',Validators.required],
       content:[''],
       filename: [''],
+<<<<<<< HEAD
       // postcode: ['',Validators.required],
       // province: ['',Validators.required],
       // district: ['',Validators.required],
       // subDistrict: ['',Validators.required],
       // address: ['',Validators.required],
       place:['', Validators.required],
+=======
+      place:['',Validators.required],
+>>>>>>> cd798dd72a1712ece923ef694cd21fc2a5ffb95a
       // data_: [''],
       // contentType: [''],
        personal: this.fb.array([]),
@@ -664,7 +672,7 @@ get personal(): FormArray {
 
 
   onInsertSummit(data) {
-    this.Submitted = true;
+    this.Submitted = true; 
     // console.log(data);
     console.log('Item form:',this.addItemForm.value);
     console.log('PernalForm : ',this.addPersonalForm.value);
@@ -697,7 +705,7 @@ get personal(): FormArray {
       });
       return;
     }
- 
+   
     // }
     // console.log(this.items);
     // ส่งข้อมูลไปยัง controller
@@ -779,56 +787,15 @@ get personal(): FormArray {
   
 
 
-//   printPDF = () => {
-//     console.log("working PDF..");
-//     const elementToPrint = document.getElementById('myDetail');
-//     html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
-//       const pdf = new jsPDF('p','mm','a4');
-//       pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
-//       pdf.save('การลงตรวจสอบ.pdf')
-//     });
-//     // this.fetchData()
-// }
-
-printPDF = () => {
-  console.log("working PDF..");
-  const elementToPrint = document.getElementById('myDetail');
-  const A4_WIDTH = 210;  // Width of A4 in mm
-  const A4_HEIGHT = 297; // Height of A4 in mm
-  const canvasScale = 2; // Scale factor for higher resolution canvas
-
-  const options = {
-      scale: canvasScale,
-      height: elementToPrint.scrollHeight,
-      windowHeight: elementToPrint.scrollHeight
-  };
-
-  html2canvas(elementToPrint, options).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      
-      const imgWidth = A4_WIDTH;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      let heightLeft = imgHeight;
-      let position = 0;
-      const bottomMargin = 10; // ขอบล่างของ PDF ที่ต้องการเว้นว่าง (มิลลิเมตร)
-      const textOffset = 5; // การเลื่อนข้อความลงมา (มิลลิเมตร)
-      
-
-      while (heightLeft > 0) {
-          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-          pdf.text(' ', A4_WIDTH / 2, A4_HEIGHT - bottomMargin - textOffset, { align: 'center' });
-          heightLeft -= A4_HEIGHT;
-
-          if (heightLeft > 0) {
-              pdf.addPage();
-          }
-          position -= A4_HEIGHT;
-      }
-
-      pdf.save('การลงตรวจสอบ.pdf');
-  });
+  printPDF = () => {
+    console.log("working PDF..");
+    const elementToPrint = document.getElementById('myDetail');
+    html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
+      const pdf = new jsPDF('p','mm','a4');
+      pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
+      pdf.save('การลงตรวจสอบ.pdf')
+    });
+    // this.fetchData()
 }
 
 saveRCPDF = () => {
@@ -845,7 +812,7 @@ saveRCPDF = () => {
     const imgData = canvas.toDataURL('image/png');
 
     const pdfWidth = 210; // A4 width in mm
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    const pdfHeight = 297 ;//(canvas.height * pdfWidth) / canvas.width
 
     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
 
@@ -897,6 +864,7 @@ showPDF(id: string) {
   // $('#showpdf').modal('show');
 }
 
+
 //     while (position < imgHeight) {
 //       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
 
@@ -920,104 +888,105 @@ showPDF(id: string) {
 /////////////////////////////// formatFont Edit
 
 formatText(command: string): void {
-    document.execCommand(command, false, '');
-    this.updateTyproText();
-  }
-
-  onInput(event: Event): void {
-    const target = event.target as HTMLElement;
-    this.typroText = target.innerHTML;
-  }
-
-  updateFontSize(): void {
-    const fontElements = document.getElementsByTagName('font');
-    for (let i = 0; i < fontElements.length; i++) {
-      const element = fontElements[i] as HTMLElement; // Cast to HTMLElement
-      const size = element.getAttribute('size');
-      if (size) {
-        switch (size) {
-          case '1':
-            element.style.fontSize = '8px';
-            break;
-          case '2':
-            element.style.fontSize = '10px';
-            break;
-          case '3':
-            element.style.fontSize = '12px';
-            break;
-          case '4':
-            element.style.fontSize = '14px';
-            break;
-          case '5':
-            element.style.fontSize = '18px';
-            break;
-          case '6':
-            element.style.fontSize = '24px';
-            break;
-          case '7':
-            element.style.fontSize = '36px';
-            break;
-        }
-        element.removeAttribute('size');
-      }
-    }
-    this.updateTyproText();
-  }
-  
-updateTyproText(): void {
-  const editableDiv = document.querySelector('.form-control.full-page-textarea');
-  if (editableDiv) {
-    this.typroText = (editableDiv as HTMLElement).innerHTML;
-  }
-}
-changeFontSize(event: Event): void {
-  const target = event.target as HTMLSelectElement;
-  const fontSize = target.value;
-  const selection = window.getSelection();
-  if (!selection.rangeCount) return;
-
-  const range = selection.getRangeAt(0);
-  const span = document.createElement('span');
-  span.style.fontSize = this.mapFontSize(fontSize);
-  range.surroundContents(span);
+  document.execCommand(command, false, '');
   this.updateTyproText();
 }
 
-mapFontSize(size: string): string {
-  switch (size) {
-    case '1':
-      return '8px';
-    case '2':
-      return '10px';
-    case '3':
-      return '12px';
-    case '4':
-      return '14px';
-    case '5':
-      return '18px';
-    case '6':
-      return '24px';
-    case '7':
-      return '36px';
-    default:
-      return '14px'; // Default size
+onInput(event: Event): void {
+  const target = event.target as HTMLElement;
+  this.typroText = target.innerHTML;
+}
+
+updateFontSize(): void {
+  const fontElements = document.getElementsByTagName('font');
+  for (let i = 0; i < fontElements.length; i++) {
+    const element = fontElements[i] as HTMLElement; // Cast to HTMLElement
+    const size = element.getAttribute('size');
+    if (size) {
+      switch (size) {
+        case '1':
+          element.style.fontSize = '8px';
+          break;
+        case '2':
+          element.style.fontSize = '10px';
+          break;
+        case '3':
+          element.style.fontSize = '12px';
+          break;
+        case '4':
+          element.style.fontSize = '14px';
+          break;
+        case '5':
+          element.style.fontSize = '18px';
+          break;
+        case '6':
+          element.style.fontSize = '24px';
+          break;
+        case '7':
+          element.style.fontSize = '36px';
+          break;
+      }
+      element.removeAttribute('size');
+    }
   }
+  this.updateTyproText();
+}
+
+updateTyproText(): void {
+const editableDiv = document.querySelector('.form-control.full-page-textarea');
+if (editableDiv) {
+  this.typroText = (editableDiv as HTMLElement).innerHTML;
+}
+}
+changeFontSize(event: Event): void {
+const target = event.target as HTMLSelectElement;
+const fontSize = target.value;
+const selection = window.getSelection();
+if (!selection.rangeCount) return;
+
+const range = selection.getRangeAt(0);
+const span = document.createElement('span');
+span.style.fontSize = this.mapFontSize(fontSize);
+range.surroundContents(span);
+this.updateTyproText();
+}
+
+mapFontSize(size: string): string {
+switch (size) {
+  case '1':
+    return '8px';
+  case '2':
+    return '10px';
+  case '3':
+    return '12px';
+  case '4':
+    return '14px';
+  case '5':
+    return '18px';
+  case '6':
+    return '24px';
+  case '7':
+    return '36px';
+  default:
+    return '14px'; // Default size
+}
 }
 
 getSafeHtml(content: string): SafeHtml {
-  return this.sanitizer.bypassSecurityTrustHtml(content);
+return this.sanitizer.bypassSecurityTrustHtml(content);
+}
+
+editContent() {
+  this.typroText = this.detailItems.record_content;
+  this.isTyproActive = true; // เปิดการแก้ไข
+  }
+loadContent() {
+    // การดึงข้อมูลจากฐานข้อมูลมาแสดง (ตัวอย่าง)
+    this.detailItems = {
+      record_content: ' '
+    };
   }
 
-  editContent() {
-    this.typroText = this.detailItems.record_content;
-    this.isTyproActive = true; // เปิดการแก้ไข
-    }
-loadContent() {
-      // การดึงข้อมูลจากฐานข้อมูลมาแสดง (ตัวอย่าง)
-      this.detailItems = {
-        record_content: ' '
-      };
-    }
  
 }
 
