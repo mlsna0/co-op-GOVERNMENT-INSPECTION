@@ -11,7 +11,12 @@ const recordSchema = new mongoose.Schema({
     record_content: String,
     // pdfs: [
     //   {
-        record_filename: String,
+    record_filename: String,
+    record_postcode: String,
+    record_prvinece: String,
+    record_district: String,
+    record_sub_district: String,
+    record_address: String
     //     record_data_: Buffer,
     //     record_contentType: String
     //   }

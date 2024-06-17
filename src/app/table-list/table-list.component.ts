@@ -106,6 +106,11 @@ export class TableListComponent implements OnInit {
       topic: ['',Validators.required],
       content:[''],
       filename: [''],
+      postcode: ['',Validators.required],
+      province: ['',Validators.required],
+      district: ['',Validators.required],
+      subDistrict: ['',Validators.required],
+      address: ['',Validators.required],
       // data_: [''],
       // contentType: [''],
        personal: this.fb.array([]),
@@ -823,6 +828,54 @@ printPDF = () => {
 
       pdf.save('การลงตรวจสอบ.pdf');
   });
+}
+
+saveRCPDF = () => {
+  console.log("Updating PDF in dictionary...");
+  const elementToPrint = document.getElementById('myDetail');
+
+  if (!elementToPrint) {
+    console.error('Element to print not found');
+    return;
+  }
+
+  html2canvas(elementToPrint, { scale: 2 }).then((canvas) => {
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const imgData = canvas.toDataURL('image/png');
+
+    const pdfWidth = 210; // A4 width in mm
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+    // Convert the PDF to Blob
+    const pdfBlob = pdf.output('blob');
+
+    // Create FormData to send the PDF to backend
+    const formData = new FormData();
+    const pdfFilename = 'การลงตรวจสอบ.pdf'; // Change to the desired filename
+    formData.append('id', this.selectedRecordId); // Adjust the ID as needed
+    formData.append('pdf', pdfBlob, pdfFilename);
+
+    // Check if `this.sv.savePDF` exists and is a function
+    if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
+      // Send the PDF to the backend
+      this.sv.savePDF(formData).subscribe(
+        response => {
+          console.log('PDF saved successfully:', response);
+        },
+        error => {
+          console.error('Error saving PDF:', error);
+        }
+      );
+    } else {
+      console.error('savePDF function is not defined or not a function');
+    }
+  }).catch((error) => {
+    console.error('Error generating PDF:', error);
+  });
+  
+  $('#myModal').modal('hide');
 }
 
 showPDF(id: string) {

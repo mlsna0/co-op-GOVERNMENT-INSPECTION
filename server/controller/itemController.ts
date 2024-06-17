@@ -37,9 +37,14 @@ class ItemModelCtrl extends BaseCtrl {
           record_location: req.body.location,
           record_topic: req.body.topic,
           record_content: req.body.content,
+          record_postcode: req.body.postcode,
+          record_province: req.body.province,
+          record_district: req.body.district,
+          record_sub_district: req.body.subDistrict,
+          record_address: req.body.address,
           // pdfs: [
           //   {
-              record_filename: req.body.filename,
+          record_filename: req.body.filename,
           //     record_data_: Buffer.from(req.body.data_, 'base64'),
           //     record_contentType: req.body.contentType
           //   }
