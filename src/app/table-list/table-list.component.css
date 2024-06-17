@@ -6,7 +6,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  
+  font-family: "Sarabun", sans-serif;
 }
 .dataTables_wrapper .dataTables_filter input{
 width: 180px;
@@ -14,30 +14,30 @@ width: 180px;
 .card-body{
   font-weight: 100;
   border: none;
-  font-family: 'TH SarabunPSK', sans-serif; 
+  font-family: 'Sarabun', sans-serif; 
 }
 .card-body tbody{
   font-size: 14px;
 }
 
 .searchLocation{
-  color: #343dff;
-  background-color: transparent;
-  border: 0.5px solid rgb(0, 0, 0);
-  border-radius: 3px;
+  color: #ff9e2c;
+  border: 0px solid transparent;
+  background-color: #fff3e4;
+  border-radius: 32px;
   padding: 4px 8px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 1.333em;
   display: inline-block;
   align-items: center;
-  font-family: 'TH SarabunPSK', sans-serif; 
+  font-family:  'Sarabun', sans-serif; 
  
 }
-.searchLocation:hover{
+/* .searchLocation:hover{
   background: #dddfff;
   z-index: 30;
-}
+} */
 
 .modal-body-detail{ 
   position: relative;
@@ -103,7 +103,7 @@ label{
   height: calc(190mm - 50px); /* 297mm minus some margin for modal padding */
   border: none;
   resize: none;
-
+  font-family: "Sarabun", sans-serif;
 
 }
 .full-page-textarea-container{
@@ -132,7 +132,7 @@ border-bottom: 1px solid #c1c1c1;
 }
 .headerText button:first-child {
   display: flex;
-  font-family: 'TH SarabunPSK', sans-serif;
+  font-family:  'Sarabun', sans-serif;
   
   height: 35px;
   width: auto;
@@ -347,7 +347,7 @@ right: 25px;
     width: 600px;
     overflow: auto;
     padding: 20px; /* เพิ่มระยะห่างบนและล่าง */
-    font-family: 'TH SarabunPSK', sans-serif; /* ใช้ฟอนต์ราชการ */
+    font-family:  'Sarabun', sans-serif; /* ใช้ฟอนต์ราชการ */
   }
 .main-detail table{
     max-width: 600px;
@@ -498,13 +498,13 @@ right: 25px;
 }
   :host ::ng-deep .btn-add{
     color: #fff;
-    background-color: #0d6efd;/*#000dc2ef*/
+    background-color: #24a0ed;/*#000dc2ef*/
     border-color: #00087c9f;
     box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd;
 
   }
   :host ::ng-deep .btn-add:hover{
-    background-color: #0d6efd; 
+    background-color: #24a0ed; 
     border-color: #00087c9f;
     /* box-shadow: 0 14px 14px -12px #0d6dfd93, 0 4px 14px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px #0d6dfd93; */
   }
@@ -533,7 +533,7 @@ right: 25px;
       color: #000000;
       background-color:white ;/*rgb(255, 219, 61)*/
       border: 0 solid #dee2e6;
-      font-family: 'TH SarabunPSK', sans-serif;
+      font-family:  'Sarabun', sans-serif;
       opacity: 0.9;
 
   }
@@ -547,7 +547,7 @@ right: 25px;
       background-color: rgb(255, 219, 61);
       border: 0 solid #dee2e6;
       box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 244, 54, 0.4);
-      font-family: 'TH SarabunPSK', sans-serif;
+      font-family:  'Sarabun', sans-serif;
       opacity: 1;
   }
 
@@ -576,6 +576,7 @@ right: 25px;
   white-space: nowrap;
   font-family: "Sarabun", sans-serif !important; 
 }
+
 
 @media print {
   .main-detail {
