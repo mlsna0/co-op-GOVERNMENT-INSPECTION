@@ -106,16 +106,16 @@ export class TableListComponent implements OnInit {
       topic: ['',Validators.required],
       content:[''],
       filename: [''],
-      postcode: ['',Validators.required],
-      province: ['',Validators.required],
-      district: ['',Validators.required],   
-      subDistrict: ['',Validators.required],
-      address: ['',Validators.required],
-      place:['', Validators.required],    
+      // postcode: ['',Validators.required],
+      // province: ['',Validators.required],
+      // district: ['',Validators.required],
+      // subDistrict: ['',Validators.required],
+      // address: ['',Validators.required],
+      place:['', Validators.required],
       // data_: [''],
       // contentType: [''],
        personal: this.fb.array([]),
-
+      
 
     }); 
     this.addPersonalForm = this.fb.group({
@@ -132,7 +132,7 @@ export class TableListComponent implements OnInit {
     
     
   }
-    
+  
   documentImageUrl = 'assets/img/sampleA4-1.png';
 
  
