@@ -771,92 +771,18 @@ get personal(): FormArray {
   
 
 
-//   printPDF = () => {
-//     console.log("working PDF..");
-//     const elementToPrint = document.getElementById('myDetail');
-//     html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
-//       const pdf = new jsPDF('p','mm','a4');
-//       pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
-//       pdf.save('การลงตรวจสอบ.pdf')
-//     });
-//     // this.fetchData()
-// }
-
-printPDF = () => {
-  console.log("working PDF..");
-  const elementToPrint = document.getElementById('myDetail');
-  const A4_WIDTH = 210;  // Width of A4 in mm
-  const A4_HEIGHT = 297; // Height of A4 in mm
-  const canvasScale = 2; // Scale factor for higher resolution canvas
-
-  const options = {
-      scale: canvasScale,
-      height: elementToPrint.scrollHeight,
-      windowHeight: elementToPrint.scrollHeight
-  };
-
-  html2canvas(elementToPrint, options).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      
-      const imgWidth = A4_WIDTH;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      let heightLeft = imgHeight;
-      let position = 0;
-      const bottomMargin = 10; // ขอบล่างของ PDF ที่ต้องการเว้นว่าง (มิลลิเมตร)
-      const textOffset = 5; // การเลื่อนข้อความลงมา (มิลลิเมตร)
-      
-
-      while (heightLeft > 0) {
-          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-          pdf.text(' ', A4_WIDTH / 2, A4_HEIGHT - bottomMargin - textOffset, { align: 'center' });
-          heightLeft -= A4_HEIGHT;
-
-          if (heightLeft > 0) {
-              pdf.addPage();
-          }
-          position -= A4_HEIGHT;
-      }
-
-      pdf.save('การลงตรวจสอบ.pdf');
-  });
+  printPDF = () => {
+    console.log("working PDF..");
+    const elementToPrint = document.getElementById('myDetail');
+    html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
+      const pdf = new jsPDF('p','mm','a4');
+      pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
+      pdf.save('การลงตรวจสอบ.pdf')
+    });
+    // this.fetchData()
 }
 
-// printPDF = () => {
-//   console.log("working PDF..");
-//   const elementToPrint = document.getElementById('myDetail');
-//   const A4_WIDTH = 210;  // ความกว้างของ A4 ในมิลลิเมตร
-//   const A4_HEIGHT = 297; // ความสูงของ A4 ในมิลลิเมตร
-//   const bottomMargin = 10; // ขอบล่างของกระดาษที่ต้องการให้ว่างไว้ (มิลลิเมตร)
 
-//   // กำหนด options สำหรับ html2canvas
-//   const options = {
-//     scale: 2, // ปรับขนาด Canvas ให้มีความละเอียดสูง
-//     windowHeight: elementToPrint.scrollHeight + bottomMargin, // ความสูงทั้งหมดของหน้าต้องรวมขอบล่างด้วย
-//   };
-
-//   html2canvas(elementToPrint, options).then((canvas) => {
-//     const imgData = canvas.toDataURL('image/png');
-//     const pdf = new jsPDF('p', 'mm', 'a4');
-
-//     let imgWidth = A4_WIDTH;
-//     let imgHeight = (canvas.height * imgWidth) / canvas.width;
-//     let position = 0;
-
-//     while (position < imgHeight) {
-//       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-
-//       position += A4_HEIGHT; // เลื่อนตำแหน่งลงหน้าถัดไป
-
-//       if (position < imgHeight) {
-//         pdf.addPage(); // เพิ่มหน้าใหม่เมื่อยังไม่สามารถแสดงหมดได้ในหน้าเดียว
-//       }
-//     }
-
-//     pdf.save('การลงตรวจสอบ.pdf');
-//   });
-// }
 
   searchData(data: string) {
     this.sv.searchData(data).subscribe(res => {

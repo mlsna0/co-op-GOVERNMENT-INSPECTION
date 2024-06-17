@@ -271,7 +271,6 @@ font-style: italic;
   padding: 96px;
   height: 100%;
   max-height: 297mm;
-  
 }
 .header-topic{
 position: relative;
@@ -317,7 +316,12 @@ right: 25px;
 .detail-content{
   position: relative;
   margin-top: 60px;
+<<<<<<< HEAD
 }  
+=======
+}
+
+>>>>>>> parent of 8ba8f7a (printpdf)
 .detail-content .form-group label {
     display: inline-block;
     font-weight: bold;
@@ -343,6 +347,7 @@ right: 25px;
 
 
 .main-detail {
+<<<<<<< HEAD
     position: relative;
     border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
     width: 600px;
@@ -350,6 +355,16 @@ right: 25px;
     padding: 20px; /* เพิ่มระยะห่างบนและล่าง */
     font-family: 'TH SarabunPSK', sans-serif; /* ใช้ฟอนต์ราชการ */
   }
+=======
+  position: relative;
+  border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
+  width: 600px;
+  overflow: auto;
+  padding: 20px; /* เพิ่มระยะห่างบนและล่าง */
+  font-family: 'TH SarabunPSK', sans-serif; /* ใช้ฟอนต์ราชการ */
+  box-sizing: border-box;
+}
+>>>>>>> parent of 8ba8f7a (printpdf)
 .main-detail table{
     max-width: 600px;
     table-layout: fixed;
@@ -582,33 +597,33 @@ right: 25px;
 @media print {
   .main-detail {
     width: 100%;
-    page-break-inside: avoid; /* ป้องกันการแบ่งหน้าภายใน .main-detail */
+    page-break-inside: avoid;
   }
 
   .main-detail table {
     width: 100%;
-    page-break-inside: auto; /* อนุญาตให้แบ่งหน้าภายในตาราง */
+    page-break-inside: auto;
   }
 
   .main-detail th, .main-detail td {
-    word-wrap: break-word; /* แบ่งคำเมื่อข้อมูลยาวเกินขอบเขต */
+    word-wrap: break-word;
   }
 
   .main-detail th:first-child, .main-detail td:first-child {
-    width: 10%; /* กำหนดความกว้างของคอลัมน์แรก */
+    width: 10%;
   }
 
   .main-detail th:last-child, .main-detail td:last-child {
-    width: 90%; /* กำหนดความกว้างของคอลัมน์สุดท้าย */
+    width: 90%;
   }
 
   .main-detail tr {
-    page-break-inside: avoid; /* ป้องกันการแบ่งหน้าภายในแถว */
-    page-break-after: auto; /* สั่งให้แบ่งหน้าหลังจากแถว */
+    page-break-inside: avoid;
+    page-break-after: auto;
   }
 
   @page {
-    size: A4; /* กำหนดขนาดกระดาษ A4 */
-    margin: 20px; /* กำหนดขอบกระดาษ */
+    size: A4;
+    margin: 20mm;
   }
 }
