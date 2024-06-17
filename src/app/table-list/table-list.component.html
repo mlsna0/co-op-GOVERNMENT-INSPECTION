@@ -82,7 +82,7 @@
                       <button (click)="openDetailModal(item._id)" 
                         style="border: none; background: none; color: black;">
                         <i data-toggle="tooltip" title="ดูรายละเอียด" data-placement="top"
-                          class="fa fa-file-text-o ModalIcon "  ></i>
+                          class="fa fa-file-text-o ModalIcon " ></i>
                       </button>
 
 
@@ -128,43 +128,24 @@
                     <div class="row">
                       <div class="col-sm-2">
                         <div class="form-group">
-                          <label for="id" class="form-label">ครั้งที่
-                            <span
-                              *ngIf="addItemForm.controls['id'].invalid && (addItemForm.controls['id'].touched || addItemForm.controls['id'].dirty || Submitted)" class="text-validate">*</span>
-                          </label>
+                          <label for="id" class="form-label">ครั้งที่</label>
 
-                          <input  type="id" id="id" formControlName="id" class="form-control" placeholder="ครั้งที่" [ngClass]="{'box-validate':  addItemForm.controls['id'].invalid && (addItemForm.controls['id'].touched || addItemForm.controls['id'].dirty || Submitted)}"/>
-                          <div class="text-validate"
-                          *ngIf="addItemForm.controls['id'].invalid &&(addItemForm.controls['id'].touched || addItemForm.controls['id'].dirty || Submitted) ">
-                          <span class="border-errorInDex" *ngIf="addItemForm.controls['id'].invalid && (addItemForm.controls['id'].touched || addItemForm.controls['id'].dirty || Submitted)"
-                           >จำเป็น**</span>
-                        </div>
+                          <input  type="id" id="id" formControlName="id" class="form-control" placeholder="ครั้งที่" />
+                      
                         </div>
                       </div>
                       <div class="col-sm-4">
                         <div class="form-group">
                           <label for="startDate">วันที่เริ่มตรวจสอบ</label>
                           <input  type="date" id="startDate" [(ngModel)]="startDate" formControlName="startDate"
-                            class="form-control" placeholder="วันที่เริ่มตรวจสอบ" [ngClass]="{'box-validate':  addItemForm.controls['startDate'].invalid && (addItemForm.controls['startDate'].touched || addItemForm.controls['startDate'].dirty || Submitted)}"/> <!--style="color:rgb(171, 171, 171)"-->
-                            <div class="text-validate"
-                            *ngIf="addItemForm.controls['startDate'].invalid &&(addItemForm.controls['startDate'].touched || addItemForm.controls['startDate'].dirty || Submitted) ">
-                            <span class="border-error" *ngIf="addItemForm.controls['startDate'].invalid && (addItemForm.controls['startDate'].touched || addItemForm.controls['startDate'].dirty || Submitted)"
-                             >กรุณากรอกข้อมูล</span>
-                          </div>
+                            class="form-control" placeholder="วันที่เริ่มตรวจสอบ" /> <!--style="color:rgb(171, 171, 171)"-->
                         </div>
                       </div>
                       <div class="col-sm-6">
                         <div class="form-group">
                           <label for="endDate">วันที่เสร็จสิ้น</label>
                           <input  type="date" id="endDate" formControlName="endDate"
-                            class="form-control" placeholder="วันที่เสร็จสิ้น"[ngClass]="{'box-validate':  addItemForm.controls['endDate'].invalid && (addItemForm.controls['endDate'].touched || addItemForm.controls['endDate'].dirty || Submitted)}" />
-                            <div class="text-validate"
-                            *ngIf="addItemForm.controls['endDate'].invalid &&(addItemForm.controls['endDate'].touched || addItemForm.controls['endDate'].dirty || Submitted) ">
-                            <span class="border-error" *ngIf="addItemForm.controls['endDate'].invalid && (addItemForm.controls['endDate'].touched || addItemForm.controls['endDate'].dirty || Submitted)"
-                             >กรุณากรอกข้อมูล</span>
-                          </div>
-
-                            
+                            class="form-control" placeholder="วันที่เสร็จสิ้น" />
                         </div>
                       </div>
                     </div>
@@ -174,14 +155,14 @@
                           <label for="topic">
                             หัวข้อการตรวจสอบ
                             <span
-                              *ngIf="addItemForm.controls['topic'].invalid && (addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty || Submitted)" class="text-validate">*</span>
+                              *ngIf="addItemForm.controls['topic'].invalid && (addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty)" class="text-validate">*</span>
                           </label>
                           <input type="text" id="topic" formControlName="topic" class="form-control"
-                            placeholder="--หัวข้อการตรวจสอบ--"
-                            [ngClass]="{'box-validate':  addItemForm.controls['topic'].invalid && (addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty || Submitted)}" />
+                            placeholder="หัวข้อการตรวจสอบ"
+                            [ngClass]="{'box-validate': addItemForm.controls['topic'].invalid && (addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty)}" />
                           <div class="text-validate"
-                            *ngIf="addItemForm.controls['topic'].invalid &&(addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty || Submitted) ">
-                            <span class="border-error" *ngIf="addItemForm.controls['topic'].invalid && (addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty || Submitted)"
+                            *ngIf="addItemForm.controls['topic'].invalid &&(addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty ) ">
+                            <span class="border-error" *ngIf="addItemForm.controls['topic'].invalid && (addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty)"
                              >กรุณากรอกข้อมูล</span>
                           </div>
                         </div>
@@ -194,12 +175,12 @@
                         <label> 
                        
                           ยศ/ตำแหน่ง
-                          <span *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty || Submitted)" class="text-validate"> *</span>
+                          <span *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty)" class="text-validate"> *</span>
                         </label>
                       </div>
                       <div class="col-sm-7">
                         <label for="fullname" style="margin-left: 45px;">ชื่อ-นามสกุล
-                          <span *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty || Submitted)" class="text-validate"> *</span>
+                          <span *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty)" class="text-validate"> *</span>
                         </label>
                       </div>
                       <div class="col-sm-2" style="position: relative; right: 0;">
@@ -223,8 +204,8 @@
 
                               <input type="text" id="rank-{{i}}" formControlName="rank" class="form-control"
                                 placeholder="--กรอกข้อมูล--"
-                                [ngClass]="{'box-validate':person.controls['rank'].invalid && (person.controls['rank'].touched || person.controls['rank'].dirty || Submitted)}" /> <!---->
-                               <div *ngIf="person.controls['rank'].invalid && (person.controls['rank'].touched || person.controls['rank'].dirty || Submitted)" class="border-errorPersonRank">
+                                [ngClass]="{'box-validate':person.controls['rank'].invalid && (person.controls['rank'].touched || person.controls['rank'].dirty)}" /> <!---->
+                               <div *ngIf="person.controls['rank'].invalid && (person.controls['rank'].touched || person.controls['rank'].dirty)" class="border-errorPersonRank">
                                 กรุณากรอกข้อมูล
                               </div>
                             </div>
@@ -233,8 +214,8 @@
                             <div class="form-group position-relative">
 
                               <input type="text" id="fullname-{{i}}" formControlName="fullname" class="form-control"
-                                placeholder="--กรอกข้อมูล--" [ngClass]="{'box-validate': person.controls['fullname'].invalid && (person.controls['fullname'].touched || person.controls['fullname'].dirty || Submitted)}" /> <!---->
-                                <div *ngIf="person.controls['fullname'].invalid && (person.controls['fullname'].touched || person.controls['fullname'].dirty || Submitted)" class="border-errorPersonFullname">
+                                placeholder="--กรอกข้อมูล--" [ngClass]="{'box-validate': person.controls['fullname'].invalid && (person.controls['fullname'].touched || person.controls['fullname'].dirty)}" /> <!---->
+                                <div *ngIf="person.controls['fullname'].invalid && (person.controls['fullname'].touched || person.controls['fullname'].dirty)" class="border-errorPersonFullname">
                                   กรุณากรอกข้อมูล
                                 </div>
                             </div>
@@ -254,32 +235,32 @@
                       <label for="detail" 
                       >รายละเอียด
                       <span
-                      *ngIf="addItemForm.controls['detail'].invalid && (addItemForm.controls['detail'].touched || addItemForm.controls['detail'].dirty || Submitted)"class="text-validate" >*</span></label>
+                      *ngIf="addItemForm.controls['detail'].invalid && (addItemForm.controls['detail'].touched || addItemForm.controls['detail'].dirty)"class="text-validate" >*</span></label>
                       <input type="text" id="detail" formControlName="detail" class="form-control"
-                        placeholder="--รายละเอียด--" [ngClass]="{'box-validate': addItemForm.controls['detail'].invalid && (addItemForm.controls['detail'].touched || addItemForm.controls['detail'].dirty || Submitted)}"/>
+                        placeholder="รายละเอียด" [ngClass]="{'box-validate': addItemForm.controls['detail'].invalid && (addItemForm.controls['detail'].touched || addItemForm.controls['detail'].dirty)}"/>
                         <div class="text-validate"
-                        *ngIf="addItemForm.controls['detail'].invalid &&(addItemForm.controls['detail'].touched || addItemForm.controls['detail'].dirty || Submitted ) ">
-                        <span class="border-error" *ngIf="addItemForm.controls['detail'].invalid && (addItemForm.controls['detail'].touched || addItemForm.controls['topic'].dirty || Submitted)"
+                        *ngIf="addItemForm.controls['detail'].invalid &&(addItemForm.controls['detail'].touched || addItemForm.controls['detail'].dirty ) ">
+                        <span class="border-error" *ngIf="addItemForm.controls['detail'].invalid && (addItemForm.controls['detail'].touched || addItemForm.controls['topic'].dirty)"
                          >กรุณากรอกข้อมูล</span>
                       </div>
                     </div>
                     <div class="form-group">
                       <label for="location">สถานที่
                         <span
-                      *ngIf="addItemForm.controls['location'].invalid && (addItemForm.controls['location'].touched || addItemForm.controls['location'].dirty || Submitted)" class="text-validate">*</span>
+                      *ngIf="addItemForm.controls['location'].invalid && (addItemForm.controls['location'].touched || addItemForm.controls['location'].dirty)" class="text-validate">*</span>
                       </label>
                       <input type="text" id="location" formControlName="location" class="form-control"
-                        placeholder="--เลือกสถานที่--" [ngClass]="{'box-validate': addItemForm.controls['location'].invalid && (addItemForm.controls['location'].touched || addItemForm.controls['location'].dirty || Submitted)}" readonly>  
-                        <span class="border-errorLocation" *ngIf="addItemForm.controls['location'].invalid && (addItemForm.controls['location'].touched || addItemForm.controls['location'].dirty || Submitted)"
+                        placeholder="--เลือกสถานที่--" [ngClass]="{'box-validate': addItemForm.controls['location'].invalid && (addItemForm.controls['location'].touched || addItemForm.controls['location'].dirty)}" readonly>  
+                        <span class="border-errorLocation" *ngIf="addItemForm.controls['location'].invalid && (addItemForm.controls['location'].touched || addItemForm.controls['location'].dirty)"
                         >กรุณาเลือกสถานที่</span>
                     </div>
-                    <button type="button" class="btn btn-add" style="margin:10px 0 10px 0; " (click)="getCurrentLocation()">
+                    <button type="button" class="btn btn-add" (click)="getCurrentLocation()">
                       <i class="fa fa-location-dot">&nbsp;</i>เลือกสถานที่
                       ปัจจุบัน</button>
 
 
 
-                    <div class="modal-footer" style="padding: 12px 0 0 0 ;">
+                    <div class="modal-footer">
                       <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;ยืนยัน</button>
                       <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"
                           (click)="closeModal()"></i>
@@ -306,7 +287,6 @@
                 <div id="myDetail" class="modal-body-detail" [ngStyle]="{ width: '210mm', height: '297mm' }">
                   <!-- เนื้อหาของป๊อปอัพ -->
                   <form action method="get">
-          
                     <div class="mainCenter-panel "> <!---->
                       <div class="header-topic">
 
@@ -333,7 +313,7 @@
                           <p>{{ detailItems?.record_detail }}</p>
                         </div>
                         <div class="form-group">
-                          <label>สถานที่:</label>
+                          <label>สถานที่</label>
                           <p>{{ detailItems?.record_location }}</p>
                         </div>
                       </div>
@@ -348,8 +328,8 @@
                         </thead>
                         <tbody>
                           <tr>
-                            <td style="position: relative; vertical-align: text-top; ">{{detailItems?.record_id}}/{{detailItems?.record_star_date | thaidate :'year'}}</td>
-                            <td [innerHTML]="getSafeHtml(detailItems?.record_content)"></td>
+                            <td>{{detailItems?.record_id}}/{{detailItems?.record_star_date | thaidate :'year'}}</td>
+                            <td>{{   detailItems?.record_content }}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -458,16 +438,7 @@
                         <div class="typroTextBox">
                           <div class="headerText">
                             <button aria-label="Preview">การพิมพ์ข้อความ</button>
-                            <select class="FontSizeBox" (change)="changeFontSize($event)">
-                              <option value="1">8</option>
-                              <option value="2">10</option>
-                              <option value="3">12</option>
-                              <option value="4" selected>14</option>
-                              <option value="5">18</option>
-                              <option value="6">24</option>
-                              <option value="7">36</option>
-                            </select>
-                            <button  (click)="formatText('bold')" aria-label="bold">
+                            <!-- <button  (click)="formatText('bold')" aria-label="bold">
                               <i class="fas fa-bold"></i>
                             </button>
                             <button (click)="formatText('italic')" aria-label="Italic">
@@ -481,21 +452,14 @@
                             </button>
                             <button (click)="formatText('insertOrderedList')" aria-label="Numbered List">
                               <i class="fas fa-list-ol"></i>
-                            </button>
-                            <button (click)="formatText('justifyLeft')" aria-label="Align Left">
-                              <i class="fas fa-align-left"></i>
-                            </button>
-                            <button (click)="formatText('justifyCenter')" aria-label="Align Center">
-                              <i class="fas fa-align-center"></i>
-                            </button>
-                            <button (click)="formatText('justifyRight')" aria-label="Align Right">
-                              <i class="fas fa-align-right"></i>
-                            </button>
+                            </button> -->
+
+
+
                           </div>
-                          <div contenteditable="true" [(ngModel)]="typroText" class="form-control full-page-textarea div-container"
-                          (input)="onInput($event)" [style.fontSize.px]="initialFontSize"> 
-                          <div [innerHTML]="detailItems?.record_content"></div>
-                      </div>
+                          <textarea contenteditable="true" [(ngModel)]="typroText" placeholder="พิมพ์ที่นี่... "
+                            class="form-control  full-page-textarea">&nbsp;&nbsp;</textarea>
+
 
                         </div>
                       </div>

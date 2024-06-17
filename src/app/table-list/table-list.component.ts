@@ -20,7 +20,7 @@ import { content } from 'html2canvas/dist/types/css/property-descriptors/content
 
 import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
 import moment from 'moment';
-import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
+
 
 @Component({
   selector: 'app-table-list',
@@ -45,7 +45,6 @@ export class TableListComponent implements OnInit {
   public pdfUrl: SafeResourceUrl;
   items:any= [];
   viewData=[];
-  Submitted:boolean =false;
   location: string;
   detailItems: any = {}; 
   PersonINT :number = 0;
@@ -94,8 +93,7 @@ export class TableListComponent implements OnInit {
     private http:HttpClient,
     private sv:SharedService,
     private router: Router,
-    private geocodingService: GeocodingServiceService,
-    private sanitizer: DomSanitizer,
+    private geocodingService: GeocodingServiceService 
   ) { 
     this.addItemForm = this.fb.group({
       id: ['',Validators.required],
@@ -658,7 +656,7 @@ get personal(): FormArray {
 
 
   onInsertSummit(data) {
-    this.Submitted = true;
+      
     // console.log(data);
     console.log('Item form:',this.addItemForm.value);
     console.log('PernalForm : ',this.addPersonalForm.value);
@@ -919,54 +917,6 @@ updateTyproText(): void {
     this.typroText = (editableDiv as HTMLElement).innerHTML;
   }
 }
-changeFontSize(event: Event): void {
-  const target = event.target as HTMLSelectElement;
-  const fontSize = target.value;
-  const selection = window.getSelection();
-  if (!selection.rangeCount) return;
-
-  const range = selection.getRangeAt(0);
-  const span = document.createElement('span');
-  span.style.fontSize = this.mapFontSize(fontSize);
-  range.surroundContents(span);
-  this.updateTyproText();
-}
-
-mapFontSize(size: string): string {
-  switch (size) {
-    case '1':
-      return '8px';
-    case '2':
-      return '10px';
-    case '3':
-      return '12px';
-    case '4':
-      return '14px';
-    case '5':
-      return '18px';
-    case '6':
-      return '24px';
-    case '7':
-      return '36px';
-    default:
-      return '14px'; // Default size
-  }
-}
-
-getSafeHtml(content: string): SafeHtml {
-  return this.sanitizer.bypassSecurityTrustHtml(content);
-  }
-
-  editContent() {
-    this.typroText = this.detailItems.record_content;
-    this.isTyproActive = true; // เปิดการแก้ไข
-    }
-loadContent() {
-      // การดึงข้อมูลจากฐานข้อมูลมาแสดง (ตัวอย่าง)
-      this.detailItems = {
-        record_content: ' '
-      };
-    }
  
 }
 
