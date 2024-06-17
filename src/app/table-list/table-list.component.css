@@ -2,8 +2,8 @@
   max-width: 100%;
 }
 
-.card-header .card-header-danger .moadl-title{
-  font-family: 'Sarabun',sans-serif;
+.card-header .card-header-danger .modal-title{
+  font-family: "Sarabun", sans-serif !important; 
 }
 .modal-body {
   display: flex;
@@ -512,7 +512,7 @@ right: 25px;
 }
   :host ::ng-deep .btn-add{
     color: #fff;
-    background-color: #24a0ed;/*#000dc2ef*/
+    background-color: #24a0ed;/*#000dc2ef  */
     border-color: #00087c9f;
     box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd;
 
