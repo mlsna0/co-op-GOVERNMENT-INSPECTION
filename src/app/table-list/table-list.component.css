@@ -2,6 +2,9 @@
   max-width: 100%;
 }
 
+.card-header .card-header-danger .moadl-title{
+  font-family: 'Sarabun',sans-serif;
+}
 .modal-body {
   display: flex;
   justify-content: center;
@@ -12,7 +15,7 @@
 width: 180px;
 }
 .card-body{
-  font-weight: 100;
+  font-weight: 300;
   border: none;
   font-family: 'Sarabun', sans-serif; 
 }
@@ -27,10 +30,11 @@ width: 180px;
   border-radius: 32px;
   padding: 4px 8px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 300;
   line-height: 1.333em;
   display: inline-block;
   align-items: center;
+  font-size: 14px;
   font-family:  'Sarabun', sans-serif; 
  
 }
@@ -114,9 +118,8 @@ border: none;
 resize: none;
 border: 1px solid black;
 border-radius: 5px;
-
-
 }
+
 .full-page-textarea-container textarea{
 width: 100%;
 height:111.5mm !important; /* ปรับให้ auto หรือกำหนดขนาดที่ต้องการ */
@@ -126,6 +129,14 @@ border: 1px solid #ccc;
 border-radius: 5px;
 }
 
+.div-container {
+  width: 100%;
+  height: 420px; /* ตั้งค่าความสูงตามที่คุณต้องการ */
+  overflow: auto;
+  padding: 15px;
+  border-bottom-left-radius: 5px; 
+  border-bottom-right-radius: 5px;
+}
 .headerText{
 display: flex;
 border-bottom: 1px solid #c1c1c1;
@@ -166,7 +177,10 @@ height: 25px;
 background: #e2e2e2;
 border-radius: 5px;
 }
+
+
 .writteDraw{
+  display: block;
 margin: 20px 0 20px 0;
 width: 827px;
 height: 460px; 
@@ -407,10 +421,10 @@ right: 25px;
   }
 .border-error {
     position: absolute;
-    top:15px;  /* ให้ข้อความอยู่ใต้ input */
-    left: 350px;
+    bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 0px;
     margin: 2px;
-    background-color: white;
+    background-color: transparent;
     color: red;
     font-size: 0.875em;
     text-align: left;
@@ -443,8 +457,8 @@ right: 25px;
   }
 .border-errorPersonFullname{
     position: absolute;
-    top:-15px;  /* ให้ข้อความอยู่ใต้ input */
-    left: 150px;
+    bottom:-15px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 0px;
     margin: 2px;
     background-color: rgb(255, 255, 255);
     color: red;
@@ -455,11 +469,11 @@ right: 25px;
   }
 .border-errorPersonRank{
     position: absolute;
-    top:-15px;  /* ให้ข้อความอยู่ใต้ input */
-    left: 30px;
+    bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 0px;
     margin: 2px;
     width: auto;
-    background-color: rgb(255, 255, 255);
+    background-color: transparent;
     color: red;
     font-size: 0.875em;
     text-align: left;
@@ -469,8 +483,8 @@ right: 25px;
 
 .border-errorLocation {
     position: absolute;
-    top:10px;  /* ให้ข้อความอยู่ใต้ input */
-    left: 350px;
+    bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 0px;
     margin: 2px;
     /* background-color: white; */
     color: red;
@@ -490,7 +504,7 @@ right: 25px;
 :host ::ng-deep .close{
   float: right;
     font-size: 1.5rem;
-    font-weight: 500;
+    font-weight: 300;
     line-height: 1;
     color: white ; /*#000000*/
     text-shadow: 0 1px 0 #ffffff;
@@ -576,7 +590,12 @@ right: 25px;
   white-space: nowrap;
   font-family: "Sarabun", sans-serif !important; 
 }
-
+:host ::ng-deep .form-check, label {
+  font-size: 14px;
+  line-height: 1.42857;
+  color: #000000;
+  font-weight: 400;
+}
 
 @media print {
   .main-detail {

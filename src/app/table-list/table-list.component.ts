@@ -20,6 +20,7 @@ import { content } from 'html2canvas/dist/types/css/property-descriptors/content
 
 import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
 import moment from 'moment';
+import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
 
 
 @Component({
@@ -43,8 +44,11 @@ export class TableListComponent implements OnInit {
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
   public pdfUrl: SafeResourceUrl;
+
+  
   items:any= [];
   viewData=[];
+  Submitted:boolean =false;
   location: string;
   detailItems: any = {}; 
   PersonINT :number = 0;
@@ -93,7 +97,9 @@ export class TableListComponent implements OnInit {
     private http:HttpClient,
     private sv:SharedService,
     private router: Router,
-    private geocodingService: GeocodingServiceService 
+    private geocodingService: GeocodingServiceService,
+    private sanitizer: DomSanitizer,
+
   ) { 
     this.addItemForm = this.fb.group({
       id: ['',Validators.required],
@@ -656,7 +662,7 @@ get personal(): FormArray {
 
 
   onInsertSummit(data) {
-      
+    this.Submitted = true; 
     // console.log(data);
     console.log('Item form:',this.addItemForm.value);
     console.log('PernalForm : ',this.addPersonalForm.value);
@@ -793,56 +799,105 @@ get personal(): FormArray {
 /////////////////////////////// formatFont Edit
 
 formatText(command: string): void {
-    document.execCommand(command, false, '');
-    this.updateTyproText();
-  }
-
-  onInput(event: Event): void {
-    const target = event.target as HTMLElement;
-    this.typroText = target.innerHTML;
-  }
-
-  updateFontSize(): void {
-    const fontElements = document.getElementsByTagName('font');
-    for (let i = 0; i < fontElements.length; i++) {
-      const element = fontElements[i] as HTMLElement; // Cast to HTMLElement
-      const size = element.getAttribute('size');
-      if (size) {
-        switch (size) {
-          case '1':
-            element.style.fontSize = '8px';
-            break;
-          case '2':
-            element.style.fontSize = '10px';
-            break;
-          case '3':
-            element.style.fontSize = '12px';
-            break;
-          case '4':
-            element.style.fontSize = '14px';
-            break;
-          case '5':
-            element.style.fontSize = '18px';
-            break;
-          case '6':
-            element.style.fontSize = '24px';
-            break;
-          case '7':
-            element.style.fontSize = '36px';
-            break;
-        }
-        element.removeAttribute('size');
-      }
-    }
-    this.updateTyproText();
-  }
-  
-updateTyproText(): void {
-  const editableDiv = document.querySelector('.form-control.full-page-textarea');
-  if (editableDiv) {
-    this.typroText = (editableDiv as HTMLElement).innerHTML;
-  }
+  document.execCommand(command, false, '');
+  this.updateTyproText();
 }
+
+onInput(event: Event): void {
+  const target = event.target as HTMLElement;
+  this.typroText = target.innerHTML;
+}
+
+updateFontSize(): void {
+  const fontElements = document.getElementsByTagName('font');
+  for (let i = 0; i < fontElements.length; i++) {
+    const element = fontElements[i] as HTMLElement; // Cast to HTMLElement
+    const size = element.getAttribute('size');
+    if (size) {
+      switch (size) {
+        case '1':
+          element.style.fontSize = '8px';
+          break;
+        case '2':
+          element.style.fontSize = '10px';
+          break;
+        case '3':
+          element.style.fontSize = '12px';
+          break;
+        case '4':
+          element.style.fontSize = '14px';
+          break;
+        case '5':
+          element.style.fontSize = '18px';
+          break;
+        case '6':
+          element.style.fontSize = '24px';
+          break;
+        case '7':
+          element.style.fontSize = '36px';
+          break;
+      }
+      element.removeAttribute('size');
+    }
+  }
+  this.updateTyproText();
+}
+
+updateTyproText(): void {
+const editableDiv = document.querySelector('.form-control.full-page-textarea');
+if (editableDiv) {
+  this.typroText = (editableDiv as HTMLElement).innerHTML;
+}
+}
+changeFontSize(event: Event): void {
+const target = event.target as HTMLSelectElement;
+const fontSize = target.value;
+const selection = window.getSelection();
+if (!selection.rangeCount) return;
+
+const range = selection.getRangeAt(0);
+const span = document.createElement('span');
+span.style.fontSize = this.mapFontSize(fontSize);
+range.surroundContents(span);
+this.updateTyproText();
+}
+
+mapFontSize(size: string): string {
+switch (size) {
+  case '1':
+    return '8px';
+  case '2':
+    return '10px';
+  case '3':
+    return '12px';
+  case '4':
+    return '14px';
+  case '5':
+    return '18px';
+  case '6':
+    return '24px';
+  case '7':
+    return '36px';
+  default:
+    return '14px'; // Default size
+}
+}
+
+getSafeHtml(content: string): SafeHtml {
+return this.sanitizer.bypassSecurityTrustHtml(content);
+}
+
+editContent() {
+  this.typroText = this.detailItems.record_content;
+  this.isTyproActive = true; // เปิดการแก้ไข
+  }
+loadContent() {
+    // การดึงข้อมูลจากฐานข้อมูลมาแสดง (ตัวอย่าง)
+    this.detailItems = {
+      record_content: ' '
+    };
+  }
+
  
 }
 
