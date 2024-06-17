@@ -60,7 +60,7 @@ width: 180px;
   left: 50%;
   transform: translateX(-50%);
   justify-content: center;
-  font-family: 'TH SarabunPSK', sans-serif;
+  font-family: "Sarabun", sans-serif;
   
 }
 .card-header{
@@ -501,7 +501,6 @@ right: 25px;
     background-color: #0d6efd;/*#000dc2ef*/
     border-color: #00087c9f;
     box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd;
-    font-family: "Sarabun", sans-serif;
 
   }
   :host ::ng-deep .btn-add:hover{
