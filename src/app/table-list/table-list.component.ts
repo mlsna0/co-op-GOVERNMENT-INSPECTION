@@ -110,16 +110,12 @@ export class TableListComponent implements OnInit {
       topic: ['',Validators.required],
       content:[''],
       filename: [''],
-<<<<<<< HEAD
       // postcode: ['',Validators.required],
       // province: ['',Validators.required],
       // district: ['',Validators.required],
       // subDistrict: ['',Validators.required],
       // address: ['',Validators.required],
       place:['', Validators.required],
-=======
-      place:['',Validators.required],
->>>>>>> cd798dd72a1712ece923ef694cd21fc2a5ffb95a
       // data_: [''],
       // contentType: [''],
        personal: this.fb.array([]),
