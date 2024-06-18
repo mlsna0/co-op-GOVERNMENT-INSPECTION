@@ -90,7 +90,7 @@
                           class="fa fa-pencil-square-o Record"></i>
                       </button>
 
-                      <button style="border: none; background: none; color: black;">
+                      <button  *ngIf="item.record_filename" style="border: none; background: none; color: black; ">
                       
                         <i class="fa fa-file-pdf-o PDF" (click)="showPDF(item.record_filename)" ></i>
 
