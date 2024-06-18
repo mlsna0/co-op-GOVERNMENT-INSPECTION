@@ -6,6 +6,7 @@ class recorCon extends BaseCtrl {
     model = recordModel;
 
     
+    
   }
 
   

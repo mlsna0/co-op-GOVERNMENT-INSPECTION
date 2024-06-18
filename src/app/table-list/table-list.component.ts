@@ -4,7 +4,8 @@ import $ from "jquery";
 import 'bootstrap';
 import { HttpClient } from '@angular/common/http';
 import { dataflow } from 'googleapis/build/src/apis/dataflow';
-import { SharedService } from "../services/shared.service"
+import { SharedService } from "../services/shared.service";
+import { GeocodingServiceService } from '../services/geocodingService/geocoding-service.service'; //พยายามแก้ไข location
 import { DataTableDirective } from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { DataTablesModule } from "angular-datatables"; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
@@ -19,7 +20,7 @@ import { content } from 'html2canvas/dist/types/css/property-descriptors/content
 
 import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
 import moment from 'moment';
-import { DomSanitizer,SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
 
 
 @Component({
@@ -31,6 +32,7 @@ export class TableListComponent implements OnInit {
   [x: string]: any;
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
   @ViewChild('textArea') textArea: ElementRef;
+  @ViewChild('myDetail', { static: false }) myDetail: ElementRef;
 
   startDate: string;
   people:any[] =[];
@@ -38,17 +40,20 @@ export class TableListComponent implements OnInit {
   //ListUser: users[] =[];
   pdfDataDict: { [key: string]: string } = {};
   Form:FormGroup;
-  dtOptions: any ={};
+  dtOptions: any ={}; //datatable.setting ={}
   dtTrigger: Subject<any> = new Subject(); 
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
   public pdfUrl: SafeResourceUrl;
   items:any= [];
   viewData=[];
+  Submitted:boolean =false;
+  location: string;
   detailItems: any = {}; 
   PersonINT :number = 0;
   personInputs: FormArray;
   // currentRecordId: string;
+  
   addItemForm: any;
   addDataForm: any;
   activeButton: string='typro';
@@ -74,20 +79,24 @@ export class TableListComponent implements OnInit {
 //writter box
   selectedRecordId: any;
   ContentRecordID:any;
-   typroTexts: { [key: string]: string } = {}; 
+  typroTexts: { [key: string]: string } = {}; 
   uploadedImageUrl: string | ArrayBuffer | null = null;
-  loadig:boolean = false;
+  loading:boolean = false;
   item: any;
   records: any;
+  pdfSrc: SafeResourceUrl;
+  loadig:boolean = false;
+  
   initialFontSize: number = 14;
   
-pdfSrc: SafeResourceUrl;
+
   constructor(
     private fb:FormBuilder,
     private http:HttpClient,
     private sv:SharedService,
     private router: Router,
-    private sanitizer: DomSanitizer
+    private geocodingService: GeocodingServiceService,
+    private sanitizer: DomSanitizer,
   ) { 
     this.addItemForm = this.fb.group({
       id: ['',Validators.required],
@@ -113,29 +122,22 @@ pdfSrc: SafeResourceUrl;
     this.addPersonInput(); // Add initial input group
     // this.loadViewData();
 
-    this.setTodaysDate();
+  
   
     
     
   }
   
   documentImageUrl = 'assets/img/sampleA4-1.png';
-  // itemsTest:any[]= [
-  //   {
-  //     id:'1', startDate:'20/05/2567',endDate:'26/05/2567',location:'data testing'
-  //   },
-  //   {
-  //     id:'2', startDate:'30/05/2567',endDate:'01/06/2567',location:'data testing'
-  //   }
 
-  // ];
  
 
  
   ngOnInit(){
-
+    this.loading = true; //เป็นการตรวจ
     this.dtOptions = {
-    
+      order:[0],
+      //ordering: false,
       // columnDefs: [
       //   {
       //     // targets: [5],
@@ -170,33 +172,31 @@ pdfSrc: SafeResourceUrl;
     this.sv.getData().subscribe(res => {
       console.log("res getRecord:", res);
       this.items = res;
-     
+      this.loading = false;
+
+    },(err) => {
+      console.log("err : ",err);
+      this.loading = false;
     });
     
-    // this.fetchData()
 
+    
   }
-  setTodaysDate() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = today.getDate().toString().padStart(2, '0');
-    const formattedDate = `${day}-${month}-${year}`;
-    this.addItemForm.get('startDate').setValue(formattedDate);
+  //parsetLatLang คือการทำงานเกี่ยวกับการแยก lat และ long ให้เป็นสองส่วน แล้วเก็บไปที่ตัวแปร lat ,lng 12/06
+  parseLatLng(location: string): [number, number] {
+    const latMatch = location.match(/Lat:\s*([0-9.]+)/);
+    const lngMatch = location.match(/Lng:\s*([0-9.]+)/);
+    const lat = latMatch ? parseFloat(latMatch[1]) : 0;
+    const lng = lngMatch ? parseFloat(lngMatch[1]) : 0;
+    return [lat, lng];
   }
-
-  // fetchData() {
-  //   this.sv.getData().subscribe(
-  //     res => {
-  //       this.items = res.records;
-  //       this.dtTrigger.next(null); // แจ้งเตือน DataTable ว่ามีข้อมูลใหม่
-  //       console.log('Items fetched successfully:', this.items);
-  //     },
-  //     error => {
-  //       console.error('Error fetching items:', error);
-  //     }
-  //   );
-  // }
+ 
+  //
+  searchLocation(local:any){
+    console.log("searchLocation : ",local)
+    const [lat, lng] = this.parseLatLng(local);
+    window.open(`https://www.google.com/maps?q=(${lat},${lng})` , "_blank");
+  }
 
   // ngOnDestroy() {
   //   this.dtTrigger.unsubscribe();
@@ -415,13 +415,8 @@ saveSignature() {
      
       
     });
-    
-  
-  
+
   }
-  
-
-
 
   // loadViewData() {
   //   this.sv.getItems().subscribe(data => {
@@ -483,10 +478,10 @@ onRecord(recordId: any) {
     if (!this.ContentRecordID) {
       console.error("ID is undefined");
       Swal.fire({
-        title: 'Error!',
-        text: 'ID is undefined.',
+        title: 'เกิดข้อผิดพลาด!',
+        text: 'ไม่มีข้อมูล ID ส่งมา',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'ตกลง'
       });
       return;
     }
@@ -502,22 +497,26 @@ onRecord(recordId: any) {
       response => {
         console.log('บันทึกข้อมูลเรียบร้อย', response);
         Swal.fire({
-          title: 'Success!!',
-          text: 'Your data has been updated successfully.',
+          title: 'บันทึกข้อมูลสำเสร็จ!!',
+          text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
           icon: 'success',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'ตกลง'
+        }).then((result)=>{
+          if (result.isConfirmed){
+            this.refreshPage();
+          }
         });
         $('#writtenModel').modal('hide');
         this.typroText = ''; // Clear the input field
-        // this.fetchData(); // Refresh data if needed
+  
       },
       error => {
         console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
         Swal.fire({
-          title: 'Error!',
+          title: 'เกิดข้อผิดพลาด!',
           text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'ตกลง'
         });
       }
     );
@@ -639,7 +638,8 @@ get personal(): FormArray {
 
   this.addItemForm.patchValue({
     id: nextId,
-    startDate: currentDate
+    startDate: currentDate,
+    endDate: currentDate
   });
 
     $('#insertModel').modal({
@@ -654,7 +654,7 @@ get personal(): FormArray {
 
 
   onInsertSummit(data) {
-      
+    this.Submitted = true;
     // console.log(data);
     console.log('Item form:',this.addItemForm.value);
     console.log('PernalForm : ',this.addPersonalForm.value);
@@ -780,131 +780,73 @@ get personal(): FormArray {
 //     // this.fetchData()
 // }
 
+// กำหนดฟังก์ชันชื่อ printPDF
 printPDF = () => {
+  // แสดงข้อความ "working PDF.." ในคอนโซล
   console.log("working PDF..");
+  // ดึงองค์ประกอบ HTML ที่มี ID 'myDetail'
   const elementToPrint = document.getElementById('myDetail');
-  const A4_WIDTH = 210;  // Width of A4 in mm
-  const A4_HEIGHT = 297; // Height of A4 in mm
-  const canvasScale = 2; // Scale factor for higher resolution canvas
+  console.log('elementToPrint',elementToPrint)
+  const htmlWidth = $("#myDetail").width()
+  const htmlHeight = $("#myDetail").height()
+  
+  // console.log('htmlWodth',htmlWodth)
 
+  // กำหนดค่าคงที่สำหรับขนาดกระดาษ A4 ในหน่วยมิลลิเมตร
+  const A4_WIDTH = 210; // ความกว้างของกระดาษ A4 ในหน่วยมม.
+  const A4_HEIGHT = 297; // ความสูงของกระดาษ A4 ในหน่วยมม.
+  const canvasScale = 2; // ปัจจัยสเกลสำหรับความละเอียดสูงของแคนวาส
+  
+  // กำหนดตัวเลือกสำหรับ html2canvas
   const options = {
-      scale: canvasScale,
-      height: elementToPrint.scrollHeight,
-      windowHeight: elementToPrint.scrollHeight
+    scale: canvasScale, // กำหนดสเกลสำหรับแคนวาส
+    height: elementToPrint.scrollHeight, // กำหนดความสูงของแคนวาสให้เท่ากับความสูงของการเลื่อนขององค์ประกอบ
+    windowHeight: elementToPrint.scrollHeight, // กำหนดความสูงของหน้าต่างให้เท่ากับความสูงของการเลื่อนขององค์ประกอบ 
   };
-
+  
+  // ใช้ html2canvas เพื่อเรนเดอร์องค์ประกอบลงในแคนวาส
   html2canvas(elementToPrint, options).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      
-      const imgWidth = A4_WIDTH;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    // แปลงแคนวาสเป็นข้อมูลรูปภาพ PNG ในรูปแบบ URL
+    const imgData = canvas.toDataURL('image/png');
+    // สร้างอินสแตนซ์ใหม่ของ jsPDF ในโหมดแนวตั้ง, หน่วยเป็นมม., และขนาด A4
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    // กำหนดความกว้างของรูปภาพให้เท่ากับความกว้างของกระดาษ A4
+    const imgWidth = A4_WIDTH;
+    // คำนวณความสูงของรูปภาพเพื่อรักษาสัดส่วน
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    
+    // กำหนดตัวแปรสำหรับจัดการ PDF หลายหน้า
+    let heightLeft = imgHeight;
+    let position = 0; // กำหนดตำแหน่งเริ่มต้นให้เท่ากับ 0
+    const bottomMargin = 100; // ขอบล่างของ PDF ที่ต้องการเว้นว่าง (มม.)
+    const textOffset = 5; // การเลื่อนข้อความลงมา (มม.)
+    // const
+    // cons totalPDFPages = Math.ceil(htmlHeight / )
 
-      let heightLeft = imgHeight;
-      let position = 0;
-      const bottomMargin = 10; // ขอบล่างของ PDF ที่ต้องการเว้นว่าง (มิลลิเมตร)
-      const textOffset = 5; // การเลื่อนข้อความลงมา (มิลลิเมตร)
-      
 
-      while (heightLeft > 0) {
-          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-          pdf.text(' ', A4_WIDTH / 2, A4_HEIGHT - bottomMargin - textOffset, { align: 'center' });
-          heightLeft -= A4_HEIGHT;
+    // ลูปเพื่อเพิ่มรูปภาพลงในหน้าของ PDF จนกว่าจะรวมเนื้อหาครบ
+    // while (heightLeft > 0) {
+    //   // เพิ่มรูปภาพลงใน PDF ที่ตำแหน่งปัจจุบัน
+    //   pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    //   // เพิ่มข้อความว่างที่ด้านล่างของหน้าเพื่อสร้างขอบ
+    //   pdf.text(' ', A4_WIDTH / 2, A4_HEIGHT - bottomMargin - textOffset, { align: 'center' });
+    //   // ลบความสูงของหนึ่งหน้าจากความสูงที่เหลือ
+    //   heightLeft -= A4_HEIGHT;
 
-          if (heightLeft > 0) {
-              pdf.addPage();
-          }
-          position -= A4_HEIGHT;
-      }
-
-      pdf.save('การลงตรวจสอบ.pdf');
+    //   // หากยังมีเนื้อหาเหลืออยู่, เพิ่มหน้าใหม่
+    //   if (heightLeft > 0) {
+    //     pdf.addPage();
+    //   }
+    //   // ย้ายตำแหน่งขึ้นไปตามความสูงของหนึ่งหน้า
+    //   position -= A4_HEIGHT;
+    // }
+    
+    // บันทึก PDF ด้วยชื่อไฟล์ที่กำหนด
+    pdf.save('การลงตรวจสอบ.pdf');
   });
 }
-// updatePDFInDatabase = () => {
-//   console.log("Updating PDF in database...");
-//   const elementToPrint = document.getElementById('myDetail');
-//   const formValue = this.addItemForm.value;
 
-// printPDF = () => {
-//   console.log("working PDF..");
-//   const elementToPrint = document.getElementById('myDetail');
-//   const A4_WIDTH = 210;  // ความกว้างของ A4 ในมิลลิเมตร
-//   const A4_HEIGHT = 297; // ความสูงของ A4 ในมิลลิเมตร
-//   const bottomMargin = 10; // ขอบล่างของกระดาษที่ต้องการให้ว่างไว้ (มิลลิเมตร)
 
-//   // กำหนด options สำหรับ html2canvas
-//   const options = {
-//     scale: 2, // ปรับขนาด Canvas ให้มีความละเอียดสูง
-//     windowHeight: elementToPrint.scrollHeight + bottomMargin, // ความสูงทั้งหมดของหน้าต้องรวมขอบล่างด้วย
-//   };
-
-//   html2canvas(elementToPrint, options).then((canvas) => {
-//     const imgData = canvas.toDataURL('image/png');
-//     const pdf = new jsPDF('p', 'mm', 'a4');
-
-//     let imgWidth = A4_WIDTH;
-//     let imgHeight = (canvas.height * imgWidth) / canvas.width;
-//     let position = 0;
-
-//     while (position < imgHeight) {
-//       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-
-//       position += A4_HEIGHT; // เลื่อนตำแหน่งลงหน้าถัดไป
-
-//       if (position < imgHeight) {
-//         pdf.addPage(); // เพิ่มหน้าใหม่เมื่อยังไม่สามารถแสดงหมดได้ในหน้าเดียว
-//       }
-//     }
-
-//     pdf.save('การลงตรวจสอบ.pdf');
-//   });
-// }
-//   html2canvas(elementToPrint, { scale: 2 }).then((canvas) => {
-//     const pdf = new jsPDF('p', 'mm', 'a4');
-//     pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297); // Change 'PDF' to 'PNG'
-
-//     // Convert the PDF to Base64
-//     pdf.output('dataurlnewwindow'); // Display the PDF in a new window to check its size
-
-//     // Create JSON data
-//     const pdfData = {
-//       id: formValue.id,
-//       filename: 'การลงตรวจสอบ.pdf',
-//       data_: pdf.output('datauristring'), // Send the PDF directly without splitting
-//       contentType: 'application/pdf'
-//     };
-
-//     // Send the JSON data to the server using PdfService
-//     this.sv.updateRecordPDF(pdfData).subscribe(
-//       (response) => {
-//         console.log('PDF updated in database successfully.');
-//         // Navigate to another route
-//         this.router.navigate(['/next-route']); // Adjust the path as needed
-//       },
-//       (error) => {
-//         console.error('Failed to update PDF in database.', error);
-//       }
-//     );
-//   });
-// }
-
-displayPDF(pdfFilename: string) {
-  // Retrieve the Base64 data of the PDF from the dictionary
-  const pdfBase64 = this.pdfDataDict[pdfFilename];
-
-  if (pdfBase64) {
-    // Create an anchor element to trigger the PDF download
-    const link = document.createElement('a');
-    link.href = pdfBase64;
-    link.download = pdfFilename;
-    link.target = '_blank';
-
-    // Trigger the download programmatically
-    link.click();
-  } else {
-    console.error(`PDF '${pdfFilename}' not found in dictionary.`);
-  }
-}
 
 saveRCPDF = () => {
   console.log("Updating PDF in dictionary...");
@@ -1033,7 +975,6 @@ updateTyproText(): void {
     this.typroText = (editableDiv as HTMLElement).innerHTML;
   }
 }
-
 changeFontSize(event: Event): void {
   const target = event.target as HTMLSelectElement;
   const fontSize = target.value;
@@ -1069,21 +1010,27 @@ mapFontSize(size: string): string {
 }
 
 getSafeHtml(content: string): SafeHtml {
-return this.sanitizer.bypassSecurityTrustHtml(content);
-}
+  return this.sanitizer.bypassSecurityTrustHtml(content);
+  }
 
-editContent() {
-this.typroText = this.detailItems.record_content;
-this.isTyproActive = true; // เปิดการแก้ไข
-}
-
+  editContent() {
+    this.typroText = this.detailItems.record_content;
+    this.isTyproActive = true; // เปิดการแก้ไข
+    }
 loadContent() {
-// การดึงข้อมูลจากฐานข้อมูลมาแสดง (ตัวอย่าง)
-this.detailItems = {
-  record_content: ' '
-};
+      // การดึงข้อมูลจากฐานข้อมูลมาแสดง (ตัวอย่าง)
+      this.detailItems = {
+        record_content: ' '
+      };
+    }
+ 
 }
+
+
+
+
+
  ///////////////////เเบ่งหน้า///////////////////////////////////
  
 
-}
+

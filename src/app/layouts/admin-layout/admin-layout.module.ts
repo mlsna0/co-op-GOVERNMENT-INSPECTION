@@ -20,6 +20,7 @@ import {MatSelectModule} from '@angular/material/select';
 
 import { DataTablesModule } from "angular-datatables"; //petch เพิ่ม datatables เพื่อใช้ใน tablelist
 import { ThaiDatePipe } from "./../../services/pipe/thaidate.service";
+import { GeocodingServiceService } from './../../services/geocodingService/geocoding-service.service';
 import { MatCardModule } from '@angular/material/card'; //petch add
 import { MatIconModule } from '@angular/material/icon'; //petch add
 
@@ -49,7 +50,8 @@ import { MatIconModule } from '@angular/material/icon'; //petch add
     MapsComponent,
     NotificationsComponent,
     UpgradeComponent,
-    ThaiDatePipe
+    ThaiDatePipe,
+    
   ]
 })
 

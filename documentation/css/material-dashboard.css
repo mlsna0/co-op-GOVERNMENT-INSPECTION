@@ -3860,7 +3860,9 @@ tbody.collapse.show {
   padding: 1.25rem; }
 
 .card-title {
-  margin-bottom: 0.75rem; }
+  margin-bottom: 0.75rem;
+  font-family: "Sarabun", sans-serif;
+ }
 
 .card-subtitle {
   margin-top: -0.375rem;
@@ -13119,7 +13121,7 @@ h2.title {
   -webkit-transition: 0.33s, cubic-bezier(0.685, 0.0473, 0.346, 1);
   transition: 0.33s, cubic-bezier(0.685, 0.0473, 0.346, 1); }
   .main-panel > .content {
-    margin-top: 70px;
+    margin-top: 0px;
     padding: 30px 15px;
     min-height: calc(100vh - 123px); }
   .main-panel > .footer {
