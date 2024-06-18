@@ -395,30 +395,31 @@ saveSignature() {
 
   //หน้าจอรายละเอียดข้อมูล
   openDetailModal(recordId: any) {
-    $('#myModal').modal({
-      backdrop: 'static', // Prevent closing when clicking outside
-      keyboard: false     // Prevent closing with keyboard (Esc key)
-    });
-    this.selectedRecordId = recordId;
+    this.router.navigate(['/table-detail', recordId]);
+    // $('#myModal').modal({
+    //   backdrop: 'static', // Prevent closing when clicking outside
+    //   keyboard: false     // Prevent closing with keyboard (Esc key)
+    // });
+    // this.selectedRecordId = recordId;
     
    
-    this.sv.getDataById(recordId).subscribe(res=>{
-      console.log("getDataById :",res);
+    // this.sv.getDataById(recordId).subscribe(res=>{
+    //   console.log("getDataById :",res);
       
-      this.detailItems =res;
+    //   this.detailItems =res;
     
-      console.log("it on working.. ")
+    //   console.log("it on working.. ")
 
-    })
-    this.sv.getViewByRecordId(recordId).subscribe((res :any)=>{
-      console.log("getDataById :",res);
+    // })
+    // this.sv.getViewByRecordId(recordId).subscribe((res :any)=>{
+    //   console.log("getDataById :",res);
       
-      this.viewData = res;
+    //   this.viewData = res;
     
-      console.log("it on working.. ")
+    //   console.log("it on working.. ")
      
       
-    });
+    // });
     
   
   
