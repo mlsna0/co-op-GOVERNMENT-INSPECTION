@@ -808,7 +808,7 @@ saveRCPDF = () => {
     const imgData = canvas.toDataURL('image/png');
 
     const pdfWidth = 210; // A4 width in mm
-    const pdfHeight = 297 ;//(canvas.height * pdfWidth) / canvas.width
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width ;297
 
     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
 
@@ -827,6 +827,10 @@ saveRCPDF = () => {
       this.sv.savePDF(formData).subscribe(
         response => {
           console.log('PDF saved successfully:', response);
+
+          
+
+          this.refreshPage();
         },
         error => {
           console.error('Error saving PDF:', error);
@@ -840,6 +844,7 @@ saveRCPDF = () => {
   });
   
   $('#myModal').modal('hide');
+    
 }
 
 showPDF(id: string) {
