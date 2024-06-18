@@ -26,10 +26,14 @@ import { TableDetailComponent } from './view/table-detail/table-detail.component
     AppRoutingModule,
     // DataTablesModule
     // NgxExtendedPdfViewerModule
+    
   ],
   declarations: [
     AppComponent,
     AdminLayoutComponent,
+   
+
+ 
     
     
 

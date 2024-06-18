@@ -1,0 +1,22 @@
+.breadcrumb {
+    position: relative;
+    right: 0;
+    background-color: transparent;
+    padding: 8px 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    justify-content: flex-end;
+  }
+  
+  .breadcrumb-item {
+    display: inline-block;
+  }
+  
+  .breadcrumb-item a {
+    text-decoration: none;
+    color: #007bff;
+  }
+  
+  .breadcrumb-item.active {
+    color: #6c757d;
+  }

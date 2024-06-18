@@ -90,6 +90,7 @@ export class TableDetailComponent implements OnInit {
       console.log("getDataById :",res);
       
       this.detailItems =res;
+      this.detailItems.record_content.substring(0,250)
     
       console.log("it on working.. ")
 
@@ -179,15 +180,56 @@ export class TableDetailComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustHtml(content);
     }
 
+  // printPDF = () => {
+  //     console.log("working PDF..");
+  //     const elementToPrint = document.getElementById('myDetail');
+  //     html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
+  //       const pdf = new jsPDF('p','mm','a4');
+  //       pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
+  //       pdf.save('การลงตรวจสอบ.pdf')
+  //     });
+  //     // this.fetchData()
+  // }
+
   printPDF = () => {
-      console.log("working PDF..");
-      const elementToPrint = document.getElementById('myDetail');
-      html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
-        const pdf = new jsPDF('p','mm','a4');
-        pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
-        pdf.save('การลงตรวจสอบ.pdf')
-      });
-      // this.fetchData()
+    console.log("working PDF..");
+    const elementToPrint = document.getElementById('myDetail');
+    const A4_WIDTH = 210; // Width of A4 in mm
+    const A4_HEIGHT = 297; // Height of A4 in mm
+    const canvasScale = 2; // Scale factor for higher resolution canvas
+
+    const options = {
+    scale: canvasScale,
+    height: elementToPrint.scrollHeight,
+    windowHeight: elementToPrint.scrollHeight
+    };
+
+    html2canvas(elementToPrint, options).then((canvas) => {
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+      const imgWidth = A4_WIDTH;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 0;
+      const bottomMargin = 10; // ขอบล่างของ PDF ที่ต้องการเว้นว่าง (มิลลิเมตร)
+      const textOffset = 5; // การเลื่อนข้อความลงมา (มิลลิเมตร)
+
+
+      while (heightLeft > 0) {
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          pdf.text(' ', A4_WIDTH / 2, A4_HEIGHT - bottomMargin - textOffset, { align: 'center' });
+          heightLeft -= A4_HEIGHT;
+
+          if (heightLeft > 0) {
+              pdf.addPage();
+          }
+          position -= A4_HEIGHT;
+      }
+
+      pdf.save('การลงตรวจสอบ.pdf');
+    });
   }
 
   saveRCPDF = () => {
