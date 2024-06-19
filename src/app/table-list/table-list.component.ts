@@ -400,8 +400,8 @@ saveSignature() {
 
   //หน้าจอรายละเอียดข้อมูล
   openDetailModal(recordId: any) {
+    this.router.navigate(['/table-detail', recordId]);
 
-    
     // $('#myModal').modal({
     //   backdrop: 'static', // Prevent closing when clicking outside
     //   keyboard: false     // Prevent closing with keyboard (Esc key)
