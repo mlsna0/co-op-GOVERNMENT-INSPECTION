@@ -209,14 +209,14 @@
                             class="text-validate"> *</span>
                         </label>
                       </div>
-                      <div class="col-sm-6">
+                      <div class="col-sm-7">
                         <label for="fullname" style="margin-left: 45px;">ชื่อ-นามสกุล
                           <span
                             *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty || Submitted)"
                             class="text-validate"> *</span>
                         </label>
                       </div>
-                      <div class="col-sm-3" style="position: relative; right: -35px;">
+                      <div class="col-sm-2" style="position: relative; right: 0;">
                         <button type="button" (click)="addPersonInput()" [disabled]="!canAddPerson()"
                           style="border: none; background: none;"> <!---->
                           <i class="fa fa-plus"></i>
