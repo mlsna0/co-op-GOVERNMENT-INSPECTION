@@ -5,7 +5,6 @@ const viewSchema = new mongoose.Schema({
     view_first_name: String,
     view_last_name: String,
 
-
     RecordModelId: { type: mongoose.Schema.Types.ObjectId, ref: 'recordModel' }
 });
 

@@ -60,7 +60,7 @@ export class TableDetailComponent implements OnInit {
     private http:HttpClient,
     private sv:SharedService,
     private router: Router,
-    private ACrouter: ActivatedRoute,
+    private ACrouter: ActivatedRoute,   
     private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
   ) { }
@@ -312,3 +312,87 @@ export class TableDetailComponent implements OnInit {
   }
 
 }
+// saveRCPDF = () => {
+//   console.log("Updating PDF in dictionary...");
+//   const elementToPrint = document.getElementById('myDetail');
+
+//   if (!elementToPrint) {
+//     console.error('Element to print not found');
+//     return;
+//   }
+
+//   // Get screen dimensions
+//   const screenWidth = window.innerWidth;
+//   const screenHeight = window.innerHeight;
+
+//   html2canvas(elementToPrint, { scale: 2 }).then((canvas) => {
+//     const pdf = new jsPDF('p', 'mm', 'a4');
+//     const imgData = canvas.toDataURL('image/png');
+
+//     const pdfWidth = 210; // A4 width in mm
+//     const pdfHeight = 297; // A4 height in mm
+
+//     // Calculate the height of the PDF page based on screen dimensions
+//     const screenRatio = screenWidth / screenHeight;
+//     const pdfHeightBasedOnScreen = pdfWidth / screenRatio;
+
+//     // Calculate the number of pages needed
+//     const totalHeight = (canvas.height / screenHeight) * pdfHeight;
+//     const numOfPages = Math.ceil(totalHeight / pdfHeight);
+
+//     for (let i = 0; i < numOfPages; i++) {
+//       const sourceY = i * screenHeight;
+//       const pageHeight = (i + 1 === numOfPages) ? (totalHeight % pdfHeight) : pdfHeight;
+//       const canvasHeight = (pageHeight / pdfHeight) * canvas.height;
+
+//       // Create a temporary canvas to draw each part
+//       const tempCanvas = document.createElement('canvas');
+//       tempCanvas.width = canvas.width;
+//       tempCanvas.height = canvasHeight;
+//       const tempCtx = tempCanvas.getContext('2d');
+
+//       // Draw the portion of the original canvas to the temporary canvas
+//       tempCtx.drawImage(canvas, 0, sourceY, canvas.width, canvasHeight, 0, 0, canvas.width, canvasHeight);
+
+//       // Convert the temporary canvas to an image
+//       const tempImgData = tempCanvas.toDataURL('image/png');
+
+//       // Add the image to the PDF
+//       pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, pageHeight);
+      
+//       // Add a new page if it's not the last page
+//       if (i < numOfPages - 1) {
+//         pdf.addPage();
+//       }
+//     }
+
+//     // Convert the PDF to Blob
+//     const pdfBlob = pdf.output('blob');
+
+//     // Create FormData to send the PDF to backend
+//     const formData = new FormData();
+//     const pdfFilename = 'การลงตรวจสอบ.pdf'; // Change to the desired filename
+//     formData.append('id', this.recordId); // Adjust the ID as needed
+//     formData.append('pdf', pdfBlob, pdfFilename);
+
+//     // Check if `this.sv.savePDF` exists and is a function
+//     if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
+//       // Send the PDF to the backend
+//       this.sv.savePDF(formData).subscribe(
+//         response => {
+//           console.log('PDF saved successfully:', response);
+//           this.router.navigate(['/table-list']);
+//         },
+//         error => {
+//           console.error('Error saving PDF:', error);
+//         }
+//       );
+//     } else {
+//       console.error('savePDF function is not defined or not a function');
+//     }
+//   }).catch((error) => {
+//     console.error('Error generating PDF:', error);
+//   });
+  
+//   $('#myModal').modal('hide');
+// }
