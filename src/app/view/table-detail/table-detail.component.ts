@@ -1,14 +1,11 @@
-import { Component, OnInit ,ChangeDetectorRef, ViewChildren } from '@angular/core';
+import { Component, OnInit ,ChangeDetectorRef, ViewChildren,ElementRef } from '@angular/core';
 import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray,AbstractControl } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
 import { HttpClient } from '@angular/common/http';
-import { dataflow } from 'googleapis/build/src/apis/dataflow';
 import { SharedService } from "../../services/shared.service";
-
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Items } from '../../../../server/models/itemModel';
-
 import { SafeResourceUrl } from '@angular/platform-browser';
 import jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
@@ -16,8 +13,6 @@ import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
 import { Router } from '@angular/router';
 import { content } from 'html2canvas/dist/types/css/property-descriptors/content';
 import { environment } from 'environments/environment';
-import { ElementRef,ViewChild,OnDestroy } from '@angular/core';
-import moment from 'moment';
 import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
 import { ActivatedRoute } from '@angular/router';
 

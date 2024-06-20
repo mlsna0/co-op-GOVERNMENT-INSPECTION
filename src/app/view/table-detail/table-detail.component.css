@@ -88,10 +88,11 @@
   
   
   label{
-  
     color: black;
   }
-  
+  p{
+    color: black;
+  }
   
 
   
@@ -495,24 +496,26 @@
   }
   :host ::ng-deep .uploadFilePDF{
     position: relative;
-    margin: 10px 0 0 0;
+    margin: 10px 0 60px 0;
     border-radius: 5px;
     width: 360px;
 
   }
   :host ::ng-deep.flieUpload{
     position: relative;
-    right: 0px;
+    
     justify-content: flex-end;
     width: 360px;
 
     border-radius: 5px;
   }
   input{
+    margin: 10px 0 0 40px ;
     border: 1px solid rgb(0, 0, 0);
     border-radius: 5px;
   }
   ::-webkit-file-upload-button{
+
     border: none;
     background-color: #24a0ed;
     color: white;

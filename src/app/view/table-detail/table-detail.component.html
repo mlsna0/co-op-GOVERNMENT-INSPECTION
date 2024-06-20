@@ -11,14 +11,14 @@
             </button>
         </div>
         
-        <div class="uploadFilePDF">
+        <div class="uploadFilePDF"> อัปโหลดไฟล์ของคุณ
             <input type="file" class="fileUpload" accept="application/pdf" (change)="onFileSelected($event)" style="font-size: 14px;">
         </div>
-        <!-- <div *ngIf="uploadedPDF">
+        <div *ngIf="uploadedPDF">
             <object [data]="uploadedPDF" type="application/pdf" width="100%" height="297mm">
                 <p>PDF cannot be displayed</p>
             </object>
-        </div> -->
+        </div>
         <div id="myDetail" class="modal-body-detail" [ngStyle]="{ width: '210mm' }">
             <!-- เนื้อหาของป๊อปอัพ -->
             <form action method="get">
