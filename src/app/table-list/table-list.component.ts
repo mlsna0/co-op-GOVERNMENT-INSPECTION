@@ -17,10 +17,11 @@ import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
 import { Router } from '@angular/router';
 import { content } from 'html2canvas/dist/types/css/property-descriptors/content';
-
+import { environment } from 'environments/environment';
 import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
 import moment from 'moment';
 import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
+import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 
 @Component({
@@ -32,7 +33,6 @@ export class TableListComponent implements OnInit {
   [x: string]: any;
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
   @ViewChild('textArea') textArea: ElementRef;
-  @ViewChild('myDetail', { static: false }) myDetail: ElementRef;
 
   startDate: string;
   people:any[] =[];
@@ -45,6 +45,8 @@ export class TableListComponent implements OnInit {
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
   public pdfUrl: SafeResourceUrl;
+
+  
   items:any= [];
   viewData=[];
   Submitted:boolean =false;
@@ -88,7 +90,11 @@ export class TableListComponent implements OnInit {
   loadig:boolean = false;
   
   initialFontSize: number = 14;
-  
+
+  htmlContent: string = '';
+
+
+
 
   constructor(
     private fb:FormBuilder,
@@ -97,6 +103,7 @@ export class TableListComponent implements OnInit {
     private router: Router,
     private geocodingService: GeocodingServiceService,
     private sanitizer: DomSanitizer,
+
   ) { 
     this.addItemForm = this.fb.group({
       id: ['',Validators.required],
@@ -107,6 +114,12 @@ export class TableListComponent implements OnInit {
       topic: ['',Validators.required],
       content:[''],
       filename: [''],
+      // postcode: ['',Validators.required],
+      // province: ['',Validators.required],
+      // district: ['',Validators.required],
+      // subDistrict: ['',Validators.required],
+      // address: ['',Validators.required],
+      place:['', Validators.required],
       // data_: [''],
       // contentType: [''],
        personal: this.fb.array([]),
@@ -121,19 +134,15 @@ export class TableListComponent implements OnInit {
     this.personInputs = this.addItemForm.get('personal') as FormArray;
     this.addPersonInput(); // Add initial input group
     // this.loadViewData();
-
-  
-  
-    
     
   }
   
   documentImageUrl = 'assets/img/sampleA4-1.png';
 
- 
-
- 
+  
   ngOnInit(){
+    this.safeHtmlContent = this.getSafeHtml(this.typroText);
+
     this.loading = true; //เป็นการตรวจ
     this.dtOptions = {
       order:[0],
@@ -365,58 +374,108 @@ saveSignature() {
 
  //End writter section////////////////////////////////////////////////////////////////////////////////////
 
+editorConfig: AngularEditorConfig = {
+  editable: true,
+  spellcheck: true,
+  height: '15rem',
+  minHeight: '5rem',
+  placeholder: 'พิมพ์ข้อความทที่นี่..',
+  translate: 'no',
+  defaultParagraphSeparator: 'p',
+  defaultFontName: 'Sarabun", sans-serif;',
 
-  setActive(button: string){
-    this.activeButton = button;
-    console.log("connented..Active")
-    if (button === 'typro'){
-      this.isTyproActive =true;
-      this.isWritteActive =false;
+  toolbarHiddenButtons: [
+    [
+      'link',
+      'unlink',
+      'insertImage',
+      'insertVideo',
+      'insertHorizontalRule',
+      'removeFormat',
+      'textColor',
+      'backgroundColor',
+      // 'toggleEditorMode',
+      'heading',
+      'fontName',
+    ],
+  ]
+ 
+};
+
+
+setActive(buttonName: string) {
+  this.isTyproActive = buttonName === 'typro';
+  this.isWritteActive = buttonName === 'writte';
+  this.activeButton = buttonName;
+}
+
+formatText(command: string) {
+  document.execCommand(command);
+}
+
+changeFontSize(event: Event) {
+  const target = event.target as HTMLSelectElement;
+  document.execCommand('fontSize', false, target.value);
+}
+
+
+  // setActive(button: string){
+  //   this.activeButton = button;
+  //   console.log("connented..Active")
+  //   if (button === 'typro'){
+  //     this.isTyproActive =true;
+  //     this.isWritteActive =false;
      
-      console.log("typro section", this.items)
+  //     console.log("typro section", this.items)
       
-    }else if(button ==="writte"){
-      this.isTyproActive =false;
-      this.isWritteActive =true;
-      console.log("writte section..")
-    }else{
-      console.log("selection error")
-    }
-    if (this.isWritteActive) {
-      setTimeout(() => this.setupCanvas(), 0);
-    }
-  }
+  //   }else if(button ==="writte"){
+  //     this.isTyproActive =false;
+  //     this.isWritteActive =true;
+  //     console.log("writte section..")
+  //   }else{
+  //     console.log("selection error")
+  //   }
+  //   if (this.isWritteActive) {
+  //     setTimeout(() => this.setupCanvas(), 0);
+  //   }
+  // }
 
 
 
   //หน้าจอรายละเอียดข้อมูล
   openDetailModal(recordId: any) {
-    $('#myModal').modal({
-      backdrop: 'static', // Prevent closing when clicking outside
-      keyboard: false     // Prevent closing with keyboard (Esc key)
-    });
-    this.selectedRecordId = recordId;
+    this.router.navigate(['/table-detail', recordId]);
+    // $('#myModal').modal({
+    //   backdrop: 'static', // Prevent closing when clicking outside
+    //   keyboard: false     // Prevent closing with keyboard (Esc key)
+    // });
+    // this.selectedRecordId = recordId;
     
    
-    this.sv.getDataById(recordId).subscribe(res=>{
-      console.log("getDataById :",res);
+    // this.sv.getDataById(recordId).subscribe(res=>{
+    //   console.log("getDataById :",res);
       
-      this.detailItems =res;
+    //   this.detailItems =res;
     
-      console.log("it on working.. ")
+    //   console.log("it on working.. ")
 
-    })
-    this.sv.getViewByRecordId(recordId).subscribe((res :any)=>{
-      console.log("getDataById :",res);
+    // })
+    // this.sv.getViewByRecordId(recordId).subscribe((res :any)=>{
+    //   console.log("getDataById :",res);
       
-      this.viewData = res;
+    //   this.viewData = res;
     
-      console.log("it on working.. ")
+    //   console.log("it on working.. ")
      
       
-    });
-
+    // });
+    
+  
+  
   }
+  
+
+
 
   // loadViewData() {
   //   this.sv.getItems().subscribe(data => {
@@ -473,7 +532,7 @@ onRecord(recordId: any) {
 
   recordCommit() {
     console.log("this.ContentRecordID :",this.ContentRecordID);
-    
+    this.safeHtmlContent = this.getSafeHtml(this.typroText);
      //recordId = this.selectedRecordId ;
     if (!this.ContentRecordID) {
       console.error("ID is undefined");
@@ -481,7 +540,14 @@ onRecord(recordId: any) {
         title: 'เกิดข้อผิดพลาด!',
         text: 'ไม่มีข้อมูล ID ส่งมา',
         icon: 'error',
-        confirmButtonText: 'ตกลง'
+        confirmButtonText: 'ตกลง',
+        didOpen: () => {
+          // เพิ่มคลาสแบบกำหนดเองหลังจาก SweetAlert2 เปิดแล้ว
+          const confirmButton = Swal.getConfirmButton();
+          if (confirmButton) {
+            confirmButton.classList.add('custom-confirm-button');
+          }
+        }
       });
       return;
     }
@@ -500,7 +566,14 @@ onRecord(recordId: any) {
           title: 'บันทึกข้อมูลสำเสร็จ!!',
           text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
           icon: 'success',
-          confirmButtonText: 'ตกลง'
+          confirmButtonText: 'ตกลง',
+          didOpen: () => {
+            // เพิ่มคลาสแบบกำหนดเองหลังจาก SweetAlert2 เปิดแล้ว
+            const confirmButton = Swal.getConfirmButton();
+            if (confirmButton) {
+              confirmButton.classList.add('custom-confirm-button');
+            }
+          }
         }).then((result)=>{
           if (result.isConfirmed){
             this.refreshPage();
@@ -516,7 +589,10 @@ onRecord(recordId: any) {
           title: 'เกิดข้อผิดพลาด!',
           text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
           icon: 'error',
-          confirmButtonText: 'ตกลง'
+          confirmButtonText: 'ตกลง',
+          customClass: {
+            confirmButton: 'custom-confirm-button'
+          }
         });
       }
     );
@@ -654,7 +730,7 @@ get personal(): FormArray {
 
 
   onInsertSummit(data) {
-    this.Submitted = true;
+    this.Submitted = true; 
     // console.log(data);
     console.log('Item form:',this.addItemForm.value);
     console.log('PernalForm : ',this.addPersonalForm.value);
@@ -683,11 +759,18 @@ get personal(): FormArray {
         title: 'เกิดข้อผิดพลาด!',
         text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง',
         icon: 'error',
-        confirmButtonText: 'ตกลง'
+        confirmButtonText: 'ตกลง',
+        didOpen: () => {
+          // เพิ่มคลาสแบบกำหนดเองหลังจาก SweetAlert2 เปิดแล้ว
+          const confirmButton = Swal.getConfirmButton();
+          if (confirmButton) {
+            confirmButton.classList.add('custom-confirm-button');
+          }
+        }
       });
       return;
     }
- 
+   
     // }
     // console.log(this.items);
     // ส่งข้อมูลไปยัง controller
@@ -703,7 +786,14 @@ get personal(): FormArray {
               title: 'เพิ่มผู้ใช้สำเร็จ!!',
               text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
               icon: 'success',
-              confirmButtonText: 'ตกลง'
+              confirmButtonText: 'ตกลง',
+              didOpen: () => {
+                // เพิ่มคลาสแบบกำหนดเองหลังจาก SweetAlert2 เปิดแล้ว
+                const confirmButton = Swal.getConfirmButton();
+                if (confirmButton) {
+                  confirmButton.classList.add('custom-confirm-button');
+                }
+              }
       }).then((result)=>{
         if (result.isConfirmed){
           this.refreshPage();
@@ -721,7 +811,14 @@ get personal(): FormArray {
             title: 'เกิดข้อผิดพลาด!',
             text: 'การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ',
             icon: 'error',
-            confirmButtonText: 'ตกลง'
+            confirmButtonText: 'ตกลง',
+            didOpen: () => {
+              // เพิ่มคลาสแบบกำหนดเองหลังจาก SweetAlert2 เปิดแล้ว
+              const confirmButton = Swal.getConfirmButton();
+              if (confirmButton) {
+                confirmButton.classList.add('custom-confirm-button');
+              }
+            }
           });
 
     }
@@ -769,84 +866,16 @@ get personal(): FormArray {
   
 
 
-//   printPDF = () => {
-//     console.log("working PDF..");
-//     const elementToPrint = document.getElementById('myDetail');
-//     html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
-//       const pdf = new jsPDF('p','mm','a4');
-//       pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
-//       pdf.save('การลงตรวจสอบ.pdf')
-//     });
-//     // this.fetchData()
-// }
-
-// กำหนดฟังก์ชันชื่อ printPDF
-printPDF = () => {
-  // แสดงข้อความ "working PDF.." ในคอนโซล
-  console.log("working PDF..");
-  // ดึงองค์ประกอบ HTML ที่มี ID 'myDetail'
-  const elementToPrint = document.getElementById('myDetail');
-  console.log('elementToPrint',elementToPrint)
-  const htmlWidth = $("#myDetail").width()
-  const htmlHeight = $("#myDetail").height()
-  
-  // console.log('htmlWodth',htmlWodth)
-
-  // กำหนดค่าคงที่สำหรับขนาดกระดาษ A4 ในหน่วยมิลลิเมตร
-  const A4_WIDTH = 210; // ความกว้างของกระดาษ A4 ในหน่วยมม.
-  const A4_HEIGHT = 297; // ความสูงของกระดาษ A4 ในหน่วยมม.
-  const canvasScale = 2; // ปัจจัยสเกลสำหรับความละเอียดสูงของแคนวาส
-  
-  // กำหนดตัวเลือกสำหรับ html2canvas
-  const options = {
-    scale: canvasScale, // กำหนดสเกลสำหรับแคนวาส
-    height: elementToPrint.scrollHeight, // กำหนดความสูงของแคนวาสให้เท่ากับความสูงของการเลื่อนขององค์ประกอบ
-    windowHeight: elementToPrint.scrollHeight, // กำหนดความสูงของหน้าต่างให้เท่ากับความสูงของการเลื่อนขององค์ประกอบ 
-  };
-  
-  // ใช้ html2canvas เพื่อเรนเดอร์องค์ประกอบลงในแคนวาส
-  html2canvas(elementToPrint, options).then((canvas) => {
-    // แปลงแคนวาสเป็นข้อมูลรูปภาพ PNG ในรูปแบบ URL
-    const imgData = canvas.toDataURL('image/png');
-    // สร้างอินสแตนซ์ใหม่ของ jsPDF ในโหมดแนวตั้ง, หน่วยเป็นมม., และขนาด A4
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    // กำหนดความกว้างของรูปภาพให้เท่ากับความกว้างของกระดาษ A4
-    const imgWidth = A4_WIDTH;
-    // คำนวณความสูงของรูปภาพเพื่อรักษาสัดส่วน
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    
-    // กำหนดตัวแปรสำหรับจัดการ PDF หลายหน้า
-    let heightLeft = imgHeight;
-    let position = 0; // กำหนดตำแหน่งเริ่มต้นให้เท่ากับ 0
-    const bottomMargin = 100; // ขอบล่างของ PDF ที่ต้องการเว้นว่าง (มม.)
-    const textOffset = 5; // การเลื่อนข้อความลงมา (มม.)
-    // const
-    // cons totalPDFPages = Math.ceil(htmlHeight / )
-
-
-    // ลูปเพื่อเพิ่มรูปภาพลงในหน้าของ PDF จนกว่าจะรวมเนื้อหาครบ
-    // while (heightLeft > 0) {
-    //   // เพิ่มรูปภาพลงใน PDF ที่ตำแหน่งปัจจุบัน
-    //   pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-    //   // เพิ่มข้อความว่างที่ด้านล่างของหน้าเพื่อสร้างขอบ
-    //   pdf.text(' ', A4_WIDTH / 2, A4_HEIGHT - bottomMargin - textOffset, { align: 'center' });
-    //   // ลบความสูงของหนึ่งหน้าจากความสูงที่เหลือ
-    //   heightLeft -= A4_HEIGHT;
-
-    //   // หากยังมีเนื้อหาเหลืออยู่, เพิ่มหน้าใหม่
-    //   if (heightLeft > 0) {
-    //     pdf.addPage();
-    //   }
-    //   // ย้ายตำแหน่งขึ้นไปตามความสูงของหนึ่งหน้า
-    //   position -= A4_HEIGHT;
-    // }
-    
-    // บันทึก PDF ด้วยชื่อไฟล์ที่กำหนด
-    pdf.save('การลงตรวจสอบ.pdf');
-  });
+  printPDF = () => {
+    console.log("working PDF..");
+    const elementToPrint = document.getElementById('myDetail');
+    html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
+      const pdf = new jsPDF('p','mm','a4');
+      pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
+      pdf.save('การลงตรวจสอบ.pdf')
+    });
+    // this.fetchData()
 }
-
-
 
 saveRCPDF = () => {
   console.log("Updating PDF in dictionary...");
@@ -862,7 +891,7 @@ saveRCPDF = () => {
     const imgData = canvas.toDataURL('image/png');
 
     const pdfWidth = 210; // A4 width in mm
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width ;297
 
     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
 
@@ -881,6 +910,10 @@ saveRCPDF = () => {
       this.sv.savePDF(formData).subscribe(
         response => {
           console.log('PDF saved successfully:', response);
+
+          
+
+          this.refreshPage();
         },
         error => {
           console.error('Error saving PDF:', error);
@@ -894,27 +927,41 @@ saveRCPDF = () => {
   });
   
   $('#myModal').modal('hide');
+    
 }
 
 showPDF(id: string) {
   if (!id) {
     console.error('ID is undefined');
     return;
-  }
+  } 
 
-  const pdfPath = `../img/${id}.pdf`; // แก้ไขวงเล็บเกิน
-  console.log('PDF Path:', pdfPath);
+  // const pdfPath = `../img/${id}`; // แก้ไขวงเล็บเกิน
+  const pdfPath = environment.URL_UPLOAD_IMG + id; // แก้ไขวงเล็บเกิน
+  console.log('pdfPath:', pdfPath);
 
   this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(pdfPath);
   console.log('Sanitized PDF Path:', this.pdfSrc);
+  window.open(pdfPath,'_blank')
 
-  $('#showpdf').modal('show');
+
+  // $('#showpdf').modal('show');
 }
 
-closePDF() {
-  // Logic to close the PDF modal
-  $('#showpdf').modal('hide');
-}
+
+//     while (position < imgHeight) {
+//       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+
+//       position += A4_HEIGHT; // เลื่อนตำแหน่งลงหน้าถัดไป
+
+//       if (position < imgHeight) {
+//         pdf.addPage(); // เพิ่มหน้าใหม่เมื่อยังไม่สามารถแสดงหมดได้ในหน้าเดียว
+//       }
+//     }
+
+//     pdf.save('การลงตรวจสอบ.pdf');
+//   });
+// }
 
   searchData(data: string) {
     this.sv.searchData(data).subscribe(res => {
@@ -924,105 +971,45 @@ closePDF() {
 
 /////////////////////////////// formatFont Edit
 
-formatText(command: string): void {
-    document.execCommand(command, false, '');
-    this.updateTyproText();
-  }
+// formatText(command: string): void {
+//   document.execCommand(command, false, '');
+//   this.updateTyproText();
+// }
 
-  onInput(event: Event): void {
-    const target = event.target as HTMLElement;
-    this.typroText = target.innerHTML;
-  }
+onInput(event: Event): void {
+  const target = event.target as HTMLElement;
+  this.typroText = target.innerHTML;
+}
 
-  updateFontSize(): void {
-    const fontElements = document.getElementsByTagName('font');
-    for (let i = 0; i < fontElements.length; i++) {
-      const element = fontElements[i] as HTMLElement; // Cast to HTMLElement
-      const size = element.getAttribute('size');
-      if (size) {
-        switch (size) {
-          case '1':
-            element.style.fontSize = '8px';
-            break;
-          case '2':
-            element.style.fontSize = '10px';
-            break;
-          case '3':
-            element.style.fontSize = '12px';
-            break;
-          case '4':
-            element.style.fontSize = '14px';
-            break;
-          case '5':
-            element.style.fontSize = '18px';
-            break;
-          case '6':
-            element.style.fontSize = '24px';
-            break;
-          case '7':
-            element.style.fontSize = '36px';
-            break;
-        }
-        element.removeAttribute('size');
-      }
-    }
-    this.updateTyproText();
-  }
-  
+
+
 updateTyproText(): void {
-  const editableDiv = document.querySelector('.form-control.full-page-textarea');
-  if (editableDiv) {
-    this.typroText = (editableDiv as HTMLElement).innerHTML;
-  }
+const editableDiv = document.querySelector('.form-control.full-page-textarea');
+if (editableDiv) {
+  this.typroText = (editableDiv as HTMLElement).innerHTML;
 }
-changeFontSize(event: Event): void {
-  const target = event.target as HTMLSelectElement;
-  const fontSize = target.value;
-  const selection = window.getSelection();
-  if (!selection.rangeCount) return;
-
-  const range = selection.getRangeAt(0);
-  const span = document.createElement('span');
-  span.style.fontSize = this.mapFontSize(fontSize);
-  range.surroundContents(span);
-  this.updateTyproText();
-}
-
-mapFontSize(size: string): string {
-  switch (size) {
-    case '1':
-      return '8px';
-    case '2':
-      return '10px';
-    case '3':
-      return '12px';
-    case '4':
-      return '14px';
-    case '5':
-      return '18px';
-    case '6':
-      return '24px';
-    case '7':
-      return '36px';
-    default:
-      return '14px'; // Default size
-  }
 }
 
 getSafeHtml(content: string): SafeHtml {
-  return this.sanitizer.bypassSecurityTrustHtml(content);
+return this.sanitizer.bypassSecurityTrustHtml(content);
+}
+
+editContent() {
+  this.typroText = this.detailItems.record_content;
+  this.isTyproActive = true; // เปิดการแก้ไข
+  }
+loadContent() {
+    // การดึงข้อมูลจากฐานข้อมูลมาแสดง (ตัวอย่าง)
+    this.detailItems = {
+      record_content: ' '
+    };
   }
 
-  editContent() {
-    this.typroText = this.detailItems.record_content;
-    this.isTyproActive = true; // เปิดการแก้ไข
-    }
-loadContent() {
-      // การดึงข้อมูลจากฐานข้อมูลมาแสดง (ตัวอย่าง)
-      this.detailItems = {
-        record_content: ' '
-      };
-    }
+saveContent() {
+    // บันทึกข้อมูลที่มี HTML Tags
+    // สมมติว่าข้อมูลที่ได้รับมาถูกเก็บในตัวแปร typroText
+    this.safeHtmlContent = this.getSafeHtml(this.typroText); // สร้าง safeHtmlContent เมื่อบันทึกข้อมูลใหม่
+  }
  
 }
 
@@ -1031,6 +1018,3 @@ loadContent() {
 
 
  ///////////////////เเบ่งหน้า///////////////////////////////////
- 
-
-

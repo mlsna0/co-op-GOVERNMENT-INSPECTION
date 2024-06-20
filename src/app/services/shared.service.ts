@@ -52,6 +52,7 @@ export class SharedService {
   getTyproText(record_id){
     return this.http.get(`${this.baseUrl}/dtModel/getTyproText/${record_id}`);
   }
+  
   updateRecordContent(data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/record/updateContent`, data).pipe(
       catchError(error => {

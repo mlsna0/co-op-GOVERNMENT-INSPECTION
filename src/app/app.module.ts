@@ -1,5 +1,5 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -10,9 +10,10 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
 import { TableListComponent } from './table-list/table-list.component';
 import { SharedService } from "./services/shared.service";
 import { GeocodingServiceService } from './services/geocodingService/geocoding-service.service';
+import { TableDetailComponent } from './view/table-detail/table-detail.component';
 // import { DataTablesModule } from "angular-datatables"; //ลองทำตามที่ chatบอก ไม่ work
 // import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
-
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 @NgModule({
   imports: [
@@ -25,14 +26,18 @@ import { GeocodingServiceService } from './services/geocodingService/geocoding-s
     AppRoutingModule,
     // DataTablesModule
     // NgxExtendedPdfViewerModule
+    AngularEditorModule,
   ],
   declarations: [
     AppComponent,
     AdminLayoutComponent,
     
+    
 
   ],
   providers: [SharedService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA] // Optional, only if you face schema issues
+  
 })
 export class AppModule { }

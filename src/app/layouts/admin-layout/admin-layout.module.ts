@@ -23,6 +23,8 @@ import { ThaiDatePipe } from "./../../services/pipe/thaidate.service";
 import { GeocodingServiceService } from './../../services/geocodingService/geocoding-service.service';
 import { MatCardModule } from '@angular/material/card'; //petch add
 import { MatIconModule } from '@angular/material/icon'; //petch add
+import { TableDetailComponent } from 'app/view/table-detail/table-detail.component';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 @NgModule({
   imports: [
@@ -39,7 +41,7 @@ import { MatIconModule } from '@angular/material/icon'; //petch add
     MatSelectModule,
     MatTooltipModule,
     DataTablesModule,
-
+    AngularEditorModule,
   ],
   declarations: [
     DashboardComponent,
@@ -51,6 +53,7 @@ import { MatIconModule } from '@angular/material/icon'; //petch add
     NotificationsComponent,
     UpgradeComponent,
     ThaiDatePipe,
+    TableDetailComponent,
     
   ]
 })

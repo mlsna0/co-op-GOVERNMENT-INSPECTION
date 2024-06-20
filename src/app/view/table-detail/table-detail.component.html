@@ -1,0 +1,136 @@
+<div class="MainTableDetail">
+  <div class="Detail-content"[ngStyle]="{ width: '230mm' }" ><!--[ngStyle]="{ width: '230mm', height: '327mm' , height: '297mm' }"-->
+      <div class="modal-header card-header card-header-danger">
+          <h5 class="modal-title" id="myModalLabel"
+              style="color: white; font-family: 'Sarabun', sans-serif !important; ">รายละเอียด</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="BackRoot()">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div id="myDetail" class="modal-body-detail" [ngStyle]="{ width: '210mm' }">
+          <!-- เนื้อหาของป๊อปอัพ -->
+          <form action method="get">
+              <div class="mainCenter-panel "> <!---->
+                  <div class="header-topic">
+
+                      <label style="font-size: 16px; font-weight: bold;">เอกสารตรวจสอบ</label>
+                      <p>{{ detailItems?.record_topic }}</p>
+
+                  </div>
+
+                  <div class="detail-content">
+                      <div class="date-flex">
+                          <div class="form-group start-date">
+                              <label>วันที่เริ่มการตรวจสอบ:</label>
+                              <p>{{ detailItems?.record_star_date | thaidate: 'medium' }}</p>
+                          </div>
+                          <div class="form-group end-date">
+                              <label>วันที่เสร็จสิ้นการตรวจสอบ:</label>
+                              <p>{{ detailItems?.record_end_date | thaidate: 'medium' }}</p>
+                          </div>
+                      </div>
+
+
+                      <div class="form-group">
+                          <label>รายละเอียด:</label>
+                          <p>{{ detailItems?.record_detail }}</p>
+                      </div>
+                      <div class="form-group">
+                          <label>สถานที่:</label>
+                          <p>{{ detailItems?.record_place }}</p>
+                      </div>
+                  </div>
+                  <div class="main-detail" >
+                      <table>
+                          <thead>
+                              <tr>
+                                  <th>ครั้งที่</th>
+                                  <th>เนื้อหาการตรวจสอบ</th>
+                              </tr>
+
+                          </thead>
+                          <tbody>
+                              <tr>
+                                  <td style="vertical-align: text-top;">
+                                      {{detailItems?.record_id}}/{{detailItems?.record_star_date | thaidate :'year'}}
+                                  </td>
+                                  
+                                  <td [innerHTML]="getSafeHtml(detailItems?.record_content)"></td>
+                            
+                                  
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+
+                  <div class="sign-content">
+                      <div class="form-group">
+                          <label>รายชื่อผู้รับผิดชอบ:</label>
+                          <div *ngFor="let person of viewData; let i = index">
+                              <div class="UploadContentBox">
+                                  
+                                  <div class="openSignModal" (click)="openSignModal(i)">
+                                      <a>คลิกเพื่อเซ็น</a>
+
+                                  </div>
+                                  <!-- Sign modal -->
+                                  <div class="Writte-sign" #writteSignElement id="SignModal-{{i}}"
+                                      *ngIf="isSignModalVisible[i]">
+                                      <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error someting
+                                          with
+                                          canvas</canvas>
+                                   
+                                  </div>
+
+
+                              </div>
+
+                              <a>( {{ person.view_rank }} &nbsp; &nbsp; {{ person.view_full_name }} )</a>
+                          </div>
+                      </div>
+                  </div>
+
+
+              </div>
+          </form>
+          <!-- <div class="right-panel">
+          <form action="">
+            <div class="right-panelOnTop">
+        
+            </div>
+  
+           
+  
+  
+          </form>
+        </div> -->
+      </div>
+      <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-success pull-center" (click)="printPDF()">
+          <i class="fa fa-download"></i>&nbsp; ดาว์โหลด
+        </button> -->
+
+          <button type="button" class="btn btn-success pull-center" (click)="printPDF()">
+              <i class="fa fa-download"></i>&nbsp; ดาว์โหลด
+          </button>
+          <button type="button" class="btn btn-add" (click)="saveRCPDF()">
+              <i class="fa fa-save"></i>&nbsp; บันทึก
+          </button>
+      </div>
+  </div>
+</div>
+
+<!-- <style>
+    .page {
+      page-break-after: always;
+    }
+    .page:last-child {
+      page-break-after: auto;
+    }
+    .page-break {
+      display: block;
+      page-break-before: always;
+    }
+  </style>
+  
+  <div [innerHTML]="getSafeHtml(longContent)"></div> -->
