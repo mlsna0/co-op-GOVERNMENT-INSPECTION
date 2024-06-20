@@ -33,13 +33,18 @@ import { ActivatedRoute } from '@angular/router';
 export class TableDetailComponent implements OnInit {
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
 
+
   recordId: any;
   viewData=[];
  
   addItemForm: any;
+  
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
-  detailItems: any = {}; 
+  detailItems: any = {};
+  displayedContent: string = '';
+  truncatedContent:string = '';
+  maxLength: number = 250;
 
   isSignModalVisible: boolean[] = [];
   private canvas2: HTMLCanvasElement;
@@ -91,11 +96,18 @@ export class TableDetailComponent implements OnInit {
       console.log("getDataById :",res);
       
       this.detailItems =res;
+
     
       console.log("it on working.. ")
-
+      if (this.detailItems && this.detailItems.record_content) {
+          this.truncateAndStoreContent(this.detailItems.record_content, 250);
+      }
+      console.log("Displayed content:", this.displayedContent);
+      console.log("Truncated content:", this.truncatedContent);
 
     });
+
+   
     this.sv.getViewByRecordId(this.recordId).subscribe((res :any)=>{
         console.log("getDataById :",res);
         
@@ -105,9 +117,6 @@ export class TableDetailComponent implements OnInit {
        
         
       });
-  }
-  BackRoot(){
-    this.router.navigate(['/table-list']);
   }
 
   setupSignCanvas(index: number) {
@@ -160,6 +169,7 @@ export class TableDetailComponent implements OnInit {
       console.error('Sign canvas element not found', this.canvas2);
     }
   }
+
   openSignModal(index: number){
     this.isSignModalVisible[index] = true;
     
@@ -176,19 +186,83 @@ export class TableDetailComponent implements OnInit {
     console.log("it openSign status : ",this.isSignModalVisible)
   }
 
-  getSafeHtml(content: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(content);
+  BackRoot(){
+    this.router.navigate(['/table-list']);
+  }
+
+  truncateAndStoreContent(data: string, maxLength: number): void {
+    if (data.length > maxLength) {
+      this.displayedContent = data.substring(0, maxLength) + '...';
+      this.truncatedContent = data.substring(maxLength);
+    } else {
+      this.displayedContent = data;
+      this.truncatedContent = '';
     }
 
+  }
+  onMaxLengthChange(newMaxLength: number): void {
+    this.maxLength = newMaxLength;
+    if (this.detailItems && this.detailItems.record_content) {
+      this.truncateAndStoreContent(this.detailItems.record_content, this.maxLength);
+    }
+  }
+
+  getSafeHtml(content: string): SafeHtml {
+    const textcontent = content.substring(0, 850);
+
+    return this.sanitizer.bypassSecurityTrustHtml(textcontent);
+    }
+
+  // printPDF = () => {
+  //     console.log("working PDF..");
+  //     const elementToPrint = document.getElementById('myDetail');
+  //     html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
+  //       const pdf = new jsPDF('p','mm','a4');
+  //       pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
+  //       pdf.save('การลงตรวจสอบ.pdf')
+  //     });
+  //     // this.fetchData()
+  // }
+
   printPDF = () => {
-      console.log("working PDF..");
-      const elementToPrint = document.getElementById('myDetail');
-      html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
-        const pdf = new jsPDF('p','mm','a4');
-        pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
-        pdf.save('การลงตรวจสอบ.pdf')
-      });
-      // this.fetchData()
+    console.log("working PDF..");
+    const elementToPrint = document.getElementById('myDetail');
+    const A4_WIDTH = 210; // Width of A4 in mm
+    const A4_HEIGHT = 297; // Height of A4 in mm
+    const canvasScale = 2; // Scale factor for higher resolution canvas
+
+    const options = {
+    scale: canvasScale,
+    height: elementToPrint.scrollHeight,
+    windowHeight: elementToPrint.scrollHeight
+    };
+
+    html2canvas(elementToPrint, options).then((canvas) => {
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+      const imgWidth = A4_WIDTH;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 0;
+      const bottomMargin = 10; // ขอบล่างของ PDF ที่ต้องการเว้นว่าง (มิลลิเมตร)
+      const textOffset = 5; // การเลื่อนข้อความลงมา (มิลลิเมตร)
+
+
+      while (heightLeft > 0) {
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          pdf.text(' ', A4_WIDTH / 2, A4_HEIGHT - bottomMargin - textOffset, { align: 'center' });
+          heightLeft -= A4_HEIGHT;
+
+          if (heightLeft > 0) {
+              pdf.addPage();
+          }
+          position -= A4_HEIGHT;
+      }
+
+      pdf.save('การลงตรวจสอบ.pdf');
+    });
   }
 
   saveRCPDF = () => {

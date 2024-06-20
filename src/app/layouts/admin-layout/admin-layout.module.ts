@@ -24,7 +24,6 @@ import { GeocodingServiceService } from './../../services/geocodingService/geoco
 import { MatCardModule } from '@angular/material/card'; //petch add
 import { MatIconModule } from '@angular/material/icon'; //petch add
 import { TableDetailComponent } from 'app/view/table-detail/table-detail.component';
-
 @NgModule({
   imports: [
     CommonModule,
@@ -41,6 +40,7 @@ import { TableDetailComponent } from 'app/view/table-detail/table-detail.compone
     MatTooltipModule,
     DataTablesModule,
 
+
   ],
   declarations: [
     DashboardComponent,
@@ -53,6 +53,8 @@ import { TableDetailComponent } from 'app/view/table-detail/table-detail.compone
     UpgradeComponent,
     ThaiDatePipe,
     TableDetailComponent,
+  
+   
     
   ]
 })
