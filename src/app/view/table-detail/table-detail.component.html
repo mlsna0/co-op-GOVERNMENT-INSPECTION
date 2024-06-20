@@ -1,6 +1,8 @@
 
 <div class="MainTableDetail">
+  
     <div class="Detail-content"[ngStyle]="{ width: '230mm' }" ><!--[ngStyle]="{ width: '230mm', height: '327mm' , height: '297mm' }"-->
+       
         <div class="modal-header card-header card-header-danger">
             <h5 class="modal-title" id="myModalLabel"
                 style="color: white; font-family: 'Sarabun', sans-serif !important; ">รายละเอียด</h5>
@@ -8,6 +10,15 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+        
+        <div class="uploadFilePDF">
+            <input type="file" class="fileUpload" accept="application/pdf" (change)="onFileSelected($event)" style="font-size: 14px;">
+        </div>
+        <!-- <div *ngIf="uploadedPDF">
+            <object [data]="uploadedPDF" type="application/pdf" width="100%" height="297mm">
+                <p>PDF cannot be displayed</p>
+            </object>
+        </div> -->
         <div id="myDetail" class="modal-body-detail" [ngStyle]="{ width: '210mm' }">
             <!-- เนื้อหาของป๊อปอัพ -->
             <form action method="get">

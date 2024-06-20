@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,ChangeDetectorRef, ViewChildren } from '@angular/core';
 import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray,AbstractControl } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
 import { HttpClient } from '@angular/common/http';
 import { dataflow } from 'googleapis/build/src/apis/dataflow';
 import { SharedService } from "../../services/shared.service";
-import { DataTableDirective } from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
-import { DataTablesModule } from "angular-datatables"; //petch เพิ่มขค้นมาเพราะจะทำ datatable
+
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Items } from '../../../../server/models/itemModel';
-import Swal from 'sweetalert2';
+
 import { SafeResourceUrl } from '@angular/platform-browser';
 import jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
@@ -17,7 +16,7 @@ import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
 import { Router } from '@angular/router';
 import { content } from 'html2canvas/dist/types/css/property-descriptors/content';
 import { environment } from 'environments/environment';
-import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
+import { ElementRef,ViewChild,OnDestroy } from '@angular/core';
 import moment from 'moment';
 import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
 import { ActivatedRoute } from '@angular/router';
@@ -46,6 +45,9 @@ export class TableDetailComponent implements OnInit {
   truncatedContent:string = '';
   maxLength: number = 250;
 
+
+  uploadedPDF: string | ArrayBuffer | null = null;
+
   isSignModalVisible: boolean[] = [];
   private canvas2: HTMLCanvasElement;
   private ctx2: CanvasRenderingContext2D;
@@ -60,29 +62,11 @@ export class TableDetailComponent implements OnInit {
     private router: Router,
     private ACrouter: ActivatedRoute,
     private sanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
-    this.addItemForm = this.fb.group({
-      id: ['',Validators.required],
-      startDate: ['',Validators.required],
-      detail:['',Validators.required],
-      endDate: ['',Validators.required],
-      location: ['',Validators.required],
-      topic: ['',Validators.required],
-      content:[''],
-      filename: [''],
-      place:['',Validators.required],
-      // data_: [''],
-      // contentType: [''],
-       personal: this.fb.array([]),
-      
-
-    }); 
-    this.addPersonalForm = this.fb.group({
-      rank: ['',Validators.required],
-      fullname: ['',Validators.required],
-    });
+    
 
     this.ACrouter.paramMap.subscribe(params => {
       this.recordId = params.get('id');
@@ -184,6 +168,19 @@ export class TableDetailComponent implements OnInit {
     }, 0);  
     console.log("it openSign status : ",this.isSignModalVisible)
   }
+  // onFileSelected file ที่เลือกมาแสดงอะ
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.uploadedPDF = e.target?.result;
+        this.cdr.detectChanges();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
 
   BackRoot(){
     this.router.navigate(['/table-list']);
