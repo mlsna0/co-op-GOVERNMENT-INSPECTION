@@ -64,7 +64,7 @@
 
                       {{item.record_topic }}
                     </td>
-                    <td style=" white-space: nowrap;">
+                    <td style="vertical-align: middle; white-space: nowrap; text-align: center;">
 
                       {{item.record_star_date | thaidate: "medium"}}
                     </td>
@@ -187,7 +187,7 @@
                               class="text-validate">*</span>
                           </label>
                           <input type="text" id="topic" formControlName="topic" class="form-control"
-                            placeholder="หัวข้อการตรวจสอบ"
+                            placeholder="--กรอกหัวข้อการตรวจสอบ--"
                             [ngClass]="{'box-validate': addItemForm.controls['topic'].invalid && (addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty || Submitted)}" />
                           <div class="text-validate"
                             *ngIf="addItemForm.controls['topic'].invalid &&(addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty || Submitted ) ">
@@ -209,14 +209,21 @@
                             class="text-validate"> *</span>
                         </label>
                       </div>
-                      <div class="col-sm-6">
-                        <label for="fullname" style="margin-left: 45px;">ชื่อ-นามสกุล
+                      <div class="col-sm-2">
+                        <label for="firstname" style="margin-left: 10px;">ชื่อ
                           <span
                             *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty || Submitted)"
                             class="text-validate"> *</span>
                         </label>
                       </div>
-                      <div class="col-sm-3" style="position: relative; right: 0;">
+                      <div class="col-sm-4">
+                        <label for="lastname" style="margin-left: 40px;">นามสกุล
+                          <span
+                            *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty || Submitted)"
+                            class="text-validate"> *</span>
+                        </label>
+                      </div>
+                      <div class="col-sm-3" style="position: relative; right: -30px;">
                         <button type="button" (click)="addPersonInput()" [disabled]="!canAddPerson()"
                           style="border: none; background: none;"> <!---->
                           <i class="fa fa-plus"></i>
@@ -233,7 +240,7 @@
                       <div *ngFor="let person of addItemForm.get('personal')['controls']; let i = index"
                         [formGroup]="addItemForm">
                         <div class="row " [formGroup]="person">
-                          <div class="col-sm-4">
+                          <div class="col-sm-3">
                             <div class="form-group position-relative">
 
                               <input type="text" id="rank-{{i}}" formControlName="rank" class="form-control"
@@ -247,18 +254,35 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-sm-7">
+                          <div class="col-sm-3">
                             <div class="form-group position-relative">
 
-                              <input type="text" id="fullname-{{i}}" formControlName="fullname" class="form-control"
+                              <input type="text" id="firstname-{{i}}" formControlName="firstname" class="form-control"
                                 placeholder="--กรอกข้อมูล--"
-                                [ngClass]="{'box-validate': person.controls['fullname'].invalid && (person.controls['fullname'].touched || person.controls['fullname'].dirty || Submitted)}" />
+                                [ngClass]="{'box-validate': person.controls['firstname'].invalid && (person.controls['firstname'].touched || person.controls['firstname'].dirty || Submitted)}" />
                               <!---->
                               <div
-                                *ngIf="person.controls['fullname'].invalid && (person.controls['fullname'].touched || person.controls['fullname'].dirty || Submitted)"
+                                *ngIf="person.controls['firstname'].invalid && (person.controls['firstname'].touched || person.controls['firstname'].dirty || Submitted)"
                                 class="border-errorPersonFullname">
                                 กรุณากรอกข้อมูล
                               </div>
+                              
+                            </div>
+
+                          </div>
+                          <div class="col-sm-3">
+                            <div class="form-group position-relative">
+
+                              <input type="text" id="lastname-{{i}}" formControlName="lastname" class="form-control"
+                                placeholder="--กรอกข้อมูล--"
+                                [ngClass]="{'box-validate': person.controls['lastname'].invalid && (person.controls['lastname'].touched || person.controls['lastname'].dirty || Submitted)}" />
+                              <!---->
+                              <div
+                                *ngIf="person.controls['lastname'].invalid && (person.controls['lastname'].touched || person.controls['lastname'].dirty || Submitted)"
+                                class="border-errorPersonFullname">
+                                กรุณากรอกข้อมูล
+                              </div>
+                              
                             </div>
 
                           </div>
@@ -278,7 +302,7 @@
                           *ngIf="addItemForm.controls['detail'].invalid && (addItemForm.controls['detail'].touched || addItemForm.controls['detail'].dirty || Submitted)"
                           class="text-validate">*</span></label>
                       <input type="text" id="detail" formControlName="detail" class="form-control"
-                        placeholder="รายละเอียด"
+                        placeholder="--กรอกรายละเอียด--"
                         [ngClass]="{'box-validate': addItemForm.controls['detail'].invalid && (addItemForm.controls['detail'].touched || addItemForm.controls['detail'].dirty || Submitted)}" />
                       <div class="text-validate"
                         *ngIf="addItemForm.controls['detail'].invalid &&(addItemForm.controls['detail'].touched || addItemForm.controls['detail'].dirty || Submitted ) ">
@@ -293,7 +317,7 @@
                           *ngIf="addItemForm.controls['place'].invalid && (addItemForm.controls['place'].touched || addItemForm.controls['place'].dirty || Submitted)"
                           class="text-validate">*</span></label>
                       <input type="text" id="place" formControlName="place" class="form-control"
-                        placeholder="รายละเอียดสถานที่"
+                        placeholder="--กรอกรายละเอียดสถานที่--"
                         [ngClass]="{'box-validate': addItemForm.controls['place'].invalid && (addItemForm.controls['place'].touched || addItemForm.controls['place'].dirty || Submitted)}" />
                       <div class="text-validate"
                         *ngIf="addItemForm.controls['place'].invalid &&(addItemForm.controls['place'].touched || addItemForm.controls['place'].dirty || Submitted ) ">
@@ -506,7 +530,7 @@
                               <option value="4" selected >14</option>
                               <option value="5">18</option>
                               <option value="6">24</option>
-                              <option value="7">36</option>
+                             
                             </select>
                             <button (click)="formatText('bold')" aria-label="bold">
                               <i class="fas fa-bold"></i>

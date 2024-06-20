@@ -24,10 +24,10 @@
     font-size: 14px;
   }
   
-  /* .searchLocation:hover{
-    background: #dddfff;
-    z-index: 30;
-  } */
+  .MainTableDetail{
+    height: 100%;
+
+  }
   
   .modal-body-detail{ 
     position: relative;
@@ -38,7 +38,7 @@
      left: 50%;
      transform: translateX(-50%);
       width: 100%;
-      height: auto;/*297mm*/
+      height: 297mm;/*297mm*/
       border: 0.2px solid #000;
       font-family: "Sarabun", sans-serif;
       
@@ -46,13 +46,12 @@
       /* overflow: auto;   */
   }
   
-  .MainTableDetail{
-    height: 100%;
-
-  }
+  
   .Detail-content{
     position: relative;
     /* max-height: 1235.9px; */
+    top: 50px;
+    bottom: 50px;
     height: auto;
     margin: 50px 0 50px 0;
     left: 50%;
@@ -61,6 +60,15 @@
     font-family: "Sarabun", sans-serif;
     background: white;
     
+  }
+
+  .main-detail {
+    position: relative;
+    border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
+    width: 600px;
+    overflow: auto;
+    padding: 20px 0 0 0; /* เพิ่มระยะห่างบนและล่าง */
+    font-family:  'Sarabun', sans-serif; /* ใช้ฟอนต์ราชการ */
   }
   .card-header{
     position: relative;
@@ -85,10 +93,7 @@
   }
   
   
-  .btn-just-icon.active {
-    background-color: #55b559; /* สีพื้นหลังเมื่อปุ่ม active */
-    color: white; /* สีตัวอักษรเมื่อปุ่ม active */
-  }
+
   
   .form-control.mt-3 {
     position: relative;
@@ -312,16 +317,19 @@
   .detail-content{
     position: relative;
     margin-top: 60px;
+
   }  
   .detail-content .form-group label {
       display: inline-block;
       font-weight: bold;
+      font-size: 14px;
     }
     
   .detail-content .form-group p {
       display: inline-block;
       margin: 0;
       padding-left: 10px;
+      font-size: 14px;
     }
   
   .date-flex{
@@ -337,14 +345,7 @@
     } */
   
   
-  .main-detail {
-      position: relative;
-      border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
-      width: 600px;
-      overflow: auto;
-      padding: 20px; /* เพิ่มระยะห่างบนและล่าง */
-      font-family:  'Sarabun', sans-serif; /* ใช้ฟอนต์ราชการ */
-    }
+ 
   .main-detail table{
       max-width: 600px;
       table-layout: fixed;

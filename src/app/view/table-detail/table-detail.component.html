@@ -45,7 +45,7 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>ครั้งที่</th>
+                                    <th style="text-align: center; vertical-align: middle;">ครั้งที่</th>
                                     <th>เนื้อหาการตรวจสอบ</th>
                                 </tr>
 
@@ -83,7 +83,7 @@
 
                                 </div>
 
-                                <a>( {{ person.view_rank }} &nbsp; &nbsp; {{ person.view_full_name }} )</a>
+                                <a style="font-size: 14px;">( {{ person.view_rank }} &nbsp;  {{ person.view_first_name }} &nbsp;{{ person.view_last_name }} )</a>
                             </div>
                         </div>
                     </div>
@@ -116,4 +116,23 @@
             </button>
         </div>
     </div>
+
+
+    <!-- <div class="other-page1" style="background: white;">
+        <div>
+            <label for="maxLengthInput">Set max length:</label>
+            <input id="maxLengthInput" type="number" [(ngModel)]="maxLength" (input)="onMaxLengthChange(maxLength)" />
+          </div>
+        <div class="main-detail">
+            <table>
+                <tbody>
+                    <tr>
+                        <td [innerHTML]="getSafeHtml(truncatedContent )"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div> -->
+
+
 </div>

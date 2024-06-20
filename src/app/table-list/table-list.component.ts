@@ -124,7 +124,8 @@ export class TableListComponent implements OnInit {
     }); 
     this.addPersonalForm = this.fb.group({
       rank: ['',Validators.required],
-      fullname: ['',Validators.required],
+      firstname: ['',Validators.required],
+      lastname: ['',Validators.required],
     });
     
     this.personInputs = this.addItemForm.get('personal') as FormArray;
@@ -516,9 +517,13 @@ onRecord(recordId: any) {
           title: 'บันทึกข้อมูลสำเสร็จ!!',
           text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
           icon: 'success',
-          confirmButtonText: 'ตกลง'
+          confirmButtonText: 'ตกลง',
+          customClass: {
+            confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+          }
         }).then((result)=>{
           if (result.isConfirmed){
+            document.querySelector('.swal2-confirm').setAttribute('style', 'background-color: #24a0ed; color: white;');
             this.refreshPage();
           }
         });
@@ -532,7 +537,10 @@ onRecord(recordId: any) {
           title: 'เกิดข้อผิดพลาด!',
           text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
           icon: 'error',
-          confirmButtonText: 'ตกลง'
+          confirmButtonText: 'ตกลง',
+          customClass: {
+            confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+          }
         });
       }
     );
@@ -626,7 +634,9 @@ onRecord(recordId: any) {
  createPersonGroup(): FormGroup {
   return this.fb.group({
     rank: ['', Validators.required],
-    fullname: ['', Validators.required]
+    firstname: ['', Validators.required],
+    lastname: ['', Validators.required]
+    // fullname: ['', Validators.required]
   });
   
 }
@@ -699,7 +709,11 @@ get personal(): FormArray {
         title: 'เกิดข้อผิดพลาด!',
         text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง',
         icon: 'error',
-        confirmButtonText: 'ตกลง'
+        confirmButtonText: 'ตกลง',
+        customClass: {
+          confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+        }
+
       });
       return;
     }
@@ -719,7 +733,11 @@ get personal(): FormArray {
               title: 'เพิ่มผู้ใช้สำเร็จ!!',
               text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
               icon: 'success',
-              confirmButtonText: 'ตกลง'
+              confirmButtonText: 'ตกลง',
+              customClass: {
+                confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+              }
+
       }).then((result)=>{
         if (result.isConfirmed){
           this.refreshPage();
@@ -737,7 +755,11 @@ get personal(): FormArray {
             title: 'เกิดข้อผิดพลาด!',
             text: 'การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ',
             icon: 'error',
-            confirmButtonText: 'ตกลง'
+            confirmButtonText: 'ตกลง',
+            confirmButtonColor: "#24a0ed",
+            customClass: {
+              confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+            }
           });
 
     }
@@ -903,7 +925,7 @@ onInput(event: Event): void {
 updateFontSize(): void {
   const fontElements = document.getElementsByTagName('font');
   for (let i = 0; i < fontElements.length; i++) {
-    const element = fontElements[i] as HTMLElement; // Cast to HTMLElement
+    const element = fontElements[i] as HTMLElement;
     const size = element.getAttribute('size');
     if (size) {
       switch (size) {
@@ -925,16 +947,13 @@ updateFontSize(): void {
         case '6':
           element.style.fontSize = '24px';
           break;
-        case '7':
-          element.style.fontSize = '36px';
-          break;
+    
       }
       element.removeAttribute('size');
     }
   }
   this.updateTyproText();
 }
-
 updateTyproText(): void {
 const editableDiv = document.querySelector('.form-control.full-page-textarea');
 if (editableDiv) {
@@ -968,8 +987,6 @@ switch (size) {
     return '18px';
   case '6':
     return '24px';
-  case '7':
-    return '36px';
   default:
     return '14px'; // Default size
 }

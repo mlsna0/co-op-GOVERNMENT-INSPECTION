@@ -60,7 +60,7 @@ class ItemModelCtrl extends BaseCtrl {
         // });
         console.log("obj _Id: ",obj._id)
         if(req.body.personal){ 
-          let newField = req.body.personal.map( x=> {return { view_rank : x.rank, view_full_name: x.fullname,RecordModelId: obj._id }});
+          let newField = req.body.personal.map( x=> {return { view_rank : x.rank, view_first_name: x.firstname, view_last_name: x.lastname,RecordModelId: obj._id }});
 
           let result = await this.modelView.insertMany(newField)
         }

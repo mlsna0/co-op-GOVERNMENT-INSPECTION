@@ -434,8 +434,8 @@ right: 25px;
     border-radius: 5px;
   }
 .border-error {
-    position: absolute;
-    bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
+    position: relative;
+    bottom:0px;  /* ให้ข้อความอยู่ใต้ input */
     left: 0px;
     margin: 2px;
     background-color: transparent;
@@ -455,8 +455,8 @@ right: 25px;
     display: block;
   }
 .border-errorInDex{
-    position: absolute;
-    bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
+    position: relative;
+    bottom:0px;  /* ให้ข้อความอยู่ใต้ input */
     left: 0px;
     margin: 2px;
     width: 600px;
@@ -470,11 +470,11 @@ right: 25px;
 
   }
 .border-errorPersonFullname{
-    position: absolute;
-    bottom:-15px;  /* ให้ข้อความอยู่ใต้ input */
+    position: relative;
+    bottom:0px;  /* ให้ข้อความอยู่ใต้ input */
     left: 0px;
     margin: 2px;
-    background-color: rgb(255, 255, 255);
+    background-color: transparent;
     color: red;
     font-size: 0.875em;
     text-align: left;
@@ -482,8 +482,8 @@ right: 25px;
     border-radius: 5px;
   }
 .border-errorPersonRank{
-    position: absolute;
-    bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
+    position: relative;
+    bottom:0px;  /* ให้ข้อความอยู่ใต้ input */
     left: 0px;
     margin: 2px;
     width: auto;
@@ -496,8 +496,8 @@ right: 25px;
   }
 
 .border-errorLocation {
-    position: absolute;
-    bottom:-10px;  /* ให้ข้อความอยู่ใต้ input */
+    position: relative;
+    bottom:0px;  /* ให้ข้อความอยู่ใต้ input */
     left: 0px;
     margin: 2px;
     /* background-color: white; */
@@ -527,8 +527,9 @@ right: 25px;
   :host ::ng-deep .btn-add{
     color: #fff;
     background-color: #24a0ed;/*#000dc2ef  */
-    border-color: #00087c9f;
-    box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd;
+    border-color: #24a0ed85;;
+    /* box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd; */
+    font-family: 'Sarabun', sans-serif;
 
   }
   :host ::ng-deep .btn-add:hover{
@@ -609,6 +610,15 @@ right: 25px;
   line-height: 1.42857;
   color: #000000;
   font-weight: 400;
+}
+
+:host ::ng-deep .custom-confirm-button{
+  background-color: #24a0ed !important; 
+  color: white !important;
+}
+:host ::ng-deep div.swal2-container button.swal2-styled.swal2-confirm {
+  background-color: #24a0ed !important; 
+  color: white;
 }
 
 @media print {
