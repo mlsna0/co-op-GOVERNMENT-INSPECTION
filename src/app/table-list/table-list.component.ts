@@ -21,7 +21,7 @@ import { environment } from 'environments/environment';
 import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
 import moment from 'moment';
 import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
-
+import Tesseract from 'tesseract.js'; // Default import Tesseract.js
 
 @Component({
   selector: 'app-table-list',
@@ -376,26 +376,24 @@ saveSignature() {
  //End writter section////////////////////////////////////////////////////////////////////////////////////
 
 
-  setActive(button: string){
-    this.activeButton = button;
-    console.log("connented..Active")
-    if (button === 'typro'){
-      this.isTyproActive =true;
-      this.isWritteActive =false;
-     
-      console.log("typro section", this.items)
-      
-    }else if(button ==="writte"){
-      this.isTyproActive =false;
-      this.isWritteActive =true;
-      console.log("writte section..")
-    }else{
-      console.log("selection error")
-    }
-    if (this.isWritteActive) {
-      setTimeout(() => this.setupCanvas(), 0);
-    }
+ setActive(button: string){
+  this.activeButton = button;
+  console.log("connected..Active");
+  if (button === 'typro'){
+    this.isTyproActive = true;
+    this.isWritteActive = false;
+    console.log("typro section", this.items);
+  } else if (button === "writte"){
+    this.isTyproActive = false;
+    this.isWritteActive = true;
+    console.log("writte section..");
+  } else {
+    console.log("selection error");
   }
+  if (this.isWritteActive) {
+    setTimeout(() => this.setupCanvas(), 0);
+  }
+}
 
 
 
@@ -488,63 +486,91 @@ onRecord(recordId: any) {
 
 
 
-  recordCommit() {
-    console.log("this.ContentRecordID :",this.ContentRecordID);
-    
-     //recordId = this.selectedRecordId ;
-    if (!this.ContentRecordID) {
-      console.error("ID is undefined");
+recordCommit() {
+  console.log("this.ContentRecordID :", this.ContentRecordID);
+
+  if (!this.ContentRecordID) {
+    console.error("ID is undefined");
+    Swal.fire({
+      title: 'เกิดข้อผิดพลาด!',
+      text: 'ไม่มีข้อมูล ID ส่งมา',
+      icon: 'error',
+      confirmButtonText: 'ตกลง'
+    });
+    return;
+  }
+
+  console.log("Record ID being committed:", this.ContentRecordID);
+
+  if (this.isWritteActive) {
+    const canvas: HTMLCanvasElement = document.getElementById('writteCanvas') as HTMLCanvasElement;
+    const context = canvas.getContext('2d');
+
+    if (context) {
+      const dataURL = canvas.toDataURL();
+
+      Tesseract.recognize(dataURL, 'tha') // ใช้ 'tha' สำหรับภาษาไทย
+        .then(({ data: { text } }) => {
+          this.typroText = text;
+          this.saveRecordContent();
+        })
+        .catch(error => {
+          Swal.fire({
+            title: 'เกิดข้อผิดพลาด!',
+            text: 'เกิดข้อผิดพลาดในการแปลงภาพเป็นข้อความ.',
+            icon: 'error',
+            confirmButtonText: 'ตกลง',
+            customClass: {
+              confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+            }
+          });
+        });
+    }
+  } else if (this.isTyproActive) {
+    this.saveRecordContent();
+  }
+}
+
+saveRecordContent() {
+  const recordData = {
+    content: this.typroText,
+    id: this.ContentRecordID
+  };
+
+  this.sv.updateRecordContent(recordData).subscribe(
+    response => {
+      console.log('บันทึกข้อมูลเรียบร้อย', response);
+      Swal.fire({
+        title: 'บันทึกข้อมูลสำเสร็จ!!',
+        text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
+        icon: 'success',
+        confirmButtonText: 'ตกลง',
+        customClass: {
+          confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          document.querySelector('.swal2-confirm').setAttribute('style', 'background-color: #24a0ed; color: white;');
+          this.refreshPage();
+        }
+      });
+      $('#writtenModel').modal('hide');
+      this.typroText = ''; // ล้างฟิลด์ข้อความ
+    },
+    error => {
+      console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
       Swal.fire({
         title: 'เกิดข้อผิดพลาด!',
-        text: 'ไม่มีข้อมูล ID ส่งมา',
+        text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
         icon: 'error',
-        confirmButtonText: 'ตกลง'
+        confirmButtonText: 'ตกลง',
+        customClass: {
+          confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+        }
       });
-      return;
     }
-  
-    console.log("Record ID being committed:", this.ContentRecordID);
-  
-    const recordData = {
-      content: this.typroText,
-      id: this.ContentRecordID
-    };
-  
-    this.sv.updateRecordContent(recordData).subscribe(
-      response => {
-        console.log('บันทึกข้อมูลเรียบร้อย', response);
-        Swal.fire({
-          title: 'บันทึกข้อมูลสำเสร็จ!!',
-          text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
-          icon: 'success',
-          confirmButtonText: 'ตกลง',
-          customClass: {
-            confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-          }
-        }).then((result)=>{
-          if (result.isConfirmed){
-            document.querySelector('.swal2-confirm').setAttribute('style', 'background-color: #24a0ed; color: white;');
-            this.refreshPage();
-          }
-        });
-        $('#writtenModel').modal('hide');
-        this.typroText = ''; // Clear the input field
-  
-      },
-      error => {
-        console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
-        Swal.fire({
-          title: 'เกิดข้อผิดพลาด!',
-          text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
-          icon: 'error',
-          confirmButtonText: 'ตกลง',
-          customClass: {
-            confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-          }
-        });
-      }
-    );
-  }
+  );
+}
   closeModal() {
     // ซ่อนโมดัล
     $('#insertModel').modal('hide');
