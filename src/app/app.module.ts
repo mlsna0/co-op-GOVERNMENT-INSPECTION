@@ -31,12 +31,8 @@ import { GeocodingServiceService } from './services/geocodingService/geocoding-s
     AppComponent,
     AdminLayoutComponent,
    
-<<<<<<< HEAD
-    
-=======
 
  
->>>>>>> b28fa3b0e03f46da46dbd655596671f69e42a518
     
 
   ],
