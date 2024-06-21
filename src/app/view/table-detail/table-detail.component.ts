@@ -63,6 +63,7 @@ export class TableDetailComponent implements OnInit {
   private isDragging = false;
   private offsetX = 0;
   private offsetY = 0;
+  testFile:any;
 
 
   constructor(
@@ -182,19 +183,35 @@ export class TableDetailComponent implements OnInit {
     console.log("it openSign status : ",this.isSignModalVisible)
   }
 
+  blobToBase64(blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+          const dataUrl = reader.result as string;
+          const base64 = dataUrl.split(',')[1];
+          resolve(base64);
+      };
+      reader.readAsDataURL(blob);
+    });
+  }
 
   //open file pdf to preview or edit to sign
-  onFileSelected(event: any):void{
+  async onFileSelected(event: any){
     this.selectedFile = event.target.files[0]?? null;
     if(this.selectedFile){
-      var reader =new FileReader();
+      this.testFile = await this.blobToBase64(event.target.files[0])
+      console.log("test file : ",this.testFile);
       
+
+      var reader =new FileReader();
+      console.log("event.target.files[0] : ",event.target.files[0]);
       reader.readAsDataURL(event.target.files[0]);
       
       reader.onload =(event)=>{
         let path =event.target == null ? '':event.target.result;
         this.selectedFilePath = path as string;
         this.selectedFileB64 = this.selectedFilePath.split(",")[1];
+        this.testFile = reader.result;
         if(this.selectedFilePath.includes('image')){
           this.isFileImage = true;
           this.isFileDocument = false;
@@ -210,6 +227,18 @@ export class TableDetailComponent implements OnInit {
       }
     }
 
+  }
+  clearFileInput(): void {
+    this.selectedFile = null;
+    this.selectedFilePath = '';
+    this.selectedFileB64 = '';
+    this.isFileImage = false;
+    this.isFileDocument = false;
+    this.testFile = undefined;
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
   }
 
 //move element

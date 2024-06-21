@@ -26,7 +26,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     AppRoutingModule,
     // DataTablesModule
     NgxExtendedPdfViewerModule,
-    // PdfViewerModule,
+    //PdfViewerModule,
     AngularEditorModule,
     
   ],
