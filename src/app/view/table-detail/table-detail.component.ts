@@ -1,4 +1,4 @@
-import { Component, OnInit ,ChangeDetectorRef, ViewChildren,ElementRef } from '@angular/core';
+import { Component, OnInit ,ChangeDetectorRef, ViewChildren,ElementRef,HostListener,Renderer2 } from '@angular/core';
 import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray,AbstractControl } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
@@ -15,6 +15,11 @@ import { content } from 'html2canvas/dist/types/css/property-descriptors/content
 import { environment } from 'environments/environment';
 import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
 import { ActivatedRoute } from '@angular/router';
+
+import { NgxExtendedPdfViewerService, pdfDefaultOptions } from 'ngx-extended-pdf-viewer';
+
+
+// import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 
 
@@ -41,13 +46,24 @@ export class TableDetailComponent implements OnInit {
   maxLength: number = 250;
 
 
-  uploadedPDF: string | ArrayBuffer | null = null;
+  uploadedPDF: SafeResourceUrl | undefined;
+  selectedFile: any ="";
+  selectedFilePath:String ="";
+  selectedFileB64:string ="";
+  isFileImage =false;
+  isFileDocument =false;
 
   isSignModalVisible: boolean[] = [];
   private canvas2: HTMLCanvasElement;
   private ctx2: CanvasRenderingContext2D;
   penColor2: string = 'black';
   penSize2: number = 1;
+
+  //move element
+  private isDragging = false;
+  private offsetX = 0;
+  private offsetY = 0;
+  testFile:any;
 
 
   constructor(
@@ -58,6 +74,9 @@ export class TableDetailComponent implements OnInit {
     private ACrouter: ActivatedRoute,   
     private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
+    private pdfService:NgxExtendedPdfViewerService,
+    private el: ElementRef,
+    private renderer: Renderer2,
   ) { }
 
   ngOnInit(): void {
@@ -163,20 +182,90 @@ export class TableDetailComponent implements OnInit {
     }, 0);  
     console.log("it openSign status : ",this.isSignModalVisible)
   }
-  // onFileSelected file ที่เลือกมาแสดงอะ
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-    if (file) {
+
+  blobToBase64(blob): Promise<string> {
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        this.uploadedPDF = e.target?.result;
-        this.cdr.detectChanges();
+      reader.onload = () => {
+          const dataUrl = reader.result as string;
+          const base64 = dataUrl.split(',')[1];
+          resolve(base64);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  //open file pdf to preview or edit to sign
+  async onFileSelected(event: any){
+    this.selectedFile = event.target.files[0]?? null;
+    if(this.selectedFile){
+      this.testFile = await this.blobToBase64(event.target.files[0])
+      console.log("test file : ",this.testFile);
+      
+
+      var reader =new FileReader();
+      console.log("event.target.files[0] : ",event.target.files[0]);
+      reader.readAsDataURL(event.target.files[0]);
+      
+      reader.onload =(event)=>{
+        let path =event.target == null ? '':event.target.result;
+        this.selectedFilePath = path as string;
+        this.selectedFileB64 = this.selectedFilePath.split(",")[1];
+        this.testFile = reader.result;
+        if(this.selectedFilePath.includes('image')){
+          this.isFileImage = true;
+          this.isFileDocument = false;
+          
+         
+        }else{
+          this.isFileImage = false;
+          this.isFileDocument = true;
+        
+        }
+        console.log("this is files img: ",this.isFileImage)
+        console.log("this is files Doc: ",this.isFileDocument)
+      }
+    }
+
+  }
+  clearFileInput(): void {
+    this.selectedFile = null;
+    this.selectedFilePath = '';
+    this.selectedFileB64 = '';
+    this.isFileImage = false;
+    this.isFileDocument = false;
+    this.testFile = undefined;
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
     }
   }
 
+//move element
+@HostListener('mousedown', ['$event'])
+onMouseDown(event: MouseEvent): void {
+  this.isDragging = true;
+  const rect = this.el.nativeElement.getBoundingClientRect();
+  this.offsetX = event.clientX - rect.left;
+  this.offsetY = event.clientY - rect.top;
+  event.preventDefault();
+}
 
+@HostListener('document:mouseup')
+onMouseUp(): void {
+  this.isDragging = false;
+}
+
+@HostListener('document:mousemove', ['$event'])
+onMouseMove(event: MouseEvent): void {
+  if (this.isDragging) {
+    const x = event.clientX - this.offsetX;
+    const y = event.clientY - this.offsetY;
+    this.renderer.setStyle(this.el.nativeElement, 'transform', `translate(${x}px, ${y}px)`);
+  }
+}
+
+//ิback to table-list
   BackRoot(){
     this.router.navigate(['/table-list']);
   }

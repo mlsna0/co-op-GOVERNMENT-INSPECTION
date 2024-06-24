@@ -10,19 +10,31 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        
-        <div class="uploadFilePDF"> อัปโหลดไฟล์ของคุณ
-            <input type="file" class="fileUpload" accept="application/pdf" (change)="onFileSelected($event)" style="font-size: 14px;">
-        </div>
-        <div *ngIf="uploadedPDF">
-            <object [data]="uploadedPDF" type="application/pdf" width="100%" height="297mm">
-                <p>PDF cannot be displayed</p>
-            </object>
-        </div>
-        <div id="myDetail" class="modal-body-detail" [ngStyle]="{ width: '210mm' }">
+    
+          <div class="uploadFilePDF">
+            <label for="fileInput" style="padding: 0 0 0 15px;">อัปโหลดไฟล์ของคุณ</label>
+            <input id="fileInput" type="file" class="fileUpload" accept="application/pdf,image/*" (change)="onFileSelected($event)" style="font-size: 14px;">
+            <button type="button" (click)="clearFileInput()" style="position: relative;left:-25px; border: none; background-color: transparent; z-index: 10;"><i class="fa fa-times"></i></button>
+          </div>
+          
+          <div *ngIf="selectedFilePath">
+            <!-- <ngx-extended-pdf-viewer *ngIf="testFile" [base64Src]="testFile"
+            [useBrowserLocale]="true" [handtool]="false" [showHandToolButton]="true" [render-text]="true" style="display: block; align-items: center;" width="100%" height="297mm">
+              <p style="vertical-align: middle;text-align: center;" >PDF cannot be displayed..</p>
+            </ngx-extended-pdf-viewer>  -->
+            <pdf-viewer *ngIf="testFile" [src]="testFile"
+              [render-text]="true"
+              [original-size]="true"
+              [show-borders]="true"
+              style="width: 400px; height: 500px;" 
+            ></pdf-viewer>
+            <img *ngIf="isFileImage" [src]="selectedFilePath" alt="Image" style="display: block; align-items: center; max-width:  100%; max-height: 297mm;">
+          </div>
+
+        <div id="myDetail" class="modal-body-detail" [ngStyle]="{'display': testFile ? 'none' : 'block', width: '210mm' }">
             <!-- เนื้อหาของป๊อปอัพ -->
             <form action method="get">
-                <div class="mainCenter-panel "> <!---->
+                <div class="mainCenter-panel ">
                     <div class="header-topic">
 
                         <label style="font-size: 16px; font-weight: bold;">เอกสารตรวจสอบ</label>
@@ -102,17 +114,7 @@
 
                 </div>
             </form>
-            <!-- <div class="right-panel">
-            <form action="">
-              <div class="right-panelOnTop">
-          
-              </div>
-    
-             
-    
-    
-            </form>
-          </div> -->
+            
         </div>
         <div class="modal-footer">
             <!-- <button type="button" class="btn btn-success pull-center" (click)="printPDF()">

@@ -9,9 +9,9 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es2020",
+    "target": "es2015", //"es2020"
     "lib": [
-      "es2020",
+      "es2018",//es2020
       "dom"
     ],
     "typeRoots": [

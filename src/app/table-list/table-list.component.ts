@@ -22,6 +22,7 @@ import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
 import moment from 'moment';
 import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
 import Tesseract from 'tesseract.js'; // Default import Tesseract.js
+import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
   selector: 'app-table-list',
@@ -89,7 +90,7 @@ export class TableListComponent implements OnInit {
   loadig:boolean = false;
   
   initialFontSize: number = 14;
-  
+  htmlContent: string = '';
 
 
   constructor(
@@ -1033,6 +1034,33 @@ loadContent() {
     };
   }
 
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+    spellcheck: true,
+    height: '15rem',
+    // minHeight: '5rem',
+    placeholder: 'พิมพ์ข้อความทที่นี่..',
+    translate: 'no',
+    defaultParagraphSeparator: 'p',
+    defaultFontName: 'Sarabun", sans-serif;',
+  
+    toolbarHiddenButtons: [
+      [
+        'link',
+        'unlink',
+        'insertImage',
+        'insertVideo',
+        'insertHorizontalRule',
+        'removeFormat',
+        'textColor',
+        'backgroundColor',
+        // 'toggleEditorMode',
+        'heading',
+        'fontName',
+      ],
+    ]
+   
+  };
  
 }
 
