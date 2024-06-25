@@ -1,3 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Sriracha&family=Teko:wght@300&display=swap');
-@import '../node_modules/font-awesome/css/font-awesome.css'
+/* @import '../node_modules/font-awesome/css/font-awesome.css';  */
+
+.custom-confirm-button{
+    background-color: #24a0ed !important; 
+    color: white !important;
+  }
+  div.swal2-container button.swal2-styled.swal2-confirm{
+    background-color: #24a0ed !important; 
+    color: white !important;
+  
+  }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+  }

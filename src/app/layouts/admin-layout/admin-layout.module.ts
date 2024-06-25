@@ -42,6 +42,8 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     MatTooltipModule,
     DataTablesModule,
     AngularEditorModule,
+
+
   ],
   declarations: [
     DashboardComponent,
@@ -54,7 +56,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     UpgradeComponent,
     ThaiDatePipe,
     TableDetailComponent,
-    
+
   ]
 })
 

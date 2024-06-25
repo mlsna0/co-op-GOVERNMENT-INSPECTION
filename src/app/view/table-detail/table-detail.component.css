@@ -280,7 +280,8 @@ font-style: italic;
   height: 292mm;
   border:none;
   /* max-height: 297mm; */
-  page-break-before: always;
+  page-break-before: always !important;
+  
 }
 .header-topic{
 position: relative;
@@ -541,3 +542,7 @@ position: absolute;
     margin: 20mm;
   }
 }   
+
+.page-break {
+  page-break-before: always !important;
+}

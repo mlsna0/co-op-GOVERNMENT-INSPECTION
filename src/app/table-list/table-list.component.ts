@@ -21,8 +21,8 @@ import { environment } from 'environments/environment';
 import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
 import moment from 'moment';
 import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
+import Tesseract from 'tesseract.js'; // Default import Tesseract.js
 import { AngularEditorConfig } from '@kolkov/angular-editor';
-
 
 @Component({
   selector: 'app-table-list',
@@ -90,10 +90,7 @@ export class TableListComponent implements OnInit {
   loadig:boolean = false;
   
   initialFontSize: number = 14;
-
   htmlContent: string = '';
-
-
 
 
   constructor(
@@ -128,21 +125,26 @@ export class TableListComponent implements OnInit {
     }); 
     this.addPersonalForm = this.fb.group({
       rank: ['',Validators.required],
-      fullname: ['',Validators.required],
+      firstname: ['',Validators.required],
+      lastname: ['',Validators.required],
     });
     
     this.personInputs = this.addItemForm.get('personal') as FormArray;
     this.addPersonInput(); // Add initial input group
     // this.loadViewData();
+
+  
+  
+    
     
   }
   
   documentImageUrl = 'assets/img/sampleA4-1.png';
 
-  
-  ngOnInit(){
-    this.safeHtmlContent = this.getSafeHtml(this.typroText);
+ 
 
+ 
+  ngOnInit(){
     this.loading = true; //เป็นการตรวจ
     this.dtOptions = {
       order:[0],
@@ -374,77 +376,32 @@ saveSignature() {
 
  //End writter section////////////////////////////////////////////////////////////////////////////////////
 
-editorConfig: AngularEditorConfig = {
-  editable: true,
-  spellcheck: true,
-  height: '15rem',
-  minHeight: '5rem',
-  placeholder: 'พิมพ์ข้อความทที่นี่..',
-  translate: 'no',
-  defaultParagraphSeparator: 'p',
-  defaultFontName: 'Sarabun", sans-serif;',
 
-  toolbarHiddenButtons: [
-    [
-      'link',
-      'unlink',
-      'insertImage',
-      'insertVideo',
-      'insertHorizontalRule',
-      'removeFormat',
-      'textColor',
-      'backgroundColor',
-      // 'toggleEditorMode',
-      'heading',
-      'fontName',
-    ],
-  ]
- 
-};
-
-
-setActive(buttonName: string) {
-  this.isTyproActive = buttonName === 'typro';
-  this.isWritteActive = buttonName === 'writte';
-  this.activeButton = buttonName;
+ setActive(button: string){
+  this.activeButton = button;
+  console.log("connected..Active");
+  if (button === 'typro'){
+    this.isTyproActive = true;
+    this.isWritteActive = false;
+    console.log("typro section", this.items);
+  } else if (button === "writte"){
+    this.isTyproActive = false;
+    this.isWritteActive = true;
+    console.log("writte section..");
+  } else {
+    console.log("selection error");
+  }
+  if (this.isWritteActive) {
+    setTimeout(() => this.setupCanvas(), 0);
+  }
 }
-
-formatText(command: string) {
-  document.execCommand(command);
-}
-
-changeFontSize(event: Event) {
-  const target = event.target as HTMLSelectElement;
-  document.execCommand('fontSize', false, target.value);
-}
-
-
-  // setActive(button: string){
-  //   this.activeButton = button;
-  //   console.log("connented..Active")
-  //   if (button === 'typro'){
-  //     this.isTyproActive =true;
-  //     this.isWritteActive =false;
-     
-  //     console.log("typro section", this.items)
-      
-  //   }else if(button ==="writte"){
-  //     this.isTyproActive =false;
-  //     this.isWritteActive =true;
-  //     console.log("writte section..")
-  //   }else{
-  //     console.log("selection error")
-  //   }
-  //   if (this.isWritteActive) {
-  //     setTimeout(() => this.setupCanvas(), 0);
-  //   }
-  // }
 
 
 
   //หน้าจอรายละเอียดข้อมูล
   openDetailModal(recordId: any) {
     this.router.navigate(['/table-detail', recordId]);
+
     // $('#myModal').modal({
     //   backdrop: 'static', // Prevent closing when clicking outside
     //   keyboard: false     // Prevent closing with keyboard (Esc key)
@@ -530,73 +487,91 @@ onRecord(recordId: any) {
 
 
 
-  recordCommit() {
-    console.log("this.ContentRecordID :",this.ContentRecordID);
-    this.safeHtmlContent = this.getSafeHtml(this.typroText);
-     //recordId = this.selectedRecordId ;
-    if (!this.ContentRecordID) {
-      console.error("ID is undefined");
+recordCommit() {
+  console.log("this.ContentRecordID :", this.ContentRecordID);
+
+  if (!this.ContentRecordID) {
+    console.error("ID is undefined");
+    Swal.fire({
+      title: 'เกิดข้อผิดพลาด!',
+      text: 'ไม่มีข้อมูล ID ส่งมา',
+      icon: 'error',
+      confirmButtonText: 'ตกลง'
+    });
+    return;
+  }
+
+  console.log("Record ID being committed:", this.ContentRecordID);
+
+  if (this.isWritteActive) {
+    const canvas: HTMLCanvasElement = document.getElementById('writteCanvas') as HTMLCanvasElement;
+    const context = canvas.getContext('2d');
+
+    if (context) {
+      const dataURL = canvas.toDataURL();
+
+      Tesseract.recognize(dataURL, 'tha') // ใช้ 'tha' สำหรับภาษาไทย
+        .then(({ data: { text } }) => {
+          this.typroText = text;
+          this.saveRecordContent();
+        })
+        .catch(error => {
+          Swal.fire({
+            title: 'เกิดข้อผิดพลาด!',
+            text: 'เกิดข้อผิดพลาดในการแปลงภาพเป็นข้อความ.',
+            icon: 'error',
+            confirmButtonText: 'ตกลง',
+            customClass: {
+              confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+            }
+          });
+        });
+    }
+  } else if (this.isTyproActive) {
+    this.saveRecordContent();
+  }
+}
+
+saveRecordContent() {
+  const recordData = {
+    content: this.typroText,
+    id: this.ContentRecordID
+  };
+
+  this.sv.updateRecordContent(recordData).subscribe(
+    response => {
+      console.log('บันทึกข้อมูลเรียบร้อย', response);
       Swal.fire({
-        title: 'เกิดข้อผิดพลาด!',
-        text: 'ไม่มีข้อมูล ID ส่งมา',
-        icon: 'error',
+        title: 'บันทึกข้อมูลสำเสร็จ!!',
+        text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
+        icon: 'success',
         confirmButtonText: 'ตกลง',
-        didOpen: () => {
-          // เพิ่มคลาสแบบกำหนดเองหลังจาก SweetAlert2 เปิดแล้ว
-          const confirmButton = Swal.getConfirmButton();
-          if (confirmButton) {
-            confirmButton.classList.add('custom-confirm-button');
-          }
+        customClass: {
+          confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          document.querySelector('.swal2-confirm').setAttribute('style', 'background-color: #24a0ed; color: white;');
+          this.refreshPage();
         }
       });
-      return;
+      $('#writtenModel').modal('hide');
+      this.typroText = ''; // ล้างฟิลด์ข้อความ
+    },
+    error => {
+      console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
+      Swal.fire({
+        title: 'เกิดข้อผิดพลาด!',
+        text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
+        icon: 'error',
+        confirmButtonText: 'ตกลง',
+        customClass: {
+          confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+        }
+      });
     }
-  
-    console.log("Record ID being committed:", this.ContentRecordID);
-  
-    const recordData = {
-      content: this.typroText,
-      id: this.ContentRecordID
-    };
-  
-    this.sv.updateRecordContent(recordData).subscribe(
-      response => {
-        console.log('บันทึกข้อมูลเรียบร้อย', response);
-        Swal.fire({
-          title: 'บันทึกข้อมูลสำเสร็จ!!',
-          text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
-          icon: 'success',
-          confirmButtonText: 'ตกลง',
-          didOpen: () => {
-            // เพิ่มคลาสแบบกำหนดเองหลังจาก SweetAlert2 เปิดแล้ว
-            const confirmButton = Swal.getConfirmButton();
-            if (confirmButton) {
-              confirmButton.classList.add('custom-confirm-button');
-            }
-          }
-        }).then((result)=>{
-          if (result.isConfirmed){
-            this.refreshPage();
-          }
-        });
-        $('#writtenModel').modal('hide');
-        this.typroText = ''; // Clear the input field
-  
-      },
-      error => {
-        console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
-        Swal.fire({
-          title: 'เกิดข้อผิดพลาด!',
-          text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
-          icon: 'error',
-          confirmButtonText: 'ตกลง',
-          customClass: {
-            confirmButton: 'custom-confirm-button'
-          }
-        });
-      }
-    );
-  }
+  );
+}
   closeModal() {
     // ซ่อนโมดัล
     $('#insertModel').modal('hide');
@@ -686,7 +661,9 @@ onRecord(recordId: any) {
  createPersonGroup(): FormGroup {
   return this.fb.group({
     rank: ['', Validators.required],
-    fullname: ['', Validators.required]
+    firstname: ['', Validators.required],
+    lastname: ['', Validators.required]
+    // fullname: ['', Validators.required]
   });
   
 }
@@ -760,13 +737,10 @@ get personal(): FormArray {
         text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง',
         icon: 'error',
         confirmButtonText: 'ตกลง',
-        didOpen: () => {
-          // เพิ่มคลาสแบบกำหนดเองหลังจาก SweetAlert2 เปิดแล้ว
-          const confirmButton = Swal.getConfirmButton();
-          if (confirmButton) {
-            confirmButton.classList.add('custom-confirm-button');
-          }
+        customClass: {
+          confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
         }
+
       });
       return;
     }
@@ -787,13 +761,10 @@ get personal(): FormArray {
               text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
               icon: 'success',
               confirmButtonText: 'ตกลง',
-              didOpen: () => {
-                // เพิ่มคลาสแบบกำหนดเองหลังจาก SweetAlert2 เปิดแล้ว
-                const confirmButton = Swal.getConfirmButton();
-                if (confirmButton) {
-                  confirmButton.classList.add('custom-confirm-button');
-                }
+              customClass: {
+                confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
               }
+
       }).then((result)=>{
         if (result.isConfirmed){
           this.refreshPage();
@@ -812,12 +783,9 @@ get personal(): FormArray {
             text: 'การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ',
             icon: 'error',
             confirmButtonText: 'ตกลง',
-            didOpen: () => {
-              // เพิ่มคลาสแบบกำหนดเองหลังจาก SweetAlert2 เปิดแล้ว
-              const confirmButton = Swal.getConfirmButton();
-              if (confirmButton) {
-                confirmButton.classList.add('custom-confirm-button');
-              }
+            confirmButtonColor: "#24a0ed",
+            customClass: {
+              confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
             }
           });
 
@@ -971,22 +939,83 @@ showPDF(id: string) {
 
 /////////////////////////////// formatFont Edit
 
-// formatText(command: string): void {
-//   document.execCommand(command, false, '');
-//   this.updateTyproText();
-// }
+formatText(command: string): void {
+  document.execCommand(command, false, '');
+  this.updateTyproText();
+}
 
 onInput(event: Event): void {
   const target = event.target as HTMLElement;
   this.typroText = target.innerHTML;
 }
 
-
-
+updateFontSize(): void {
+  const fontElements = document.getElementsByTagName('font');
+  for (let i = 0; i < fontElements.length; i++) {
+    const element = fontElements[i] as HTMLElement;
+    const size = element.getAttribute('size');
+    if (size) {
+      switch (size) {
+        case '1':
+          element.style.fontSize = '8px';
+          break;
+        case '2':
+          element.style.fontSize = '10px';
+          break;
+        case '3':
+          element.style.fontSize = '12px';
+          break;
+        case '4':
+          element.style.fontSize = '14px';
+          break;
+        case '5':
+          element.style.fontSize = '18px';
+          break;
+        case '6':
+          element.style.fontSize = '24px';
+          break;
+    
+      }
+      element.removeAttribute('size');
+    }
+  }
+  this.updateTyproText();
+}
 updateTyproText(): void {
 const editableDiv = document.querySelector('.form-control.full-page-textarea');
 if (editableDiv) {
   this.typroText = (editableDiv as HTMLElement).innerHTML;
+}
+}
+changeFontSize(event: Event): void {
+const target = event.target as HTMLSelectElement;
+const fontSize = target.value;
+const selection = window.getSelection();
+if (!selection.rangeCount) return;
+
+const range = selection.getRangeAt(0);
+const span = document.createElement('span');
+span.style.fontSize = this.mapFontSize(fontSize);
+range.surroundContents(span);
+this.updateTyproText();
+}
+
+mapFontSize(size: string): string {
+switch (size) {
+  case '1':
+    return '8px';
+  case '2':
+    return '10px';
+  case '3':
+    return '12px';
+  case '4':
+    return '14px';
+  case '5':
+    return '18px';
+  case '6':
+    return '24px';
+  default:
+    return '14px'; // Default size
 }
 }
 
@@ -1005,12 +1034,32 @@ loadContent() {
     };
   }
 
-saveContent() {
-    // บันทึกข้อมูลที่มี HTML Tags
-    // สมมติว่าข้อมูลที่ได้รับมาถูกเก็บในตัวแปร typroText
-    this.safeHtmlContent = this.getSafeHtml(this.typroText); // สร้าง safeHtmlContent เมื่อบันทึกข้อมูลใหม่
-  }
- 
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+    spellcheck: true,
+    height: '15rem',
+    // minHeight: '5rem',
+    placeholder: 'พิมพ์ข้อความทที่นี่..',
+    translate: 'yes',
+    defaultParagraphSeparator: 'p',
+    defaultFontName: 'Sarabun", sans-serif;',
+    sanitize: false,  //สำคัญมากถ้าอยากให้มันอยู่คงฟอร์ม มันเป็นตัวควบคุมว่าจะแยก HTML ที่ไม่ปลอดภัยออกจากเนื้อหาหรือไม่ 
+    toolbarHiddenButtons: [
+      [
+        'link',
+        'unlink',
+        'insertImage',
+        'insertVideo',
+        'insertHorizontalRule',
+        'removeFormat', 
+        'textColor',
+        'backgroundColor',
+        // 'toggleEditorMode',
+        'heading',
+        'fontName',
+      ],
+    ],
+  };
 }
 
 
