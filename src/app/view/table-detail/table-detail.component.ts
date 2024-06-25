@@ -345,7 +345,7 @@ onMouseMove(event: MouseEvent): void {
     });
   }
 
-  saveRCPDF = () => {
+  async saveRCPDF() {
     console.log("Updating PDF in dictionary...");
     const elementToPrint = document.getElementById('myDetail');
   
@@ -354,12 +354,13 @@ onMouseMove(event: MouseEvent): void {
       return;
     }
   
-    html2canvas(elementToPrint, { scale: 2 }).then((canvas) => {
+    try {
+      const canvas = await html2canvas(elementToPrint, { scale: 2 });
       const pdf = new jsPDF('p', 'mm', 'a4');
       const imgData = canvas.toDataURL('image/png');
   
       const pdfWidth = 210; // A4 width in mm
-      const pdfHeight = 297 ;//(canvas.height * pdfWidth) / canvas.width
+      const pdfHeight = 297; // A4 height in mm
   
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
   
@@ -379,7 +380,6 @@ onMouseMove(event: MouseEvent): void {
           response => {
             console.log('PDF saved successfully:', response);
             this.router.navigate(['/table-list']);
-
           },
           error => {
             console.error('Error saving PDF:', error);
@@ -388,9 +388,9 @@ onMouseMove(event: MouseEvent): void {
       } else {
         console.error('savePDF function is not defined or not a function');
       }
-    }).catch((error) => {
+    } catch (error) {
       console.error('Error generating PDF:', error);
-    });
+    }
     
     $('#myModal').modal('hide');
   }
