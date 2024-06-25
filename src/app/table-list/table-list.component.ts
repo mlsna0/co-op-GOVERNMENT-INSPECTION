@@ -1043,7 +1043,7 @@ loadContent() {
     translate: 'no',
     defaultParagraphSeparator: 'p',
     defaultFontName: 'Sarabun", sans-serif;',
-    
+    sanitize:false,
     toolbarHiddenButtons: [
       [
         'link',
