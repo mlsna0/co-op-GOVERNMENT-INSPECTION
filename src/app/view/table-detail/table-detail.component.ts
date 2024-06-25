@@ -1,4 +1,4 @@
-import { Component, OnInit ,ChangeDetectorRef, ViewChildren,ElementRef,HostListener,Renderer2 } from '@angular/core';
+import { Component, OnInit ,ChangeDetectorRef, ViewChildren,ElementRef,HostListener,Renderer2,ViewChild } from '@angular/core';
 import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray,AbstractControl } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
@@ -31,7 +31,9 @@ import { NgxExtendedPdfViewerService, pdfDefaultOptions } from 'ngx-extended-pdf
 })
 export class TableDetailComponent implements OnInit {
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
+  @ViewChild('firstPage', { static: false }) firstPage: ElementRef; //break page
 
+  details: any[] = []; //break page
   textContentLength:number =0;
   recordId: any;
   viewData=[];
@@ -269,7 +271,20 @@ onMouseMove(event: MouseEvent): void {
   BackRoot(){
     this.router.navigate(['/table-list']);
   }
+//add page??
+  addDetail() {
+    console.log("addDetail work")
+    this.details.push({});
+  }
+//page break
+checkContentHeight() {
+  const firstPageElement = this.firstPage.nativeElement;
+  const signContentElement = firstPageElement.querySelector('.sign-content');
 
+  if (firstPageElement.scrollHeight > firstPageElement.clientHeight) {
+    this.renderer.appendChild(this.details[0], signContentElement);
+  }
+}
   // truncateAndStoreContent(data: string, maxLength: number): void {
   //   if (data.length > maxLength) {
   //     this.displayedContent = data.substring(0, maxLength) + '...';
@@ -291,11 +306,11 @@ onMouseMove(event: MouseEvent): void {
   //show content table
   getSafeHtml(content: string): SafeHtml {
     
-    const textcontent = content.substring(0, 950);
+    const textcontent = content.substring(0, 1200);
     this.textContentLength = textcontent.length; 
-    this.remainingContent = content.substring(950);
-    console.log("textContent :",textcontent)
-    console.log("textContent Count :",this.textContentLength)
+    this.remainingContent = content.substring(1200);
+    // console.log("textContent :",textcontent)
+    // console.log("textContent Count :",this.textContentLength)
     return this.sanitizer.bypassSecurityTrustHtml(textcontent);
     }
 

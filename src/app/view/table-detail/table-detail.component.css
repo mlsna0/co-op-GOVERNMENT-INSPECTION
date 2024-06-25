@@ -45,7 +45,21 @@
       max-height:297mm ;
       /* overflow: auto;   */
   }
+
+    /*page Break */
+  /* .page {
+    width: 210mm;
+    height: 297mm;
+    position: relative;
+    display: inline-block;
+    
+  } */
   
+  .page-break {
+    page-break-before: always;
+  }
+
+  /*end page break*/
   
   .Detail-content{
     position: relative;
@@ -497,6 +511,8 @@
     color: #000000;
     font-weight: 400;
   }
+
+  /*upload file botton */
   :host ::ng-deep .uploadFilePDF{
     position: relative;
     margin: 10px 0 60px 0;
@@ -524,6 +540,8 @@
     color: white;
     border-radius: 5px 0 0 5px ;
   }
+/*end botton upload file PDF*/
+
   
   @media print {
     #myDetail{

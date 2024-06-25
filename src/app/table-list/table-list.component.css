@@ -621,12 +621,14 @@ right: 25px;
 }
 
 :host ::ng-deep .angular-editor-textarea {
-  border: 1px !important;
+  border: none !important;
+  border-bottom-left-radius: 5px !important;
+  border-top-right-radius:5px !important ;
   padding: 10px !important;
   overflow: auto !important;
   margin-top: 5px !important;
   resize: none !important;
-  height: 101.7mm !important;
+  height: 103.7mm !important;
   top: -5px !important;
 }
 :host ::ng-deep .custom-confirm-button{
