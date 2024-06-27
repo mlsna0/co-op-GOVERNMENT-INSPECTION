@@ -64,6 +64,7 @@ export class TableDetailComponent implements OnInit {
   private offsetX = 0;
   private offsetY = 0;
   testFile:any;
+  remainingContent: string;
 
 
   constructor(
