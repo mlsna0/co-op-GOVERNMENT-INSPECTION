@@ -32,7 +32,7 @@ import { NgxExtendedPdfViewerService, pdfDefaultOptions } from 'ngx-extended-pdf
 export class TableDetailComponent implements OnInit {
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
 
-
+  textContentLength:number =0;
   recordId: any;
   viewData=[];
   boxes: any[] = [];
@@ -97,7 +97,7 @@ export class TableDetailComponent implements OnInit {
     
       console.log("it on working.. ")
       if (this.detailItems && this.detailItems.record_content) {
-          this.truncateAndStoreContent(this.detailItems.record_content, 250);
+          // this.truncateAndStoreContent(this.detailItems.record_content, 250);
       }
       console.log("Displayed content:", this.displayedContent);
       console.log("Truncated content:", this.truncatedContent);
@@ -303,26 +303,32 @@ onMouseMove(event: MouseEvent): void {
     this.router.navigate(['/table-list']);
   }
 
-  truncateAndStoreContent(data: string, maxLength: number): void {
-    if (data.length > maxLength) {
-      this.displayedContent = data.substring(0, maxLength) + '...';
-      this.truncatedContent = data.substring(maxLength);
-    } else {
-      this.displayedContent = data;
-      this.truncatedContent = '';
-    }
+  // truncateAndStoreContent(data: string, maxLength: number): void {
+  //   if (data.length > maxLength) {
+  //     this.displayedContent = data.substring(0, maxLength) + '...';
+  //     this.truncatedContent = data.substring(maxLength);
+  //   } else {
+  //     this.displayedContent = data;
+  //     this.truncatedContent = '';
+  //   }
 
-  }
-  onMaxLengthChange(newMaxLength: number): void {
-    this.maxLength = newMaxLength;
-    if (this.detailItems && this.detailItems.record_content) {
-      this.truncateAndStoreContent(this.detailItems.record_content, this.maxLength);
-    }
-  }
+  // }
+  // onMaxLengthChange(newMaxLength: number): void {
+  //   this.maxLength = newMaxLength;
+  //   if (this.detailItems && this.detailItems.record_content) {
+  //     this.truncateAndStoreContent(this.detailItems.record_content, this.maxLength);
+  //   }
+  // }
 
+
+  //show content table
   getSafeHtml(content: string): SafeHtml {
-    const textcontent = content.substring(0, 850);
-
+    
+    const textcontent = content.substring(0, 950);
+    this.textContentLength = textcontent.length; 
+    this.remainingContent = content.substring(950);
+    console.log("textContent :",textcontent)
+    console.log("textContent Count :",this.textContentLength)
     return this.sanitizer.bypassSecurityTrustHtml(textcontent);
     }
 
@@ -339,7 +345,7 @@ onMouseMove(event: MouseEvent): void {
 
   printPDF = () => {
     console.log("working PDF..");
-    const elementToPrint = document.getElementById('myDetail');
+    const elementToPrint = document.getElementById('myDetail'); //,pdf-viewer
     const A4_WIDTH = 210; // Width of A4 in mm
     const A4_HEIGHT = 297; // Height of A4 in mm
     const canvasScale = 2; // Scale factor for higher resolution canvas

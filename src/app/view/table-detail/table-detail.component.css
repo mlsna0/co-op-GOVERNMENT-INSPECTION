@@ -21,7 +21,7 @@
     font-family: 'Sarabun', sans-serif; 
   }
   .card-body tbody{
-    font-size: 14px;
+    font-size: 16px;
   }
   
   .MainTableDetail{
@@ -67,7 +67,7 @@
     border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
     width: 600px;
     overflow: auto;
-    padding: 20px 0 0 0; /* เพิ่มระยะห่างบนและล่าง */
+    padding: 10px 0 0 0; /* เพิ่มระยะห่างบนและล่าง */
     font-family:  'Sarabun', sans-serif; /* ใช้ฟอนต์ราชการ */
   }
   .card-header{
@@ -323,14 +323,14 @@
   .detail-content .form-group label {
       display: inline-block;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 16px;
     }
     
   .detail-content .form-group p {
       display: inline-block;
       margin: 0;
       padding-left: 10px;
-      font-size: 14px;
+      font-size: 16px;
     }
   
   .date-flex{
@@ -378,8 +378,11 @@
   
   .sign-content{
       position: relative;
-      padding-left: 380px;
-      
+      /* padding-left: 360px; */
+      display: flex;
+      justify-content: flex-end;
+      font-size: 16px;
+      font-family: 'Sarabun',sans-serif;
       text-align: center;
       margin-top: 20px;
     }
