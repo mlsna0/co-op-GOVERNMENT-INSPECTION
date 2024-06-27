@@ -1019,10 +1019,6 @@ switch (size) {
 }
 }
 
-getSafeHtml(content: string): SafeHtml {
-return this.sanitizer.bypassSecurityTrustHtml(content);
-}
-
 editContent() {
   this.typroText = this.detailItems.record_content;
   this.isTyproActive = true; // เปิดการแก้ไข

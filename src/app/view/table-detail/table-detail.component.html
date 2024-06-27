@@ -5,7 +5,7 @@
 
         <div class="modal-header card-header card-header-danger">
             <h5 class="modal-title" id="myModalLabel"
-                style="color: white; font-family: 'Sarabun', sans-serif !important; ">รายละเอียด</h5>
+                style="color: white; font-family: 'Sarabun', sans-serif !important; font-size: 18px;">รายละเอียด</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="BackRoot()">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -21,13 +21,17 @@
                     class="fa fa-times"></i></button>
         </div>
         <!-- <button (click)="addDetail()">เพิ่มหน้าใหม่</button> -->
+         <!--หน้าในการแสดง ไฟล์ pdf ที่อัปโหลดมา-->
         <div *ngIf="selectedFilePath">
-            <!-- <ngx-extended-pdf-viewer *ngIf="testFile" [base64Src]="testFile"
-            [useBrowserLocale]="true" [handtool]="false" [showHandToolButton]="true" [render-text]="true" style="display: block; align-items: center;" width="100%" height="297mm">
-              <p style="vertical-align: middle;text-align: center;" >PDF cannot be displayed..</p>
-            </ngx-extended-pdf-viewer>  -->
-            <pdf-viewer id="pdf-viewer" *ngIf="testFile" [src]="testFile" [render-text]="true" [original-size]="true"
-                [show-borders]="true" style="width: 400px; height: 500px;"></pdf-viewer>
+
+            <pdf-viewer id="pdf-viewer" *ngIf="testFile"
+                [src]="testFile" 
+                [render-text]="true" 
+                [original-size]="true"
+                [borders]="true"
+                [show-borders]="true" 
+                style="width: 210mm; height: 297mm;">
+            </pdf-viewer>
             <img *ngIf="isFileImage" [src]="selectedFilePath" alt="Image"
                 style="display: block; align-items: center; max-width:  100%; max-height: 297mm;">
         </div>
@@ -41,7 +45,7 @@
                     <div class="mainCenter-panel ">
                         <div class="header-topic">
 
-                            <label style="font-size: 16px; font-weight: bold;">เอกสารตรวจสอบ</label>
+                            <label style="font-size: 18px; font-weight: bold;">เอกสารตรวจสอบ</label>
                             <p>{{ detailItems?.record_topic }}</p>
 
                         </div>
@@ -72,8 +76,8 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th style="text-align: center; vertical-align: middle;">ครั้งที่</th>
-                                        <th>เนื้อหาการตรวจสอบ</th>
+                                        <th style="text-align: center; vertical-align: middle; width: 10%;">ครั้งที่</th>
+                                        <th style="text-align: center; vertical-align: middle;">เนื้อหาการตรวจสอบ</th>
                                     </tr>
 
                                 </thead>
@@ -89,7 +93,7 @@
                             </table>
                         </div>
 
-                        <div class="sign-content"  [ngStyle]="{'display':!remainingContent ? 'flex' : 'none'}">
+                        <div *ngIf="!remainingContent" class="sign-content" [ngStyle]="{'display':!remainingContent ? 'flex' : 'none'}" > <!-- [ngStyle]="{'display':!remainingContent ? 'flex' : 'none'}"-->
                             <div class="form-group" style="width: auto;">
                                 <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
                                 <div *ngFor="let person of viewData; let i = index">
@@ -125,10 +129,10 @@
 
             <!--page2?-->
             
-            <div id="myDetail" class="modal-body-detail" [ngStyle]="{'display': testFile ||!remainingContent ? 'none' : 'block', width: '210mm' }">
+            <div  id="myDetail" class="modal-body-detail" [ngStyle]="{'display': (testFile ||!remainingContent) ? 'none' : 'block', width: '210mm' }">
             
                 <form action method="get">
-                    <div class="mainCenter-panel ">
+                    <div #signContentContainer class="mainCenter-panel ">
                        
     
                         <div class="main-detail">
@@ -136,16 +140,16 @@
                                
                                 <tbody>
                                     <tr>
-                                        <td style="vertical-align: text-top;">
-                                      
+                                        <td >
+                                
                                         </td>
-                                        <td [innerHTML]="getSafeHtml(remainingContent)"></td>
+                                        <td [innerHTML]="getSafeHtml(remainingContent)" style="width: 90%;"></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
     
-                        <div class="sign-content" >
+                        <div  class="sign-content" [ngStyle]="{'display': isContentOverflow ? 'none' : 'flex'}"><!--  *ngIf="!otherRemainingContent" [ngStyle]="{'display':!otherRemainingContent ? 'flex' : 'none'}"-->
                             <div class="form-group" style="width: auto;">
                                 <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
                                 <div *ngFor="let person of viewData; let i = index" >
@@ -177,6 +181,60 @@
                 </form>
                 
             </div>
+
+            <!--page3-->
+            <!-- <div id="myDetail" class="modal-body-detail" [ngStyle]="{'display': (testFile ||!otherRemainingContent) ? 'none' : 'block', width: '210mm' }">
+            
+                <form action method="get">
+                    <div class="mainCenter-panel ">
+                       
+    
+                        <div class="main-detail">
+                            <table>
+                               
+                                <tbody>
+                                    <tr>
+                                        <td >
+                                
+                                        </td>
+                                        <td [innerHTML]="getSafeHtml(otherRemainingContent)" style="width: 90%;"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+    
+                        <div class="sign-content">
+                            <div class="form-group" style="width: auto;">
+                                <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
+                                <div *ngFor="let person of viewData; let i = index" >
+                                    <div class="UploadContentBox">
+                                        
+                                        <div class="openSignModal" (click)="openSignModal(i)">
+                                            <a>คลิกเพื่อเซ็น</a>
+    
+                                        </div>
+                                  
+                                        <div class="Writte-sign" #writteSignElement id="SignModal-{{i}}"
+                                            *ngIf="isSignModalVisible[i]">
+                                            <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error someting
+                                                with
+                                                canvas</canvas>
+                                         
+                                        </div>
+    
+    
+                                    </div>
+    
+                                    <a style="position: relative; font-size: 16px; display: inline;">( {{ person.view_rank }} &nbsp;  {{ person.view_first_name }} &nbsp;{{ person.view_last_name }} )</a>
+                                </div>
+                            </div>
+                        </div>
+    
+    
+                    </div>
+                </form>
+                
+            </div> -->
 
             
         </div>

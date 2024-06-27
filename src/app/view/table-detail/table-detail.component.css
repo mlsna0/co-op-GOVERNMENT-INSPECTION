@@ -79,8 +79,8 @@
   .main-detail {
     position: relative;
     border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
-    width: 600px;
-    overflow: auto;
+    width:605px;
+   
     padding: 10px 0 0 0; /* เพิ่มระยะห่างบนและล่าง */
     font-family:  'Sarabun', sans-serif; /* ใช้ฟอนต์ราชการ */
   }
@@ -237,8 +237,9 @@
   }
   .Writte-sign{
   position: absolute; /*[ng-reflect-writteSignElement]*/
-  left: 50px;
+  left: 53px;
   display: flex; /* Hidden by default */
+  align-items: center;
   top: 0;
   width: 100%;
   height: 20mm;
@@ -352,19 +353,14 @@
       justify-content: space-between;
     }
     /*location td*/
-    /* .table-responsive table td:nth-child(4) {
-      max-width: 220px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    } */
-  
-  
+ 
  
   .main-detail table{
       max-width: 600px;
       table-layout: fixed;
       overflow: auto;
+      border-collapse: collapse;
+      border: 0.1px solid black;
     }
   .main-detail th, .main-detail td {
       max-width: 539.29px;
@@ -376,11 +372,12 @@
     }
     
   .main-detail th:first-child, .main-detail td:first-child {
-      width: 10%;
+    text-align: center;
+      width: 12%;
     }
     
   .main-detail th:last-child, .main-detail td:last-child {
-      width: 90%;
+      width: 88%;
     }
   .main-detail th {
       background-color: #f2f2f2; /* พื้นหลังสีเทาอ่อนสำหรับหัวตาราง */
@@ -539,6 +536,12 @@
     background-color: #24a0ed;
     color: white;
     border-radius: 5px 0 0 5px ;
+  }
+็
+  :host ::ng-deep .pdfViewer .page{
+    border: 1px solid black !important;
+    /* margin: 1px auto -8px; */
+
   }
 /*end botton upload file PDF*/
 
