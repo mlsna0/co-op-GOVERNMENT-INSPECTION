@@ -378,7 +378,7 @@
   .main-detail th:last-child, .main-detail td:last-child {
       width: 88%;
     }
-  .main-detail th {
+  .main-detail th {   
       background-color: #f2f2f2; /* พื้นหลังสีเทาอ่อนสำหรับหัวตาราง */
     }
     
@@ -400,6 +400,7 @@
       position: relative;
       display: flex;
       align-items: center;
+       cursor: move;
       justify-content: center;
     }
   
