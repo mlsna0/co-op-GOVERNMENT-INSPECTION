@@ -15,6 +15,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 // import { PdfViewerModule } from 'ng2-pdf-viewer'; 
 import { AngularEditorModule } from '@kolkov/angular-editor';
 
+
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -33,6 +34,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
   declarations: [
     AppComponent,
     AdminLayoutComponent,
+
    
 
  

@@ -59,7 +59,7 @@ export class TableDetailComponent implements OnInit {
   isFileImage =false;
   isFileDocument =false;
 
-  isSignModalVisible: boolean[] = [];
+  isSignModalVisible: boolean[] = [false];
   private canvas2: HTMLCanvasElement;
   private ctx2: CanvasRenderingContext2D;
   penColor2: string = 'black';
@@ -374,7 +374,7 @@ onMouseMove(event: MouseEvent): void {
 
 //ิback to table-list
   BackRoot(){
-    this.router.navigate(['/table-list']);
+    this.router.navigate(['/table-main']);
   }
 //add page??
   addDetail() {
@@ -435,6 +435,10 @@ onMouseMove(event: MouseEvent): void {
     }
 
     elements.forEach((element, index) => {
+      const style = getComputedStyle(element as HTMLElement);
+      if (style.display === 'none') {
+        return; // ข้าม element ที่ไม่แสดง
+      }
       promises.push(
         html2canvas(element as HTMLElement, {
           scale: 2,

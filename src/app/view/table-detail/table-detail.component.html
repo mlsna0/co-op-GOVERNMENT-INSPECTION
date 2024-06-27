@@ -126,6 +126,7 @@
                 </form>
 
             </div>
+            
 
             <!--page2?-->
             
@@ -155,7 +156,7 @@
                                 <div *ngFor="let person of viewData; let i = index" >
                                     <div class="UploadContentBox">
                                         
-                                        <div class="openSignModal" (click)="openSignModal(i)">
+                                        <div  class="openSignModal" (click)="openSignModal(i)" [ngStyle]="{'display':isSignModalVisible[i] ? 'none':'flex'}" >
                                             <a>คลิกเพื่อเซ็น</a>
     
                                         </div>
