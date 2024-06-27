@@ -35,8 +35,8 @@ export class TableDetailComponent implements OnInit {
 
   recordId: any;
   viewData=[];
- 
-  addItemForm: any;
+  boxes: any[] = [];
+  addItemForm: any; 
   
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
@@ -139,7 +139,7 @@ export class TableDetailComponent implements OnInit {
       };
 
       const draw = (e: MouseEvent) => {
-        if (!painting) return;
+        if (!painting) return;    
 
         if (this.ctx2) { // Ensure ctx2 is not undefined
           this.ctx2.lineWidth = this.penSize2;
@@ -182,6 +182,23 @@ export class TableDetailComponent implements OnInit {
     }, 0);  
     console.log("it openSign status : ",this.isSignModalVisible)
   }
+  addBox() {
+    this.boxes.push({ top: '0px', left: '0px' });
+    this.isSignModalVisible.push(false);
+  }
+  onDragStart(event: DragEvent, index: number) {
+    const box = this.boxes[index];
+    box.dragStartX = event.clientX - box.left;
+    box.dragStartY = event.clientY - box.top;
+  }
+
+  onDragEnd(event: DragEvent, index: number) {
+    const box = this.boxes[index];
+    box.left = event.clientX - box.dragStartX;
+    box.top = event.clientY - box.dragStartY;
+    delete box.dragStartX;
+    delete box.dragStartY;  
+  }
 
   blobToBase64(blob): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -197,37 +214,47 @@ export class TableDetailComponent implements OnInit {
 
   //open file pdf to preview or edit to sign
   async onFileSelected(event: any){
-    this.selectedFile = event.target.files[0]?? null;
+    this.selectedFile = event.target.files[0] ?? null;
+    const btnAddBox = document.getElementById('btn-add-box');
+  
     if(this.selectedFile){
       this.testFile = await this.blobToBase64(event.target.files[0])
-      console.log("test file : ",this.testFile);
-      
-
-      var reader =new FileReader();
-      console.log("event.target.files[0] : ",event.target.files[0]);
+      console.log("test file : ", this.testFile);
+  
+      var reader = new FileReader();
+      console.log("event.target.files[0] : ", event.target.files[0]);
       reader.readAsDataURL(event.target.files[0]);
-      
-      reader.onload =(event)=>{
-        let path =event.target == null ? '':event.target.result;
+  
+      reader.onload = (event) => {
+        let path = event.target == null ? '' : event.target.result;
         this.selectedFilePath = path as string;
         this.selectedFileB64 = this.selectedFilePath.split(",")[1];
         this.testFile = reader.result;
+  
         if(this.selectedFilePath.includes('image')){
           this.isFileImage = true;
           this.isFileDocument = false;
-          
-         
-        }else{
+        } else {
           this.isFileImage = false;
           this.isFileDocument = true;
-        
         }
-        console.log("this is files img: ",this.isFileImage)
-        console.log("this is files Doc: ",this.isFileDocument)
+        
+        console.log("this is files img: ", this.isFileImage);
+        console.log("this is files Doc: ", this.isFileDocument);
+  
+        // แสดงปุ่มเมื่อมีไฟล์ถูกเลือก
+        if (btnAddBox) {
+          btnAddBox.style.display = 'block';
+        }
+      }
+    } else {
+      // ซ่อนปุ่มเมื่อไม่มีไฟล์ถูกเลือก
+      if (btnAddBox) {
+        btnAddBox.style.display = 'none';
       }
     }
-
   }
+  
   clearFileInput(): void {
     this.selectedFile = null;
     this.selectedFilePath = '';
@@ -236,8 +263,14 @@ export class TableDetailComponent implements OnInit {
     this.isFileDocument = false;
     this.testFile = undefined;
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    const btnAddBox = document.getElementById('btn-add-box'); // เพิ่มส่วนนี้
+  
     if (fileInput) {
       fileInput.value = '';
+    }
+    
+    if (btnAddBox) { // เพิ่มส่วนนี้
+      btnAddBox.style.display = 'none';
     }
   }
 
@@ -345,7 +378,7 @@ onMouseMove(event: MouseEvent): void {
     });
   }
 
-  saveRCPDF = () => {
+  async saveRCPDF() {
     console.log("Updating PDF in dictionary...");
     const elementToPrint = document.getElementById('myDetail');
   
@@ -354,12 +387,13 @@ onMouseMove(event: MouseEvent): void {
       return;
     }
   
-    html2canvas(elementToPrint, { scale: 2 }).then((canvas) => {
+    try {
+      const canvas = await html2canvas(elementToPrint, { scale: 2 });
       const pdf = new jsPDF('p', 'mm', 'a4');
       const imgData = canvas.toDataURL('image/png');
   
       const pdfWidth = 210; // A4 width in mm
-      const pdfHeight = 297 ;//(canvas.height * pdfWidth) / canvas.width
+      const pdfHeight = 297; // A4 height in mm
   
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
   
@@ -379,7 +413,6 @@ onMouseMove(event: MouseEvent): void {
           response => {
             console.log('PDF saved successfully:', response);
             this.router.navigate(['/table-list']);
-
           },
           error => {
             console.error('Error saving PDF:', error);
@@ -388,9 +421,9 @@ onMouseMove(event: MouseEvent): void {
       } else {
         console.error('savePDF function is not defined or not a function');
       }
-    }).catch((error) => {
+    } catch (error) {
       console.error('Error generating PDF:', error);
-    });
+    }
     
     $('#myModal').modal('hide');
   }

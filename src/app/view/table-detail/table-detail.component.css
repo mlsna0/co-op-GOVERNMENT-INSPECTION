@@ -368,7 +368,7 @@
   .main-detail th:last-child, .main-detail td:last-child {
       width: 90%;
     }
-  .main-detail th {
+  .main-detail th {   
       background-color: #f2f2f2; /* พื้นหลังสีเทาอ่อนสำหรับหัวตาราง */
     }
     
@@ -387,6 +387,7 @@
       position: relative;
       display: flex;
       align-items: center;
+       cursor: move;
       justify-content: center;
     }
   
@@ -520,6 +521,14 @@
     background-color: #24a0ed;
     color: white;
     border-radius: 5px 0 0 5px ;
+  }
+  :host ::ng-deep .btn-add-box{
+    color: #fff;
+    background-color: rgb(24,144,255) ;/*#000dc2ef rgb(24,144,255)  #24a0ed*/
+    border-color: #00087c9f;
+    /* box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd; /
+    / left: -50px; */
+
   }
   
   @media print {
