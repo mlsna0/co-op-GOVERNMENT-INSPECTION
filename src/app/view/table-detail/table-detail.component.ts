@@ -32,7 +32,7 @@ import { NgxExtendedPdfViewerService, pdfDefaultOptions } from 'ngx-extended-pdf
 export class TableDetailComponent implements OnInit {
   @ViewChildren('writteSignElement') writteSignElements :QueryList<ElementRef>;
   @ViewChild('firstPage', { static: false }) firstPage: ElementRef; //break page
-  @ViewChild('signContentContainer') signContentContainers: ElementRef;//for over sign-content
+  @ViewChild('mainCenterPanel') mainCenterPanel: ElementRef;//for over sign-content
 
   details: any[] = []; //break page
   textContentLength:number =0;
@@ -132,7 +132,7 @@ export class TableDetailComponent implements OnInit {
     window.removeEventListener('resize', this.checkContentOverflow.bind(this));
   }
 
-  
+
   //////////////////////////////////////////////////////////////////////
   setupSignCanvas(index: number) {
     this.canvas2 = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
@@ -367,12 +367,19 @@ onMouseMove(event: MouseEvent): void {
 //page break
 
 
-checkContentOverflow() {
-  const element = this.signContentContainers.nativeElement;
-  const contentHeight = element.scrollHeight;
-  const containerHeight = element.clientHeight;
-  this.isContentOverflow = element.scrollHeight > element.clientHeight;
-}
+ checkContentOverflow() {
+    const mainDetailElement = document.getElementById('myDetail');
+    const mainCenterPanelElement = this.mainCenterPanel.nativeElement;
+    
+    if (mainDetailElement && mainCenterPanelElement) {
+      const contentHeight = mainCenterPanelElement.scrollHeight;
+      const containerHeight = mainDetailElement.clientHeight;
+      console.log('contentHeight:', contentHeight);
+      console.log('containerHeight:', containerHeight);
+      this.isContentOverflow = contentHeight > containerHeight;
+      console.log('isContentOverflow:', this.isContentOverflow);
+    }
+  }
 
 
   //show content table
@@ -385,7 +392,7 @@ checkContentOverflow() {
     this.remainingContentLength = this.remainingContent.length;
     // console.log("textContent :",textcontent)
     // console.log("textContent Count :",this.textContentLength)
-    console.log("textREMAINContent Count :",this.remainingContentLength)
+    // console.log("textREMAINContent Count :",this.remainingContentLength)
     return this.sanitizer.bypassSecurityTrustHtml(textcontent);
     }
 
