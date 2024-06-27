@@ -32,11 +32,11 @@ import { NgxExtendedPdfViewerService, pdfDefaultOptions } from 'ngx-extended-pdf
 export class TableDetailComponent implements OnInit {
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
 
-
+  textContentLength:number =0;
   recordId: any;
   viewData=[];
- 
-  addItemForm: any;
+  boxes: any[] = [];
+  addItemForm: any; 
   
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
@@ -64,6 +64,7 @@ export class TableDetailComponent implements OnInit {
   private offsetX = 0;
   private offsetY = 0;
   testFile:any;
+  remainingContent: string;
 
 
   constructor(
@@ -97,7 +98,7 @@ export class TableDetailComponent implements OnInit {
     
       console.log("it on working.. ")
       if (this.detailItems && this.detailItems.record_content) {
-          this.truncateAndStoreContent(this.detailItems.record_content, 250);
+          // this.truncateAndStoreContent(this.detailItems.record_content, 250);
       }
       console.log("Displayed content:", this.displayedContent);
       console.log("Truncated content:", this.truncatedContent);
@@ -139,7 +140,7 @@ export class TableDetailComponent implements OnInit {
       };
 
       const draw = (e: MouseEvent) => {
-        if (!painting) return;
+        if (!painting) return;    
 
         if (this.ctx2) { // Ensure ctx2 is not undefined
           this.ctx2.lineWidth = this.penSize2;
@@ -182,6 +183,23 @@ export class TableDetailComponent implements OnInit {
     }, 0);  
     console.log("it openSign status : ",this.isSignModalVisible)
   }
+  addBox() {
+    this.boxes.push({ top: '0px', left: '0px' });
+    this.isSignModalVisible.push(false);
+  }
+  onDragStart(event: DragEvent, index: number) {
+    const box = this.boxes[index];
+    box.dragStartX = event.clientX - box.left;
+    box.dragStartY = event.clientY - box.top;
+  }
+
+  onDragEnd(event: DragEvent, index: number) {
+    const box = this.boxes[index];
+    box.left = event.clientX - box.dragStartX;
+    box.top = event.clientY - box.dragStartY;
+    delete box.dragStartX;
+    delete box.dragStartY;  
+  }
 
   blobToBase64(blob): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -197,37 +215,47 @@ export class TableDetailComponent implements OnInit {
 
   //open file pdf to preview or edit to sign
   async onFileSelected(event: any){
-    this.selectedFile = event.target.files[0]?? null;
+    this.selectedFile = event.target.files[0] ?? null;
+    const btnAddBox = document.getElementById('btn-add-box');
+  
     if(this.selectedFile){
       this.testFile = await this.blobToBase64(event.target.files[0])
-      console.log("test file : ",this.testFile);
-      
-
-      var reader =new FileReader();
-      console.log("event.target.files[0] : ",event.target.files[0]);
+      console.log("test file : ", this.testFile);
+  
+      var reader = new FileReader();
+      console.log("event.target.files[0] : ", event.target.files[0]);
       reader.readAsDataURL(event.target.files[0]);
-      
-      reader.onload =(event)=>{
-        let path =event.target == null ? '':event.target.result;
+  
+      reader.onload = (event) => {
+        let path = event.target == null ? '' : event.target.result;
         this.selectedFilePath = path as string;
         this.selectedFileB64 = this.selectedFilePath.split(",")[1];
         this.testFile = reader.result;
+  
         if(this.selectedFilePath.includes('image')){
           this.isFileImage = true;
           this.isFileDocument = false;
-          
-         
-        }else{
+        } else {
           this.isFileImage = false;
           this.isFileDocument = true;
-        
         }
-        console.log("this is files img: ",this.isFileImage)
-        console.log("this is files Doc: ",this.isFileDocument)
+        
+        console.log("this is files img: ", this.isFileImage);
+        console.log("this is files Doc: ", this.isFileDocument);
+  
+        // แสดงปุ่มเมื่อมีไฟล์ถูกเลือก
+        if (btnAddBox) {
+          btnAddBox.style.display = 'block';
+        }
+      }
+    } else {
+      // ซ่อนปุ่มเมื่อไม่มีไฟล์ถูกเลือก
+      if (btnAddBox) {
+        btnAddBox.style.display = 'none';
       }
     }
-
   }
+  
   clearFileInput(): void {
     this.selectedFile = null;
     this.selectedFilePath = '';
@@ -236,8 +264,14 @@ export class TableDetailComponent implements OnInit {
     this.isFileDocument = false;
     this.testFile = undefined;
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    const btnAddBox = document.getElementById('btn-add-box'); // เพิ่มส่วนนี้
+  
     if (fileInput) {
       fileInput.value = '';
+    }
+    
+    if (btnAddBox) { // เพิ่มส่วนนี้
+      btnAddBox.style.display = 'none';
     }
   }
 
@@ -270,26 +304,32 @@ onMouseMove(event: MouseEvent): void {
     this.router.navigate(['/table-list']);
   }
 
-  truncateAndStoreContent(data: string, maxLength: number): void {
-    if (data.length > maxLength) {
-      this.displayedContent = data.substring(0, maxLength) + '...';
-      this.truncatedContent = data.substring(maxLength);
-    } else {
-      this.displayedContent = data;
-      this.truncatedContent = '';
-    }
+  // truncateAndStoreContent(data: string, maxLength: number): void {
+  //   if (data.length > maxLength) {
+  //     this.displayedContent = data.substring(0, maxLength) + '...';
+  //     this.truncatedContent = data.substring(maxLength);
+  //   } else {
+  //     this.displayedContent = data;
+  //     this.truncatedContent = '';
+  //   }
 
-  }
-  onMaxLengthChange(newMaxLength: number): void {
-    this.maxLength = newMaxLength;
-    if (this.detailItems && this.detailItems.record_content) {
-      this.truncateAndStoreContent(this.detailItems.record_content, this.maxLength);
-    }
-  }
+  // }
+  // onMaxLengthChange(newMaxLength: number): void {
+  //   this.maxLength = newMaxLength;
+  //   if (this.detailItems && this.detailItems.record_content) {
+  //     this.truncateAndStoreContent(this.detailItems.record_content, this.maxLength);
+  //   }
+  // }
 
+
+  //show content table
   getSafeHtml(content: string): SafeHtml {
-    const textcontent = content.substring(0, 850);
-
+    
+    const textcontent = content.substring(0, 950);
+    this.textContentLength = textcontent.length; 
+    this.remainingContent = content.substring(950);
+    console.log("textContent :",textcontent)
+    console.log("textContent Count :",this.textContentLength)
     return this.sanitizer.bypassSecurityTrustHtml(textcontent);
     }
 
@@ -306,7 +346,7 @@ onMouseMove(event: MouseEvent): void {
 
   printPDF = () => {
     console.log("working PDF..");
-    const elementToPrint = document.getElementById('myDetail');
+    const elementToPrint = document.getElementById('myDetail'); //,pdf-viewer
     const A4_WIDTH = 210; // Width of A4 in mm
     const A4_HEIGHT = 297; // Height of A4 in mm
     const canvasScale = 2; // Scale factor for higher resolution canvas

@@ -21,7 +21,7 @@
     font-family: 'Sarabun', sans-serif; 
   }
   .card-body tbody{
-    font-size: 14px;
+    font-size: 16px;
   }
   
   .MainTableDetail{
@@ -67,7 +67,7 @@
     border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
     width: 600px;
     overflow: auto;
-    padding: 20px 0 0 0; /* เพิ่มระยะห่างบนและล่าง */
+    padding: 10px 0 0 0; /* เพิ่มระยะห่างบนและล่าง */
     font-family:  'Sarabun', sans-serif; /* ใช้ฟอนต์ราชการ */
   }
   .card-header{
@@ -323,14 +323,14 @@
   .detail-content .form-group label {
       display: inline-block;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 16px;
     }
     
   .detail-content .form-group p {
       display: inline-block;
       margin: 0;
       padding-left: 10px;
-      font-size: 14px;
+      font-size: 16px;
     }
   
   .date-flex{
@@ -368,7 +368,7 @@
   .main-detail th:last-child, .main-detail td:last-child {
       width: 90%;
     }
-  .main-detail th {
+  .main-detail th {   
       background-color: #f2f2f2; /* พื้นหลังสีเทาอ่อนสำหรับหัวตาราง */
     }
     
@@ -378,8 +378,11 @@
   
   .sign-content{
       position: relative;
-      padding-left: 380px;
-      
+      /* padding-left: 360px; */
+      display: flex;
+      justify-content: flex-end;
+      font-size: 16px;
+      font-family: 'Sarabun',sans-serif;
       text-align: center;
       margin-top: 20px;
     }
@@ -387,6 +390,7 @@
       position: relative;
       display: flex;
       align-items: center;
+       cursor: move;
       justify-content: center;
     }
   
@@ -520,6 +524,14 @@
     background-color: #24a0ed;
     color: white;
     border-radius: 5px 0 0 5px ;
+  }
+  :host ::ng-deep .btn-add-box{
+    color: #fff;
+    background-color: rgb(24,144,255) ;/*#000dc2ef rgb(24,144,255)  #24a0ed*/
+    border-color: #00087c9f;
+    /* box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd; /
+    / left: -50px; */
+
   }
   
   @media print {

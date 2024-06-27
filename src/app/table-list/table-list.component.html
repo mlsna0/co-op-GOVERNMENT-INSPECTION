@@ -193,6 +193,17 @@
                       </div>
                     </div>
 
+                    <div class="col-sm-12" style="position: relative; display: flex; justify-content: flex-end;">
+                      <button type="button" (click)="addPersonInput()" [disabled]="!canAddPerson()"
+                        style="border: none; background: none;"> <!---->
+                        <i class="fa fa-plus"></i>
+                      </button>
+                      <button type="button" (click)="deletePersonInput()" style="border: none; background: none;">
+                        <i class="fa fa-minus"></i>
+                      </button>
+
+                    </div>
+
                     <!-- <form action method="post" [formGroup]="addPersonalForm"> -->
                     <div class="row inputLabel" [formGroup]="addItemForm">
                       <div class="col-sm-3">
@@ -204,30 +215,30 @@
                             class="text-validate"> *</span>
                         </label>
                       </div>
-                      <div class="col-sm-2">
-                        <label for="firstname" style="margin-left: 10px;">ชื่อ
+                      <div class="col-sm-2" style="padding-left: 0;" >
+                        <label for="firstname">ชื่อ
                           <span
                             *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty || Submitted)"
                             class="text-validate"> *</span>
                         </label>
                       </div>
-                      <div class="col-sm-4">
-                        <label for="lastname" style="margin-left: 40px;">นามสกุล
+                      <div class="col-sm-4" style="padding-left: 82px;" >
+                        <label for="lastname" >นามสกุล
                           <span
                             *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty || Submitted)"
                             class="text-validate"> *</span>
                         </label>
                       </div>
-                      <div class="col-sm-3" style="position: relative; right: -30px;">
+                      <!-- <div class="col-sm-3" style="position: relative; right: -30px;">
                         <button type="button" (click)="addPersonInput()" [disabled]="!canAddPerson()"
-                          style="border: none; background: none;"> <!---->
+                          style="border: none; background: none;"> 
                           <i class="fa fa-plus"></i>
                         </button>
                         <button type="button" (click)="deletePersonInput()" style="border: none; background: none;">
                           <i class="fa fa-minus"></i>
                         </button>
 
-                      </div>
+                      </div> -->
 
                     </div>
                     <!-- formArrayName="personal" -->
@@ -235,7 +246,7 @@
                       <div *ngFor="let person of addItemForm.get('personal')['controls']; let i = index"
                         [formGroup]="addItemForm">
                         <div class="row " [formGroup]="person">
-                          <div class="col-sm-3">
+                          <div class="col-sm-3" >
                             <div class="form-group position-relative">
 
                               <input type="text" id="rank-{{i}}" formControlName="rank" class="form-control"
@@ -249,7 +260,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-sm-3">
+                          <div class="col-sm-4" style="padding-left: 0;">
                             <div class="form-group position-relative">
 
                               <input type="text" id="firstname-{{i}}" formControlName="firstname" class="form-control"
@@ -265,7 +276,7 @@
                             </div>
 
                           </div>
-                          <div class="col-sm-3">
+                          <div class="col-sm-4" style="padding-left: 0; width: 40%; max-width: 40%;">
                             <div class="form-group position-relative">
 
                               <input type="text" id="lastname-{{i}}" formControlName="lastname" class="form-control"

@@ -1,47 +1,47 @@
-
 <div class="MainTableDetail">
-  
-    <div class="Detail-content"[ngStyle]="{ width: '230mm' }" ><!--[ngStyle]="{ width: '230mm', height: '327mm' , height: '297mm' }"-->
-       
+    <div class="Detail-content" [ngStyle]="{ width: '230mm' }">
         <div class="modal-header card-header card-header-danger">
-            <h5 class="modal-title" id="myModalLabel"
-                style="color: white; font-family: 'Sarabun', sans-serif !important; ">รายละเอียด</h5>
+            <h5 class="modal-title" id="myModalLabel" style="color: white; font-family: 'Sarabun', sans-serif !important;">รายละเอียด</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="BackRoot()">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
     
-          <div class="uploadFilePDF">
+        <div class="uploadFilePDF">
             <label for="fileInput" style="padding: 0 0 0 15px;">อัปโหลดไฟล์ของคุณ</label>
             <input id="fileInput" type="file" class="fileUpload" accept="application/pdf,image/*" (change)="onFileSelected($event)" style="font-size: 14px;">
             <button type="button" (click)="clearFileInput()" style="position: relative;left:-25px; border: none; background-color: transparent; z-index: 10;"><i class="fa fa-times"></i></button>
-          </div>
-          
-          <div *ngIf="selectedFilePath">
-            <!-- <ngx-extended-pdf-viewer *ngIf="testFile" [base64Src]="testFile"
-            [useBrowserLocale]="true" [handtool]="false" [showHandToolButton]="true" [render-text]="true" style="display: block; align-items: center;" width="100%" height="297mm">
-              <p style="vertical-align: middle;text-align: center;" >PDF cannot be displayed..</p>
-            </ngx-extended-pdf-viewer>  -->
-            <pdf-viewer *ngIf="testFile" [src]="testFile"
-              [render-text]="true"
-              [original-size]="true"
-              [show-borders]="true"
-              style="width: 400px; height: 500px;" 
-            ></pdf-viewer>
-            <img *ngIf="isFileImage" [src]="selectedFilePath" alt="Image" style="display: block; align-items: center; max-width:  100%; max-height: 297mm;">
-          </div>
+        </div>
+
+        <div *ngIf="selectedFilePath">
+            <div style="position: relative;">
+                <pdf-viewer *ngIf="testFile" [src]="testFile"
+                    [render-text]="true"
+                    [original-size]="true"
+                    [show-borders]="true"
+                    style="width: 100%; height: 500px; position: relative;">
+                </pdf-viewer>
+                <img *ngIf="isFileImage" [src]="selectedFilePath" alt="Image" style="display: block; align-items: center; max-width: 100%; max-height: 297mm; position: relative;">
+                <!-- Add signature boxes here -->
+                <div *ngFor="let box of boxes; let i = index" class="UploadContentBox" [ngStyle]="{'top': box.top + 'px', 'left': box.left + 'px', 'position': 'absolute'}" draggable="true" (dragstart)="onDragStart($event, i)" (dragend)="onDragEnd($event, i)">
+                    <div class="openSignModal" (click)="openSignModal(i)">
+                        <a>คลิกเพื่อเซ็น</a>
+                    </div>
+                    <div class="Writte-sign" *ngIf="isSignModalVisible[i]">
+                        <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error something with canvas</canvas>
+                    </div>
+                </div>
+                <!-- End of signature boxes -->
+            </div>
+        </div>
 
         <div id="myDetail" class="modal-body-detail" [ngStyle]="{'display': testFile ? 'none' : 'block', width: '210mm' }">
-            <!-- เนื้อหาของป๊อปอัพ -->
             <form action method="get">
-                <div class="mainCenter-panel ">
+                <div class="mainCenter-panel">
                     <div class="header-topic">
-
                         <label style="font-size: 16px; font-weight: bold;">เอกสารตรวจสอบ</label>
                         <p>{{ detailItems?.record_topic }}</p>
-
                     </div>
-
                     <div class="detail-content">
                         <div class="date-flex">
                             <div class="form-group start-date">
@@ -53,8 +53,6 @@
                                 <p>{{ detailItems?.record_end_date | thaidate: 'medium' }}</p>
                             </div>
                         </div>
-
-
                         <div class="form-group">
                             <label>รายละเอียด:</label>
                             <p>{{ detailItems?.record_detail }}</p>
@@ -71,7 +69,6 @@
                                     <th style="text-align: center; vertical-align: middle;">ครั้งที่</th>
                                     <th>เนื้อหาการตรวจสอบ</th>
                                 </tr>
-
                             </thead>
                             <tbody>
                                 <tr>
@@ -83,44 +80,29 @@
                             </tbody>
                         </table>
                     </div>
-
                     <div class="sign-content">
                         <div class="form-group">
                             <label>รายชื่อผู้รับผิดชอบ:</label>
                             <div *ngFor="let person of viewData; let i = index">
                                 <div class="UploadContentBox">
-                                    
                                     <div class="openSignModal" (click)="openSignModal(i)">
                                         <a>คลิกเพื่อเซ็น</a>
-
                                     </div>
-                                    <!-- Sign modal -->
-                                    <div class="Writte-sign" #writteSignElement id="SignModal-{{i}}"
-                                        *ngIf="isSignModalVisible[i]">
-                                        <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error someting
-                                            with
-                                            canvas</canvas>
-                                     
+                                    <div class="Writte-sign" #writteSignElement id="SignModal-{{i}}" *ngIf="isSignModalVisible[i]">
+                                        <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error someting with canvas</canvas>
                                     </div>
-
-
                                 </div>
-
                                 <a style="font-size: 14px;">( {{ person.view_rank }} &nbsp;  {{ person.view_first_name }} &nbsp;{{ person.view_last_name }} )</a>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </form>
-            
         </div>
         <div class="modal-footer">
-            <!-- <button type="button" class="btn btn-success pull-center" (click)="printPDF()">
-            <i class="fa fa-download"></i>&nbsp; ดาว์โหลด
-          </button> -->
-
+            <button id="btn-add-box" class="btn btn-add-box pull-center" style="display:none;" (click)="addBox()">
+                <i class="fa fa-plus"></i> &nbsp; เพิ่มกล่องเพื่อเซ็นต์
+            </button>
             <button type="button" class="btn btn-success pull-center" (click)="printPDF()">
                 <i class="fa fa-download"></i>&nbsp; ดาว์โหลด
             </button>
@@ -129,23 +111,4 @@
             </button>
         </div>
     </div>
-
-
-    <!-- <div class="other-page1" style="background: white;">
-        <div>
-            <label for="maxLengthInput">Set max length:</label>
-            <input id="maxLengthInput" type="number" [(ngModel)]="maxLength" (input)="onMaxLengthChange(maxLength)" />
-          </div>
-        <div class="main-detail">
-            <table>
-                <tbody>
-                    <tr>
-                        <td [innerHTML]="getSafeHtml(truncatedContent )"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div> -->
-
-
 </div>
