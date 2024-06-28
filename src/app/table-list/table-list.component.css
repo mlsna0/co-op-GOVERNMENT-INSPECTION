@@ -147,6 +147,11 @@ border-bottom: 1px solid #c1c1c1;
 text-align: center;
 padding: 3px;
 font-size: 16px;
+  height: 34px;
+  padding: 0 1px 0 6px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #c1c1c1;
 }
 .headerText button:first-child {
   display: flex;
@@ -648,6 +653,17 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:hover {
 
 :host ::ng-deep .ae-font .ae-picker-label{
   left: -8px;
+}
+:host ::ng-deep .angular-editor-textarea {
+  border: none !important;
+  border-bottom-left-radius: 5px !important;
+  border-bottom-right-radius:5px !important ;
+  padding: 10px !important;
+  overflow: auto !important;
+  margin-top: 5px !important;
+  resize: none !important;
+  height: 100.9mm !important;
+  top: -5px !important;
 }
 :host ::ng-deep .custom-confirm-button{
   background-color: #24a0ed !important; 

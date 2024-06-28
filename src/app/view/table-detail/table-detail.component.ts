@@ -1,4 +1,4 @@
-import { Component, OnInit ,ChangeDetectorRef, ViewChildren,ElementRef,HostListener,Renderer2 } from '@angular/core';
+import { Component, OnInit ,ChangeDetectorRef, ViewChildren,ElementRef,HostListener,Renderer2,ViewChild,QueryList } from '@angular/core';
 import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray,AbstractControl } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
@@ -30,12 +30,18 @@ import { NgxExtendedPdfViewerService, pdfDefaultOptions } from 'ngx-extended-pdf
   styleUrls: ['./table-detail.component.css']
 })
 export class TableDetailComponent implements OnInit {
-  @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
+  @ViewChildren('writteSignElement') writteSignElements :QueryList<ElementRef>;
+  @ViewChild('firstPage', { static: false }) firstPage: ElementRef; //break page
+  @ViewChild('mainCenterPanel') mainCenterPanel: ElementRef;//for over sign-content
 
-
+  details: any[] = []; //break page
+  textContentLength:number =0;
+  remainingContentLength:number =0;
   recordId: any;
   viewData=[];
- 
+  remainingContent: string = '';//content ที่ตัดออกจะเก็บที่นี้?
+  otherRemainingContent:string='';//content ที่ตัดออกจะเก็บที่นี้? ระดับ 3
+  isContentOverflow = false; //
   addItemForm: any;
   
   addRecordForm:FormGroup;
@@ -59,14 +65,11 @@ export class TableDetailComponent implements OnInit {
   penColor2: string = 'black';
   penSize2: number = 1;
 
-  shorttext: SafeHtml;
-  alltext: SafeHtml;
-  contentExceedsLimit: boolean = false;
-
   //move element
   private isDragging = false;
   private offsetX = 0;
   private offsetY = 0;
+  testFile:any;
 
 
   constructor(
@@ -100,7 +103,7 @@ export class TableDetailComponent implements OnInit {
     
       console.log("it on working.. ")
       if (this.detailItems && this.detailItems.record_content) {
-          this.truncateAndStoreContent(this.detailItems.record_content, 250);
+          // this.truncateAndStoreContent(this.detailItems.record_content, 250);
       }
       console.log("Displayed content:", this.displayedContent);
       console.log("Truncated content:", this.truncatedContent);
@@ -119,6 +122,18 @@ export class TableDetailComponent implements OnInit {
       });
   }
 
+  ngAfterViewInit() {
+ 
+    this.checkContentOverflow();
+    window.addEventListener('resize', this.checkContentOverflow.bind(this));
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('resize', this.checkContentOverflow.bind(this));
+  }
+
+
+  //////////////////////////////////////////////////////////////////////
   setupSignCanvas(index: number) {
     this.canvas2 = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
     if (this.canvas2) {
@@ -131,6 +146,7 @@ export class TableDetailComponent implements OnInit {
       const startPosition = (e: MouseEvent) => {
         painting = true;
         draw(e);
+        // console.log('Mouse down at: ', e.clientX, e.clientY);
       };
 
       const endPosition = () => {
@@ -138,7 +154,8 @@ export class TableDetailComponent implements OnInit {
         if (this.ctx2) { // Ensure ctx2 is not undefined
           this.ctx2.beginPath();
         }
-        this.canvas2.style.border="none";
+        // console.log('Mouse up');
+        this.canvas2.style.border = "none";
       };
 
       const draw = (e: MouseEvent) => {
@@ -157,6 +174,8 @@ export class TableDetailComponent implements OnInit {
           this.ctx2.stroke();
           this.ctx2.beginPath();
           this.ctx2.moveTo(x, y);
+
+          // console.log("Drawing at: ",x,y);
         }
       };
 
@@ -169,36 +188,120 @@ export class TableDetailComponent implements OnInit {
       console.error('Sign canvas element not found', this.canvas2);
     }
   }
+  // setupSignCanvas(index: number) {
+  //   this.canvas2 = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
+  //   if (this.canvas2) {
+  //     this.ctx2 = this.canvas2.getContext('2d');
+  //     let painting = false;
 
-  openSignModal(index: number){
+  //     this.canvas2.width = this.canvas2.clientWidth;
+  //     this.canvas2.height = this.canvas2.clientHeight;
+
+  //     const startPosition = (e: MouseEvent) => {
+  //       painting = true;
+  //       draw(e);
+  //     };
+
+  //     const endPosition = () => {
+  //       painting = false;
+  //       if (this.ctx2) { // Ensure ctx2 is not undefined
+  //         this.ctx2.beginPath();
+  //       }
+  //       this.canvas2.style.border="none";
+  //     };
+
+  //     const draw = (e: MouseEvent) => {
+  //       if (!painting) return;
+
+  //       if (this.ctx2) { // Ensure ctx2 is not undefined
+  //         this.ctx2.lineWidth = this.penSize2;
+  //         this.ctx2.lineCap = 'round';
+  //         this.ctx2.strokeStyle = this.penColor2;
+
+  //         const rect = this.canvas2.getBoundingClientRect();
+  //         const x = e.clientX - rect.left;
+  //         const y = e.clientY - rect.top;
+
+  //         this.ctx2.lineTo(x, y);
+  //         this.ctx2.stroke();
+  //         this.ctx2.beginPath();
+  //         this.ctx2.moveTo(x, y);
+  //       }
+  //     };
+
+  //     this.canvas2.addEventListener('mousedown', startPosition);
+  //     this.canvas2.addEventListener('mouseup', endPosition);
+  //     this.canvas2.addEventListener('mousemove', draw);
+
+  //     console.log('Sign canvas setup complete');
+  //   } else {
+  //     console.error('Sign canvas element not found', this.canvas2);
+  //   }
+  // }
+
+  openSignModal(index: number) {
+     
+
     this.isSignModalVisible[index] = true;
-    
+
     setTimeout(() => {
-      if (this.writteSignElement) {
-        this.setupSignCanvas(index);
-        const writteSignElement = this.writteSignElement.nativeElement as HTMLElement;
+      const writteSignElement = this.writteSignElements.toArray()[index]?.nativeElement as HTMLElement;
+      if (writteSignElement) {
         writteSignElement.style.display = 'flex';
-        console.log("Setup activate or not: ",this.setupSignCanvas)
+        this.setupSignCanvas(index);
+        console.log("Setup activated for canvas index: ", index);
       } else {
-        console.error('writteSignElement is null or undefined',this.writteSignElement);
+        console.error('writteSignElement is null or undefined', this.writteSignElements.toArray()[index]);
       }
-    }, 0);  
-    console.log("it openSign status : ",this.isSignModalVisible)
+    }, 0);
+
+    console.log("it openSign status: ", this.isSignModalVisible);
+  }
+  // openSignModal(index: number){
+  //   this.isSignModalVisible[index] = true;
+    
+  //   setTimeout(() => {
+  //     if (this.writteSignElements) {
+  //       this.setupSignCanvas(index);
+  //       const writteSignElement = this.writteSignElements.toArray()[index]?.nativeElement as HTMLElement;
+  //       writteSignElement.style.display = 'flex';
+  //       console.log("Setup activate or not: ",this.setupSignCanvas)
+  //     } else {
+  //       console.error('writteSignElement is null or undefined',this.writteSignElements);
+  //     }
+  //   }, 0);  
+  //   console.log("it openSign status : ",this.isSignModalVisible)
+  // }
+
+  blobToBase64(blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+          const dataUrl = reader.result as string;
+          const base64 = dataUrl.split(',')[1];
+          resolve(base64);
+      };
+      reader.readAsDataURL(blob);
+    });
   }
 
-
   //open file pdf to preview or edit to sign
-  onFileSelected(event: any):void{
+  async onFileSelected(event: any){
     this.selectedFile = event.target.files[0]?? null;
     if(this.selectedFile){
-      var reader =new FileReader();
+      this.testFile = await this.blobToBase64(event.target.files[0])
+      console.log("test file : ",this.testFile);
       
+
+      var reader =new FileReader();
+      console.log("event.target.files[0] : ",event.target.files[0]);
       reader.readAsDataURL(event.target.files[0]);
       
       reader.onload =(event)=>{
         let path =event.target == null ? '':event.target.result;
         this.selectedFilePath = path as string;
         this.selectedFileB64 = this.selectedFilePath.split(",")[1];
+        this.testFile = reader.result;
         if(this.selectedFilePath.includes('image')){
           this.isFileImage = true;
           this.isFileDocument = false;
@@ -214,6 +317,18 @@ export class TableDetailComponent implements OnInit {
       }
     }
 
+  }
+  clearFileInput(): void {
+    this.selectedFile = null;
+    this.selectedFilePath = '';
+    this.selectedFileB64 = '';
+    this.isFileImage = false;
+    this.isFileDocument = false;
+    this.testFile = undefined;
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
   }
 
 //move element
@@ -244,46 +359,42 @@ onMouseMove(event: MouseEvent): void {
   BackRoot(){
     this.router.navigate(['/table-list']);
   }
-
-  truncateAndStoreContent(data: string, maxLength: number): void {
-    if (data.length > maxLength) {
-      this.displayedContent = data.substring(0, maxLength) + '...';
-      this.truncatedContent = data.substring(maxLength);
-    } else {
-      this.displayedContent = data;
-      this.truncatedContent = '';
-    }
-
+//add page??
+  addDetail() {
+    console.log("addDetail work")
+    this.details.push({});
   }
-  onMaxLengthChange(newMaxLength: number): void {
-    this.maxLength = newMaxLength;
-    if (this.detailItems && this.detailItems.record_content) {
-      this.truncateAndStoreContent(this.detailItems.record_content, this.maxLength);
-    }
-  }
+//page break
 
-  // getSafeHtml(content: string): SafeHtml {
 
-  //   return this.sanitizer.bypassSecurityTrustHtml(content);
-  //   }
-  getSafeHtml(content: string): SafeHtml {
-    const length = content.length;
+ checkContentOverflow() {
+    const mainDetailElement = document.getElementById('myDetail');
+    const mainCenterPanelElement = this.mainCenterPanel.nativeElement;
     
-   
-    if (length <= 500) {
-      this.shorttext = this.sanitizer.bypassSecurityTrustHtml(content);
-      this.alltext = this.shorttext;
-      this.contentExceedsLimit = false;
-    } else {
-      const shorttext = content.substring(0, 500);
-      const longtext = content.substring(501);
-      this.shorttext = this.sanitizer.bypassSecurityTrustHtml(shorttext);
-      this.alltext = this.sanitizer.bypassSecurityTrustHtml(content);
-      this.contentExceedsLimit = true;
+    if (mainDetailElement && mainCenterPanelElement) {
+      const contentHeight = mainCenterPanelElement.scrollHeight;
+      const containerHeight = mainDetailElement.clientHeight;
+      console.log('contentHeight:', contentHeight);
+      console.log('containerHeight:', containerHeight);
+      this.isContentOverflow = contentHeight > containerHeight;
+      console.log('isContentOverflow:', this.isContentOverflow);
     }
-
-    return this.contentExceedsLimit ? this.alltext : this.shorttext;
   }
+
+
+  //show content table
+  getSafeHtml(content: string): SafeHtml {
+    const maxLength = 1525;
+    const textcontent = content.substring(0, maxLength);
+    this.textContentLength = textcontent.length; 
+    this.remainingContent = content.substring(maxLength);
+    this.otherRemainingContent = this.remainingContent.substring(3050)
+    this.remainingContentLength = this.remainingContent.length;
+    // console.log("textContent :",textcontent)
+    // console.log("textContent Count :",this.textContentLength)
+    // console.log("textREMAINContent Count :",this.remainingContentLength)
+    return this.sanitizer.bypassSecurityTrustHtml(textcontent);
+    }
 
   // printPDF = () => {
   //     console.log("working PDF..");
@@ -296,65 +407,130 @@ onMouseMove(event: MouseEvent): void {
   //     // this.fetchData()
   // }
 
-  printPDF = () => {
-    console.log("working PDF..");
-    const elementToPrint = document.getElementById('myDetail');
-    const A4_WIDTH = 210; // Width of A4 in mm
-    const A4_HEIGHT = 297; // Height of A4 in mm
-    const canvasScale = 2; // Scale factor for higher resolution canvas
-
-    const options = {
-    scale: canvasScale,
-    height: elementToPrint.scrollHeight,
-    windowHeight: elementToPrint.scrollHeight
-    };
-
-    html2canvas(elementToPrint, options).then((canvas) => {
-    const imgData = canvas.toDataURL('image/png');
+  printPDF() {
     const pdf = new jsPDF('p', 'mm', 'a4');
+    const elements = document.querySelectorAll('.modal-body-detail'); // เลือกทุกองค์ประกอบที่ต้องการ
+    let promises = [];
 
-      const imgWidth = A4_WIDTH;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    if (elements.length === 0) {
+      console.error('No elements found to print.');
+      return;
+    }
 
-      let heightLeft = imgHeight;
-      let position = 0;
-      const bottomMargin = 10; // ขอบล่างของ PDF ที่ต้องการเว้นว่าง (มิลลิเมตร)
-      const textOffset = 5; // การเลื่อนข้อความลงมา (มิลลิเมตร)
-
-
-      while (heightLeft > 0) {
-          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-          pdf.text(' ', A4_WIDTH / 2, A4_HEIGHT - bottomMargin - textOffset, { align: 'center' });
-          heightLeft -= A4_HEIGHT;
-
-          if (heightLeft > 0) {
-              pdf.addPage();
+    elements.forEach((element, index) => {
+      promises.push(
+        html2canvas(element as HTMLElement, {
+          scale: 2,
+          useCORS: true
+        }).then(canvas => {
+          const imgWidth = 210; // A4 width in mm
+          const imgHeight = canvas.height * imgWidth / canvas.width;
+          const contentDataURL = canvas.toDataURL('image/png');
+          if (index > 0) { // เพิ่มหน้าใหม่ใน PDF ถ้าไม่ใช่หน้าแรก
+            pdf.addPage();
           }
-          position -= A4_HEIGHT;
-      }
+          pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight);
+        }).catch(error => {
+          console.error('Error creating canvas for element:', element, error);
+        })
+      );
+    });
 
-      pdf.save('การลงตรวจสอบ.pdf');
+    Promise.all(promises).then(() => {
+      pdf.save('เอกสารการลงตรวจ.pdf');
+    }).catch(error => {
+      console.error('Error generating PDF:', error);
     });
   }
 
   saveRCPDF = () => {
     console.log("Updating PDF in dictionary...");
-    const elementToPrint = document.getElementById('myDetail');
+    const elements = document.querySelectorAll('.modal-body-detail');
+    const pdfViewerElement = document.getElementById('pdf-viewer');
   
-    if (!elementToPrint) {
-      console.error('Element to print not found');
+    if (!pdfViewerElement && elements.length === 0) {
+      console.error('No elements found to print.');
       return;
     }
   
-    html2canvas(elementToPrint, { scale: 2 }).then((canvas) => {
-      const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = 210; // A4 width in mm
+    const pdfHeight = 297; // A4 height in mm
+  
+    let promises = [];
+    
+    html2canvas(pdfViewerElement, { scale: 5 }).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      const ratio = canvasWidth / pdfWidth;
+      const pdfCanvasHeight = canvasHeight / ratio;
+      const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
   
-      const pdfWidth = 210; // A4 width in mm
-      const pdfHeight = 297 ;//(canvas.height * pdfWidth) / canvas.width
+      for (let i = 0; i < numOfPages; i++) {
+        const startY = i * pdfHeight * ratio;
   
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        // Create a temporary canvas to draw each part
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvasWidth;
+        tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
   
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
+  
+        const tempImgData = tempCanvas.toDataURL('image/png');
+  
+        // Check if the image data is not blank
+        if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
+          if (i > 0) {
+            pdf.addPage();
+          }
+          pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, (tempCanvas.height / ratio));
+        }
+      }
+    }).catch((error) => {
+      console.error('Error generating PDF:', error);
+    });
+  
+    elements.forEach((element, index) => {
+      const htmlElement = element as HTMLElement; // Cast Element to HTMLElement
+      htmlElement.style.border = 'none';
+      htmlElement.style.borderCollapse = 'collapse';
+      promises.push(html2canvas(htmlElement, { scale: 5 }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        const ratio = canvasWidth / pdfWidth;
+        const pdfCanvasHeight = canvasHeight / ratio;
+        const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
+  
+        for (let i = 0; i < numOfPages; i++) {
+          const startY = i * pdfHeight * ratio;
+  
+          // Create a temporary canvas to draw each part
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = canvasWidth;
+          tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
+  
+          const tempCtx = tempCanvas.getContext('2d');
+          tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
+  
+          const tempImgData = tempCanvas.toDataURL('image/png');
+  
+          // Check if the image data is not blank
+          if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
+            if (index > 0 || i > 0) {
+              pdf.addPage();
+            }
+            pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, (tempCanvas.height / ratio));
+          }
+        }
+      }).catch((error) => {
+        console.error('Error generating PDF:', error);
+      }));
+    });
+  
+    Promise.all(promises).then(() => {
       // Convert the PDF to Blob
       const pdfBlob = pdf.output('blob');
   
@@ -364,14 +540,13 @@ onMouseMove(event: MouseEvent): void {
       formData.append('id', this.recordId); // Adjust the ID as needed
       formData.append('pdf', pdfBlob, pdfFilename);
   
-      // Check if `this.sv.savePDF` exists and is a function
+      // Check if this.sv.savePDF exists and is a function
       if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
         // Send the PDF to the backend
         this.sv.savePDF(formData).subscribe(
           response => {
             console.log('PDF saved successfully:', response);
             this.router.navigate(['/table-list']);
-
           },
           error => {
             console.error('Error saving PDF:', error);
@@ -380,68 +555,65 @@ onMouseMove(event: MouseEvent): void {
       } else {
         console.error('savePDF function is not defined or not a function');
       }
-    }).catch((error) => {
-      console.error('Error generating PDF:', error);
     });
-    
+  
     $('#myModal').modal('hide');
   }
-
-}
-// saveRCPDF = () => {
+//   saveRCPDF = () => {
 //   console.log("Updating PDF in dictionary...");
-//   const elementToPrint = document.getElementById('myDetail');
+//   // const pdfViewerElement = document.getElementById('pdf-viewer');
+//   const elements = document.querySelectorAll('.modal-body-detail');
 
-//   if (!elementToPrint) {
-//     console.error('Element to print not found');
+//   if (!elements.length) {
+//     console.error('Elements to print not found');
 //     return;
 //   }
 
-//   // Get screen dimensions
-//   const screenWidth = window.innerWidth;
-//   const screenHeight = window.innerHeight;
+//   const pdf = new jsPDF('p', 'mm', 'a4');
+//   const pdfWidth = 210; // A4 width in mm
+//   const pdfHeight = 297; // A4 height in mm
 
-//   html2canvas(elementToPrint, { scale: 2 }).then((canvas) => {
-//     const pdf = new jsPDF('p', 'mm', 'a4');
-//     const imgData = canvas.toDataURL('image/png');
+//   let promises = [];
 
-//     const pdfWidth = 210; // A4 width in mm
-//     const pdfHeight = 297; // A4 height in mm
+//   elements.forEach((element, index) => {
+//     const htmlElement = element as HTMLElement; // Cast Element to HTMLElement
+//     htmlElement.style.border = 'none';
+//     htmlElement.style.borderCollapse = 'collapse';
+//     promises.push(html2canvas(htmlElement, { scale: 5 }).then((canvas) => {
+//       const imgData = canvas.toDataURL('image/png');
+//       const canvasWidth = canvas.width;
+//       const canvasHeight = canvas.height;
+//       const ratio = canvasWidth / pdfWidth;
+//       const pdfCanvasHeight = canvasHeight / ratio;
+//       const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
 
-//     // Calculate the height of the PDF page based on screen dimensions
-//     const screenRatio = screenWidth / screenHeight;
-//     const pdfHeightBasedOnScreen = pdfWidth / screenRatio;
+//       for (let i = 0; i < numOfPages; i++) {
+//         const startY = i * pdfHeight * ratio;
 
-//     // Calculate the number of pages needed
-//     const totalHeight = (canvas.height / screenHeight) * pdfHeight;
-//     const numOfPages = Math.ceil(totalHeight / pdfHeight);
+//         // Create a temporary canvas to draw each part
+//         const tempCanvas = document.createElement('canvas');
+//         tempCanvas.width = canvasWidth;
+//         tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
 
-//     for (let i = 0; i < numOfPages; i++) {
-//       const sourceY = i * screenHeight;
-//       const pageHeight = (i + 1 === numOfPages) ? (totalHeight % pdfHeight) : pdfHeight;
-//       const canvasHeight = (pageHeight / pdfHeight) * canvas.height;
+//         const tempCtx = tempCanvas.getContext('2d');
+//         tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
 
-//       // Create a temporary canvas to draw each part
-//       const tempCanvas = document.createElement('canvas');
-//       tempCanvas.width = canvas.width;
-//       tempCanvas.height = canvasHeight;
-//       const tempCtx = tempCanvas.getContext('2d');
+//         const tempImgData = tempCanvas.toDataURL('image/png');
 
-//       // Draw the portion of the original canvas to the temporary canvas
-//       tempCtx.drawImage(canvas, 0, sourceY, canvas.width, canvasHeight, 0, 0, canvas.width, canvasHeight);
-
-//       // Convert the temporary canvas to an image
-//       const tempImgData = tempCanvas.toDataURL('image/png');
-
-//       // Add the image to the PDF
-//       pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, pageHeight);
-      
-//       // Add a new page if it's not the last page
-//       if (i < numOfPages - 1) {
-//         pdf.addPage();
+//         // Check if the image data is not blank
+//         if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
+//           if (index > 0 || i > 0) {
+//             pdf.addPage();
+//           }
+//           pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, (tempCanvas.height / ratio));
+//         }
 //       }
-//     }
+//     }).catch((error) => {
+//       console.error('Error generating PDF:', error);
+//     }));
+//   });
 
+//   Promise.all(promises).then(() => {
 //     // Convert the PDF to Blob
 //     const pdfBlob = pdf.output('blob');
 
@@ -466,9 +638,8 @@ onMouseMove(event: MouseEvent): void {
 //     } else {
 //       console.error('savePDF function is not defined or not a function');
 //     }
-//   }).catch((error) => {
-//     console.error('Error generating PDF:', error);
 //   });
-  
+
 //   $('#myModal').modal('hide');
 // }
+}

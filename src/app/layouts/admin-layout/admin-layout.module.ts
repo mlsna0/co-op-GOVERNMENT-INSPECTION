@@ -25,6 +25,7 @@ import { MatCardModule } from '@angular/material/card'; //petch add
 import { MatIconModule } from '@angular/material/icon'; //petch add
 import { TableDetailComponent } from 'app/view/table-detail/table-detail.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @NgModule({
   imports: [
@@ -44,6 +45,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     AngularEditorModule,
 
 
+    PdfViewerModule,
   ],
   declarations: [
     DashboardComponent,
@@ -56,7 +58,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     UpgradeComponent,
     ThaiDatePipe,
     TableDetailComponent,
-
+  
   ]
 })
 
