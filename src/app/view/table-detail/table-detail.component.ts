@@ -415,10 +415,10 @@ onMouseMove(event: MouseEvent): void {
     if (mainDetailElement && mainCenterPanelElement) {
       const contentHeight = mainCenterPanelElement.scrollHeight;
       const containerHeight = mainDetailElement.clientHeight;
-      console.log('contentHeight:', contentHeight);
-      console.log('containerHeight:', containerHeight);
+      // console.log('contentHeight:', contentHeight);
+      // console.log('containerHeight:', containerHeight);
       this.isContentOverflow = contentHeight > containerHeight;
-      console.log('isContentOverflow:', this.isContentOverflow);
+      // console.log('isContentOverflow:', this.isContentOverflow);
     }
   }
 
