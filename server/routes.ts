@@ -78,6 +78,8 @@ function setRoutes(app): void {
   router.route('/registerModel/:id').put(registerModelCtrl.update);
   router.route('/registerModel/:id').delete(registerModelCtrl.delete);
   router.route('/registerModel/login').post(registerModelCtrl.login);
+  router.route('/registerModel/forgotPassword').post(registerModelCtrl.forgotPassword);
+  router.route('/registerModel/resetPassword').post(registerModelCtrl.resetPassword);
 
   
   //agg $lookup Record and View model routes //petch edit add this
@@ -87,4 +89,4 @@ function setRoutes(app): void {
 }
 
 export default setRoutes;
-  
+

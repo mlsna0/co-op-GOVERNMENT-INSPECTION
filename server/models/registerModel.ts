@@ -7,7 +7,9 @@ const registerSchema = new mongoose.Schema({
     password: { type: String, required: true },
     confirmpassword: { type: String, required: true },
     phone: String,
-    role: { type: String, required: true, enum: ['user', 'admin', 'superadmin'], default: 'user' }
+    role: { type: String, required: true, enum: ['user', 'admin', 'superadmin'], default: 'user' },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date }
 });
 
 const RegisterModel = mongoose.model('RegisterModel', registerSchema);
