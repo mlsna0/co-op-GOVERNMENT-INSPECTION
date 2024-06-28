@@ -1,184 +1,411 @@
 .modal-lg {
-    max-width: 100%;
-  }
-  
-  :host ::ng-deep .card-header .card-header-danger .modal-title{
-    font-family: "Sarabun", sans-serif !important; 
-  }
-  
-  .modal-body {
+  max-width: 100%;
+}
+
+:host ::ng-deep .card-header .card-header-danger .modal-title{
+  font-family: "Sarabun", sans-serif !important; 
+}
+
+.modal-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Sarabun", sans-serif;
+}
+.dataTables_wrapper .dataTables_filter input{
+width: 180px;
+}
+.card-body{
+  font-weight: 300;
+  border: none;
+  font-family: 'Sarabun', sans-serif; 
+}
+.card-body tbody{
+  font-size: 16px;
+}
+
+.MainTableDetail{
+  height: 100%;
+
+}
+
+.modal-body-detail{ 
+  position: relative;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: "Sarabun", sans-serif;
-  }
-  .dataTables_wrapper .dataTables_filter input{
-  width: 180px;
-  }
-  .card-body{
-    font-weight: 300;
-    border: none;
-    font-family: 'Sarabun', sans-serif; 
-  }
-  .card-body tbody{
-    font-size: 16px;
-  }
-  
-  .MainTableDetail{
-    height: 100%;
-
-  }
-  
-  .modal-body-detail{ 
-    position: relative;
-      display: flex;
-      flex-direction: column;
-      margin-top:10mm;
-      margin-bottom: 10mm;
-     left: 50%;
-     transform: translateX(-50%);
-      width: 100%;
-      height: 297mm;/*297mm*/
-      border: 0.2px solid #000;
-      font-family: "Sarabun", sans-serif;
-      
-      max-height:297mm ;
-      /* overflow: auto;   */
-  }
-    /*page Break */
-  /* .page {
-    width: 210mm;
-    height: 297mm;
-    position: relative;
-    display: inline-block;
-    
-  } */
-  
-  .page-break {
-    page-break-before: always;
-  }
-
-  /*end page break*/
-  
-  .Detail-content{
-    position: relative;
-    /* max-height: 1235.9px; */
-    top: 50px;
-    bottom: 50px;
-    height: auto;
-    margin: 50px 0 50px 0;
-    left: 50%;
-    transform: translateX(-50%);
-    justify-content: center;
-    font-family: "Sarabun", sans-serif;
-    background: white;
-    
-  }
-
-  .main-detail {
-    position: relative;
-    border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
-    width:605px;
-   
-    padding: 10px 0 0 0; /* เพิ่มระยะห่างบนและล่าง */
-    font-family:  'Sarabun', sans-serif; /* ใช้ฟอนต์ราชการ */
-  }
-  .card-header{
-    position: relative;
-    background-color: rgb(255, 209, 0);
-    width: 836.3px;
-    border-radius: 3px;
-    top: -20px;
-    margin-top: -20px;
-    padding: 15px;
-    left: 50%;
-    transform: translate(-50%);
-    justify-content: center;
-    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 67, 54, 0.4);
-  }
-
-  
-  
-  
-  label{
-    color: black;
-  }
-  p{
-    color: black;
-  }
-  
-
-  
-  .form-control.mt-3 {
-    position: relative;
-  }
-  .full-page-textarea{
+    flex-direction: column;
+    margin-top:10mm;
+    margin-bottom: 10mm;
+   left: 50%;
+   transform: translateX(-50%);
     width: 100%;
-    height: calc(190mm - 50px); /* 297mm minus some margin for modal padding */
-    border: none;
-    resize: none;
+    height: 297mm;/*297mm*/
+    border: 0.2px solid #000;
     font-family: "Sarabun", sans-serif;
+    
+    max-height:297mm ;
+    /* overflow: auto;   */
+}
+  /*page Break */
+/* .page {
+  width: 210mm;
+  height: 297mm;
+  position: relative;
+  display: inline-block;
   
-  }
-  .full-page-textarea-container{
-  margin: 20px 0 20px 0;
-  width: 827px;
-  height: 460px; 
+} */
+
+.page-break {
+  page-break-before: always;
+}
+
+/*end page break*/
+
+.Detail-content{
+  position: relative;
+  /* max-height: 1235.9px; */
+  top: 50px;
+  bottom: 50px;
+  height: auto;
+  margin: 50px 0 50px 0;
+  left: 50%;
+  transform: translateX(-50%);
+  justify-content: center;
+  font-family: "Sarabun", sans-serif;
+  background: white;
+  
+}
+
+.main-detail {
+  position: relative;
+  border-collapse: collapse; /* เพื่อทำให้เส้นขอบรวมกัน */
+  width:605px;
+ 
+  padding: 10px 0 0 0; /* เพิ่มระยะห่างบนและล่าง */
+  font-family:  'Sarabun', sans-serif; /* ใช้ฟอนต์ราชการ */
+}
+.card-header{
+  position: relative;
+  background-color: rgb(255, 209, 0);
+  width: 836.3px;
+  border-radius: 3px;
+  top: -20px;
+  margin-top: -20px;
+  padding: 15px;
+  left: 50%;
+  transform: translate(-50%);
+  justify-content: center;
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 67, 54, 0.4);
+}
+
+
+
+
+label{
+  color: black;
+}
+p{
+  color: black;
+}
+
+
+
+.form-control.mt-3 {
+  position: relative;
+}
+.full-page-textarea{
+  width: 100%;
+  height: calc(190mm - 50px); /* 297mm minus some margin for modal padding */
   border: none;
   resize: none;
-  border: 1px solid black;
-  border-radius: 5px;
-  }
-  
-  .full-page-textarea-container textarea{
+  font-family: "Sarabun", sans-serif;
+
+}
+.full-page-textarea-container{
+margin: 20px 0 20px 0;
+width: 827px;
+height: 460px; 
+border: none;
+resize: none;
+border: 1px solid black;
+border-radius: 5px;
+}
+
+.full-page-textarea-container textarea{
+width: 100%;
+height:111.5mm !important; /* ปรับให้ auto หรือกำหนดขนาดที่ต้องการ */
+min-height: 100px; /* หรือกำหนด min-height */
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
+
+.div-container {
   width: 100%;
-  height:111.5mm !important; /* ปรับให้ auto หรือกำหนดขนาดที่ต้องการ */
-  min-height: 100px; /* หรือกำหนด min-height */
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  }
-  
-  .div-container {
-    width: 100%;
-    height: 420px; /* ตั้งค่าความสูงตามที่คุณต้องการ */
-    overflow: auto;
-    padding: 15px;
-    border-bottom-left-radius: 5px; 
-    border-bottom-right-radius: 5px;
-  }
-  .headerText{
+  height: 420px; /* ตั้งค่าความสูงตามที่คุณต้องการ */
+  overflow: auto;
+  padding: 15px;
+  border-bottom-left-radius: 5px; 
+  border-bottom-right-radius: 5px;
+}
+.headerText{
+display: flex;
+border-bottom: 1px solid #c1c1c1;
+}
+.headerText button:first-child {
   display: flex;
-  border-bottom: 1px solid #c1c1c1;
-  }
-  .headerText button:first-child {
-    display: flex;
-    font-family:  'Sarabun', sans-serif;
-    
-    height: 35px;
-    width: auto;
-    border-right: 1px solid #c1c1c1;
-  }
-  .FontSizeBox{
-    margin-left: 10px;
-    margin-top:5px ;
+  font-family:  'Sarabun', sans-serif;
+  
+  height: 35px;
+  width: auto;
+  border-right: 1px solid #c1c1c1;
+}
+.FontSizeBox{
+  margin-left: 10px;
+  margin-top:5px ;
+display: flex;
+align-items: center;
+justify-content: center;
+  border-radius: 5px;
+  width: 30px;
+  height: 25px;
+}
+
+.headerText button{
   display: flex;
   align-items: center;
   justify-content: center;
-    border-radius: 5px;
-    width: 30px;
-    height: 25px;
+  background:none;
+  width: 35px;
+  height: 35px;
+  border: none;
+  margin-left: 10px;
+  
+  
+}
+.headerText i:hover{
+display: flex;
+align-items: center;
+justify-content: center;
+width: 30px;
+height: 25px;
+background: #e2e2e2;
+border-radius: 5px;
+}
+
+
+.writteDraw{
+  display: block;
+margin: 20px 0 20px 0;
+width: 827px;
+height: 460px; 
+border: none;
+resize: none;
+border: 1px solid black;
+border-radius: 5px;
+
+
+}
+
+.full-page-canvas {
+width: 100%;
+height: 460.3px;
+/* border: 1px solid black;  */
+border-radius: 5px;
+
+}
+.openSignModal{
+position: relative;
+
+display: flex;
+width: 30mm;
+height: 20mm;
+border: 2px dashed orange;
+background: repeating-linear-gradient(-45deg,  rgb(253, 216, 4) 4px, transparent,  transparent 10px );
+border-radius: 5px;
+border-style:dashed ;
+opacity: 0.5;
+justify-content: center;
+align-items: center;
+text-align: center;
+cursor: pointer;
+transition: 0.3s;
+}
+.openSignModal:hover{
+box-shadow: 0 14px 20px -12px rgb(253, 216, 4), 0 4px 15px 0px rgba(211, 211, 211, 0.12), 0 2px 5px -5px rgb(253, 216, 4);
+opacity: 0.9;
+}
+.Writte-sign{
+position: absolute; /*[ng-reflect-writteSignElement]*/
+left: 53px;
+display: flex; /* Hidden by default */
+align-items: center;
+top: 0;
+width: 100%;
+height: 20mm;
+background-color: rgb(255, 254, 254); /* Semi-transparent background */
+z-index: 1000; /* Higher than other content */
+
+}
+
+
+
+.full-page-signWritte{
+
+width: 30mm;
+height: 20mm;
+border-radius: 5px;
+border: 1px solid black;
+z-index: 1001;
+}
+
+
+.toolbar {
+display: flex;
+padding: 0 1px 0 6px ;
+align-items: center;
+justify-content: space-between;
+border-bottom: 1px solid #929292;
+}
+
+.toolbar button {
+margin-right: 5px;
+padding: 5px 10px;
+background: none;
+border: none;
+}
+
+/*end writter draw*/
+
+.placeholder::before {
+content: attr(placeholder);
+color: gray;
+font-style: italic;
+}
+
+
+.btn-warning:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color:rgb(255, 209,0); /* สีพื้นหลังที่ต้องการเมื่อ hover */
+  z-index: -1;
+}
+
+.mainCenter-panel {
+  position: relative;
+  background: #fff;
+  padding: 96px;
+  height: 100%;
+  border:none;
+  /* max-height: 297mm; */
+}
+.header-topic{
+position: relative;
+padding-top: 1px;
+display: flex;
+flex-direction: column;
+
+font-size: 16px;
+font-weight: bold;
+text-align: center;
+}
+
+.right-panel {
+width: 60%;
+height: 150vh;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+position: relative; /* ให้ลูกสามารถจัดตำแหน่งตามคอนเทนเนอร์ได้ */
+
+ 
+}
+.right-panelOnTop{
+position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.detail-content{
+  position: relative;
+  margin-top: 60px;
+
+}  
+.detail-content .form-group label {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 16px;
   }
   
-  .headerText button{
+.detail-content .form-group p {
+    display: inline-block;
+    margin: 0;
+    padding-left: 10px;
+    font-size: 16px;
+  }
+
+.date-flex{
+    display: flex;
+    justify-content: space-between;
+  }
+  /*location td*/
+
+
+.main-detail table{
+    max-width: 600px;
+    table-layout: fixed;
+    overflow: auto;
+    border-collapse: collapse;
+    border: 0.1px solid black;
+  }
+.main-detail th, .main-detail td {
+    max-width: 539.29px;
+    border: 1px solid black; /* เส้นขอบสีดำ */
+    padding: 5px; /* ระยะห่างภายในเซลล์ */
+    text-align: left; /* จัดตำแหน่งเนื้อหาให้อยู่ทางซ้าย */
+    word-wrap: break-word;
+    overflow: hidden;
+  }
+  
+.main-detail th:first-child, .main-detail td:first-child {
+  text-align: center;
+    width: 12%;
+  }
+  
+.main-detail th:last-child, .main-detail td:last-child {
+    width: 88%;
+  }
+.main-detail th {
+    background-color: #f2f2f2; /* พื้นหลังสีเทาอ่อนสำหรับหัวตาราง */
+  }
+  
+.main-detail tr:nth-child(even) {
+    background-color: #f9f9f9; /* พื้นหลังสีเทาอ่อนสำหรับแถวคู่ */
+  }
+
+.sign-content{
+    position: relative;
+    /* padding-left: 360px; */
+    display: flex;
+    justify-content: flex-end;
+    font-size: 16px;
+    font-family: 'Sarabun',sans-serif;
+    text-align: center;
+    margin-top: 20px;
+  }
+.UploadContentBox{
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    background:none;
-    width: 35px;
-    height: 35px;
-    border: none;
-    margin-left: 10px;
+  }
+
+.sign-content img{
+    width: 30mm;   
+    height: 20mm;
     
     
   }
@@ -342,54 +569,37 @@
   
    
   }
-  .right-panelOnTop{
-  position: absolute;
-    top: 0;
-    left: 0;
+
+
+:host ::ng-deep .close{
+  float: right;
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1;
+    color: white ; /*#000000*/
+    text-shadow: 0 1px 0 #ffffff;
+    opacity: 1;
+}
+  :host ::ng-deep .btn-add{
+    color: #fff;
+    background-color: rgb(24,144,255) ;/*#000dc2ef rgb(24,144,255)  #24a0ed */
+    border-color: #00087c9f;
+    /* box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd; */
+
   }
-
-  .detail-content{
-    position: relative;
-    margin-top: 60px;
-
-  }  
-  .detail-content .form-group label {
-      display: inline-block;
-      font-weight: bold;
-      font-size: 16px;
-    }
-    
-  .detail-content .form-group p {
-      display: inline-block;
-      margin: 0;
-      padding-left: 10px;
-      font-size: 16px;
-    }
-  
-  .date-flex{
-      display: flex;
-      justify-content: space-between;
-    }
-    /*location td*/
+  :host ::ng-deep .btn-add:hover{
+    background-color: rgb(24,144,255); 
+    border-color: #24a0edb6;
+    box-shadow: 0 14px 14px -12px #24a0ed51, 0 4px 14px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px #24a0ed51;
+  }
  
  
-  .main-detail table{
-      max-width: 600px;
-      table-layout: fixed;
-      overflow: auto;
-      border-collapse: collapse;
-      border: 0.1px solid black;
-    }
-  .main-detail th, .main-detail td {
-      max-width: 539.29px;
-      border: 1px solid black; /* เส้นขอบสีดำ */
-      padding: 5px; /* ระยะห่างภายในเซลล์ */
-      text-align: left; /* จัดตำแหน่งเนื้อหาให้อยู่ทางซ้าย */
-      word-wrap: break-word;
-      overflow: hidden;
-    }
-    
-  .main-detail th:first-child, .main-detail td:first-child {
+:host ::ng-deep .dataTables_wrapper .dataTables_paginate .paginate_button {
+    box-sizing: border-box;
+    display: inline-block;
+    min-width: 1.5em;
+    padding: 2px !important;
+    margin-left: 2px;
     text-align: center;
       width: 12%;
     }
@@ -425,164 +635,135 @@
       text-shadow: 0 1px 0 #ffffff;
       opacity: 1;
   }
-    :host ::ng-deep .btn-add{
-      color: #fff;
-      background-color: rgb(24,144,255) ;/*#000dc2ef rgb(24,144,255)  #24a0ed */
-      border-color: #00087c9f;
-      /* box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd; */
-  
-    }
-    :host ::ng-deep .btn-add:hover{
-      background-color: rgb(24,144,255); 
-      border-color: #24a0edb6;
-      box-shadow: 0 14px 14px -12px #24a0ed51, 0 4px 14px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px #24a0ed51;
-    }
-   
-   
-  :host ::ng-deep .dataTables_wrapper .dataTables_paginate .paginate_button {
-      box-sizing: border-box;
-      display: inline-block;
-      min-width: 1.5em;
-      padding: 2px !important;
-      margin-left: 2px;
-      text-align: center;
-      text-decoration: none !important;
-      cursor: pointer;
-      color: inherit !important;
-      border: 1px solid transparent;
-      border-radius: 2px;
-      background: transparent;
-    }
-  :host ::ng-deep .page-link{
-      position: relative;
-        display: block;
-        padding: 0.5rem 0.75rem;
-        margin-left: 0;
-        line-height: 1.25;
-        color: #000000;
-        background-color:white ;/*rgb(255, 219, 61)*/
-        border: 0 solid #dee2e6;
-        font-family:  'Sarabun', sans-serif;
-        opacity: 0.9;
-  
-    }
-    :host ::ng-deep .page-link:hover{
-      position: relative;
-        display: flex;
-        padding: 0.5rem 0.75rem;
-        margin-left: 0;
-        line-height: 1.25;
-        color: black;
-        background-color: rgb(255, 219, 61);
-        border: 0 solid #dee2e6;
-        box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 244, 54, 0.4);
-        font-family:  'Sarabun', sans-serif;
-        opacity: 1;
-    }
-  
-    :host ::ng-deep .page-item.active .page-link {
-      z-index: 3;
+:host ::ng-deep .page-link{
+    position: relative;
+      display: block;
+      padding: 0.5rem 0.75rem;
+      margin-left: 0;
+      line-height: 1.25;
+      color: #000000;
+      background-color:white ;/*rgb(255, 219, 61)*/
+      border: 0 solid #dee2e6;
+      font-family:  'Sarabun', sans-serif;
+      opacity: 0.9;
+
+  }
+  :host ::ng-deep .page-link:hover{
+    position: relative;
+      display: flex;
+      padding: 0.5rem 0.75rem;
+      margin-left: 0;
+      line-height: 1.25;
       color: black;
-      background-color: rgb(255, 209, 0);
-      border-color: rgb(232, 189, 0);
-      border-radius: 3px;
+      background-color: rgb(255, 219, 61);
+      border: 0 solid #dee2e6;
       box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 244, 54, 0.4);
+      font-family:  'Sarabun', sans-serif;
       opacity: 1;
-      
-  }
-  
-  
-  :host ::ng-deep .card .card-header .card-title{
-    font-family: "Sarabun", sans-serif;
-  }
-  :host ::ng-deep .sidebar .nav p {
-    margin: 0;
-    line-height: 30px;
-    font-size: 14px;
-    position: relative;
-    display: block;
-    height: auto;
-    white-space: nowrap;
-    font-family: "Sarabun", sans-serif !important; 
-  }
-  :host ::ng-deep .form-check, label {
-    font-size: 14px;
-    line-height: 1.42857;
-    color: #000000;
-    font-weight: 400;
   }
 
-  /*upload file botton */
-  :host ::ng-deep .uploadFilePDF{
-    position: relative;
-    margin: 10px 0 60px 0;
-    border-radius: 5px;
-    width: 360px;
-
-  }
-  :host ::ng-deep.flieUpload{
-    position: relative;
+  :host ::ng-deep .page-item.active .page-link {
+    z-index: 3;
+    color: black;
+    background-color: rgb(255, 209, 0);
+    border-color: rgb(232, 189, 0);
+    border-radius: 3px;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 244, 54, 0.4);
+    opacity: 1;
     
-    justify-content: flex-end;
-    width: 360px;
+}
 
-    border-radius: 5px;
-  }
-  input{
-    margin: 10px 0 0 40px ;
-    border: 1px solid rgb(0, 0, 0);
-    border-radius: 5px;
-  }
-  ::-webkit-file-upload-button{
 
-    border: none;
-    background-color: #24a0ed;
-    color: white;
-    border-radius: 5px 0 0 5px ;
-  }
+:host ::ng-deep .card .card-header .card-title{
+  font-family: "Sarabun", sans-serif;
+}
+:host ::ng-deep .sidebar .nav p {
+  margin: 0;
+  line-height: 30px;
+  font-size: 14px;
+  position: relative;
+  display: block;
+  height: auto;
+  white-space: nowrap;
+  font-family: "Sarabun", sans-serif !important; 
+}
+:host ::ng-deep .form-check, label {
+  font-size: 14px;
+  line-height: 1.42857;
+  color: #000000;
+  font-weight: 400;
+}
+
+/*upload file botton */
+:host ::ng-deep .uploadFilePDF{
+  position: relative;
+  margin: 10px 0 60px 0;
+  border-radius: 5px;
+  width: 360px;
+
+}
+:host ::ng-deep.flieUpload{
+  position: relative;
+  
+  justify-content: flex-end;
+  width: 360px;
+
+  border-radius: 5px;
+}
+input{
+  margin: 10px 0 0 40px ;
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 5px;
+}
+::-webkit-file-upload-button{
+
+  border: none;
+  background-color: #24a0ed;
+  color: white;
+  border-radius: 5px 0 0 5px ;
+}
 ็
-  :host ::ng-deep .pdfViewer .page{
-    border: 1px solid black !important;
-    /* margin: 1px auto -8px; */
+:host ::ng-deep .pdfViewer .page{
+  border: 1px solid black !important;
+  /* margin: 1px auto -8px; */
 
-  }
+}
 /*end botton upload file PDF*/
 
-  
-  @media print {
-    #myDetail{
-      border: none;
-    }
-    .main-detail {
-      width: 100%;
-      page-break-inside: avoid;
-    }
-  
-    .main-detail table {
-      width: 100%;
-      page-break-inside: auto;
-    }
-  
-    .main-detail th, .main-detail td {
-      word-wrap: break-word;
-    }
-  
-    .main-detail th:first-child, .main-detail td:first-child {
-      width: 10%;
-    }
-  
-    .main-detail th:last-child, .main-detail td:last-child {
-      width: 90%;
-    }
-  
-    .main-detail tr {
-      page-break-inside: avoid;
-      page-break-after: auto;
-    }
-  
-    @page {
-      size: A4;
-      margin: 20mm;
-    }
+
+@media print {
+  #myDetail{
+    border: none;
   }
-  
+  .main-detail {
+    width: 100%;
+    page-break-inside: avoid;
+  }
+
+  .main-detail table {
+    width: 100%;
+    page-break-inside: auto;
+  }
+
+  .main-detail th, .main-detail td {
+    word-wrap: break-word;
+  }
+
+  .main-detail th:first-child, .main-detail td:first-child {
+    width: 10%;
+  }
+
+  .main-detail th:last-child, .main-detail td:last-child {
+    width: 90%;
+  }
+
+  .main-detail tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  @page {
+    size: A4;
+    margin: 20mm;
+  }
+}

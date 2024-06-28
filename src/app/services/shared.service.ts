@@ -9,6 +9,9 @@ import { Observable, catchError } from 'rxjs';
   providedIn: 'root'
 })
 export class SharedService {
+
+  
+
   // private baseUrl = 'mongodb://127.0.0.1:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private baseUrl = 'http://localhost:3000/api'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private typroText: string = '';
@@ -52,6 +55,7 @@ export class SharedService {
   getTyproText(record_id){
     return this.http.get(`${this.baseUrl}/dtModel/getTyproText/${record_id}`);
   }
+  
   updateRecordContent(data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/record/updateContent`, data).pipe(
       catchError(error => {

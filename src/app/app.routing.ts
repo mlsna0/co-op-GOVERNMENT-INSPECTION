@@ -4,13 +4,24 @@ import { BrowserModule  } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 
 const routes: Routes =[
   {
     path: '',
-    redirectTo: 'table-list', //dashboard
+    redirectTo: 'login', //dashboard
     pathMatch: 'full',
-  }, {
+  }, 
+  {
+    path: '',
+    component: AuthLayoutComponent,
+    children: [{
+      path: '',
+      loadChildren: () => import('./layouts/auth-layout/auth-layout.module').then(m => m.AuthLayoutModule)
+    //   loadChildren: () => import('./layouts/admin-layout/admin-layout.module').then(m => m.AdminLayoutModule)
+    }]
+  },
+  { 
     path: '',
     component: AdminLayoutComponent,
     children: [{

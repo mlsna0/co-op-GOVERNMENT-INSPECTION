@@ -26,7 +26,8 @@ import { MatIconModule } from '@angular/material/icon'; //petch add
 import { TableDetailComponent } from 'app/view/table-detail/table-detail.component';
 import {TableMainComponent } from '../../view/table-main/table-main.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
-import { PdfViewerModule } from 'ng2-pdf-viewer'
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -43,6 +44,8 @@ import { PdfViewerModule } from 'ng2-pdf-viewer'
     MatTooltipModule,
     DataTablesModule,
     AngularEditorModule,
+
+
     PdfViewerModule,
   ],
   declarations: [
@@ -59,8 +62,6 @@ import { PdfViewerModule } from 'ng2-pdf-viewer'
     TableMainComponent,
     
   
-   
-    
   ]
 })
 

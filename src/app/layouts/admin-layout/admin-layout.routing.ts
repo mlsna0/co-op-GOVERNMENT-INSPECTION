@@ -10,13 +10,15 @@ import { NotificationsComponent } from '../../notifications/notifications.compon
 import { UpgradeComponent } from '../../upgrade/upgrade.component';
 import { TableDetailComponent } from '../../view/table-detail/table-detail.component';
 import {TableMainComponent } from '../../view/table-main/table-main.component';
+// import { LoginComponent } from '../auth-layout/login/login.component';
 export const AdminLayoutRoutes: Routes = [
     // {
     //   path: '',
     //   children: [ {
     //     path: 'dashboard',
     //     component: DashboardComponent
-    // }]}, {
+    // }]}
+    // , {
     // path: '',
     // children: [ {
     //   path: 'userprofile',
@@ -57,10 +59,11 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'user-profile',   component: UserProfileComponent },
     { path: 'table-list',     component: TableListComponent },
     { path: 'table-main',     component: TableMainComponent },
+    // { path:'login',             component:LoginComponent },
     { path: 'table-detail/:id', component: TableDetailComponent },
-    { path: 'typography',     component: TypographyComponent },
-    { path: 'icons',          component: IconsComponent },
-    { path: 'maps',           component: MapsComponent },
-    { path: 'notifications',  component: NotificationsComponent },
-    { path: 'upgrade',        component: UpgradeComponent },
+    { path: 'typography',       component: TypographyComponent },
+    { path: 'icons',            component: IconsComponent },
+    { path: 'maps',             component: MapsComponent },
+    { path: 'notifications',    component: NotificationsComponent },
+    { path: 'upgrade',          component: UpgradeComponent },
 ];

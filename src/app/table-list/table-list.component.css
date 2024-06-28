@@ -1,9 +1,11 @@
+
 .modal-lg {
   max-width: 100%;
 }
 
 :host ::ng-deep .card-header .card-header-danger .modal-title{
   font-family: "Sarabun", sans-serif !important; 
+  font-size: 16px;
 }
 
 .modal-body {
@@ -140,6 +142,11 @@ border-radius: 5px;
   border-bottom-right-radius: 5px;
 }
 .headerText{
+
+border-bottom: 1px solid #c1c1c1;
+text-align: center;
+padding: 3px;
+font-size: 16px;
   height: 34px;
   padding: 0 1px 0 6px;
   display: flex;
@@ -615,6 +622,27 @@ right: 25px;
   font-weight: 400;
 }
 
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
+  background-color: #ff0000 !important; /* สีพื้นหลังของปุ่ม */
+  color: #ffffff !important; /* สีข้อความของปุ่ม */
+}
+
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:hover {
+  background-color: #cc0000 !important; /* สีพื้นหลังของปุ่มเมื่อ hover */
+  
+}
+
+
+:host ::ng-deep .angular-editor-textarea {
+  border: 1px !important;
+  padding: 10px !important;
+  overflow: auto !important;
+  margin-top: 5px !important;
+  resize: none !important;
+  height: 101.7mm !important;
+  top: -5px !important;
+}
+
 :host ::ng-deep .angular-editor-toolbar{
 
   background-color: #f5f5f5;
@@ -623,6 +651,9 @@ right: 25px;
   font-size: 14px !important;
 }
 
+:host ::ng-deep .ae-font .ae-picker-label{
+  left: -8px;
+}
 :host ::ng-deep .angular-editor-textarea {
   border: none !important;
   border-bottom-left-radius: 5px !important;

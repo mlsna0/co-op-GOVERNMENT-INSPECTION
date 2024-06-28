@@ -1036,10 +1036,10 @@ loadContent() {
     height: '15rem',
     // minHeight: '5rem',
     placeholder: 'พิมพ์ข้อความทที่นี่..',
-    translate: 'no',
+    translate: 'yes',
     defaultParagraphSeparator: 'p',
     defaultFontName: 'Sarabun", sans-serif;',
-    sanitize:false,
+    sanitize: false,  //สำคัญมากถ้าอยากให้มันอยู่คงฟอร์ม มันเป็นตัวควบคุมว่าจะแยก HTML ที่ไม่ปลอดภัยออกจากเนื้อหาหรือไม่ 
     toolbarHiddenButtons: [
       [
         'link',
@@ -1047,17 +1047,15 @@ loadContent() {
         'insertImage',
         'insertVideo',
         'insertHorizontalRule',
-        'removeFormat',
+        'removeFormat', 
         'textColor',
         'backgroundColor',
         // 'toggleEditorMode',
         'heading',
         'fontName',
       ],
-    ]
-   
+    ],
   };
- 
 }
 
 
@@ -1065,6 +1063,3 @@ loadContent() {
 
 
  ///////////////////เเบ่งหน้า///////////////////////////////////
- 
-
-

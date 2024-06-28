@@ -1,6 +1,5 @@
 <div class="main-content">
 
-
   <div class="container-fluid">
     <div class="row justify-content-end">
       <div class="col-sm-2">
@@ -396,20 +395,15 @@
                         </button>
                       </div>
                     </div>
-                    <div class="col-md-12" class="modal-body" style="width: 210mm; padding: 0 20px 0 20px;"
-                      [ngStyle]="{top:0 }">
-
+                    
+                    <div class="col-md-12" class="modal-body" style="width: 210mm; padding: 0 20px 0 20px;" [ngStyle]="{top:0}">
                       <div *ngIf="isTyproActive" class="full-page-textarea-container">
                         <div class="typroTextBox">
                           <div class="headerText">
-                            <div aria-label="Preview">การพิมพ์ข้อความ</div>
+                            <div style="text-align: center;">การพิมพ์ข้อความ</div>
                             
                           </div>
-                          <angular-editor [placeholder]="'พิมพ์ข้อความที่นี้...'" [config]="editorConfig" [(ngModel)]="typroText "></angular-editor>
-
-
-
-                          </div>
+                          <angular-editor [placeholder]="'พิมพ์ข้อความทที่นี่..'" [config]="editorConfig" [(ngModel)]="typroText"></angular-editor>
                         </div>
                    
                       <div *ngIf="isWritteActive" class="full-page-pdf">
@@ -462,6 +456,5 @@
               </div>
             </div>
           </div>
-
 
         </div>
