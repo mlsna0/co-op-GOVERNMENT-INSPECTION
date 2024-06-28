@@ -35,8 +35,12 @@ export class TableDetailComponent implements OnInit {
   @ViewChild('mainCenterPanel') mainCenterPanel: ElementRef;//for over sign-content
 
   details: any[] = []; //break page
+ 
   textContentLength:number =0;
   remainingContentLength:number =0;
+  contentParts: SafeHtml[] = [];
+
+
   recordId: any;
   viewData=[];
   remainingContent: string = '';//content ที่ตัดออกจะเก็บที่นี้?
@@ -51,7 +55,7 @@ export class TableDetailComponent implements OnInit {
   truncatedContent:string = '';
   maxLength: number = 250;
 
-
+//upload file PDF
   uploadedPDF: SafeResourceUrl | undefined;
   selectedFile: any ="";
   selectedFilePath:String ="";
@@ -407,10 +411,21 @@ onMouseMove(event: MouseEvent): void {
     this.remainingContent = content.substring(maxLength);
     this.otherRemainingContent = this.remainingContent.substring(3050)
     this.remainingContentLength = this.remainingContent.length;
+
+    this.contentParts = this.splitContent(content, maxLength);
     // console.log("textContent :",textcontent)
     // console.log("textContent Count :",this.textContentLength)
     // console.log("textREMAINContent Count :",this.remainingContentLength)
     return this.sanitizer.bypassSecurityTrustHtml(textcontent);
+    }
+
+    splitContent(content: string, chunkSize: number): SafeHtml[] {
+      const parts: SafeHtml[] = [];
+      for (let i = 0; i < content.length; i += chunkSize) {
+        const chunk = content.substring(i, i + chunkSize);
+        parts.push(this.sanitizer.bypassSecurityTrustHtml(chunk));
+      }
+      return parts;
     }
 
   // printPDF = () => {

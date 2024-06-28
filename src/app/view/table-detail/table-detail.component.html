@@ -99,7 +99,7 @@
                                 <div *ngFor="let person of viewData; let i = index">
                                     <div class="UploadContentBox">
 
-                                        <div class="openSignModal" (click)="openSignModal(i)">
+                                        <div class="openSignModal" (click)="openSignModal(i)"  [ngStyle]="{'display':isSignModalVisible[i] ? 'none':'flex'}">
                                             <a>คลิกเพื่อเซ็น</a>
 
                                         </div>
@@ -150,7 +150,7 @@
                             </table>
                         </div>
     
-                        <div  class="sign-content" [ngStyle]="{'display': isContentOverflow ? 'none' : 'flex'}"><!--  *ngIf="!otherRemainingContent" [ngStyle]="{'display':!otherRemainingContent ? 'flex' : 'none'}"-->
+                        <div *ngIf="!remainingContent" class="sign-content" [ngStyle]="{'display':!remainingContent ? 'flex' : 'none'}">
                             <div class="form-group" style="width: auto;">
                                 <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
                                 <div *ngFor="let person of viewData; let i = index" >
@@ -183,59 +183,68 @@
                 
             </div>
 
-            <!--page3-->
-            <!-- <div id="myDetail" class="modal-body-detail" [ngStyle]="{'display': (testFile ||!otherRemainingContent) ? 'none' : 'block', width: '210mm' }">
-            
-                <form action method="get">
-                    <div class="mainCenter-panel ">
-                       
-    
-                        <div class="main-detail">
-                            <table>
-                               
-                                <tbody>
-                                    <tr>
-                                        <td >
-                                
-                                        </td>
-                                        <td [innerHTML]="getSafeHtml(otherRemainingContent)" style="width: 90%;"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-    
-                        <div class="sign-content">
-                            <div class="form-group" style="width: auto;">
-                                <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
-                                <div *ngFor="let person of viewData; let i = index" >
-                                    <div class="UploadContentBox">
-                                        
-                                        <div class="openSignModal" (click)="openSignModal(i)">
-                                            <a>คลิกเพื่อเซ็น</a>
-    
+            <div *ngFor="let part of contentParts; let last = last">
+                <div id="myDetail" class="modal-body-detail" [ngStyle]="{'display': testFile ? 'none' : 'block', width: '210mm' }">
+
+                    <form action method="get">
+                        <div #mainCenterPanel class="mainCenter-panel ">
+                           
+        
+                            <div class="main-detail">
+                                <table>
+                                   
+                                    <tbody>
+                                        <tr>
+                                            <td >
+                                    
+                                            </td>
+                                            <td [innerHTML]="part" style="width: 90%;"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+        
+                            <div *ngIf="last" class="sign-content">
+                                <div class="form-group" style="width: auto;">
+                                    <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
+                                    <div *ngFor="let person of viewData; let i = index" >
+                                        <div class="UploadContentBox">
+                                            
+                                            <div  class="openSignModal" (click)="openSignModal(i)" [ngStyle]="{'display':isSignModalVisible[i] ? 'none':'flex'}" >
+                                                <a>คลิกเพื่อเซ็น</a>
+        
+                                            </div>
+                                      
+                                            <div class="Writte-sign" #writteSignElement id="SignModal-{{i}}"
+                                                *ngIf="isSignModalVisible[i]">
+                                                <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error someting
+                                                    with
+                                                    canvas</canvas>
+                                             
+                                            </div>
+        
+        
                                         </div>
-                                  
-                                        <div class="Writte-sign" #writteSignElement id="SignModal-{{i}}"
-                                            *ngIf="isSignModalVisible[i]">
-                                            <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error someting
-                                                with
-                                                canvas</canvas>
-                                         
-                                        </div>
-    
-    
+        
+                                        <a style="position: relative; font-size: 16px; display: inline;">( {{ person.view_rank }} &nbsp;  {{ person.view_first_name }} &nbsp;{{ person.view_last_name }} )</a>
                                     </div>
-    
-                                    <a style="position: relative; font-size: 16px; display: inline;">( {{ person.view_rank }} &nbsp;  {{ person.view_first_name }} &nbsp;{{ person.view_last_name }} )</a>
                                 </div>
                             </div>
+        
+        
                         </div>
-    
-    
-                    </div>
-                </form>
-                
-            </div> -->
+                    </form>
+                </div>
+            </div>
+             <!-- <div *ngFor="let part of contentParts">
+                <div id="myDetail" class="modal-body-detail" [ngStyle]="{'display': testFile ? 'none' : 'block', width: '210mm' }">
+
+                  <div [innerHtml]="part"></div>
+                </div>
+            </div>  -->
+          
+     
+            
 
             
         </div>

@@ -236,7 +236,7 @@
   }
   .Writte-sign{
   position: relative; /*[ng-reflect-writteSignElement]*/
-  left: 53px;
+  left: -18px;
   display: flex; /* Hidden by default */
   align-items: center;
   top: 0;
@@ -250,12 +250,31 @@
   
   
   .full-page-signWritte{
+    position: relative;
   cursor: url('/assets/img/pen-cursor.png') -1 15,auto;
   width: 30mm;
   height: 20mm;
   border-radius: 5px;
   border: 1px solid black;
   z-index: 1001;
+  }
+
+  .sign-content{
+    position: relative;
+    /* padding-left: 360px; */
+    display: flex;
+    justify-content: flex-end;
+    font-size: 16px;
+    font-family: 'Sarabun',sans-serif;
+    text-align: center;
+    margin-top: 20px;
+  }
+.UploadContentBox{
+    position: relative;
+    display: flex;
+    align-items: center;
+   
+    justify-content: center;
   }
   
   
@@ -386,23 +405,7 @@
       background-color: #f9f9f9; /* พื้นหลังสีเทาอ่อนสำหรับแถวคู่ */
     }
   
-  .sign-content{
-      position: relative;
-      /* padding-left: 360px; */
-      display: flex;
-      justify-content: flex-end;
-      font-size: 16px;
-      font-family: 'Sarabun',sans-serif;
-      text-align: center;
-      margin-top: 20px;
-    }
-  .UploadContentBox{
-      position: relative;
-      display: flex;
-      align-items: center;
-     
-      justify-content: center;
-    }
+  
   
   .sign-content img{
       width: 30mm;   
