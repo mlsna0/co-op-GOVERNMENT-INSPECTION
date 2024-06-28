@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from 'app/services/shared.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth-layout.Service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private sv : SharedService,
-    private router: Router
+    private router: Router,
+    private as : AuthService,
   ) { }
 
   ngOnInit(): void {
@@ -28,6 +30,10 @@ export class LoginComponent implements OnInit {
   //     alert('Invalid credentials');
   //   }
   // }
+
+  onLogin() {
+    this.as.login(this.email, this.password);
+  }
 
   onSubmit() {
     this.router.navigate(['/table-list']);

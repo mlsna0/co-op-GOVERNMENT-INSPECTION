@@ -1,6 +1,6 @@
 <div class="login-card">
     <h2>เข้าสู่ระบบ</h2>
-    <form (ngSubmit)="onSubmit()">
+    <form (ngSubmit)="onLogin()">
       <div class="form-group">
         <label for="email" style="font-size: 16px;">อีเมล</label>
         <input type="email" id="email" [(ngModel)]="email" name="email" required placeholder="กรอกอีเมลของคุณ" 
@@ -14,7 +14,7 @@
       </div>
       <button type="submit" class="btn-login">เข้าสู่ระบบ</button>
     </form>
-    
+
     <div class="footer-links">
       <a (click)="openFogetPassword()" class="forgot-password-link"  style="font-size: 14px;">ลืมรหัสผ่าน</a>
       <a (click)="openRegister()" class="register-link" style="font-size: 14px;">สมัครสมาชิก</a>
