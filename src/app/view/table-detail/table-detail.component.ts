@@ -47,6 +47,8 @@ export class TableDetailComponent implements OnInit {
   otherRemainingContent:string='';//content ที่ตัดออกจะเก็บที่นี้? ระดับ 3
   isContentOverflow = false; //
   addItemForm: any;
+  boxes: any[] = [];
+
   
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
@@ -75,6 +77,7 @@ export class TableDetailComponent implements OnInit {
   private offsetY = 0;
   testFile:any;
  
+
 
 
   constructor(
@@ -277,6 +280,23 @@ export class TableDetailComponent implements OnInit {
   //   }, 0);  
   //   console.log("it openSign status : ",this.isSignModalVisible)
   // }
+  addBox() {
+    this.boxes.push({ top: '0px', left: '0px' });
+    this.isSignModalVisible.push(false);
+  }
+  onDragStart(event: DragEvent, index: number) {
+    const box = this.boxes[index];
+    box.dragStartX = event.clientX - box.left;
+    box.dragStartY = event.clientY - box.top;
+  }
+
+  onDragEnd(event: DragEvent, index: number) {
+    const box = this.boxes[index];
+    box.left = event.clientX - box.dragStartX;
+    box.top = event.clientY - box.dragStartY;
+    delete box.dragStartX;
+    delete box.dragStartY;  
+  }
 
   blobToBase64(blob): Promise<string> {
     return new Promise((resolve, reject) => {
