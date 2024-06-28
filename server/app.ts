@@ -16,7 +16,7 @@ app.use('/uploads', express.static(path.join(__dirname, './uploads')));
 app.use('/img', express.static(path.join(__dirname, './img')));
 
 app.use('/', express.static(path.join(__dirname, '../public')));
-
+require('dotenv').config();
 app.use((req, res, next) => {
 req.headers['content-type'] = req.headers['content-type'] || 'application/json; charset=utf-8' || 'text/csv; charset=utf-8';
 res.header("Access-Control-Allow-Origin", "*");

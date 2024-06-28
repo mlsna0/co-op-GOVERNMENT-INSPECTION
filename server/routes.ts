@@ -4,6 +4,7 @@ import ItemModelCtrl from './controller/itemController';
 import RecordModelCtrl from './controller/recordController';
 import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
+import RegisterModelCtrl from './controller/registerController';
 import uploadService from './service/uploadservice.service';
 // import PdfCtrl from './controller/pdfController';
 // import DetailModelCtrl from 'controller/detailController';
@@ -15,6 +16,7 @@ function setRoutes(app): void {
   const recordModelCtrl = new RecordModelCtrl();
   const userModelCtrl = new UserModelCtrl();
   const viewModelCtrl = new ViewModelCtrl();
+  const registerModelCtrl = new RegisterModelCtrl();
   // const pdfCtrl = new PdfCtrl();
   // const detailModelCtrl = new DetailModelCtrl();
 
@@ -69,6 +71,14 @@ function setRoutes(app): void {
   router.route('/viewModel/:id').put(viewModelCtrl.update);
   router.route('/viewModel/:id').delete(viewModelCtrl.delete);
 
+  router.route('/registerModel').get(registerModelCtrl.getAll);
+  router.route('/registerModel/count').get(registerModelCtrl.count);
+  router.route('/registerModel').post(registerModelCtrl.create);
+  router.route('/registerModel/:id').get(registerModelCtrl.get);
+  router.route('/registerModel/:id').put(registerModelCtrl.update);
+  router.route('/registerModel/:id').delete(registerModelCtrl.delete);
+  router.route('/registerModel/login').post(registerModelCtrl.login);
+
   
   //agg $lookup Record and View model routes //petch edit add this
   // router.route('/aggRecordNview/:id').get(AggRecordNViewCon.get);
@@ -77,4 +87,4 @@ function setRoutes(app): void {
 }
 
 export default setRoutes;
-
+  
