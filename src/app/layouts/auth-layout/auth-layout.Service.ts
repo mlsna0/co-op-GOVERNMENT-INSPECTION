@@ -1,6 +1,9 @@
 // auth.service.ts
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -56,4 +59,8 @@ export class AuthService {
   isUser(): boolean {
     return this.currentUserRole === 'user' || this.currentUserRole === 'admin' || this.currentUserRole === 'superadmin';
   }
+  // register(user: RegisterModel): Observable<any> {
+  //   return this.http.post(`${this.baseUrl}/register`, user);
+  // }
+
 }

@@ -407,7 +407,166 @@ position: absolute;
     width: 30mm;   
     height: 20mm;
     
-    margin-left: 58px;
+    
+  }
+  .headerText i:hover{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 25px;
+  background: #e2e2e2;
+  border-radius: 5px;
+  }
+  
+  
+  .writteDraw{
+    display: block;
+  margin: 20px 0 20px 0;
+  width: 827px;
+  height: 460px; 
+  border: none;
+  resize: none;
+  border: 1px solid black;
+  border-radius: 5px;
+  
+  
+  }
+  
+  .full-page-canvas {
+  width: 100%;
+  height: 460.3px;
+  /* border: 1px solid black;  */
+  border-radius: 5px;
+  
+  }
+  .openSignModal{
+  position: relative;
+  
+  display: flex;
+  width: 30mm;
+  height: 20mm;
+  border: 2px dashed orange;
+  background: repeating-linear-gradient(-45deg,  rgb(253, 216, 4) 4px, transparent,  transparent 10px );
+  border-radius: 5px;
+  border-style:dashed ;
+  opacity: 0.5;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+  }
+  .openSignModal:hover{
+  box-shadow: 0 14px 20px -12px rgb(253, 216, 4), 0 4px 15px 0px rgba(211, 211, 211, 0.12), 0 2px 5px -5px rgb(253, 216, 4);
+  opacity: 0.9;
+  }
+  .Writte-sign{
+  position: relative; /*[ng-reflect-writteSignElement]*/
+  left: -18px;
+  display: flex; /* Hidden by default */
+  align-items: center;
+  top: 0;
+  width: 35%;
+  height: 20mm;
+  background-color: rgb(255, 254, 254); /* Semi-transparent background */
+  z-index: 1000; /* Higher than other content */
+  
+  }
+  
+  
+  
+  .full-page-signWritte{
+    position: relative;
+  cursor: url('/assets/img/pen-cursor.png') -1 15,auto;
+  width: 30mm;
+  height: 20mm;
+  border-radius: 5px;
+  border: 1px solid black;
+  z-index: 1001;
+  }
+
+  .sign-content{
+    position: relative;
+    /* padding-left: 360px; */
+    display: flex;
+    justify-content: flex-end;
+    font-size: 16px;
+    font-family: 'Sarabun',sans-serif;
+    text-align: center;
+    margin-top: 20px;
+  }
+.UploadContentBox{
+    position: relative;
+    display: flex;
+    align-items: center;
+   
+    justify-content: center;
+  }
+  
+  
+  .toolbar {
+  display: flex;
+  padding: 0 1px 0 6px ;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #929292;
+  }
+  
+  .toolbar button {
+  margin-right: 5px;
+  padding: 5px 10px;
+  background: none;
+  border: none;
+  }
+  
+  /*end writter draw*/
+  
+  .placeholder::before {
+  content: attr(placeholder);
+  color: gray;
+  font-style: italic;
+  }
+  
+  
+  .btn-warning:hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color:rgb(255, 209,0); /* สีพื้นหลังที่ต้องการเมื่อ hover */
+    z-index: -1;
+  }
+  
+  .mainCenter-panel {
+    position: relative;
+    background: #fff;
+    padding: 96px;
+    height: 100%;
+    border:none;
+    /* max-height: 297mm; */
+  }
+  .header-topic{
+  position: relative;
+  padding-top: 1px;
+  display: flex;
+  flex-direction: column;
+  
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  }
+  
+  .right-panel {
+  width: 60%;
+  height: 150vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative; /* ให้ลูกสามารถจัดตำแหน่งตามคอนเทนเนอร์ได้ */
+  
    
   }
 
@@ -442,12 +601,39 @@ position: absolute;
     padding: 2px !important;
     margin-left: 2px;
     text-align: center;
-    text-decoration: none !important;
-    cursor: pointer;
-    color: inherit !important;
-    border: 1px solid transparent;
-    border-radius: 2px;
-    background: transparent;
+      width: 12%;
+    }
+    
+  .main-detail th:last-child, .main-detail td:last-child {
+      width: 88%;
+    }
+  .main-detail th {   
+      background-color: #f2f2f2; /* พื้นหลังสีเทาอ่อนสำหรับหัวตาราง */
+    }
+    
+  .main-detail tr:nth-child(even) {
+      background-color: #f9f9f9; /* พื้นหลังสีเทาอ่อนสำหรับแถวคู่ */
+    }
+  
+  
+  
+  .sign-content img{
+      width: 30mm;   
+      height: 20mm;
+      
+      margin-left: 58px;
+     
+    }
+
+  
+  :host ::ng-deep .close{
+    float: right;
+      font-size: 1.5rem;
+      font-weight: 300;
+      line-height: 1;
+      color: white ; /*#000000*/
+      text-shadow: 0 1px 0 #ffffff;
+      opacity: 1;
   }
 :host ::ng-deep .page-link{
     position: relative;

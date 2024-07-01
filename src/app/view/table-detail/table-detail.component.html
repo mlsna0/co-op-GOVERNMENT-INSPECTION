@@ -21,19 +21,27 @@
                     class="fa fa-times"></i></button>
         </div>
         <!-- <button (click)="addDetail()">เพิ่มหน้าใหม่</button> -->
-         <!--หน้าในการแสดง ไฟล์ pdf ที่อัปโหลดมา-->
+        <!--หน้าในการแสดง ไฟล์ pdf ที่อัปโหลดมา-->
         <div *ngIf="selectedFilePath">
 
-            <pdf-viewer id="pdf-viewer" *ngIf="testFile"
-                [src]="testFile" 
-                [render-text]="true" 
-                [original-size]="true"
-                [borders]="true"
-                [show-borders]="true" 
-                style="width: 210mm; height: 297mm;">
+            <pdf-viewer id="pdf-viewer" *ngIf="testFile" [src]="testFile" [render-text]="true" [original-size]="true"
+                [borders]="true" [show-borders]="true" style="width: 210mm; height: 297mm;">
             </pdf-viewer>
             <img *ngIf="isFileImage" [src]="selectedFilePath" alt="Image"
                 style="display: block; align-items: center; max-width:  100%; max-height: 297mm;">
+            <!-- Add signature boxes here -->
+            <div *ngFor="let box of boxes; let i = index" class="UploadContentBox"
+                [ngStyle]="{'top': box.top + 'px', 'left': box.left + 'px', 'position': 'absolute'}" draggable="true"
+                (dragstart)="onDragStart($event, i)" (dragend)="onDragEnd($event, i)">
+                <div class="openSignModal" (click)="openSignModal(i)">
+                    <a>คลิกเพื่อเซ็น</a>
+                </div>
+                <div class="Writte-sign" *ngIf="isSignModalVisible[i]">
+                    <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error something with
+                        canvas</canvas>
+                </div>
+            </div>
+            <!-- End of signature boxes -->
         </div>
 
 
@@ -76,7 +84,8 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th style="text-align: center; vertical-align: middle; width: 10%;">ครั้งที่</th>
+                                        <th style="text-align: center; vertical-align: middle; width: 10%;">ครั้งที่
+                                        </th>
                                         <th style="text-align: center; vertical-align: middle;">เนื้อหาการตรวจสอบ</th>
                                     </tr>
 
@@ -93,13 +102,16 @@
                             </table>
                         </div>
 
-                        <div *ngIf="!remainingContent" class="sign-content" [ngStyle]="{'display':!remainingContent ? 'flex' : 'none'}" > <!-- [ngStyle]="{'display':!remainingContent ? 'flex' : 'none'}"-->
+                        <div *ngIf="!remainingContent" class="sign-content"
+                            [ngStyle]="{'display':!remainingContent ? 'flex' : 'none'}">
+                            <!-- [ngStyle]="{'display':!remainingContent ? 'flex' : 'none'}"-->
                             <div class="form-group" style="width: auto;">
                                 <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
                                 <div *ngFor="let person of viewData; let i = index">
                                     <div class="UploadContentBox">
 
-                                        <div class="openSignModal" (click)="openSignModal(i)">
+                                        <div class="openSignModal" (click)="openSignModal(i)"
+                                            [ngStyle]="{'display':isSignModalVisible[i] ? 'none':'flex'}">
                                             <a>คลิกเพื่อเซ็น</a>
 
                                         </div>
@@ -127,127 +139,146 @@
 
             </div>
 
+
             <!--page2?-->
-            
-            <div  id="myDetail" class="modal-body-detail" [ngStyle]="{'display': (testFile ||!remainingContent) ? 'none' : 'block', width: '210mm' }">
-            
+
+            <div id="myDetail" class="modal-body-detail"
+                [ngStyle]="{'display': (testFile ||!remainingContent) ? 'none' : 'block', width: '210mm' }">
+
                 <form action method="get">
                     <div #mainCenterPanel class="mainCenter-panel ">
-                       
-    
+
+
                         <div class="main-detail">
                             <table>
-                               
+
                                 <tbody>
                                     <tr>
-                                        <td >
-                                
+                                        <td>
+
                                         </td>
                                         <td [innerHTML]="getSafeHtml(remainingContent)" style="width: 90%;"></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-    
-                        <div  class="sign-content" [ngStyle]="{'display': isContentOverflow ? 'none' : 'flex'}"><!--  *ngIf="!otherRemainingContent" [ngStyle]="{'display':!otherRemainingContent ? 'flex' : 'none'}"-->
+
+                        <div *ngIf="!remainingContent" class="sign-content"
+                            [ngStyle]="{'display':!remainingContent ? 'flex' : 'none'}">
                             <div class="form-group" style="width: auto;">
                                 <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
-                                <div *ngFor="let person of viewData; let i = index" >
+                                <div *ngFor="let person of viewData; let i = index">
                                     <div class="UploadContentBox">
-                                        
-                                        <div class="openSignModal" (click)="openSignModal(i)">
+
+                                        <div class="openSignModal" (click)="openSignModal(i)"
+                                            [ngStyle]="{'display':isSignModalVisible[i] ? 'none':'flex'}">
                                             <a>คลิกเพื่อเซ็น</a>
-    
+
                                         </div>
-                                  
+
                                         <div class="Writte-sign" #writteSignElement id="SignModal-{{i}}"
                                             *ngIf="isSignModalVisible[i]">
-                                            <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error someting
+                                            <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error
+                                                someting
                                                 with
                                                 canvas</canvas>
-                                         
+
                                         </div>
-    
-    
+
+
                                     </div>
-    
-                                    <a style="position: relative; font-size: 16px; display: inline;">( {{ person.view_rank }} &nbsp;  {{ person.view_first_name }} &nbsp;{{ person.view_last_name }} )</a>
+
+                                    <a style="position: relative; font-size: 16px; display: inline;">( {{
+                                        person.view_rank }} &nbsp; {{ person.view_first_name }} &nbsp;{{
+                                        person.view_last_name }} )</a>
                                 </div>
                             </div>
                         </div>
-    
-    
+
+
                     </div>
                 </form>
-                
+
             </div>
 
-            <!--page3-->
-            <!-- <div id="myDetail" class="modal-body-detail" [ngStyle]="{'display': (testFile ||!otherRemainingContent) ? 'none' : 'block', width: '210mm' }">
-            
-                <form action method="get">
-                    <div class="mainCenter-panel ">
-                       
-    
-                        <div class="main-detail">
-                            <table>
-                               
-                                <tbody>
-                                    <tr>
-                                        <td >
-                                
-                                        </td>
-                                        <td [innerHTML]="getSafeHtml(otherRemainingContent)" style="width: 90%;"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-    
-                        <div class="sign-content">
-                            <div class="form-group" style="width: auto;">
-                                <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
-                                <div *ngFor="let person of viewData; let i = index" >
-                                    <div class="UploadContentBox">
-                                        
-                                        <div class="openSignModal" (click)="openSignModal(i)">
-                                            <a>คลิกเพื่อเซ็น</a>
-    
+            <div *ngFor="let part of contentParts; let last = last">
+                <div id="myDetail" class="modal-body-detail"
+                    [ngStyle]="{'display': testFile ? 'none' : 'block', width: '210mm' }">
+
+                    <form action method="get">
+                        <div #mainCenterPanel class="mainCenter-panel ">
+
+
+                            <div class="main-detail">
+                                <table>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>
+
+                                            </td>
+                                            <td [innerHTML]="part" style="width: 90%;"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div *ngIf="last" class="sign-content">
+                                <div class="form-group" style="width: auto;">
+                                    <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
+                                    <div *ngFor="let person of viewData; let i = index">
+                                        <div class="UploadContentBox">
+
+                                            <div class="openSignModal" (click)="openSignModal(i)"
+                                                [ngStyle]="{'display':isSignModalVisible[i] ? 'none':'flex'}">
+                                                <a>คลิกเพื่อเซ็น</a>
+
+                                            </div>
+
+                                            <div class="Writte-sign" #writteSignElement id="SignModal-{{i}}"
+                                                *ngIf="isSignModalVisible[i]">
+                                                <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error
+                                                    someting
+                                                    with
+                                                    canvas</canvas>
+
+                                            </div>
+
+
                                         </div>
-                                  
-                                        <div class="Writte-sign" #writteSignElement id="SignModal-{{i}}"
-                                            *ngIf="isSignModalVisible[i]">
-                                            <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error someting
-                                                with
-                                                canvas</canvas>
-                                         
-                                        </div>
-    
-    
+
+                                        <a style="position: relative; font-size: 16px; display: inline;">( {{
+                                            person.view_rank }} &nbsp; {{ person.view_first_name }} &nbsp;{{
+                                            person.view_last_name }} )</a>
                                     </div>
-    
-                                    <a style="position: relative; font-size: 16px; display: inline;">( {{ person.view_rank }} &nbsp;  {{ person.view_first_name }} &nbsp;{{ person.view_last_name }} )</a>
                                 </div>
                             </div>
-                        </div>
-    
-    
-                    </div>
-                </form>
-                
-            </div> -->
 
-            
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- <div *ngFor="let part of contentParts">
+                <div id="myDetail" class="modal-body-detail" [ngStyle]="{'display': testFile ? 'none' : 'block', width: '210mm' }">
+
+                  <div [innerHtml]="part"></div>
+                </div>
+            </div>  -->
+
+
+
+
+
         </div>
 
 
 
 
-        
-
-
-
-
         <div class="modal-footer">
+            <button id="btn-add-box" class="btn btn-add pull-center" style="display:none;" (click)="addBox()">
+                <i class="fa fa-plus"></i> &nbsp; เพิ่มกล่องเพื่อเซ็นต์
+            </button>
             <button type="button" class="btn btn-success pull-center" (click)="printPDF()">
                 <i class="fa fa-download"></i>&nbsp; ดาว์โหลด
             </button>
@@ -255,10 +286,18 @@
                 <i class="fa fa-save"></i>&nbsp; บันทึก
             </button>
         </div>
+
+
+
+    
+    
+       
     </div>
+  
+</div>
 
 
-    <!-- <div class="other-page1" style="background: white;">
+<!-- <div class="other-page1" style="background: white;">
         <div>
             <label for="maxLengthInput">Set max length:</label>
             <input id="maxLengthInput" type="number" [(ngModel)]="maxLength" (input)="onMaxLengthChange(maxLength)" />
@@ -277,4 +316,3 @@
 
 
 
-</div>

@@ -35,14 +35,20 @@ export class TableDetailComponent implements OnInit {
   @ViewChild('mainCenterPanel') mainCenterPanel: ElementRef;//for over sign-content
 
   details: any[] = []; //break page
+ 
   textContentLength:number =0;
   remainingContentLength:number =0;
+  contentParts: SafeHtml[] = [];
+
+
   recordId: any;
   viewData=[];
   remainingContent: string = '';//content ที่ตัดออกจะเก็บที่นี้?
   otherRemainingContent:string='';//content ที่ตัดออกจะเก็บที่นี้? ระดับ 3
   isContentOverflow = false; //
   addItemForm: any;
+  boxes: any[] = [];
+
   
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
@@ -51,7 +57,7 @@ export class TableDetailComponent implements OnInit {
   truncatedContent:string = '';
   maxLength: number = 250;
 
-
+//upload file PDF
   uploadedPDF: SafeResourceUrl | undefined;
   selectedFile: any ="";
   selectedFilePath:String ="";
@@ -59,7 +65,7 @@ export class TableDetailComponent implements OnInit {
   isFileImage =false;
   isFileDocument =false;
 
-  isSignModalVisible: boolean[] = [];
+  isSignModalVisible: boolean[] = [false];
   private canvas2: HTMLCanvasElement;
   private ctx2: CanvasRenderingContext2D;
   penColor2: string = 'black';
@@ -70,6 +76,8 @@ export class TableDetailComponent implements OnInit {
   private offsetX = 0;
   private offsetY = 0;
   testFile:any;
+ 
+
 
 
   constructor(
@@ -159,7 +167,7 @@ export class TableDetailComponent implements OnInit {
       };
 
       const draw = (e: MouseEvent) => {
-        if (!painting) return;
+        if (!painting) return;    
 
         if (this.ctx2) { // Ensure ctx2 is not undefined
           this.ctx2.lineWidth = this.penSize2;
@@ -272,6 +280,23 @@ export class TableDetailComponent implements OnInit {
   //   }, 0);  
   //   console.log("it openSign status : ",this.isSignModalVisible)
   // }
+  addBox() {
+    this.boxes.push({ top: '0px', left: '0px' });
+    this.isSignModalVisible.push(false);
+  }
+  onDragStart(event: DragEvent, index: number) {
+    const box = this.boxes[index];
+    box.dragStartX = event.clientX - box.left;
+    box.dragStartY = event.clientY - box.top;
+  }
+
+  onDragEnd(event: DragEvent, index: number) {
+    const box = this.boxes[index];
+    box.left = event.clientX - box.dragStartX;
+    box.top = event.clientY - box.dragStartY;
+    delete box.dragStartX;
+    delete box.dragStartY;  
+  }
 
   blobToBase64(blob): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -287,37 +312,47 @@ export class TableDetailComponent implements OnInit {
 
   //open file pdf to preview or edit to sign
   async onFileSelected(event: any){
-    this.selectedFile = event.target.files[0]?? null;
+    this.selectedFile = event.target.files[0] ?? null;
+    const btnAddBox = document.getElementById('btn-add-box');
+  
     if(this.selectedFile){
       this.testFile = await this.blobToBase64(event.target.files[0])
-      console.log("test file : ",this.testFile);
-      
-
-      var reader =new FileReader();
-      console.log("event.target.files[0] : ",event.target.files[0]);
+      console.log("test file : ", this.testFile);
+  
+      var reader = new FileReader();
+      console.log("event.target.files[0] : ", event.target.files[0]);
       reader.readAsDataURL(event.target.files[0]);
-      
-      reader.onload =(event)=>{
-        let path =event.target == null ? '':event.target.result;
+  
+      reader.onload = (event) => {
+        let path = event.target == null ? '' : event.target.result;
         this.selectedFilePath = path as string;
         this.selectedFileB64 = this.selectedFilePath.split(",")[1];
         this.testFile = reader.result;
+  
         if(this.selectedFilePath.includes('image')){
           this.isFileImage = true;
           this.isFileDocument = false;
-          
-         
-        }else{
+        } else {
           this.isFileImage = false;
           this.isFileDocument = true;
-        
         }
-        console.log("this is files img: ",this.isFileImage)
-        console.log("this is files Doc: ",this.isFileDocument)
+        
+        console.log("this is files img: ", this.isFileImage);
+        console.log("this is files Doc: ", this.isFileDocument);
+  
+        // แสดงปุ่มเมื่อมีไฟล์ถูกเลือก
+        if (btnAddBox) {
+          btnAddBox.style.display = 'block';
+        }
+      }
+    } else {
+      // ซ่อนปุ่มเมื่อไม่มีไฟล์ถูกเลือก
+      if (btnAddBox) {
+        btnAddBox.style.display = 'none';
       }
     }
-
   }
+  
   clearFileInput(): void {
     this.selectedFile = null;
     this.selectedFilePath = '';
@@ -326,8 +361,14 @@ export class TableDetailComponent implements OnInit {
     this.isFileDocument = false;
     this.testFile = undefined;
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    const btnAddBox = document.getElementById('btn-add-box'); // เพิ่มส่วนนี้
+  
     if (fileInput) {
       fileInput.value = '';
+    }
+    
+    if (btnAddBox) { // เพิ่มส่วนนี้
+      btnAddBox.style.display = 'none';
     }
   }
 
@@ -357,7 +398,7 @@ onMouseMove(event: MouseEvent): void {
 
 //ิback to table-list
   BackRoot(){
-    this.router.navigate(['/table-list']);
+    this.router.navigate(['/table-main']);
   }
 //add page??
   addDetail() {
@@ -374,10 +415,10 @@ onMouseMove(event: MouseEvent): void {
     if (mainDetailElement && mainCenterPanelElement) {
       const contentHeight = mainCenterPanelElement.scrollHeight;
       const containerHeight = mainDetailElement.clientHeight;
-      console.log('contentHeight:', contentHeight);
-      console.log('containerHeight:', containerHeight);
+      // console.log('contentHeight:', contentHeight);
+      // console.log('containerHeight:', containerHeight);
       this.isContentOverflow = contentHeight > containerHeight;
-      console.log('isContentOverflow:', this.isContentOverflow);
+      // console.log('isContentOverflow:', this.isContentOverflow);
     }
   }
 
@@ -390,10 +431,21 @@ onMouseMove(event: MouseEvent): void {
     this.remainingContent = content.substring(maxLength);
     this.otherRemainingContent = this.remainingContent.substring(3050)
     this.remainingContentLength = this.remainingContent.length;
+
+    this.contentParts = this.splitContent(content, maxLength);
     // console.log("textContent :",textcontent)
     // console.log("textContent Count :",this.textContentLength)
     // console.log("textREMAINContent Count :",this.remainingContentLength)
     return this.sanitizer.bypassSecurityTrustHtml(textcontent);
+    }
+
+    splitContent(content: string, chunkSize: number): SafeHtml[] {
+      const parts: SafeHtml[] = [];
+      for (let i = 0; i < content.length; i += chunkSize) {
+        const chunk = content.substring(i, i + chunkSize);
+        parts.push(this.sanitizer.bypassSecurityTrustHtml(chunk));
+      }
+      return parts;
     }
 
   // printPDF = () => {
@@ -418,6 +470,10 @@ onMouseMove(event: MouseEvent): void {
     }
 
     elements.forEach((element, index) => {
+      const style = getComputedStyle(element as HTMLElement);
+      if (style.display === 'none') {
+        return; // ข้าม element ที่ไม่แสดง
+      }
       promises.push(
         html2canvas(element as HTMLElement, {
           scale: 2,
@@ -443,7 +499,7 @@ onMouseMove(event: MouseEvent): void {
     });
   }
 
-  saveRCPDF = () => {
+  async saveRCPDF() {
     console.log("Updating PDF in dictionary...");
     const elements = document.querySelectorAll('.modal-body-detail');
     const pdfViewerElement = document.getElementById('pdf-viewer');

@@ -1,14 +1,14 @@
 <div class="register-card">
     <h2>สมัครสมาชิก</h2>
-    <form (ngSubmit)="onSubmit()">
+    <form [formGroup]="regisForm" (ngSubmit)="onSubmit(regisForm.va)">
       <div class="form-group">
-        <label for="first-name" style="font-size: 16px;">ชื่อ</label>
-        <input type="text" id="first-name" [(ngModel)]="firstName" name="firstName" required placeholder="กรอกชื่อของคุณ"  
+        <label for="firstName" style="font-size: 16px;">ชื่อ</label>
+        <input type="text" id="firstName" [(ngModel)]="firstName" name="firstName" required placeholder="กรอกชื่อของคุณ"  
         style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
       </div>
       <div class="form-group">
-        <label for="last-name" style="font-size: 16px;">นามสกุล</label>
-        <input type="text" id="last-name" [(ngModel)]="lastName" name="lastName" required placeholder="กรอกนามสกุลของคุณ"  
+        <label for="lastName" style="font-size: 16px;">นามสกุล</label>
+        <input type="text" id="lastName" [(ngModel)]="lastName" name="lastName" required placeholder="กรอกนามสกุลของคุณ"  
         style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
       </div>
       <div class="form-group">
@@ -22,8 +22,8 @@
         style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
       </div>
       <div class="form-group">
-        <label for="confirm-password" style="font-size: 16px;">ยืนยัน รหัสผ่าน</label>
-        <input type="password" id="confirm-password" [(ngModel)]="confirmPassword" name="confirmPassword" required placeholder="กรอกรหัสผ่านของคุณ"  
+        <label for="confirmPassword" style="font-size: 16px;">ยืนยัน รหัสผ่าน</label>
+        <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" required placeholder="กรอกรหัสผ่านของคุณ"  
         style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
       </div>
       <div class="form-group">

@@ -16,7 +16,9 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 // import { PdfViewerModule } from 'ng2-pdf-viewer'; 
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
-import { LoginComponent } from './layouts/auth-layout/login/login.component';
+
+
+
 
 
 
@@ -40,12 +42,6 @@ import { LoginComponent } from './layouts/auth-layout/login/login.component';
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
-    
-
-   
-
- 
-    
 
   ],
   providers: [SharedService],

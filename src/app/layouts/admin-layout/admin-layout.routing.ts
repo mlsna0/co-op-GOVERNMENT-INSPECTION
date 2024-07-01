@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { DashboardComponent } from '../../dashboard/dashboard.component';
+// import { DashboardComponent } from '../../dashboard/dashboard.component';
 import { UserProfileComponent } from '../../user-profile/user-profile.component';
 import { TableListComponent } from '../../table-list/table-list.component';
 import { TypographyComponent } from '../../typography/typography.component';
@@ -9,7 +9,10 @@ import { MapsComponent } from '../../maps/maps.component';
 import { NotificationsComponent } from '../../notifications/notifications.component';
 import { UpgradeComponent } from '../../upgrade/upgrade.component';
 import { TableDetailComponent } from '../../view/table-detail/table-detail.component';
+import {TableMainComponent } from '../../view/table-main/table-main.component';
 // import { LoginComponent } from '../auth-layout/login/login.component';
+import { DashboardComponent } from 'app/view/dashboard/dashboard.component';
+
 export const AdminLayoutRoutes: Routes = [
     // {
     //   path: '',
@@ -54,10 +57,11 @@ export const AdminLayoutRoutes: Routes = [
     //         component: UpgradeComponent
     //     }]
     // }
+    { path: 'dashboard',      component: DashboardComponent },
+    { path: 'user-profile',   component: UserProfileComponent },
+    { path: 'table-list',     component: TableListComponent },
+    { path: 'table-main',     component: TableMainComponent },
     // { path:'login',             component:LoginComponent },
-    { path: 'dashboard',        component: DashboardComponent },
-    { path: 'user-profile',     component: UserProfileComponent },
-    { path: 'table-list',       component: TableListComponent },
     { path: 'table-detail/:id', component: TableDetailComponent },
     { path: 'typography',       component: TypographyComponent },
     { path: 'icons',            component: IconsComponent },
