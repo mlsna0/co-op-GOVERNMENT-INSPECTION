@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { Observable, catchError } from 'rxjs';
 
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -128,5 +129,13 @@ export class SharedService {
   // getItems(): Observable<any[]> {
   //   return this.http.get<any[]>(`${this.baseUrl}/items`);
   // }
-  
+
+  register(user: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/registerModel`, user).pipe(
+      catchError(error => {
+        console.error('Error registering user:', error);
+        throw 'ไม่สามารถลงทะเบียนผู้ใช้ได้';
+      })
+    );
+  }
 }

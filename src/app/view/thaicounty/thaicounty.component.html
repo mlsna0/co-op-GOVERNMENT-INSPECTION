@@ -1,0 +1,23 @@
+<div class="card">
+  <div class="card-header">
+    การลงรายเซ็นต์
+  </div>
+  <div class="card-body">
+    <table>
+      <thead>
+        <tr>
+          <th>จังหวัด</th>
+          <th>จำนวน (ครั้ง)</th>
+          <th>เปอร์เซ็นต์</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let province of provinces">
+          <td>{{ province.name }}</td>
+          <td>{{ province.count }}</td>
+          <td>{{ province.percentage }}%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

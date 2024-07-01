@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminLayoutRoutes } from './admin-layout.routing';
-import { DashboardComponent } from '../../dashboard/dashboard.component';
+// import { DashboardComponent } from '../../dashboard/dashboard.component';
 import { UserProfileComponent } from '../../user-profile/user-profile.component';
 import { TableListComponent } from '../../table-list/table-list.component';
 import { TypographyComponent } from '../../typography/typography.component';
@@ -17,6 +17,8 @@ import {MatRippleModule} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
+import { DashboardComponent } from 'app/view/dashboard/dashboard.component';
+import { ThaicountyComponent } from '../../view/thaicounty/thaicounty.component';
 
 import { DataTablesModule } from "angular-datatables"; //petch เพิ่ม datatables เพื่อใช้ใน tablelist
 import { ThaiDatePipe } from "./../../services/pipe/thaidate.service";
@@ -60,7 +62,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     ThaiDatePipe,
     TableDetailComponent,
     TableMainComponent,
-    
+    ThaicountyComponent,
   
   ]
 })

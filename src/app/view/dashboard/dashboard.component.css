@@ -1,0 +1,13 @@
+.dashboard {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .global-sales,
+  .website-views,
+  .daily-sales,
+  .completed-tasks {
+    flex: 1 1 45%; /* Adjust this as necessary */
+    margin: 10px;
+  }
+  
