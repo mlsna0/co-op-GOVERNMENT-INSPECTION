@@ -14,10 +14,6 @@
     "e2e": "ng e2e",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && ng serve -o"
   },
-  "engines": {
-    "node": "6.11.1",
-    "npm": "3.10.9"
-  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^14.2.0",
@@ -38,7 +34,7 @@
     "@types/mongoose": "^5.11.97",
     "@types/multer": "^1.4.11",
     "@types/sequelize": "^4.28.20",
-    "@types/ws": "^8.5.10",
+    "@types/ws": "^8.5.4",
     "ajv": "8.11.0",
     "angular-datatables": "^14.0.2",
     "arrive": "2.4.1",
@@ -93,9 +89,8 @@
     "@angular/language-service": "14.2.0",
     "@types/bootstrap": "4.5.0",
     "@types/chartist": "0.11.1",
-    "@types/datatables.net": "^1.10.24",
+    "@types/datatables.net": "^1.10.6",
     "@types/google.maps": "3.47.4",
-    "@types/googlemaps": "^3.43.3",
     "@types/jasmine": "~4.0.0",
     "@types/jasminewd2": "~2.0.10",
     "@types/jquery": "^3.5.30",
@@ -110,6 +105,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.3",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
+    "nodemon": "^3.1.4",
     "protractor": "7.0.0",
     "sass": "1.32.13",
     "ts-node": "~10.9.1",
