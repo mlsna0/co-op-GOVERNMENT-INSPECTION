@@ -1,0 +1,23 @@
+<div class="login-card">
+    <h2>เข้าสู่ระบบ</h2>
+    <form (ngSubmit)="onLogin()">
+      <div class="form-group">
+        <label for="email" style="font-size: 16px;">อีเมล</label>
+        <input type="email" id="email" [(ngModel)]="email" name="email" required placeholder="กรอกอีเมลของคุณ" 
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      </div>
+
+      <div class="form-group">
+        <label for="password"  style="font-size: 16px;">รหัสผ่าน</label>
+        <input type="password" id="password" [(ngModel)]="password" name="password" required placeholder="กรอกรหัสผ่านของคุณ"
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      </div>
+      <button type="submit" class="btn-login">เข้าสู่ระบบ</button>
+    </form>
+
+    <div class="footer-links">
+      <a (click)="openFogetPassword()" class="forgot-password-link"  style="font-size: 14px;">ลืมรหัสผ่าน</a>
+      <a (click)="openRegister()" class="register-link" style="font-size: 14px;">สมัครสมาชิก</a>
+    </div>
+  </div>
+  

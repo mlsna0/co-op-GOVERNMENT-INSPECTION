@@ -44,7 +44,7 @@ class RegisterModelCtrl extends BaseCtrl {
             res.status(500).send('Server error');
         }
     };
-
+    
     login = async (req, res) => {
         try {
             const { email, password } = req.body;

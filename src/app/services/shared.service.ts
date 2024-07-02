@@ -5,10 +5,14 @@ import { environment } from '../../environments/environment';
 import { Observable, catchError } from 'rxjs';
 
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
+
+  
+
   // private baseUrl = 'mongodb://127.0.0.1:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private baseUrl = 'http://localhost:3000/api'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private typroText: string = '';
@@ -52,6 +56,7 @@ export class SharedService {
   getTyproText(record_id){
     return this.http.get(`${this.baseUrl}/dtModel/getTyproText/${record_id}`);
   }
+  
   updateRecordContent(data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/record/updateContent`, data).pipe(
       catchError(error => {
@@ -124,5 +129,13 @@ export class SharedService {
   // getItems(): Observable<any[]> {
   //   return this.http.get<any[]>(`${this.baseUrl}/items`);
   // }
-  
+
+  register(user: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/registerModel`, user).pipe(
+      catchError(error => {
+        console.error('Error registering user:', error);
+        throw 'ไม่สามารถลงทะเบียนผู้ใช้ได้';
+      })
+    );
+  }
 }

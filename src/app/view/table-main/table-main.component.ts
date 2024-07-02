@@ -4,12 +4,12 @@ import $ from "jquery";
 import 'bootstrap';
 import { HttpClient } from '@angular/common/http';
 import { dataflow } from 'googleapis/build/src/apis/dataflow';
-import { SharedService } from "../services/shared.service";
-import { GeocodingServiceService } from '../services/geocodingService/geocoding-service.service'; //พยายามแก้ไข location
+import { SharedService } from "../../services/shared.service";
+import { GeocodingServiceService } from '../../services/geocodingService/geocoding-service.service'; //พยายามแก้ไข location
 import { DataTableDirective } from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { DataTablesModule } from "angular-datatables"; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
-import { Items } from '../../../server/models/itemModel';
+import { Items } from '../../../../server/models/itemModel';
 import Swal from 'sweetalert2';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import jsPDF from 'jspdf';
@@ -25,12 +25,11 @@ import Tesseract from 'tesseract.js'; // Default import Tesseract.js
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
-  selector: 'app-table-list',
-  templateUrl: './table-list.component.html',
-  styleUrls: ['./table-list.component.css']
+  selector: 'app-table-main',
+  templateUrl: './table-main.component.html',
+  styleUrls: ['./table-main.component.css']
 })
-export class TableListComponent implements OnInit {
-  [x: string]: any;
+export class TableMainComponent implements OnInit { [x: string]: any;
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
   @ViewChild('textArea') textArea: ElementRef;
 
@@ -1036,10 +1035,10 @@ loadContent() {
     height: '15rem',
     // minHeight: '5rem',
     placeholder: 'พิมพ์ข้อความทที่นี่..',
-    translate: 'yes',
+    translate: 'no',
     defaultParagraphSeparator: 'p',
     defaultFontName: 'Sarabun", sans-serif;',
-    sanitize: false,  //สำคัญมากถ้าอยากให้มันอยู่คงฟอร์ม มันเป็นตัวควบคุมว่าจะแยก HTML ที่ไม่ปลอดภัยออกจากเนื้อหาหรือไม่ 
+    sanitize:false,
     toolbarHiddenButtons: [
       [
         'link',
@@ -1047,15 +1046,17 @@ loadContent() {
         'insertImage',
         'insertVideo',
         'insertHorizontalRule',
-        'removeFormat', 
+        'removeFormat',
         'textColor',
         'backgroundColor',
         // 'toggleEditorMode',
         'heading',
         'fontName',
       ],
-    ],
+    ]
+   
   };
+ 
 }
 
 

@@ -1,0 +1,40 @@
+<div class="register-card">
+    <h2>สมัครสมาชิก</h2>
+    <form [formGroup]="regisForm" (ngSubmit)="onSubmit(regisForm.va)">
+      <div class="form-group">
+        <label for="firstName" style="font-size: 16px;">ชื่อ</label>
+        <input type="text" id="firstName" [(ngModel)]="firstName" name="firstName" required placeholder="กรอกชื่อของคุณ"  
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      </div>
+      <div class="form-group">
+        <label for="lastName" style="font-size: 16px;">นามสกุล</label>
+        <input type="text" id="lastName" [(ngModel)]="lastName" name="lastName" required placeholder="กรอกนามสกุลของคุณ"  
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      </div>
+      <div class="form-group">
+        <label for="email" style="font-size: 16px;">อีเมล</label>
+        <input type="email" id="email" [(ngModel)]="email" name="email" required placeholder="กรอกอีเมลของคุณ"  
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      </div>
+      <div class="form-group">
+        <label for="password" style="font-size: 16px;">รหัสผ่าน</label>
+        <input type="password" id="password" [(ngModel)]="password" name="password" required placeholder="กรอกรหัสผ่านของคุณ"  
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword" style="font-size: 16px;">ยืนยัน รหัสผ่าน</label>
+        <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" required placeholder="กรอกรหัสผ่านของคุณ"  
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      </div>
+      <div class="form-group">
+        <label for="phone" style="font-size: 16px;">เบอร์โทรศัพท์</label>
+        <input type="tel" id="phone" [(ngModel)]="phone" name="phone" required placeholder="กรอกเบอร์โทรศัทพ์ของคุณ"  
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      </div>
+      <button type="submit" class="btn-create-account">สร้างบัญชี</button>
+    </form>
+    <div class="footer-links" >
+        <a style="font-size: 14px; color: #24a0ed;"> มีบัญชีอยู่เเล้ว? </a> &nbsp; <a routerLink="/login" class="login-link" style="font-size: 14px;">เข้าสู่ระบบ</a>
+    </div>
+  </div>
+  

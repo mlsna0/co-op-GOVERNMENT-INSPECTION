@@ -1,0 +1,29 @@
+.card {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  bottom: -50px;
+}
+
+.card-header {
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
