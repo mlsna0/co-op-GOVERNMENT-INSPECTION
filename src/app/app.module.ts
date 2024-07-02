@@ -23,6 +23,7 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 
 
 
+
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -42,6 +43,7 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
+   
 
   ],
   providers: [SharedService],

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SharedService } from "../../../services/shared.service";
+import { loginservice } from 'app/layouts/login.services.';
 
 @Component({
   selector: 'app-register',
@@ -10,26 +10,26 @@ import { SharedService } from "../../../services/shared.service";
 })
 export class RegisterComponent implements OnInit {
 
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   email: string;
   password: string;
-  confirmPassword: string; // เพิ่มบรรทัดนี้
+  confirmpassword: string; // เพิ่มบรรทัดนี้
   phone: string;
 
   regisForm: any;
 
   constructor(
     private fb: FormBuilder,
-    private sv: SharedService,
+    private lc: loginservice,
     private router: Router,
   ) {
     this.regisForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstname: ['', Validators.required],
+      lastname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      confirmPassword: ['', Validators.required],
+      confirmpassword: ['', Validators.required],
       phone: ['', Validators.required],
     });
   }
@@ -42,21 +42,22 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    if (this.regisForm.value.password !== this.regisForm.value.confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
+    // if (this.regisForm.value.password !== this.regisForm.value.confirmPassword) {
+    //   alert('Passwords do not match');
+    //   return;
+    // }
 
     const newUser = {
-      firstName: this.regisForm.value.firstName,
-      lastName: this.regisForm.value.lastName,
+      firstName: this.regisForm.value.firstname,
+      lastName: this.regisForm.value.lastname,
       email: this.regisForm.value.email,
       password: this.regisForm.value.password,
+      confirmpassword: this.regisForm.value.confirmpassword,
       phone: this.regisForm.value.phone,
       role: 'user'
     };
 
-    this.sv.register(newUser).subscribe(
+    this.lc.register(newUser).subscribe(
       response => {
         console.log('User registered successfully', response);
         this.router.navigate(['/login']);

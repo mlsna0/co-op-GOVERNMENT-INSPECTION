@@ -130,12 +130,5 @@ export class SharedService {
   //   return this.http.get<any[]>(`${this.baseUrl}/items`);
   // }
 
-  register(user: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/registerModel`, user).pipe(
-      catchError(error => {
-        console.error('Error registering user:', error);
-        throw 'ไม่สามารถลงทะเบียนผู้ใช้ได้';
-      })
-    );
-  }
+
 }
