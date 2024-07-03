@@ -122,4 +122,9 @@ export class NavbarComponent implements OnInit {
       }
       return 'Dashboard';
     }
+
+    LoginPage(){
+        console.log("Login button : ");
+        this.router.navigate(['/login']);
+    };
 }

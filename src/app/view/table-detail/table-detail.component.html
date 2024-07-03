@@ -86,7 +86,7 @@
                                     <tr>
                                         <th style="text-align: center; vertical-align: middle; width: 10%;">ครั้งที่
                                         </th>
-                                        <th style="text-align: center; vertical-align: middle;">เนื้อหาการตรวจสอบ</th>
+                                        <th style="text-align: center; vertical-align: middle; width: 600px;">เนื้อหาการตรวจสอบ</th>
                                     </tr>
 
                                 </thead>
@@ -96,14 +96,14 @@
                                             {{detailItems?.record_id}}/{{detailItems?.record_star_date | thaidate
                                             :'year'}}
                                         </td>
-                                        <td [innerHTML]="getSafeHtml(detailItems?.record_content)"></td>
+                                        <td [innerHTML]="getSafeHtml(detailItems?.record_content)"></td><!---->
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-
+                        <button class="btn btn-success" (click)="openSignModalx(1)">test click page1</button>
                         <div *ngIf="!remainingContent" class="sign-content"
-                            [ngStyle]="{'display':!remainingContent ? 'flex' : 'none'}">
+                            [ngStyle]="{'display':contentParts ? 'flex' : 'none'}">
                             <!-- [ngStyle]="{'display':!remainingContent ? 'flex' : 'none'}"-->
                             <div class="form-group" style="width: auto;">
                                 <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
@@ -142,7 +142,7 @@
 
             <!--page2?-->
 
-            <div id="myDetail" class="modal-body-detail"
+            <!-- <div id="myDetail" class="modal-body-detail"
                 [ngStyle]="{'display': (testFile ||!remainingContent) ? 'none' : 'block', width: '210mm' }">
 
                 <form action method="get">
@@ -199,9 +199,9 @@
                     </div>
                 </form>
 
-            </div>
+            </div> -->
 
-            <div *ngFor="let part of contentParts; let last = last">
+            <div *ngFor="let part of contentParts; let last = last, let i = index">
                 <div id="myDetail" class="modal-body-detail"
                     [ngStyle]="{'display': testFile ? 'none' : 'block', width: '210mm' }">
 
@@ -217,13 +217,15 @@
                                             <td>
 
                                             </td>
-                                            <td [innerHTML]="part" style="width: 90%;"></td>
+                                            <td [innerHTML]="part" style="width: 600px;"></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
 
                             <div *ngIf="last" class="sign-content">
+                        <!-- <button class="btn btn-success" (click)="openSignModalx(1)">test click page2</button> -->
+
                                 <div class="form-group" style="width: auto;">
                                     <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
                                     <div *ngFor="let person of viewData; let i = index">
@@ -234,9 +236,8 @@
                                                 <a>คลิกเพื่อเซ็น</a>
 
                                             </div>
-
                                             <div class="Writte-sign" #writteSignElement id="SignModal-{{i}}"
-                                                *ngIf="isSignModalVisible[i]">
+                                                *ngIf="isSignModalVisible[i]">                                                
                                                 <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error
                                                     someting
                                                     with
@@ -259,12 +260,6 @@
                     </form>
                 </div>
             </div>
-            <!-- <div *ngFor="let part of contentParts">
-                <div id="myDetail" class="modal-body-detail" [ngStyle]="{'display': testFile ? 'none' : 'block', width: '210mm' }">
-
-                  <div [innerHtml]="part"></div>
-                </div>
-            </div>  -->
 
 
 

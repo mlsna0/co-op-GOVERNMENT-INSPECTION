@@ -10,7 +10,7 @@ import { NotificationsComponent } from '../../notifications/notifications.compon
 import { UpgradeComponent } from '../../upgrade/upgrade.component';
 import { TableDetailComponent } from '../../view/table-detail/table-detail.component';
 import {TableMainComponent } from '../../view/table-main/table-main.component';
-// import { LoginComponent } from '../auth-layout/login/login.component';
+import { LoginComponent } from '../auth-layout/login/login.component';
 import { DashboardComponent } from 'app/view/dashboard/dashboard.component';
 
 export const AdminLayoutRoutes: Routes = [
@@ -61,7 +61,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'user-profile',   component: UserProfileComponent },
     { path: 'table-list',     component: TableListComponent },
     { path: 'table-main',     component: TableMainComponent },
-    // { path:'login',             component:LoginComponent },
+    { path:'login',             component:LoginComponent },
     { path: 'table-detail/:id', component: TableDetailComponent },
     { path: 'typography',       component: TypographyComponent },
     { path: 'icons',            component: IconsComponent },

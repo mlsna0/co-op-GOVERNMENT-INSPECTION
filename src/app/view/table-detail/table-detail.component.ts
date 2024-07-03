@@ -132,7 +132,7 @@ export class TableDetailComponent implements OnInit {
 
   ngAfterViewInit() {
  
-    this.checkContentOverflow();
+    //this.checkContentOverflow();
     window.addEventListener('resize', this.checkContentOverflow.bind(this));
   }
 
@@ -247,13 +247,23 @@ export class TableDetailComponent implements OnInit {
   //   }
   // }
 
+  openSignModalx(i){
+    console.log("openSignModalx  x "+ i);
+    
+  }
+
   openSignModal(index: number) {
-     
+     console.log("Sign modal is work >", index );
 
     this.isSignModalVisible[index] = true;
-
+    
+    console.log("it openSign status: ", this.isSignModalVisible);
+    this.cdr.detectChanges();
     setTimeout(() => {
-      const writteSignElement = this.writteSignElements.toArray()[index]?.nativeElement as HTMLElement;
+      const elementsArray = this.writteSignElements.toArray();
+      const writteSignElement = elementsArray[index]?.nativeElement as HTMLElement;
+      console.log("writteSignElement :",this.writteSignElements);
+      
       if (writteSignElement) {
         writteSignElement.style.display = 'flex';
         this.setupSignCanvas(index);
@@ -261,9 +271,9 @@ export class TableDetailComponent implements OnInit {
       } else {
         console.error('writteSignElement is null or undefined', this.writteSignElements.toArray()[index]);
       }
-    }, 0);
+    }, 100);
 
-    console.log("it openSign status: ", this.isSignModalVisible);
+   
   }
   // openSignModal(index: number){
   //   this.isSignModalVisible[index] = true;
@@ -373,28 +383,28 @@ export class TableDetailComponent implements OnInit {
   }
 
 //move element
-@HostListener('mousedown', ['$event'])
-onMouseDown(event: MouseEvent): void {
-  this.isDragging = true;
-  const rect = this.el.nativeElement.getBoundingClientRect();
-  this.offsetX = event.clientX - rect.left;
-  this.offsetY = event.clientY - rect.top;
-  event.preventDefault();
-}
+// @HostListener('mousedown', ['$event'])
+// onMouseDown(event: MouseEvent): void {
+//   this.isDragging = true;
+//   const rect = this.el.nativeElement.getBoundingClientRect();
+//   this.offsetX = event.clientX - rect.left;
+//   this.offsetY = event.clientY - rect.top;
+//   event.preventDefault();
+// }
 
-@HostListener('document:mouseup')
-onMouseUp(): void {
-  this.isDragging = false;
-}
+// @HostListener('document:mouseup')
+// onMouseUp(): void {
+//   this.isDragging = false;
+// }
 
-@HostListener('document:mousemove', ['$event'])
-onMouseMove(event: MouseEvent): void {
-  if (this.isDragging) {
-    const x = event.clientX - this.offsetX;
-    const y = event.clientY - this.offsetY;
-    this.renderer.setStyle(this.el.nativeElement, 'transform', `translate(${x}px, ${y}px)`);
-  }
-}
+// @HostListener('document:mousemove', ['$event'])
+// onMouseMove(event: MouseEvent): void {
+//   if (this.isDragging) {
+//     const x = event.clientX - this.offsetX;
+//     const y = event.clientY - this.offsetY;
+//     this.renderer.setStyle(this.el.nativeElement, 'transform', `translate(${x}px, ${y}px)`);
+//   }
+// }
 
 //ิback to table-list
   BackRoot(){
@@ -410,7 +420,9 @@ onMouseMove(event: MouseEvent): void {
 
  checkContentOverflow() {
     const mainDetailElement = document.getElementById('myDetail');
-    const mainCenterPanelElement = this.mainCenterPanel.nativeElement;
+    console.log("mainDetailElement :",mainDetailElement);
+    
+    const mainCenterPanelElement = this.mainCenterPanel?.nativeElement; 
     
     if (mainDetailElement && mainCenterPanelElement) {
       const contentHeight = mainCenterPanelElement.scrollHeight;
@@ -425,28 +437,37 @@ onMouseMove(event: MouseEvent): void {
 
   //show content table
   getSafeHtml(content: string): SafeHtml {
-    const maxLength = 1525;
-    const textcontent = content.substring(0, maxLength);
-    this.textContentLength = textcontent.length; 
-    this.remainingContent = content.substring(maxLength);
-    this.otherRemainingContent = this.remainingContent.substring(3050)
-    this.remainingContentLength = this.remainingContent.length;
+    if(!content){
+      console.log("no content ", content);
+      return "";
+    }
+    const maxLength = 1950;
+    const AddLength = 1960;
+    const textcontent = content?.substring(0, maxLength);
+    
+    this.remainingContent = content?.substring(maxLength);
 
-    this.contentParts = this.splitContent(content, maxLength);
+    // this.otherRemainingContent = this.remainingContent.substring(3050)
+    // this.textContentLength = textcontent.length; 
+    // this.remainingContentLength = this.remainingContent.length;
+
+    this.contentParts = this.splitContent(this.remainingContent,maxLength+AddLength);
+    // console.log("textContent : ",textcontent);
+    //  console.log("contentParts :",this.contentParts);
     // console.log("textContent :",textcontent)
     // console.log("textContent Count :",this.textContentLength)
     // console.log("textREMAINContent Count :",this.remainingContentLength)
     return this.sanitizer.bypassSecurityTrustHtml(textcontent);
-    }
+  }
 
-    splitContent(content: string, chunkSize: number): SafeHtml[] {
+  splitContent(content: string, chunkSize: number): SafeHtml[] {
       const parts: SafeHtml[] = [];
       for (let i = 0; i < content.length; i += chunkSize) {
         const chunk = content.substring(i, i + chunkSize);
         parts.push(this.sanitizer.bypassSecurityTrustHtml(chunk));
       }
       return parts;
-    }
+  }
 
   // printPDF = () => {
   //     console.log("working PDF..");

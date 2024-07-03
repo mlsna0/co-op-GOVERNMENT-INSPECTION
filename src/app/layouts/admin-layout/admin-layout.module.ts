@@ -63,6 +63,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     TableDetailComponent,
     TableMainComponent,
     ThaicountyComponent,
+
   
   ]
 })
