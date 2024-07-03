@@ -16,12 +16,11 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 // import { PdfViewerModule } from 'ng2-pdf-viewer'; 
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
-
-
-
-
-
-
+import { SignaturePadModule } from 'angular2-signaturepad';
+import { NgxLoadingModule } from 'ngx-loading';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { SignatureComponent } from './signature/signature.component';
 
 
 @NgModule({
@@ -36,15 +35,16 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
     // DataTablesModule
     // NgxExtendedPdfViewerModule
     NgxExtendedPdfViewerModule,
-
-    
+    SignaturePadModule,
+    DragDropModule,
+    PdfViewerModule,
+    NgxLoadingModule.forRoot({}),
   ],
   declarations: [
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
-   
-
+    SignatureComponent
   ],
   providers: [SharedService],
   bootstrap: [AppComponent],

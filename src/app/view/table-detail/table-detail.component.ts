@@ -1,5 +1,5 @@
-import { Component, OnInit ,ChangeDetectorRef, ViewChildren,ElementRef,HostListener,Renderer2,ViewChild,QueryList } from '@angular/core';
-import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray,AbstractControl } from '@angular/forms';
+import { Component, OnInit, ChangeDetectorRef, ViewChildren, ElementRef, HostListener, Renderer2, ViewChild, QueryList } from '@angular/core';
+import { FormGroup, FormsModule, FormControl, FormBuilder, Validators, FormArray, AbstractControl } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
 import { HttpClient } from '@angular/common/http';
@@ -8,12 +8,12 @@ import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพ�
 import { Items } from '../../../../server/models/itemModel';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import jsPDF from 'jspdf';
-import  html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
 import { Router } from '@angular/router';
 import { content } from 'html2canvas/dist/types/css/property-descriptors/content';
 import { environment } from 'environments/environment';
-import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
 import { ActivatedRoute } from '@angular/router';
 
 import { NgxExtendedPdfViewerService, pdfDefaultOptions } from 'ngx-extended-pdf-viewer';
@@ -30,40 +30,40 @@ import { NgxExtendedPdfViewerService, pdfDefaultOptions } from 'ngx-extended-pdf
   styleUrls: ['./table-detail.component.css']
 })
 export class TableDetailComponent implements OnInit {
-  @ViewChildren('writteSignElement') writteSignElements :QueryList<ElementRef>;
+  @ViewChildren('writteSignElement') writteSignElements: QueryList<ElementRef>;
   @ViewChild('firstPage', { static: false }) firstPage: ElementRef; //break page
   @ViewChild('mainCenterPanel') mainCenterPanel: ElementRef;//for over sign-content
 
   details: any[] = []; //break page
- 
-  textContentLength:number =0;
-  remainingContentLength:number =0;
+
+  textContentLength: number = 0;
+  remainingContentLength: number = 0;
   contentParts: SafeHtml[] = [];
 
 
   recordId: any;
-  viewData=[];
+  viewData = [];
   remainingContent: string = '';//content ที่ตัดออกจะเก็บที่นี้?
-  otherRemainingContent:string='';//content ที่ตัดออกจะเก็บที่นี้? ระดับ 3
+  otherRemainingContent: string = '';//content ที่ตัดออกจะเก็บที่นี้? ระดับ 3
   isContentOverflow = false; //
   addItemForm: any;
   boxes: any[] = [];
 
-  
-  addRecordForm:FormGroup;
-  addPersonalForm:FormGroup;
+
+  addRecordForm: FormGroup;
+  addPersonalForm: FormGroup;
   detailItems: any = {};
   displayedContent: string = '';
-  truncatedContent:string = '';
+  truncatedContent: string = '';
   maxLength: number = 250;
 
-//upload file PDF
+  //upload file PDF
   uploadedPDF: SafeResourceUrl | undefined;
-  selectedFile: any ="";
-  selectedFilePath:String ="";
-  selectedFileB64:string ="";
-  isFileImage =false;
-  isFileDocument =false;
+  selectedFile: any = "";
+  selectedFilePath: String = "";
+  selectedFileB64: string = "";
+  isFileImage = false;
+  isFileDocument = false;
 
   isSignModalVisible: boolean[] = [false];
   private canvas2: HTMLCanvasElement;
@@ -75,64 +75,66 @@ export class TableDetailComponent implements OnInit {
   private isDragging = false;
   private offsetX = 0;
   private offsetY = 0;
-  testFile:any;
- 
+  testFile: any;
+
 
 
 
   constructor(
-    private fb:FormBuilder,
-    private http:HttpClient,
-    private sv:SharedService,
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private sv: SharedService,
     private router: Router,
-    private ACrouter: ActivatedRoute,   
+    private ACrouter: ActivatedRoute,
     private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
-    private pdfService:NgxExtendedPdfViewerService,
+    private pdfService: NgxExtendedPdfViewerService,
     private el: ElementRef,
     private renderer: Renderer2,
   ) { }
 
   ngOnInit(): void {
-    
+
 
     this.ACrouter.paramMap.subscribe(params => {
       this.recordId = params.get('id');
-  
+
       // ทำงานอื่น ๆ ที่คุณต้องการใช้กับ itemId นี้
       console.log(this.recordId); // ทดสอบการดึงค่า id
     });
 
-     this.sv.getDataById(this.recordId).subscribe(res=>{
-      console.log("getDataById :",res);
-      
-      this.detailItems =res;
+    this.sv.getDataById(this.recordId).subscribe(res => {
+      console.log("getDataById :", res);
 
-    
+      this.detailItems = res;
+
+
       console.log("it on working.. ")
       if (this.detailItems && this.detailItems.record_content) {
-          // this.truncateAndStoreContent(this.detailItems.record_content, 250);
+        // this.truncateAndStoreContent(this.detailItems.record_content, 250);
       }
       console.log("Displayed content:", this.displayedContent);
       console.log("Truncated content:", this.truncatedContent);
 
     });
 
-   
-    this.sv.getViewByRecordId(this.recordId).subscribe((res :any)=>{
-        console.log("getDataById :",res);
-        
-        this.viewData = res;
-      
-        console.log("it on working.. ")
-       
-        
-      });
+
+    this.sv.getViewByRecordId(this.recordId).subscribe((res: any) => {
+      console.log("getDataById :", res);
+
+      this.viewData = res;
+
+      console.log("it on working.. ")
+
+
+    });
   }
 
   ngAfterViewInit() {
  
     //this.checkContentOverflow();
+
+    this.checkContentOverflow();
     window.addEventListener('resize', this.checkContentOverflow.bind(this));
   }
 
@@ -169,7 +171,7 @@ export class TableDetailComponent implements OnInit {
       };
 
       const draw = (e: MouseEvent) => {
-        if (!painting) return;    
+        if (!painting) return;
 
         if (this.ctx2) { // Ensure ctx2 is not undefined
           this.ctx2.lineWidth = this.penSize2;
@@ -257,6 +259,7 @@ export class TableDetailComponent implements OnInit {
   openSignModal(index: number) {
      console.log("Sign modal is work index: >", index );
 
+
     this.isSignModalVisible[index] = true;
 
     
@@ -285,9 +288,25 @@ export class TableDetailComponent implements OnInit {
 
    
   }
+  // openSignModalWithDelay(index: number, delay: number) {
+  //   this.isSignModalVisible[index] = true;
+
+  //   setTimeout(() => {
+  //     const writteSignElement = this.writteSignElements.toArray()[index]?.nativeElement as HTMLElement;
+  //     if (writteSignElement) {
+  //       writteSignElement.style.display = 'flex';
+  //       this.setupSignCanvas(index);
+  //       console.log("Setup activated for canvas index with delay: ", index);
+  //     } else {
+  //       console.error('writteSignElement is null or undefined', this.writteSignElements.toArray()[index]);
+  //     }
+  //   }, delay);
+
+  //   console.log("it openSign status with delay: ", this.isSignModalVisible);
+  // }
   // openSignModal(index: number){
   //   this.isSignModalVisible[index] = true;
-    
+
   //   setTimeout(() => {
   //     if (this.writteSignElements) {
   //       this.setupSignCanvas(index);
@@ -304,62 +323,95 @@ export class TableDetailComponent implements OnInit {
     this.boxes.push({ top: '0px', left: '0px' });
     this.isSignModalVisible.push(false);
   }
-  onDragStart(event: DragEvent, index: number) {
+  onDragStart(event: DragEvent, index: number): void {
+    if (index === undefined) {
+        console.error('Index is undefined in onDragStart');
+        return;
+    }
     const box = this.boxes[index];
+    if (!box) {
+        console.error('Box not found at index start:', index);
+        return;
+    }
+    console.log('Box before drag:', box);
     box.dragStartX = event.clientX - box.left;
     box.dragStartY = event.clientY - box.top;
-  }
 
-  onDragEnd(event: DragEvent, index: number) {
+    // ซ่อนปุ่มเมื่อเริ่มลาก
+    // const closeBtn = document.getElementById(`close-btn-${index}`);
+    // const dragBtn = document.getElementById(`drag-btn-${index}`);
+    // if (closeBtn) closeBtn.style.display = 'none';
+    // if (dragBtn) dragBtn.style.display = 'none';
+}
+
+onDragEnd(event: DragEvent, index: number): void {
+    if (index === undefined) {
+        console.error('Index is undefined in onDragEnd');
+        return;
+    }
     const box = this.boxes[index];
+    if (!box) {
+        console.error('Box not found at index end:', index);
+        return;
+    }
     box.left = event.clientX - box.dragStartX;
     box.top = event.clientY - box.dragStartY;
     delete box.dragStartX;
-    delete box.dragStartY;  
-  }
+    delete box.dragStartY;
+    console.log('Box after drag:', box);
+
+    // ซ่อนปุ่มหลังจากการลากเสร็จสิ้น
+    // const closeBtn = document.getElementById(`close-btn-${index}`);
+    // const dragBtn = document.getElementById(`drag-btn-${index}`);
+    // if (closeBtn) closeBtn.style.display = 'none';
+    // if (dragBtn) dragBtn.style.display = 'none';
+}
 
   blobToBase64(blob): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => {
-          const dataUrl = reader.result as string;
-          const base64 = dataUrl.split(',')[1];
-          resolve(base64);
+        const dataUrl = reader.result as string;
+        const base64 = dataUrl.split(',')[1];
+        resolve(base64);
       };
       reader.readAsDataURL(blob);
     });
   }
+  closeSignModal(index: number): void {
+    this.isSignModalVisible[index] = false;
+  }
 
   //open file pdf to preview or edit to sign
-  async onFileSelected(event: any){
+  async onFileSelected(event: any) {
     this.selectedFile = event.target.files[0] ?? null;
     const btnAddBox = document.getElementById('btn-add-box');
-  
-    if(this.selectedFile){
+
+    if (this.selectedFile) {
       this.testFile = await this.blobToBase64(event.target.files[0])
       console.log("test file : ", this.testFile);
-  
+
       var reader = new FileReader();
       console.log("event.target.files[0] : ", event.target.files[0]);
       reader.readAsDataURL(event.target.files[0]);
-  
+
       reader.onload = (event) => {
         let path = event.target == null ? '' : event.target.result;
         this.selectedFilePath = path as string;
         this.selectedFileB64 = this.selectedFilePath.split(",")[1];
         this.testFile = reader.result;
-  
-        if(this.selectedFilePath.includes('image')){
+
+        if (this.selectedFilePath.includes('image')) {
           this.isFileImage = true;
           this.isFileDocument = false;
         } else {
           this.isFileImage = false;
           this.isFileDocument = true;
         }
-        
+
         console.log("this is files img: ", this.isFileImage);
         console.log("this is files Doc: ", this.isFileDocument);
-  
+
         // แสดงปุ่มเมื่อมีไฟล์ถูกเลือก
         if (btnAddBox) {
           btnAddBox.style.display = 'block';
@@ -372,7 +424,7 @@ export class TableDetailComponent implements OnInit {
       }
     }
   }
-  
+
   clearFileInput(): void {
     this.selectedFile = null;
     this.selectedFilePath = '';
@@ -382,11 +434,11 @@ export class TableDetailComponent implements OnInit {
     this.testFile = undefined;
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     const btnAddBox = document.getElementById('btn-add-box'); // เพิ่มส่วนนี้
-  
+
     if (fileInput) {
       fileInput.value = '';
     }
-    
+
     if (btnAddBox) { // เพิ่มส่วนนี้
       btnAddBox.style.display = 'none';
     }
@@ -415,25 +467,67 @@ export class TableDetailComponent implements OnInit {
 //     this.renderer.setStyle(this.el.nativeElement, 'transform', `translate(${x}px, ${y}px)`);
 //   }
 // }
+  //move element
+  @HostListener('mousedown', ['$event'])
+  onMouseDown(event: MouseEvent, index: number): void {
+    event.preventDefault();
+    const box = this.boxes[index];
+    if (!box) {
+      console.error('Box not found at index mouse:', index);
+      return;
+    }
+    console.log('Box before drag:', box);
 
-//ิback to table-list
-  BackRoot(){
+    box.dragStartX = event.clientX - box.left;
+    box.dragStartY = event.clientY - box.top;
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      box.left = moveEvent.clientX - box.dragStartX;
+      box.top = moveEvent.clientY - box.dragStartY;
+    };
+
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      console.log('Box after drag:', box);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  }
+
+  @HostListener('document:mouseup')
+  onMouseUp(): void {
+    this.isDragging = false;
+  }
+
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(event: MouseEvent): void {
+    if (this.isDragging) {
+      const x = event.clientX - this.offsetX;
+      const y = event.clientY - this.offsetY;
+      this.renderer.setStyle(this.el.nativeElement, 'transform', `translate(${x}px, ${y}px)`);
+    }
+  }
+
+  //ิback to table-list
+  BackRoot() {
     this.router.navigate(['/table-main']);
   }
-//add page??
+  //add page??
   addDetail() {
     console.log("addDetail work")
     this.details.push({});
   }
-//page break
+  //page break
 
 
- checkContentOverflow() {
+  checkContentOverflow() {
     const mainDetailElement = document.getElementById('myDetail');
     console.log("mainDetailElement :",mainDetailElement);
     
     const mainCenterPanelElement = this.mainCenterPanel?.nativeElement; 
-    
+
     if (mainDetailElement && mainCenterPanelElement) {
       const contentHeight = mainCenterPanelElement.scrollHeight;
       const containerHeight = mainDetailElement.clientHeight;
@@ -534,18 +628,18 @@ export class TableDetailComponent implements OnInit {
     console.log("Updating PDF in dictionary...");
     const elements = document.querySelectorAll('.modal-body-detail');
     const pdfViewerElement = document.getElementById('pdf-viewer');
-  
+
     if (!pdfViewerElement && elements.length === 0) {
       console.error('No elements found to print.');
       return;
     }
-  
+
     const pdf = new jsPDF('p', 'mm', 'a4');
     const pdfWidth = 210; // A4 width in mm
     const pdfHeight = 297; // A4 height in mm
-  
+
     let promises = [];
-    
+
     html2canvas(pdfViewerElement, { scale: 5 }).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const canvasWidth = canvas.width;
@@ -553,20 +647,20 @@ export class TableDetailComponent implements OnInit {
       const ratio = canvasWidth / pdfWidth;
       const pdfCanvasHeight = canvasHeight / ratio;
       const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
-  
+
       for (let i = 0; i < numOfPages; i++) {
         const startY = i * pdfHeight * ratio;
-  
+
         // Create a temporary canvas to draw each part
         const tempCanvas = document.createElement('canvas');
         tempCanvas.width = canvasWidth;
         tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
-  
+
         const tempCtx = tempCanvas.getContext('2d');
         tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
-  
+
         const tempImgData = tempCanvas.toDataURL('image/png');
-  
+
         // Check if the image data is not blank
         if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
           if (i > 0) {
@@ -578,7 +672,7 @@ export class TableDetailComponent implements OnInit {
     }).catch((error) => {
       console.error('Error generating PDF:', error);
     });
-  
+
     elements.forEach((element, index) => {
       const htmlElement = element as HTMLElement; // Cast Element to HTMLElement
       htmlElement.style.border = 'none';
@@ -590,20 +684,20 @@ export class TableDetailComponent implements OnInit {
         const ratio = canvasWidth / pdfWidth;
         const pdfCanvasHeight = canvasHeight / ratio;
         const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
-  
+
         for (let i = 0; i < numOfPages; i++) {
           const startY = i * pdfHeight * ratio;
-  
+
           // Create a temporary canvas to draw each part
           const tempCanvas = document.createElement('canvas');
           tempCanvas.width = canvasWidth;
           tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
-  
+
           const tempCtx = tempCanvas.getContext('2d');
           tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
-  
+
           const tempImgData = tempCanvas.toDataURL('image/png');
-  
+
           // Check if the image data is not blank
           if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
             if (index > 0 || i > 0) {
@@ -616,17 +710,17 @@ export class TableDetailComponent implements OnInit {
         console.error('Error generating PDF:', error);
       }));
     });
-  
+
     Promise.all(promises).then(() => {
       // Convert the PDF to Blob
       const pdfBlob = pdf.output('blob');
-  
+
       // Create FormData to send the PDF to backend
       const formData = new FormData();
       const pdfFilename = 'การลงตรวจสอบ.pdf'; // Change to the desired filename
       formData.append('id', this.recordId); // Adjust the ID as needed
       formData.append('pdf', pdfBlob, pdfFilename);
-  
+
       // Check if this.sv.savePDF exists and is a function
       if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
         // Send the PDF to the backend
@@ -643,90 +737,94 @@ export class TableDetailComponent implements OnInit {
         console.error('savePDF function is not defined or not a function');
       }
     });
-  
+
     $('#myModal').modal('hide');
   }
-//   saveRCPDF = () => {
-//   console.log("Updating PDF in dictionary...");
-//   // const pdfViewerElement = document.getElementById('pdf-viewer');
-//   const elements = document.querySelectorAll('.modal-body-detail');
+  //   saveRCPDF = () => {
+  //   console.log("Updating PDF in dictionary...");
+  //   // const pdfViewerElement = document.getElementById('pdf-viewer');
+  //   const elements = document.querySelectorAll('.modal-body-detail');
 
-//   if (!elements.length) {
-//     console.error('Elements to print not found');
-//     return;
-//   }
+  //   if (!elements.length) {
+  //     console.error('Elements to print not found');
+  //     return;
+  //   }
 
-//   const pdf = new jsPDF('p', 'mm', 'a4');
-//   const pdfWidth = 210; // A4 width in mm
-//   const pdfHeight = 297; // A4 height in mm
+  //   const pdf = new jsPDF('p', 'mm', 'a4');
+  //   const pdfWidth = 210; // A4 width in mm
+  //   const pdfHeight = 297; // A4 height in mm
 
-//   let promises = [];
+  //   let promises = [];
 
-//   elements.forEach((element, index) => {
-//     const htmlElement = element as HTMLElement; // Cast Element to HTMLElement
-//     htmlElement.style.border = 'none';
-//     htmlElement.style.borderCollapse = 'collapse';
-//     promises.push(html2canvas(htmlElement, { scale: 5 }).then((canvas) => {
-//       const imgData = canvas.toDataURL('image/png');
-//       const canvasWidth = canvas.width;
-//       const canvasHeight = canvas.height;
-//       const ratio = canvasWidth / pdfWidth;
-//       const pdfCanvasHeight = canvasHeight / ratio;
-//       const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
+  //   elements.forEach((element, index) => {
+  //     const htmlElement = element as HTMLElement; // Cast Element to HTMLElement
+  //     htmlElement.style.border = 'none';
+  //     htmlElement.style.borderCollapse = 'collapse';
+  //     promises.push(html2canvas(htmlElement, { scale: 5 }).then((canvas) => {
+  //       const imgData = canvas.toDataURL('image/png');
+  //       const canvasWidth = canvas.width;
+  //       const canvasHeight = canvas.height;
+  //       const ratio = canvasWidth / pdfWidth;
+  //       const pdfCanvasHeight = canvasHeight / ratio;
+  //       const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
 
-//       for (let i = 0; i < numOfPages; i++) {
-//         const startY = i * pdfHeight * ratio;
+  //       for (let i = 0; i < numOfPages; i++) {
+  //         const startY = i * pdfHeight * ratio;
 
-//         // Create a temporary canvas to draw each part
-//         const tempCanvas = document.createElement('canvas');
-//         tempCanvas.width = canvasWidth;
-//         tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
+  //         // Create a temporary canvas to draw each part
+  //         const tempCanvas = document.createElement('canvas');
+  //         tempCanvas.width = canvasWidth;
+  //         tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
 
-//         const tempCtx = tempCanvas.getContext('2d');
-//         tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
+  //         const tempCtx = tempCanvas.getContext('2d');
+  //         tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
 
-//         const tempImgData = tempCanvas.toDataURL('image/png');
+  //         const tempImgData = tempCanvas.toDataURL('image/png');
 
-//         // Check if the image data is not blank
-//         if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
-//           if (index > 0 || i > 0) {
-//             pdf.addPage();
-//           }
-//           pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, (tempCanvas.height / ratio));
-//         }
-//       }
-//     }).catch((error) => {
-//       console.error('Error generating PDF:', error);
-//     }));
-//   });
+  //         // Check if the image data is not blank
+  //         if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
+  //           if (index > 0 || i > 0) {
+  //             pdf.addPage();
+  //           }
+  //           pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, (tempCanvas.height / ratio));
+  //         }
+  //       }
+  //     }).catch((error) => {
+  //       console.error('Error generating PDF:', error);
+  //     }));
+  //   });
 
-//   Promise.all(promises).then(() => {
-//     // Convert the PDF to Blob
-//     const pdfBlob = pdf.output('blob');
+  //   Promise.all(promises).then(() => {
+  //     // Convert the PDF to Blob
+  //     const pdfBlob = pdf.output('blob');
 
-//     // Create FormData to send the PDF to backend
-//     const formData = new FormData();
-//     const pdfFilename = 'การลงตรวจสอบ.pdf'; // Change to the desired filename
-//     formData.append('id', this.recordId); // Adjust the ID as needed
-//     formData.append('pdf', pdfBlob, pdfFilename);
+  //     // Create FormData to send the PDF to backend
+  //     const formData = new FormData();
+  //     const pdfFilename = 'การลงตรวจสอบ.pdf'; // Change to the desired filename
+  //     formData.append('id', this.recordId); // Adjust the ID as needed
+  //     formData.append('pdf', pdfBlob, pdfFilename);
 
-//     // Check if `this.sv.savePDF` exists and is a function
-//     if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
-//       // Send the PDF to the backend
-//       this.sv.savePDF(formData).subscribe(
-//         response => {
-//           console.log('PDF saved successfully:', response);
-//           this.router.navigate(['/table-list']);
-//         },
-//         error => {
-//           console.error('Error saving PDF:', error);
-//         }
-//       );
-//     } else {
-//       console.error('savePDF function is not defined or not a function');
-//     }
-//   });
+  //     // Check if `this.sv.savePDF` exists and is a function
+  //     if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
+  //       // Send the PDF to the backend
+  //       this.sv.savePDF(formData).subscribe(
+  //         response => {
+  //           console.log('PDF saved successfully:', response);
+  //           this.router.navigate(['/table-list']);
+  //         },
+  //         error => {
+  //           console.error('Error saving PDF:', error);
+  //         }
+  //       );
+  //     } else {
+  //       console.error('savePDF function is not defined or not a function');
+  //     }
+  //   });
 
-//   $('#myModal').modal('hide');
-// }
+  //   $('#myModal').modal('hide');
+  // }
+
+  test(){
+    alert("1")
+  }
 }
