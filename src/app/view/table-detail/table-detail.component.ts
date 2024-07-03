@@ -139,7 +139,9 @@ export class TableDetailComponent implements OnInit {
   ngOnDestroy() {
     window.removeEventListener('resize', this.checkContentOverflow.bind(this));
   }
-
+  ngAfterViewChecked() {
+    this.cdr.detectChanges();
+  }
 
   //////////////////////////////////////////////////////////////////////
   setupSignCanvas(index: number) {
@@ -253,15 +255,23 @@ export class TableDetailComponent implements OnInit {
   }
 
   openSignModal(index: number) {
-     console.log("Sign modal is work >", index );
+     console.log("Sign modal is work index: >", index );
 
     this.isSignModalVisible[index] = true;
+
     
     console.log("it openSign status: ", this.isSignModalVisible);
     this.cdr.detectChanges();
     setTimeout(() => {
       const elementsArray = this.writteSignElements.toArray();
-      const writteSignElement = elementsArray[index]?.nativeElement as HTMLElement;
+      const writteSignElement = elementsArray.find((_, i) => i === index)?.nativeElement as HTMLElement;
+
+
+      // if (index >= elementsArray.length) {
+      //   console.error('Index is out of bounds for elementsArray', index);
+      //   return;
+      // }
+      // const writteSignElement = elementsArray[index]?.nativeElement as HTMLElement;
       console.log("writteSignElement :",this.writteSignElements);
       
       if (writteSignElement) {
@@ -271,7 +281,7 @@ export class TableDetailComponent implements OnInit {
       } else {
         console.error('writteSignElement is null or undefined', this.writteSignElements.toArray()[index]);
       }
-    }, 100);
+    }, 200);
 
    
   }

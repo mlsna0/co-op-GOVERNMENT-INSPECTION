@@ -9,6 +9,7 @@
   .completed-tasks {
     flex: 1 1 45%; /* Adjust this as necessary */
     margin: 10px;
+    font-family: 'Sarabun',sans-serif;
   }
 
   :host ::ng-deep .dataTables_wrapper .dataTables_paginate .paginate_button {
