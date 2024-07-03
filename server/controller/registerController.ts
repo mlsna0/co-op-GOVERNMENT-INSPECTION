@@ -12,40 +12,39 @@ class RegisterModelCtrl extends BaseCtrl {
         try {
             const { firstname, lastname, email, password, confirmpassword, phone, role } = req.body;
 
+            if (!password || !confirmpassword) {
+                return res.status(400).json({ msg: 'Password fields are required' });
+            }
+
             if (password !== confirmpassword) {
                 return res.status(400).json({ msg: 'Passwords do not match' });
             }
 
-            // ตรวจสอบว่าผู้ใช้มีอยู่แล้วหรือไม่
             let user = await this.model.findOne({ email });
             if (user) {
                 return res.status(400).json({ msg: 'User already exists' });
             }
 
-            // เข้ารหัสผ่าน
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
 
-            // สร้างผู้ใช้ใหม่
             user = new this.model({
                 firstname,
                 lastname,
                 email,
                 password: hashedPassword,
-                confirmpassword: hashedPassword,
                 phone,
                 role
             });
 
             await user.save();
-
             res.status(201).json({ msg: 'User registered successfully' });
         } catch (error) {
-            console.error(error.message);
+            console.error('Error in create function:', error.message);
             res.status(500).send('Server error');
         }
     };
-
+    
     login = async (req, res) => {
         try {
             const { email, password } = req.body;

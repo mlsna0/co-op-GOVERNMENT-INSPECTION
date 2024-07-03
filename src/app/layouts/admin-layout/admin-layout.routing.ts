@@ -12,7 +12,7 @@ import { TableDetailComponent } from '../../view/table-detail/table-detail.compo
 import {TableMainComponent } from '../../view/table-main/table-main.component';
 import { LoginComponent } from '../auth-layout/login/login.component';
 import { DashboardComponent } from 'app/view/dashboard/dashboard.component';
-
+import { ProfileComponent} from '../../view/profile/profile.component';
 export const AdminLayoutRoutes: Routes = [
     // {
     //   path: '',
@@ -58,7 +58,7 @@ export const AdminLayoutRoutes: Routes = [
     //     }]
     // }
     { path: 'dashboard',      component: DashboardComponent },
-    { path: 'user-profile',   component: UserProfileComponent },
+    { path: 'profile',   component: ProfileComponent },
     { path: 'table-list',     component: TableListComponent },
     { path: 'table-main',     component: TableMainComponent },
     { path:'login',             component:LoginComponent },

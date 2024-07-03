@@ -19,6 +19,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
 import { DashboardComponent } from 'app/view/dashboard/dashboard.component';
 import { ThaicountyComponent } from '../../view/thaicounty/thaicounty.component';
+import { ProfileComponent } from '../../view/profile/profile.component';
 
 import { DataTablesModule } from "angular-datatables"; //petch เพิ่ม datatables เพื่อใช้ใน tablelist
 import { ThaiDatePipe } from "./../../services/pipe/thaidate.service";
@@ -46,8 +47,6 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     MatTooltipModule,
     DataTablesModule,
     AngularEditorModule,
-
-
     PdfViewerModule,
   ],
   declarations: [
@@ -63,8 +62,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     TableDetailComponent,
     TableMainComponent,
     ThaicountyComponent,
-
-  
+    ProfileComponent,
   ]
 })
 

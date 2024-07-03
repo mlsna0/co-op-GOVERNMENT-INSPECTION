@@ -1,0 +1,64 @@
+/* 1. Add height: 100% to .main-content and .container-fluid */
+.main-content,
+.container-fluid {
+  height: 100%;
+}
+
+/* 2. Update .row to be centered */
+.row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* 3. Set .col-md-8 to occupy full height */
+.col-md-8 {
+  height: 100%;
+}
+
+/* 4. Add a border to .card and padding to .card-header */
+.card {
+  border: 1px solid #000;
+}
+
+.card-header {
+  padding: 20px;
+}
+
+/* 5. Update .card-header-danger background color */
+.card-header-danger {
+  background: linear-gradient(60deg, #b71c1c, #ff8a80);
+}
+
+/* 6. Increase the font size of .card-title and .card-category */
+.card-title {
+  font-size: 24px;
+}
+
+.card-category {
+  font-size: 18px;
+}
+
+/* 7. Add padding to .card-body */
+.card-body {
+  padding: 20px;
+}
+
+/* 8. Add bottom padding to .form-group */
+.form-group {
+  padding-bottom: 15px;
+}
+
+/* 9. Add bottom margin to .form-control */
+.form-control {
+  margin-bottom: 10px;
+}
+
+/* 10. Style the submit button (.btn-danger.btn-round) */
+.btn-danger.btn-round {
+  background-color: #d32f2f;
+  border-color: #d32f2f;
+  font-size: 18px;
+  padding: 15px 30px;
+}
