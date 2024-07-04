@@ -1,0 +1,29 @@
+<div class="card">
+    <div class="card-header">
+    รายงานผู้ใช้งานระบบ
+    </div>
+    <div class="card-body">
+      <table width="100%" datatable [dtOptions]="dtOptions" class="table table-striped table-bordered" *ngIf="!loading">
+        <thead>
+            
+          <tr>
+            <th class="small-cell">ลำดับ</th>
+            <th class="small-name">ชื่อ</th>
+            <th class="small-name">นามสกุล</th>
+            <th class="small-name">อีเมล</th>
+            <th class="small-cell">ตำเเหน่ง</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let users of user ; let i = index">
+            <td class="small-cell">{{ i + 1 }}</td>
+            <td class="small-name"> {{ users.firstname }} </td>
+            <td class="small-name"> {{ users.lastname }} </td>
+            <td class="small-name"> {{ users.email }} </td>
+            <td class="small-cell"> {{ users.role }} </td>
+            </tr>
+          </tbody>
+      </table>
+    </div>
+  </div>
+  

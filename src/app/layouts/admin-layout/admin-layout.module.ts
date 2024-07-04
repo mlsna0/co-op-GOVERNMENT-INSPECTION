@@ -30,6 +30,7 @@ import { TableDetailComponent } from 'app/view/table-detail/table-detail.compone
 import {TableMainComponent } from '../../view/table-main/table-main.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { ReportuserComponent } from 'app/view/reportuser/reportuser.component';
 
 @NgModule({
   imports: [
@@ -63,6 +64,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     TableMainComponent,
     ThaicountyComponent,
     ProfileComponent,
+    ReportuserComponent,
   ]
 })
 

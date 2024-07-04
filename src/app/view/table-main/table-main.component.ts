@@ -778,7 +778,7 @@ get personal(): FormArray {
     this.sv.postDataTest(this.addItemForm.value).subscribe(res => {
       console.log("res submitted successfully", res);
       Swal.fire({
-              title: 'เพิ่มผู้ใช้สำเร็จ!!',
+              title: 'เพิ่มข้อมูลสำเร็จ!!',
               text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
               icon: 'success',
               confirmButtonText: 'ตกลง',

@@ -13,6 +13,8 @@ import {TableMainComponent } from '../../view/table-main/table-main.component';
 // import { LoginComponent } from '../auth-layout/login/login.component';
 import { DashboardComponent } from 'app/view/dashboard/dashboard.component';
 import { ProfileComponent} from '../../view/profile/profile.component';
+import { ReportuserComponent } from '../../view/reportuser/reportuser.component';
+
 export const AdminLayoutRoutes: Routes = [
     // {
     //   path: '',
@@ -68,4 +70,5 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'maps',             component: MapsComponent },
     { path: 'notifications',    component: NotificationsComponent },
     { path: 'upgrade',          component: UpgradeComponent },
+    { path: 'reportuser',         component:ReportuserComponent}
 ];
