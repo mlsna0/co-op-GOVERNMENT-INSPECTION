@@ -60,7 +60,7 @@ export class TableMainComponent implements OnInit { [x: string]: any;
   activeButton: string='typro';
   isTyproActive:boolean = true;
   isWritteActive:boolean = false;
-  typroText: string='';
+  // typroText: string='';
   uploadedImages: string[] = [];
   isLoading: boolean[] = [false];
   // uploadedImageUrl: string | ArrayBuffer | null = null;
@@ -91,6 +91,18 @@ export class TableMainComponent implements OnInit { [x: string]: any;
   initialFontSize: number = 14;
   htmlContent: string = '';
 
+  private _typroText: string = '';
+  
+  get typroText(): string {
+    return this._typroText;
+  }
+
+  set typroText(value: string) {
+    this._typroText = value;
+    this.updatePlaceholder();
+  }
+
+  placeholder: string = 'พิมพ์ข้อความที่นี่...';
 
   constructor(
     private fb:FormBuilder,
@@ -99,6 +111,7 @@ export class TableMainComponent implements OnInit { [x: string]: any;
     private router: Router,
     private geocodingService: GeocodingServiceService,
     private sanitizer: DomSanitizer,
+    
 
   ) { 
     this.addItemForm = this.fb.group({
@@ -144,6 +157,7 @@ export class TableMainComponent implements OnInit { [x: string]: any;
 
  
   ngOnInit(){
+    
     this.loading = true; //เป็นการตรวจ
     this.dtOptions = {
       order:[0],
@@ -190,8 +204,12 @@ export class TableMainComponent implements OnInit { [x: string]: any;
     });
     
 
-    
+    document.addEventListener('keydown', this.handleKeydown.bind(this));
   }
+  ngOnDestroy() {
+    document.removeEventListener('keydown', this.handleKeydown.bind(this));
+  }
+
   //parsetLatLang คือการทำงานเกี่ยวกับการแยก lat และ long ให้เป็นสองส่วน แล้วเก็บไปที่ตัวแปร lat ,lng 12/06
   parseLatLng(location: string): [number, number] {
     const latMatch = location.match(/Lat:\s*([0-9.]+)/);
@@ -634,8 +652,12 @@ get personal(): FormArray {
 
 //insert
   onInsertModal():void{
-
-  const nextId = this.items.records.length + 1;
+  let nextId: number;
+  if (this.items.records && this.items.records.length >= 0){
+    nextId = this.items.records.length + 1;
+  } else {
+    nextId= 1;
+  }
   const currentDate = moment().format('YYYY-MM-DD');
 
   this.addItemForm.patchValue({
@@ -979,6 +1001,7 @@ loadContent() {
     };
   }
 
+  
   editorConfig: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
@@ -999,18 +1022,60 @@ loadContent() {
         'removeFormat',
         'textColor',
         'backgroundColor',
-        // 'toggleEditorMode',
+        'toggleEditorMode',
         'heading',
         'fontName',
       ],
     ]
    
   };
- 
+
+  handleKeydown(event: KeyboardEvent) {
+    if (event.ctrlKey && event.key === 'c') {
+      this.copyText();
+      event.preventDefault();
+    } else if (event.ctrlKey && event.key === 'v') {
+      this.pasteText();
+      event.preventDefault();
+    }
+  }
+
+  stripStyles(html: string): string {
+    const tmp = document.createElement('DIV');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  }
+
+  copyText() {
+    const plainText = this.stripStyles(this.typroText);
+    navigator.clipboard.writeText(plainText).then(() => {
+      console.log('Text copied to clipboard');
+    }).catch(err => {
+      console.error('Could not copy text: ', err);
+    });
+  }
+
+  pasteText() {
+    navigator.clipboard.readText().then(text => {
+      const selection = window.getSelection();
+      if (!selection.rangeCount) return;
+
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+      range.insertNode(document.createTextNode(text));
+      this.typroText = this.typroText + text;
+    }).catch(err => {
+      console.error('Could not paste text: ', err);
+    });
+  }
+
+
+  updatePlaceholder() {
+    this.placeholder = this.typroText ? '' : 'พิมพ์ข้อความที่นี่...';
+  }
 }
 
 
 
 
-
- ///////////////////เเบ่งหน้า///////////////////////////////////
+ ///////////////////เเบ่งหoOnIn้า///////////////////////////////////

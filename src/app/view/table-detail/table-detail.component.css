@@ -33,7 +33,7 @@ width: 180px;
   position: relative;
     display: flex;
     flex-direction: column;
-    margin-top:10mm;
+
     margin-bottom: 10mm;
    left: 50%;
    transform: translateX(-50%);
@@ -540,14 +540,7 @@ position: absolute;
     z-index: -1;
   }
   
-  .mainCenter-panel {
-    position: relative;
-    background: #fff;
-    padding: 96px;
-    height: 100%;
-    border:none;
-    /* max-height: 297mm; */
-  }
+
   .header-topic{
   position: relative;
   padding-top: 1px;
@@ -697,7 +690,7 @@ position: absolute;
 /*upload file botton */
 :host ::ng-deep .uploadFilePDF{
   position: relative;
-  margin: 10px 0 60px 0;
+  margin: 10px 0 30px 0;
   border-radius: 5px;
   width: 360px;
 

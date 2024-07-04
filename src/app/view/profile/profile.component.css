@@ -1,0 +1,92 @@
+/* 1. Add height: 100% to .main-content and .container-fluid */
+.main-content,
+.container-fluid {
+  height: 100%;
+  font-family: 'Sarabun',sans-serif;
+}
+
+
+
+/* 2. Update .row to be centered */
+.row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* 3. Set .col-md-8 to occupy full height */
+.col-md-8 {
+  height: 100%;
+}
+
+/* 4. Add a border to .card and padding to .card-header */
+/* .card {
+  border: 1px solid #000;
+} */
+
+
+.card-header {
+  padding: 20px;
+  background-color: rgb(255, 209, 0);
+
+}
+
+
+/* 5. Update .card-header-danger background color  linear-gradient(60deg,  rgb(255, 209, 0), #fcffc2) */
+.card-header-danger {
+  background:rgb(255, 209, 0);
+  font-family: 'Sarabun',sans-serif;
+}
+
+/* 6. Increase the font size of .card-title and .card-category */
+.card-title {
+  font-size: 18px;
+  font-family: 'Sarabun',sans-serif;
+}
+
+.card-category {
+  font-size: 18px;
+}
+
+/* 7. Add padding to .card-body */
+.card-body {
+  padding: 20px;
+}
+
+/* 8. Add bottom padding to .form-group */
+.form-group {
+  padding-bottom: 15px;
+}
+
+/* 9. Add bottom margin to .form-control */
+.form-control {
+  margin-bottom: 10px;
+}
+
+/* 10. Style the submit button (.btn-danger.btn-round) */
+.btn-danger.btn-round {
+  background-color: #d32f2f;
+  border-color: #d32f2f;
+  font-size: 18px;
+  padding: 15px 30px;
+}
+:host ::ng-deep textarea{
+  height: 100px;
+}
+::placeholder{
+  font-family: 'Sarabun',sans-serif;
+}
+:host ::ng-deep .btn-add{
+  color: #fff;
+  background-color: #24a0ed;/*#000dc2ef  */
+  border-color: #24a0ed85;;
+  /* box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd; */
+  font-family: 'Sarabun', sans-serif;
+
+}
+:host ::ng-deep .btn-add:hover{
+  background-color: #24a0ed; 
+  border-color: #00087c9f;
+  /* box-shadow: 0 14px 14px -12px #24a0ed51, 0 4px 14px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px #24a0ed51; */
+}
