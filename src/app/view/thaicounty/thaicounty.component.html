@@ -1,26 +1,40 @@
-<div class="card">
-  <div class="card-header">
-    การลงรายเซ็นต์
+
+  <div class="card">
+    <div class="card-header card-header-danger">
+      <h4 class="card-title">
+        การลงรายเซ็นต์
+      </h4>
+      
+    </div>
+
+
+    <div class="card-body">
+      <table width="100%" datatable [dtOptions]="dtOptions" class="table table-striped table-bordered" *ngIf="!loading">
+        <thead>
+          <tr>
+            <th>จังหวัด</th>
+            <th>จำนวนที่เซ็นเเล้ว(ครั้ง)</th>
+            <th>จำนวนที่ยังไม่ได้เซ็น(ครั้ง)</th>
+              
+            <th>เปอร์เซ็นต์</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let province of provinces">
+            <td>{{ province.name }}</td>
+            <td>{{ province.count }}</td>
+            <td>{{ province.percentage }}%</td>
+            <td>{{ province.percentage }}%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-  <div class="card-body">
-    <table width="100%" datatable [dtOptions]="dtOptions" class="table table-striped table-bordered" *ngIf="!loading">
-      <thead>
-        <tr>
-          <th>จังหวัด</th>
-          <th>จำนวนที่เซ็นเเล้ว(ครั้ง)</th>
-          <th>จำนวนที่ยังไม่ได้เซ็น(ครั้ง)</th>
-            
-          <th>เปอร์เซ็นต์</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let province of provinces">
-          <td>{{ province.name }}</td>
-          <td>{{ province.count }}</td>
-          <td>{{ province.percentage }}%</td>
-          <td>{{ province.percentage }}%</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+   
+    
+
+
+ 
+
+
+

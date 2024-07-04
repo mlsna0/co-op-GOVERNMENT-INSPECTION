@@ -11,14 +11,14 @@
   </div>
   <div class="card-body">
     <div class="col-12" *ngIf="loading">
-      <div>จำนวนหน้า : {{totalPage}}</div>
-      <input class="form-control col-4 col-sm-2 col-md-2 col-lg-1 mb-1" type="number" [(ngModel)]="pageVariable" />
+      <div>จำนวนหน้า : {{totalPage}} <input class="form-control col-4 col-sm-2 col-md-2 col-lg-1 mb-1" style="border: none;" type="number" [(ngModel)]="pageVariable" /></div>
+      
 
 
       <button *ngIf="step == 0" (click)="choseTypeSignature('pin')" style="height: 40px;" type="button"
-        class="btn btn-primary">ลงนามเอกสาร</button>
+        class="btn btn-add">ลงนามเอกสาร</button>
       <button *ngIf="step == 0 && user_ca" (click)="choseTypeSignature('ca')" style="height: 40px;" type="button"
-        class="btn btn-primary ms-2">ลงนามอิเล็กทรอนิกส์</button>
+        class="btn btn-add ms-2">ลงนามอิเล็กทรอนิกส์</button>
 
       <button *ngIf="step == 1" (click)="startMarkSign()" [disabled]="stageMarkSign" style="height: 40px;" type="button"
         class="btn btn-secondary">วางตำแหน่งลายเซ็น</button>
