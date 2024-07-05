@@ -251,72 +251,6 @@ export class TableMainComponent implements OnInit { [x: string]: any;
     // this.setupSignCanvas(index: number);
   }
 
-
-  setupSignCanvas(index: number) {
-    this.canvas2 = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
-    if (this.canvas2) {
-      this.ctx2 = this.canvas2.getContext('2d');
-      let painting = false;
-
-      this.canvas2.width = this.canvas2.clientWidth;
-      this.canvas2.height = this.canvas2.clientHeight;
-
-      const startPosition = (e: MouseEvent) => {
-        painting = true;
-        draw(e);
-      };
-
-      const endPosition = () => {
-        painting = false;
-        if (this.ctx2) { // Ensure ctx2 is not undefined
-          this.ctx2.beginPath();
-        }
-        this.canvas2.style.border="none";
-      };
-
-      const draw = (e: MouseEvent) => {
-        if (!painting) return;
-
-        if (this.ctx2) { // Ensure ctx2 is not undefined
-          this.ctx2.lineWidth = this.penSize2;
-          this.ctx2.lineCap = 'round';
-          this.ctx2.strokeStyle = this.penColor2;
-
-          const rect = this.canvas2.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-
-          this.ctx2.lineTo(x, y);
-          this.ctx2.stroke();
-          this.ctx2.beginPath();
-          this.ctx2.moveTo(x, y);
-        }
-      };
-
-      this.canvas2.addEventListener('mousedown', startPosition);
-      this.canvas2.addEventListener('mouseup', endPosition);
-      this.canvas2.addEventListener('mousemove', draw);
-
-      console.log('Sign canvas setup complete');
-    } else {
-      console.error('Sign canvas element not found', this.canvas2);
-    }
-  }
-  openSignModal(index: number){
-    this.isSignModalVisible[index] = true;
-    
-    setTimeout(() => {
-      if (this.writteSignElement) {
-        this.setupSignCanvas(index);
-        const writteSignElement = this.writteSignElement.nativeElement as HTMLElement;
-        writteSignElement.style.display = 'flex';
-        console.log("Setup activate or not: ",this.setupSignCanvas)
-      } else {
-        console.error('writteSignElement is null or undefined',this.writteSignElement);
-      }
-    }, 0);  
-    console.log("it openSign status : ",this.isSignModalVisible)
-  }
   // refreshSignCanvas(index: number){
   //   if(this.ctx2){
   //     this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
@@ -778,7 +712,7 @@ get personal(): FormArray {
     this.sv.postDataTest(this.addItemForm.value).subscribe(res => {
       console.log("res submitted successfully", res);
       Swal.fire({
-              title: 'เพิ่มผู้ใช้สำเร็จ!!',
+              title: 'เพิ่มรายการสำเร็จ!!',
               text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
               icon: 'success',
               confirmButtonText: 'ตกลง',

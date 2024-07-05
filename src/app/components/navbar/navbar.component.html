@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-transparent  navbar-absolute fixed-top">
+<nav class="navbar navbar-expand-lg navbar-white  navbar-absolute fixed-top">
     <div class="container-fluid">
         <div class="navbar-wrapper">
         </div>
@@ -8,8 +8,20 @@
             <span class="navbar-toggler-icon icon-bar"></span>
             <span class="navbar-toggler-icon icon-bar"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-end"></div>
-       <div class="nav-link" (click)="openprofile()"><i class="bi bi-person-circle" ></i></div>
+        <div class="collapse navbar-collapse justify-content-end" id="navigation">
+            <div class="dropdown">
+                <div class="Profile" (click)="toggleDropdown()">
+                    <img src="./assets/img/Person-icon.jpg" alt="img not fond" style="border-radius: 15px; border: 1 solid black; height: 32px; width: 32px;">
+                </div>
+                <div class="dropdown-menu"  [class.show]="dropdownOpen">
+                    <a class="nav-link"  (click)="openProfile()"><i class="fa fa-user"></i> &nbsp;จัดการผู้ใช้</a>
+                    <a class="nav-link"  ><i class="fa fa-gear"></i> &nbsp; ตั้งค่า</a>
+                    <a class="nav-link"  (click)="openLogin()"> <i class="fa fa-sign-out"></i> &nbsp;ออกจากระบบ</a>
+                </div>
+            </div>
+          
+        </div>
+
     </div>
         
 </nav>
