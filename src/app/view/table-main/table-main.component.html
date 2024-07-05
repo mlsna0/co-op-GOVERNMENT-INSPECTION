@@ -48,6 +48,7 @@
                       <th style="width: 10%; color: black; font-size: 16px;">วันที่เริ่มตรวจสอบ</th>
   
                       <th style="width: 5%; color: black;  font-size: 16px;">สถานที่</th>
+                      <th style="width: 10%; color: black;  font-size: 16px; text-align: center;">สถานะ</th>
                       <th class="text-center" style="color: black;  font-size: 16px;"><i class="fa fa-gear"></i></th>
                     </tr>
                   </thead>
@@ -73,6 +74,10 @@
                         <!-- {{item.record_location}} -->
                         <button class="searchLocation" (click)="searchLocation(item.record_location)">ดูพิกัด</button>
   
+                      </td>
+                      <td style="vertical-align: middle; white-space: nowrap; text-align: center;">
+                        <i  *ngIf="item.record_filename" class="fa-regular fa-circle-check checkIcon" > &nbsp;<div style="font-family: 'Sarabun',sans-serif;">เซ็นสำเร็จ</div></i>
+                        <i  *ngIf="!item.record_filename" class="fa-regular fa-circle-xmark cancleIcon" > &nbsp;<div style="font-family: 'Sarabun',sans-serif;">ยังไม่ได้เซ็น</div></i>
                       </td>
   
                       <td class="text-center" style=" width:1% ;white-space: nowrap;">

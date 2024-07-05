@@ -7,18 +7,6 @@
 
 
 
-/* 2. Update .row to be centered */
-.row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-/* 3. Set .col-md-8 to occupy full height */
-.col-md-8 {
-  height: 100%;
-}
 
 /* 4. Add a border to .card and padding to .card-header */
 /* .card {
@@ -71,6 +59,30 @@
   font-size: 18px;
   padding: 15px 30px;
 }
+
+/*userInfo*/
+.title{
+  padding: 10px;
+  border-bottom: 1px solid rgb(189, 186, 186);
+}
+.userInfo{
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #000000;
+}
+.userContect{
+  border-radius: 5px;
+  border: 1px solid #000000;
+}
+.user-content{
+  padding: 10px;
+  font-family: 'Sarabun',sans-serif;
+}
+
+
+
+
+
 :host ::ng-deep textarea{
   height: 100px;
 }

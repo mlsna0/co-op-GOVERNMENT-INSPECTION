@@ -42,7 +42,7 @@ export class TableDetailComponent implements OnInit {
 
 
   recordId: any;
-  viewData = [];
+  viewData:any[] = [];
   remainingContent: string = '';//content ที่ตัดออกจะเก็บที่นี้?
   otherRemainingContent: string = '';//content ที่ตัดออกจะเก็บที่นี้? ระดับ 3
   isContentOverflow = false; //
@@ -65,7 +65,7 @@ export class TableDetailComponent implements OnInit {
   isFileImage = false;
   isFileDocument = false;
 
-  isSignModalVisible: boolean[] = [false];
+  isSignModalVisible: boolean[] = [];
   private canvas2: HTMLCanvasElement;
   private ctx2: CanvasRenderingContext2D;
   penColor2: string = 'black';
@@ -126,12 +126,37 @@ export class TableDetailComponent implements OnInit {
 
       console.log("it on working.. ")
 
-
+  
+      this.isSignModalVisible = new Array(this.viewData.length).fill(false);
+    
+      setTimeout(() => {
+        this.cdr.detectChanges(); // ทำการตรวจสอบการเปลี่ยนแปลง
+    }, 0);
     });
+
   }
 
   ngAfterViewInit() {
+
+   // Subscribe และดึงข้อมูลจาก API หรือแหล่งอื่น ๆ
+   this.sv.getViewByRecordId(this.recordId).subscribe((res: any) => {
+    console.log("getViewByRecordId response:", res);
+
+    this.viewData = res; // กำหนดค่า viewData จากข้อมูลที่ได้รับ
+
+    // รอให้ Angular สร้าง elements และ QueryList ให้เรียบร้อย
+    setTimeout(() => {
+      // กำหนดความยาวของ writteSignElements เท่ากับความยาวของ viewData
  
+      this.writteSignElements = new QueryList<ElementRef>(...this.viewData.map(() => null));
+
+      // อัพเดท UI หลังจากที่กำหนดค่า
+      this.cdr.detectChanges();
+
+      // ต่อไปคุณสามารถดำเนินการเพิ่มอย่างอื่นต่อได้ที่นี่
+    });
+  });
+
     //this.checkContentOverflow();
 
     this.checkContentOverflow();
@@ -270,19 +295,16 @@ export class TableDetailComponent implements OnInit {
     
     console.log("it openSign status: ", this.isSignModalVisible);
     this.cdr.detectChanges();
+
     setTimeout(() => {
       const elementsArray = this.writteSignElements.toArray();
       const writteSignElement = elementsArray.find((_, i) => i === index)?.nativeElement as HTMLElement;
 
-
-      // if (index >= elementsArray.length) {
-      //   console.error('Index is out of bounds for elementsArray', index);
-      //   return;
-      // }
       // const writteSignElement = elementsArray[index]?.nativeElement as HTMLElement;
       console.log("writteSignElement :",this.writteSignElements);
       
       if (writteSignElement) {
+        this.cdr.detectChanges();
         writteSignElement.style.display = 'flex';
         this.setupSignCanvas(index);
         console.log("Setup activated for canvas index: ", index);
