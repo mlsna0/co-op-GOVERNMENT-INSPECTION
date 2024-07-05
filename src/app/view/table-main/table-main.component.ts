@@ -251,6 +251,22 @@ export class TableMainComponent implements OnInit { [x: string]: any;
     // this.setupSignCanvas(index: number);
   }
 
+
+  openSignModal(index: number){
+    this.isSignModalVisible[index] = true;
+    
+    setTimeout(() => {
+      if (this.writteSignElement) {
+        this.setupSignCanvas(index);
+        const writteSignElement = this.writteSignElement.nativeElement as HTMLElement;
+        writteSignElement.style.display = 'flex';
+        console.log("Setup activate or not: ",this.setupSignCanvas)
+      } else {
+        console.error('writteSignElement is null or undefined',this.writteSignElement);
+      }
+    }, 0);  
+    console.log("it openSign status : ",this.isSignModalVisible)
+  }
   // refreshSignCanvas(index: number){
   //   if(this.ctx2){
   //     this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
