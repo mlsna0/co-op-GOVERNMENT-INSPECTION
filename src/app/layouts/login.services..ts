@@ -28,10 +28,11 @@ export class loginservice {
     );
   }
 
-  login(email: string, password: string): Observable<any> {
+  login(email: string, password: string, role: string ): Observable<any> {
     console.log("email",email)
     console.log("password",password)
-    return this.http.post(`${this.baseUrl}/registerModel/login`, { email, password }).pipe(
+    console.log("role",role)
+    return this.http.post(`${this.baseUrl}/registerModel/login`, { email, password ,role}).pipe(
       catchError(error => {
         console.error('Error logging in:', error);
         return throwError('Invalid email or password');
@@ -39,4 +40,12 @@ export class loginservice {
     );
   }
 
+  resetPassword(email: string, password: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}//registerModel/resetPassword`, { email, password });
+
+  }
+
+  getUserReport(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/registerModel`);
+  }
 }

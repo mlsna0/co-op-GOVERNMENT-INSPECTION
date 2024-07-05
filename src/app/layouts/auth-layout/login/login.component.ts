@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 export class LoginComponent implements OnInit {
   email: string = '';
   password: string = '';
+  role: any
 
   constructor(
     private sv : SharedService,
@@ -35,10 +36,8 @@ export class LoginComponent implements OnInit {
   // }
 
   onLogin() {
-    console.log("email", this.email);
-    console.log("password", this.password);
   
-    this.lc.login(this.email, this.password).subscribe(
+    this.lc.login(this.email, this.password, this.role).subscribe(
       response => {
         console.log('Login successful', response);
         Swal.fire({
@@ -52,7 +51,12 @@ export class LoginComponent implements OnInit {
         }).then((result) => {
           if (result.isConfirmed) {
             document.querySelector('.swal2-confirm').setAttribute('style', 'background-color: #24a0ed; color: white;');
-            this.router.navigate(['/dashboard']); // เปลี่ยนหน้าไปยัง dashboard
+
+            if (response.role === 'superadmin') {
+              this.router.navigate(['/reportuser']);
+            } else  {
+              this.router.navigate(['/dashboard']);
+            } 
           }
         });
       },

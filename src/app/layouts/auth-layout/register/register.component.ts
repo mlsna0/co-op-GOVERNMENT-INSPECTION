@@ -89,13 +89,13 @@ export class RegisterComponent implements OnInit {
     }
 
     const newUser = {
-      firstName: this.regisForm.value.firstname,
-      lastName: this.regisForm.value.lastname,
+      firstname: this.regisForm.value.firstname,
+      lastname: this.regisForm.value.lastname,
       email: this.regisForm.value.email,
       password: this.regisForm.value.password,
       confirmpassword: this.regisForm.value.confirmpassword,
       phone: this.regisForm.value.phone,
-      role: "user",
+      role: "admin",
     };
 
     this.lc.register(newUser).subscribe(
