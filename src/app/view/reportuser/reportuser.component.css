@@ -35,3 +35,8 @@
   .small-name {
     width: 120px; 
   }
+
+  .small-cell-text{
+    width: 50px; /* Adjust the width as needed */
+    text-align: center;
+  }

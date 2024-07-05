@@ -3,7 +3,7 @@ import { ProvinceService } from '../../../app/view/thaicounty/thaicounty.service
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { loginservice } from 'app/layouts/login.services.';
-
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -23,6 +23,7 @@ export class ReportuserComponent implements OnInit {
     private provinceService: ProvinceService,
     private http: HttpClient,
     private ls: loginservice,
+    private router: Router,
 
   ) { }
 
@@ -55,6 +56,10 @@ export class ReportuserComponent implements OnInit {
         this.loading = false;
       }
     );
-  } 
+  }
+  openProfile(firstname: any,lastname:any) {
+  
+    this.router.navigate(['/profilereport']);
+  }
 }
 

@@ -13,7 +13,7 @@ export const ROUTES: RouteInfo[] = [
    { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '' },
     // { path: '/table-list', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '' },
     { path: '/table-main', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '' },
-    { path: '/reportuser', title: 'รายงานเข้าใช้งาน' , icon:'person', class:''},
+    { path: '/reportuser', title: 'รายงานสมัครเข้าใช้งาน' , icon:'person', class:''},
     // { path: '/user-profile', title: 'User Profile',  icon:'person', class: '' },
     // { path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' },
     // { path: '/typography', title: 'Typography',  icon:'library_books', class: '' },

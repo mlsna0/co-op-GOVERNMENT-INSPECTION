@@ -14,6 +14,7 @@ import {TableMainComponent } from '../../view/table-main/table-main.component';
 import { DashboardComponent } from 'app/view/dashboard/dashboard.component';
 import { ProfileComponent} from '../../view/profile/profile.component';
 import { ReportuserComponent } from '../../view/reportuser/reportuser.component';
+import { ReportprofileComponent } from '../../view/reportuser/reportprofile/reportprofile.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -63,6 +64,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'profile',   component: ProfileComponent },
     { path: 'table-list',     component: TableListComponent },
     { path: 'table-main',     component: TableMainComponent },
+    { path: 'profilereport', component: ReportprofileComponent},
     // { path:'login',             component:LoginComponent },
     { path: 'table-detail/:id', component: TableDetailComponent },
     { path: 'typography',       component: TypographyComponent },
