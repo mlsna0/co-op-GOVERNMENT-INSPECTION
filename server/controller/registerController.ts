@@ -4,6 +4,20 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
+import multer from 'multer';
+import path from 'path';
+
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+    }
+});
+const upload = multer({ storage });
+
 
 class RegisterModelCtrl extends BaseCtrl {
     model = RegisterModel;
@@ -44,7 +58,44 @@ class RegisterModelCtrl extends BaseCtrl {
             res.status(500).send('Server error');
         }
     };
-    
+
+    getEmp = async (req, res) => {
+        try {
+            const { email } = req.query;
+
+            if (!email) {
+                return res.status(400).json({ msg: 'Email is required' });
+            }
+
+            let user = await this.model.findOne({ email });
+
+            if (!user) {
+                return res.status(404).json({ msg: 'User not found' });
+            }
+
+            res.status(200).json({
+                firstname: user.firstname,
+                lastname: user.lastname,
+                email: user.email,
+                phone: user.phone,
+                role: user.role
+            });
+        } catch (error) {
+            console.error('Error in getEmp function:', error.message);
+            res.status(500).send('Server error');
+        }
+    };
+
+    getAllUsers = async (req, res) => {
+        try {
+            const users = await this.model.find({});
+            res.status(200).json(users);
+        } catch (error) {
+            console.error('Error in getAllUsers function:', error.message);
+            res.status(500).send('Server error');
+        }
+    };
+
     login = async (req, res) => {
         try {
             const { email, password } = req.body;
@@ -154,7 +205,70 @@ class RegisterModelCtrl extends BaseCtrl {
           console.error(error.message);
           res.status(500).send('Server error');
         }
-      };
+    };
+
+    updateUserDetails = async (req, res) => {
+        try {
+            const { id } = req.params; // Assume the user ID is passed in the URL parameters
+            const { firstname, lastname, phone, role, address, provine, district, subDistrict, postcode, detail } = req.body;
+    
+            let user = await this.model.findById(id);
+            if (!user) {
+                return res.status(404).json({ msg: 'User not found' });
+            }
+    
+            user.firstname = firstname || user.firstname;
+            user.lastname = lastname || user.lastname;
+            user.phone = phone || user.phone;
+            user.role = role || user.role;
+            user.address = address || user.address;
+            user.provine = provine || user.provine;
+            user.district = district || user.district;
+            user.subDistrict = subDistrict || user.subDistrict;
+            user.postcode = postcode || user.postcode;
+            user.detail = detail || user.detail;
+    
+            await user.save();
+            res.status(200).json({ msg: 'User updated successfully' });
+        } catch (error) {
+            console.error('Error in updateUserDetails function:', error.message);
+            res.status(500).send('Server error');
+        }
+    };
+    updateProfile = async (req, res) => {
+        try {
+            const userId = req.user.id; // Assuming the user ID is available in req.user.id
+            const { firstname, lastname, phone, address, provine, district, subDistrict, postcode, detail } = req.body;
+
+            let user = await this.model.findById(userId);
+            if (!user) {
+                return res.status(404).json({ msg: 'User not found' });
+            }
+
+            // อัปเดตข้อมูลโปรไฟล์
+            user.firstname = firstname || user.firstname;
+            user.lastname = lastname || user.lastname;
+            user.phone = phone || user.phone;
+            user.address = address || user.address;
+            user.provine = provine || user.provine;
+            user.district = district || user.district;
+            user.subDistrict = subDistrict || user.subDistrict;
+            user.postcode = postcode || user.postcode;
+            user.detail = detail || user.detail;
+
+            // อัปเดตไฟล์โปรไฟล์ถ้ามีการอัปโหลดไฟล์ใหม่
+            if (req.file) {
+                user.profileImage = req.file.path;
+            }
+
+            await user.save();
+            res.status(200).json({ msg: 'Profile updated successfully' });
+        } catch (error) {
+            console.error('Error in updateProfile function:', error.message);
+            res.status(500).send('Server error');
+        }
+    };
+    // วิธีการอื่นๆ ของ CRUD...
 }
 
 export default RegisterModelCtrl;

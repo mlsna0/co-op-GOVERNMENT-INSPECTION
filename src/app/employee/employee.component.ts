@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 declare var $: any;
 @Component({
-  selector: 'app-notifications',
-  templateUrl: './notifications.component.html',
-  styleUrls: ['./notifications.component.css']
+  selector: 'app-employee',
+  templateUrl: './employee.component.html',
+  styleUrls: ['./employee.component.css']
 })
-export class NotificationsComponent implements OnInit {
+export class EmployeeComponent implements OnInit {
 
   constructor() { }
   showNotification(from, align){

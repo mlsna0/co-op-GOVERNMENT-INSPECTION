@@ -7,6 +7,13 @@ const registerSchema = new mongoose.Schema({
     password: { type: String, required: true },
     phone: String,
     role: { type: String, required: true, enum: ['user', 'admin', 'superadmin'], default: 'user' },
+    address: String,
+    provine : String,
+    district : String,
+    subDistrict : String,
+    postcode : String,
+    detail : String,
+    profileImage: String, // เพิ่มฟิลด์สำหรับเก็บไฟล์โปรไฟล์
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date }
 });

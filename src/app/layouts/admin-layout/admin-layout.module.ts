@@ -9,7 +9,7 @@ import { TableListComponent } from '../../table-list/table-list.component';
 import { TypographyComponent } from '../../typography/typography.component';
 import { IconsComponent } from '../../icons/icons.component';
 // import { SignatureComponent } from '../../signature/signature.component';
-import { NotificationsComponent } from '../../notifications/notifications.component';
+import { EmployeeComponent } from '../../employee/employee.component';
 import { UpgradeComponent } from '../../upgrade/upgrade.component';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
@@ -20,7 +20,7 @@ import {MatSelectModule} from '@angular/material/select';
 import { DashboardComponent } from 'app/view/dashboard/dashboard.component';
 import { ThaicountyComponent } from '../../view/thaicounty/thaicounty.component';
 import { ProfileComponent } from '../../view/profile/profile.component';
-
+import { MapComponent } from '../../view/map/map.component';
 import { DataTablesModule } from "angular-datatables"; //petch เพิ่ม datatables เพื่อใช้ใน tablelist
 import { ThaiDatePipe } from "./../../services/pipe/thaidate.service";
 import { GeocodingServiceService } from './../../services/geocodingService/geocoding-service.service';
@@ -57,13 +57,14 @@ import { ReportprofileComponent } from '../../view/reportuser/reportprofile/repo
     TableListComponent,
     TypographyComponent,
     IconsComponent,
-    NotificationsComponent,
+    EmployeeComponent,
     UpgradeComponent,
     ThaiDatePipe,
     TableDetailComponent,
     TableMainComponent,
     ThaicountyComponent,
     ProfileComponent,
+    MapComponent
     // SignatureComponent,
   
     ReportuserComponent,
