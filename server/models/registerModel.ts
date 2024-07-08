@@ -5,7 +5,6 @@ const registerSchema = new mongoose.Schema({
     lastname: String,
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    confirmpassword: { type: String, required: true },
     phone: String,
     role: { type: String, required: true, enum: ['user', 'admin', 'superadmin'], default: 'user' },
     resetPasswordToken: { type: String },

@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from 'app/services/shared.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth-layout.Service';
+import { loginservice } from 'app/layouts/login.services.';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -10,10 +13,13 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
   email: string = '';
   password: string = '';
+  role: any
 
   constructor(
     private sv : SharedService,
-    private router: Router
+    private router: Router,
+    private as : AuthService,
+    private lc : loginservice,
   ) { }
 
   ngOnInit(): void {
@@ -28,6 +34,47 @@ export class LoginComponent implements OnInit {
   //     alert('Invalid credentials');
   //   }
   // }
+
+  onLogin() {
+  
+    this.lc.login(this.email, this.password, this.role).subscribe(
+      response => {
+        console.log('Login successful', response);
+        Swal.fire({
+          title: 'เข้าสู่ระบบสำเร็จ!',
+          text: 'คุณได้เข้าสู่ระบบเรียบร้อยแล้ว',
+          icon: 'success',
+          confirmButtonText: 'ตกลง',
+          customClass: {
+            confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.querySelector('.swal2-confirm').setAttribute('style', 'background-color: #24a0ed; color: white;');
+
+            if (response.role === 'superadmin') {
+              this.router.navigate(['/reportuser']);
+            } else  {
+              this.router.navigate(['/dashboard']);
+            } 
+          }
+        });
+      },
+      error => {
+        console.error('Error logging in', error);
+        Swal.fire({
+          title: 'เกิดข้อผิดพลาด!',
+          text: 'ข้อมูลการเข้าสู่ระบบไม่ถูกต้อง',
+          icon: 'error',
+          confirmButtonText: 'ตกลง',
+          customClass: {
+            confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+          }
+        });
+      }
+    );
+  }
+  
 
   onSubmit() {
     this.router.navigate(['/table-list']);

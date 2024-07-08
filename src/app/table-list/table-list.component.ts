@@ -148,13 +148,13 @@ export class TableListComponent implements OnInit {
     this.loading = true; //เป็นการตรวจ
     this.dtOptions = {
       order:[0],
-      //ordering: false,
-      // columnDefs: [
-      //   {
-      //     // targets: [5],
-      //     // orderable: false
-      //   }
-      // ],
+          //ordering: false,
+          // columnDefs: [
+          //   {
+          //     // targets: [5],
+              // orderable: false
+          //   }
+          // ],
       pagingType: 'full_numbers',
       "language": {
         "lengthMenu": "แสดง _MENU_ รายการ",
@@ -685,8 +685,13 @@ get personal(): FormArray {
 
 //insert
   onInsertModal():void{
+  let nextId: Number;
 
-  const nextId = this.items.records.length + 1;
+  if (this.items.records && this.items.records.length >=0) {
+    nextId =this.items.records.length +1;
+  }else {
+    nextId = 1;
+  }
   const currentDate = moment().format('YYYY-MM-DD');
 
   this.addItemForm.patchValue({
@@ -791,7 +796,6 @@ get personal(): FormArray {
 
     }
     
-
   );
     
   // this.fetchData()

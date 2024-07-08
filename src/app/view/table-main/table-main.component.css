@@ -39,6 +39,28 @@
     font-family:  'Sarabun', sans-serif; 
    
   }
+  .checkIcon{
+    display: flex;
+    width: auto;
+    padding: 4px 8px;
+    color:#449d44; 
+    background-color: #dcffdc;
+    border: 1px solid #449d44;
+    border-radius: 32px;
+    align-items: center;
+
+  }
+  .cancleIcon{
+    display: flex;
+    width: auto;
+    padding: 4px 8px;
+    color:#db1900; 
+     background-color: #fff0ee;;
+    border: 1px solid #db1900 ;
+    border-radius: 32px;
+    align-items: center;
+
+  }
   /* .searchLocation:hover{
     background: #dddfff;
     z-index: 30;
@@ -643,6 +665,9 @@
     color: white;
   }
   
+  :host ::ng-deep .form-control{
+    background-image: linear-gradient(to top, #000000 2px, rgba(156, 39, 176, 0) 2px), linear-gradient(to top, #d2d2d2 1px, rgba(210, 210, 210, 0) 1px);
+  }
   @media print {
     #myDetail{
       border: none;

@@ -1,16 +1,21 @@
 import { Routes } from '@angular/router';
 
-import { DashboardComponent } from '../../dashboard/dashboard.component';
+// import { DashboardComponent } from '../../dashboard/dashboard.component';
 import { UserProfileComponent } from '../../user-profile/user-profile.component';
 import { TableListComponent } from '../../table-list/table-list.component';
 import { TypographyComponent } from '../../typography/typography.component';
 import { IconsComponent } from '../../icons/icons.component';
-import { MapsComponent } from '../../maps/maps.component';
+import { SignatureComponent } from '../../signature/signature.component';
 import { NotificationsComponent } from '../../notifications/notifications.component';
 import { UpgradeComponent } from '../../upgrade/upgrade.component';
 import { TableDetailComponent } from '../../view/table-detail/table-detail.component';
 import {TableMainComponent } from '../../view/table-main/table-main.component';
-// import { LoginComponent } from '../auth-layout/login/login.component';
+import { LoginComponent } from '../auth-layout/login/login.component';
+import { DashboardComponent } from 'app/view/dashboard/dashboard.component';
+import { ProfileComponent} from '../../view/profile/profile.component';
+import { ReportuserComponent } from '../../view/reportuser/reportuser.component';
+import { ReportprofileComponent } from '../../view/reportuser/reportprofile/reportprofile.component';
+
 export const AdminLayoutRoutes: Routes = [
     // {
     //   path: '',
@@ -56,14 +61,17 @@ export const AdminLayoutRoutes: Routes = [
     //     }]
     // }
     { path: 'dashboard',      component: DashboardComponent },
-    { path: 'user-profile',   component: UserProfileComponent },
+    { path: 'profile',   component: ProfileComponent },
     { path: 'table-list',     component: TableListComponent },
     { path: 'table-main',     component: TableMainComponent },
+    { path:'login',             component:LoginComponent },
+    { path: 'profilereport', component: ReportprofileComponent},
     // { path:'login',             component:LoginComponent },
     { path: 'table-detail/:id', component: TableDetailComponent },
     { path: 'typography',       component: TypographyComponent },
     { path: 'icons',            component: IconsComponent },
-    { path: 'maps',             component: MapsComponent },
+    { path: 'signature',             component: SignatureComponent },
     { path: 'notifications',    component: NotificationsComponent },
     { path: 'upgrade',          component: UpgradeComponent },
+    { path: 'reportuser',         component:ReportuserComponent}
 ];
