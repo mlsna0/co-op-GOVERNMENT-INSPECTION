@@ -24,6 +24,7 @@ import { SignatureComponent } from './signature/signature.component';
 
 
 
+
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -45,7 +46,8 @@ import { SignatureComponent } from './signature/signature.component';
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
-    SignatureComponent
+    SignatureComponent,
+    
   ],
   providers: [SharedService],
   bootstrap: [AppComponent],

@@ -48,4 +48,9 @@ export class loginservice {
   getUserReport(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/registerModel`);
   }
+
+  getUserReportProfile(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/registerModel/:id`);
+  }
+
 }

@@ -57,8 +57,8 @@ export class ReportuserComponent implements OnInit {
       }
     );
   }
-  openProfile(firstname: any,lastname:any) {
-  
+  getUserReportProfile(id:any) {
+    
     this.router.navigate(['/profilereport']);
   }
 }

@@ -6,6 +6,7 @@ declare interface RouteInfo {
     title: string;
     icon: string;
     class: string;
+    children?: RouteInfo[]; 
 }
 export const ROUTES: RouteInfo[] = [
 
@@ -13,7 +14,12 @@ export const ROUTES: RouteInfo[] = [
    { path: '/dashboard', title: 'หน้าหลัก',  icon: 'dashboard', class: '' },
     // { path: '/table-list', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '' },
     { path: '/table-main', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '' },
-    { path: '/reportuser', title: 'รายงานสมัครเข้าใช้งาน' , icon:'person', class:''},
+    { path: '/reportuser', title: 'รายงานสมัครเข้าใช้งาน' , icon:'person', class:'',
+      children: [
+        { path: '/reportuser/reportuser', title: 'Sub Report 1', icon: 'person', class: '' },
+        { path: '/reportuser/reportprofile', title: 'Sub Report 2', icon: 'person', class: '' }
+      ]
+    },
     // { path: '/user-profile', title: 'User Profile',  icon:'person', class: '' },
     // { path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' },
     // { path: '/typography', title: 'Typography',  icon:'library_books', class: '' },

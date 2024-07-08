@@ -73,5 +73,6 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'signature',             component: SignatureComponent },
     { path: 'notifications',    component: NotificationsComponent },
     { path: 'upgrade',          component: UpgradeComponent },
-    { path: 'reportuser',         component:ReportuserComponent}
+    { path: 'reportuser',         component:ReportuserComponent},
+    { path: 'reportprofile', component:ReportprofileComponent}
 ];
