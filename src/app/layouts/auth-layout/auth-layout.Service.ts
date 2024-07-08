@@ -1,7 +1,7 @@
 // auth.service.ts
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable,of } from 'rxjs';
 
 
 
@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
   private currentUserRole: string;
+  private currentUser: any;
   private users = [
     { email: 'superadmin@gmail.com', password: 's12345', role: 'superadmin' },
     { email: 'admin@gmail.com', password: 'admin123', role: 'admin' },
@@ -22,9 +23,11 @@ export class AuthService {
     const user = this.users.find(u => u.email === email && u.password === password);
     if (user) {
       this.currentUserRole = user.role;
-      this.router.navigate(['/table-list']);
+      this.currentUser =user;
+      return of(user)
     } else {
       alert('Invalid credentials');
+      return of(null);
     }
   }
 

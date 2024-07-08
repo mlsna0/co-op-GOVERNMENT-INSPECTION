@@ -5,6 +5,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
+import { DashboardComponent } from './view/dashboard/dashboard.component';
+import { ReportuserComponent } from './view/reportuser/reportuser.component';
 
 const routes: Routes =[
   {
@@ -28,8 +30,18 @@ const routes: Routes =[
       path: '',
       loadChildren: () => import('./layouts/admin-layout/admin-layout.module').then(m => m.AdminLayoutModule)
     }]
-  }
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+  },
+  {
+    path: 'reportuser',
+    component: ReportuserComponent,
+  },
 ];
+
+
 
 @NgModule({
   imports: [

@@ -89,7 +89,8 @@
                                     <tr>
                                         <th style="text-align: center; vertical-align: middle; width: 10%;">ครั้งที่
                                         </th>
-                                        <th style="text-align: center; vertical-align: middle; width: 600px;">เนื้อหาการตรวจสอบ</th>
+                                        <th style="text-align: center; vertical-align: middle; width: 600px;">
+                                            เนื้อหาการตรวจสอบ</th>
                                     </tr>
 
                                 </thead>
@@ -123,6 +124,9 @@
                                             *ngIf="isSignModalVisible[i]">
                                             <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error
                                                 someting with canvas</canvas>
+                                            <button class="btn-refreshCanvas" (click)="refreshCanvas(i)">
+                                                <i data-toggle="tooltip" title="ล้างหน้ากระดาษ" data-placement="top"
+                                                    class="fa fa-refresh"></i></button>
 
                                         </div>
 
@@ -227,7 +231,7 @@
                             </div>
 
                             <div *ngIf="last" class="sign-content">
-                        <!-- <button class="btn btn-success" (click)="openSignModalx(1)">test click page2</button> -->
+                                <!-- <button class="btn btn-success" (click)="openSignModalx(1)">test click page2</button> -->
 
                                 <div class="form-group" style="width: auto;">
                                     <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
@@ -240,11 +244,14 @@
 
                                             </div>
                                             <div class="Writte-sign" #writteSignElement id="SignModal-{{i}}"
-                                                *ngIf="isSignModalVisible[i]">                                                
-                                                <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error
-                                                    someting
-                                                    with
-                                                    canvas</canvas>
+                                                *ngIf="isSignModalVisible[i]">
+                                                <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">
+                                                    Errorsometing with canvas
+                                                </canvas>
+                                                <button (click)="refreshCanvas(i)" >
+                                                    <i data-toggle="tooltip" title="ล้างหน้ากระดาษ" data-placement="top"
+                                                        class="fa fa-refresh"></i>
+                                                </button>
 
                                             </div>
 

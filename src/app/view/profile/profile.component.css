@@ -7,18 +7,6 @@
 
 
 
-/* 2. Update .row to be centered */
-.row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-/* 3. Set .col-md-8 to occupy full height */
-.col-md-8 {
-  height: 100%;
-}
 
 /* 4. Add a border to .card and padding to .card-header */
 /* .card {
@@ -49,9 +37,9 @@
   font-size: 18px;
 }
 
-/* 7. Add padding to .card-body */
 .card-body {
-  padding: 20px;
+  padding: 50px 40px 20px 40px !important;
+
 }
 
 /* 8. Add bottom padding to .form-group */
@@ -71,11 +59,40 @@
   font-size: 18px;
   padding: 15px 30px;
 }
+i{
+  cursor: pointer;
+}
+/*userInfo*/
+.title{
+  padding: 10px;
+  border-bottom: 1px solid rgb(189, 186, 186);
+}
+.userInfo{
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #000000;
+}
+.userContect{
+  border-radius: 5px;
+  border: 1px solid #000000;
+}
+.user-content{
+  padding: 10px;
+  font-family: 'Sarabun',sans-serif;
+}
+
+
+
+
+
 :host ::ng-deep textarea{
   height: 100px;
 }
 ::placeholder{
   font-family: 'Sarabun',sans-serif;
+}
+:host ::ng-deep .form-control{
+  background-image: linear-gradient(to top, #000000 2px, rgba(156, 39, 176, 0) 2px), linear-gradient(to top, #d2d2d2 1px, rgba(210, 210, 210, 0) 1px);
 }
 :host ::ng-deep .btn-add{
   color: #fff;

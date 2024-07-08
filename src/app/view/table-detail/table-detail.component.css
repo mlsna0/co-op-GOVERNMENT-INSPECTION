@@ -246,6 +246,10 @@ background-color: rgb(255, 254, 254); /* Semi-transparent background */
 z-index: 1000; /* Higher than other content */
 
 }
+.Writte-sign button{
+  border: none;
+  background: none;
+}
 
 
 
@@ -782,6 +786,9 @@ input{
 @media print {
   #myDetail{
     border: none;
+  }
+  .btn-refreshCanvas{
+    display: none !important;
   }
   .main-detail {
     width: 100%;

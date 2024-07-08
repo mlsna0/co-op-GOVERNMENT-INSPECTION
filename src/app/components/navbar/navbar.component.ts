@@ -19,6 +19,9 @@ export class NavbarComponent implements OnInit {
   private toggleButton: any;
   private sidebarVisible: boolean;
 
+  ////////////////////////////////
+  dropdownOpen = false;
+
   constructor(
     location: Location,
     private element: ElementRef,
@@ -132,7 +135,16 @@ export class NavbarComponent implements OnInit {
     return "Dashboard";
   }
 
-  openprofile() {
+  ////////////////////////////////////////////////////////////////
+
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+  openProfile() {
     this.router.navigate(["/profile"]);
+  }
+  openLogin(){
+    this.router.navigate(["/login"]);
+
   }
 }

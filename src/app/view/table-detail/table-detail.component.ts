@@ -42,7 +42,7 @@ export class TableDetailComponent implements OnInit {
 
 
   recordId: any;
-  viewData = [];
+  viewData:any[] = [];
   remainingContent: string = '';//content ที่ตัดออกจะเก็บที่นี้?
   otherRemainingContent: string = '';//content ที่ตัดออกจะเก็บที่นี้? ระดับ 3
   isContentOverflow = false; //
@@ -65,7 +65,7 @@ export class TableDetailComponent implements OnInit {
   isFileImage = false;
   isFileDocument = false;
 
-  isSignModalVisible: boolean[] = [false];
+  isSignModalVisible: boolean[] = [];
   private canvas2: HTMLCanvasElement;
   private ctx2: CanvasRenderingContext2D;
   penColor2: string = 'black';
@@ -126,12 +126,37 @@ export class TableDetailComponent implements OnInit {
 
       console.log("it on working.. ")
 
-
+  
+      this.isSignModalVisible = new Array(this.viewData.length).fill(false);
+    
+      setTimeout(() => {
+        this.cdr.detectChanges(); // ทำการตรวจสอบการเปลี่ยนแปลง
+    }, 0);
     });
+
   }
 
   ngAfterViewInit() {
+
+   // Subscribe และดึงข้อมูลจาก API หรือแหล่งอื่น ๆ
+   this.sv.getViewByRecordId(this.recordId).subscribe((res: any) => {
+    console.log("getViewByRecordId response:", res);
+
+    this.viewData = res; // กำหนดค่า viewData จากข้อมูลที่ได้รับ
+
+    // รอให้ Angular สร้าง elements และ QueryList ให้เรียบร้อย
+    setTimeout(() => {
+      // กำหนดความยาวของ writteSignElements เท่ากับความยาวของ viewData
  
+      this.writteSignElements = new QueryList<ElementRef>(...this.viewData.map(() => null));
+
+      // อัพเดท UI หลังจากที่กำหนดค่า
+      this.cdr.detectChanges();
+
+      // ต่อไปคุณสามารถดำเนินการเพิ่มอย่างอื่นต่อได้ที่นี่
+    });
+  });
+
     //this.checkContentOverflow();
 
     this.checkContentOverflow();
@@ -200,6 +225,11 @@ export class TableDetailComponent implements OnInit {
       console.error('Sign canvas element not found', this.canvas2);
     }
   }
+  refreshCanvas() {
+    if (this.ctx2) {
+      this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
+    }
+  }
   // setupSignCanvas(index: number) {
   //   this.canvas2 = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
   //   if (this.canvas2) {
@@ -265,19 +295,16 @@ export class TableDetailComponent implements OnInit {
     
     console.log("it openSign status: ", this.isSignModalVisible);
     this.cdr.detectChanges();
+
     setTimeout(() => {
       const elementsArray = this.writteSignElements.toArray();
       const writteSignElement = elementsArray.find((_, i) => i === index)?.nativeElement as HTMLElement;
 
-
-      // if (index >= elementsArray.length) {
-      //   console.error('Index is out of bounds for elementsArray', index);
-      //   return;
-      // }
       // const writteSignElement = elementsArray[index]?.nativeElement as HTMLElement;
       console.log("writteSignElement :",this.writteSignElements);
       
       if (writteSignElement) {
+        this.cdr.detectChanges();
         writteSignElement.style.display = 'flex';
         this.setupSignCanvas(index);
         console.log("Setup activated for canvas index: ", index);
@@ -444,71 +471,48 @@ onDragEnd(event: DragEvent, index: number): void {
     }
   }
 
-//move element
-// @HostListener('mousedown', ['$event'])
-// onMouseDown(event: MouseEvent): void {
-//   this.isDragging = true;
-//   const rect = this.el.nativeElement.getBoundingClientRect();
-//   this.offsetX = event.clientX - rect.left;
-//   this.offsetY = event.clientY - rect.top;
-//   event.preventDefault();
-// }
+  //move element 2 ถ้าเปิดมาจะไม่สามารถ ใช้ openSignModal ไม่ได้
+  // @HostListener('mousedown', ['$event'])
+  // onMouseDown(event: MouseEvent, index: number): void {
+  //   event.preventDefault();
+  //   const box = this.boxes[index];
+  //   if (!box) {
+  //     console.error('Box not found at index mouse:', index);
+  //     return;
+  //   }
+  //   console.log('Box before drag:', box);
 
-// @HostListener('document:mouseup')
-// onMouseUp(): void {
-//   this.isDragging = false;
-// }
+  //   box.dragStartX = event.clientX - box.left;
+  //   box.dragStartY = event.clientY - box.top;
 
-// @HostListener('document:mousemove', ['$event'])
-// onMouseMove(event: MouseEvent): void {
-//   if (this.isDragging) {
-//     const x = event.clientX - this.offsetX;
-//     const y = event.clientY - this.offsetY;
-//     this.renderer.setStyle(this.el.nativeElement, 'transform', `translate(${x}px, ${y}px)`);
-//   }
-// }
-  //move element
-  @HostListener('mousedown', ['$event'])
-  onMouseDown(event: MouseEvent, index: number): void {
-    event.preventDefault();
-    const box = this.boxes[index];
-    if (!box) {
-      console.error('Box not found at index mouse:', index);
-      return;
-    }
-    console.log('Box before drag:', box);
+  //   const onMouseMove = (moveEvent: MouseEvent) => {
+  //     box.left = moveEvent.clientX - box.dragStartX;
+  //     box.top = moveEvent.clientY - box.dragStartY;
+  //   };
 
-    box.dragStartX = event.clientX - box.left;
-    box.dragStartY = event.clientY - box.top;
+  //   const onMouseUp = () => {
+  //     document.removeEventListener('mousemove', onMouseMove);
+  //     document.removeEventListener('mouseup', onMouseUp);
+  //     console.log('Box after drag:', box);
+  //   };
 
-    const onMouseMove = (moveEvent: MouseEvent) => {
-      box.left = moveEvent.clientX - box.dragStartX;
-      box.top = moveEvent.clientY - box.dragStartY;
-    };
+  //   document.addEventListener('mousemove', onMouseMove);
+  //   document.addEventListener('mouseup', onMouseUp);
+  // }
 
-    const onMouseUp = () => {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-      console.log('Box after drag:', box);
-    };
+  // @HostListener('document:mouseup')
+  // onMouseUp(): void {
+  //   this.isDragging = false;
+  // }
 
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  }
-
-  @HostListener('document:mouseup')
-  onMouseUp(): void {
-    this.isDragging = false;
-  }
-
-  @HostListener('document:mousemove', ['$event'])
-  onMouseMove(event: MouseEvent): void {
-    if (this.isDragging) {
-      const x = event.clientX - this.offsetX;
-      const y = event.clientY - this.offsetY;
-      this.renderer.setStyle(this.el.nativeElement, 'transform', `translate(${x}px, ${y}px)`);
-    }
-  }
+  // @HostListener('document:mousemove', ['$event'])
+  // onMouseMove(event: MouseEvent): void {
+  //   if (this.isDragging) {
+  //     const x = event.clientX - this.offsetX;
+  //     const y = event.clientY - this.offsetY;
+  //     this.renderer.setStyle(this.el.nativeElement, 'transform', `translate(${x}px, ${y}px)`);
+  //   }
+  // }
 
   //ิback to table-list
   BackRoot() {
@@ -594,6 +598,10 @@ onDragEnd(event: DragEvent, index: number): void {
       return;
     }
 
+    const refreshButton = document.querySelector('.btn-refreshCanvas') as HTMLElement;
+    if (refreshButton) {
+        refreshButton.style.display = 'none';
+    }
     elements.forEach((element, index) => {
       const style = getComputedStyle(element as HTMLElement);
       if (style.display === 'none') {
@@ -672,7 +680,10 @@ onDragEnd(event: DragEvent, index: number): void {
     }).catch((error) => {
       console.error('Error generating PDF:', error);
     });
-
+    const refreshButton = document.querySelector('.btn-refreshCanvas') as HTMLElement;
+    if (refreshButton) {
+        refreshButton.style.display = 'none';
+    }
     elements.forEach((element, index) => {
       const htmlElement = element as HTMLElement; // Cast Element to HTMLElement
       htmlElement.style.border = 'none';
@@ -727,7 +738,7 @@ onDragEnd(event: DragEvent, index: number): void {
         this.sv.savePDF(formData).subscribe(
           response => {
             console.log('PDF saved successfully:', response);
-            this.router.navigate(['/table-list']);
+            this.router.navigate(['/table-main']);
           },
           error => {
             console.error('Error saving PDF:', error);
