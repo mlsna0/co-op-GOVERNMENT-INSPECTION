@@ -40,6 +40,10 @@ export class LoginComponent implements OnInit {
     this.lc.login(this.email, this.password, this.role).subscribe(
       response => {
         console.log('Login successful', response);
+
+        if (response.token) {
+          localStorage.setItem('token', response.token);
+        } 
         Swal.fire({
           title: 'เข้าสู่ระบบสำเร็จ!',
           text: 'คุณได้เข้าสู่ระบบเรียบร้อยแล้ว',
@@ -77,7 +81,7 @@ export class LoginComponent implements OnInit {
   
 
   onSubmit() {
-    this.router.navigate(['/table-list']);
+    this.router.navigate(['/table-main']);
   }
 
   openFogetPassword() {

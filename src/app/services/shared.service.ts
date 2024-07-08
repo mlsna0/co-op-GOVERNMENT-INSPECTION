@@ -129,6 +129,11 @@ export class SharedService {
   // getItems(): Observable<any[]> {
   //   return this.http.get<any[]>(`${this.baseUrl}/items`);
   // }
-
+  getUserReport(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/registerModel`);
+  }
+  updateUserProfile(updatedData:any):Observable<any>{
+    return this.http.put(`${this.baseUrl}/registerModel`, updatedData);
+  }
 
 }
