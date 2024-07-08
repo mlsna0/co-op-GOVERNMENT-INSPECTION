@@ -1,40 +1,55 @@
 <div class="register-card">
-    <h2>สมัครสมาชิก</h2>
-    <form [formGroup]="regisForm" (ngSubmit)="onSubmit(regisForm.va)">
-      <div class="form-group">
-        <label for="firstname" style="font-size: 16px;">ชื่อ</label>
-        <input type="text" id="firstname" [(ngModel)]="firstname" name="firstname" required placeholder="กรอกชื่อของคุณ"  
+  <h2>สมัครสมาชิก</h2>
+  <form [formGroup]="regisForm" (ngSubmit)="onSubmit(regisForm.data)">
+    <div class="form-group">
+      <label for="firstname" style="font-size: 16px;">ชื่อ</label>
+      <input type="text" id="firstname" [(ngModel)]="firstname" name="firstname" required placeholder="กรอกชื่อของคุณ"
         style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+        <div *ngIf="regisForm.controls.firstname.errors?.mustMatch">
+        <small class="error-text">กรุณากรอกชื่อของคุณ</small>
       </div>
-      <div class="form-group">
-        <label for="lastname" style="font-size: 16px;">นามสกุล</label>
-        <input type="text" id="lastname" [(ngModel)]="lastname" name="lastname" required placeholder="กรอกนามสกุลของคุณ"  
-        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
-      </div>
-      <div class="form-group">
-        <label for="email" style="font-size: 16px;">อีเมล</label>
-        <input type="email" id="email" [(ngModel)]="email" name="email" required placeholder="กรอกอีเมลของคุณ"  
-        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
-      </div>
-      <div class="form-group">
-        <label for="password" style="font-size: 16px;">รหัสผ่าน</label>
-        <input type="password" id="password" [(ngModel)]="password" name="password" required placeholder="กรอกรหัสผ่านของคุณ"  
-        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
-      </div>
-      <div class="form-group">
-        <label for="confirmpassword" style="font-size: 16px;">ยืนยัน รหัสผ่าน</label>
-        <input type="password" id="confirmpassword" [(ngModel)]="confirmpassword" name="confirmpassword" required placeholder="กรอกรหัสผ่านของคุณ"  
-        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
-      </div>
-      <div class="form-group">
-        <label for="phone" style="font-size: 16px;">เบอร์โทรศัพท์</label>
-        <input type="tel" id="phone" [(ngModel)]="phone" name="phone" required placeholder="กรอกเบอร์โทรศัทพ์ของคุณ"  
-        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
-      </div>
-      <button type="submit" class="btn-create-account">สร้างบัญชี</button>
-    </form>
-    <div class="footer-links" >
-        <a style="font-size: 14px; color: #24a0ed;"> มีบัญชีอยู่เเล้ว? </a> &nbsp; <a routerLink="/login" class="login-link" style="font-size: 14px;">เข้าสู่ระบบ</a>
     </div>
+    <div class="form-group">
+      <label for="lastname" style="font-size: 16px;">นามสกุล</label>
+      <input type="text" id="lastname" [(ngModel)]="lastname" name="lastname" required placeholder="กรอกนามสกุลของคุณ"
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+        <div *ngIf="regisForm.controls.lastname.errors?.mustMatch">
+          <small class="error-text">กรุณากรอกนามสกุลของคุณ</small>
+        </div>
+    </div>
+    <div class="form-group">
+      <label for="email" style="font-size: 16px;">อีเมล</label>
+      <input type="email" id="email" [(ngModel)]="email" name="email" required placeholder="กรอกอีเมลของคุณ"
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+        <div *ngIf="regisForm.controls.email.errors?.mustMatch">
+          <small class="error-text">กรุณากรอกอีเมลของคุณ</small>
+        </div>
+    </div>
+    <div class="form-group">
+      <label for="password" style="font-size: 16px;">รหัสผ่าน</label>
+      <input type="password" id="password" [(ngModel)]="password" name="password" required
+        placeholder="กรอกรหัสผ่านของคุณ" style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      <div *ngIf="regisForm.controls.password.errors?.minlength">
+        <small class="error-text">รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร</small>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="confirmpassword" style="font-size: 16px;">ยืนยัน รหัสผ่าน</label>
+      <input type="password" id="confirmpassword" [(ngModel)]="confirmpassword" name="confirmpassword" required
+        placeholder="กรอกรหัสผ่านของคุณ" style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      <div *ngIf="regisForm.controls.confirmpassword.errors?.mustMatch">
+        <small class="error-text">รหัสผ่านไม่ตรงกัน</small>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="phone" style="font-size: 16px;">เบอร์โทรศัพท์</label>
+      <input type="tel" id="phone" [(ngModel)]="phone" name="phone" required placeholder="กรอกเบอร์โทรศัทพ์ของคุณ"
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+    </div>
+    <button type="submit" class="btn-create-account">สร้างบัญชี</button>
+  </form>
+  <div class="footer-links">
+    <a style="font-size: 14px; color: #24a0ed;"> มีบัญชีอยู่เเล้ว? </a> &nbsp; <a routerLink="/login" class="login-link"
+      style="font-size: 14px;">เข้าสู่ระบบ</a>
   </div>
-  
+</div>

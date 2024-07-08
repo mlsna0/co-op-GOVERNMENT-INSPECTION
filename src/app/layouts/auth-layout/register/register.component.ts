@@ -28,47 +28,25 @@ export class RegisterComponent implements OnInit {
       firstname: ["", Validators.required],
       lastname: ["", Validators.required],
       email: ["", [Validators.required, Validators.email]],
-      password: ["", Validators.required],
-      confirmpassword: ["", Validators.required],
+      password: ["",[Validators.required, Validators.minLength(8)]],
+      confirmpassword: ["", [Validators.required, Validators.minLength(8)]],
       phone: ["", Validators.required],
-    });
-  }
+    }, { validator: this.passwordMatchValidator });
+  }  
 
   ngOnInit(): void {}
 
-  //   onSubmit(data) {
-  //     if (this.regisForm.invalid) {
-  //       return;
-  //     }
 
-  //     // if (this.regisForm.value.password !== this.regisForm.value.confirmPassword) {
-  //     //   alert('Passwords do not match');
-  //     //   return;
-  //     // }
-
-  //     const newUser = {
-  //       firstName: this.regisForm.value.firstname,
-  //       lastName: this.regisForm.value.lastname,
-  //       email: this.regisForm.value.email,
-  //       password: this.regisForm.value.password,
-  //       confirmpassword: this.regisForm.value.confirmpassword,
-  //       phone: this.regisForm.value.phone,
-  //       role: 'user'
-  //     };
-
-  //     this.lc.register(newUser).subscribe(
-  //       response => {
-  //         console.log('User registered successfully', response);
-  //         this.router.navigate(['/login']);
-  //       },
-  //       error => {
-  //         console.error('Error registering user', error);
-  //       }
-  //     );
-  //   }
-  // }
   onSubmit(data) {
     if (this.regisForm.invalid) {
+      if (this.regisForm.controls.password.errors?.minlength || this.regisForm.controls.confirmpassword.errors?.minlength) {
+        Swal.fire({
+          title: "รหัสผ่านไม่ครบ!",
+          text: "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร",
+          icon: "error",
+          confirmButtonText: "ตกลง",
+        });
+      }
       return;
     }
 
@@ -134,5 +112,15 @@ export class RegisterComponent implements OnInit {
         });
       }
     );
+  }
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password');
+    const confirmPassword = form.get('confirmpassword');
+
+    if (password?.value !== confirmPassword?.value) {
+      confirmPassword?.setErrors({ mustMatch: true });
+    } else {
+      confirmPassword?.setErrors(null);
+    }
   }
 }

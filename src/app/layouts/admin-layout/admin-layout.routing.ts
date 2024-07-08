@@ -76,4 +76,5 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'upgrade',          component: UpgradeComponent },
     { path: 'reportuser',         component:ReportuserComponent},
     { path: 'map',             component:MapComponent},
+    { path: 'reportprofile', component:ReportprofileComponent}
 ];
