@@ -64,7 +64,7 @@ import { ReportprofileComponent } from '../../view/reportuser/reportprofile/repo
     TableMainComponent,
     ThaicountyComponent,
     ProfileComponent,
-    MapComponent
+    MapComponent,
     // SignatureComponent,
   
     ReportuserComponent,
