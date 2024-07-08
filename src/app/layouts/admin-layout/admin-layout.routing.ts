@@ -6,13 +6,14 @@ import { TableListComponent } from '../../table-list/table-list.component';
 import { TypographyComponent } from '../../typography/typography.component';
 import { IconsComponent } from '../../icons/icons.component';
 import { SignatureComponent } from '../../signature/signature.component';
-import { NotificationsComponent } from '../../notifications/notifications.component';
+import { EmployeeComponent } from '../../employee/employee.component';
 import { UpgradeComponent } from '../../upgrade/upgrade.component';
 import { TableDetailComponent } from '../../view/table-detail/table-detail.component';
 import {TableMainComponent } from '../../view/table-main/table-main.component';
 import { LoginComponent } from '../auth-layout/login/login.component';
 import { DashboardComponent } from 'app/view/dashboard/dashboard.component';
 import { ProfileComponent} from '../../view/profile/profile.component';
+import { MapComponent } from '../../view/map/map.component';
 export const AdminLayoutRoutes: Routes = [
     // {
     //   path: '',
@@ -66,6 +67,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'typography',       component: TypographyComponent },
     { path: 'icons',            component: IconsComponent },
     { path: 'signature',             component: SignatureComponent },
-    { path: 'notifications',    component: NotificationsComponent },
+    { path: 'employee',    component: EmployeeComponent },
     { path: 'upgrade',          component: UpgradeComponent },
+    { path: 'map',             component:MapComponent},
 ];

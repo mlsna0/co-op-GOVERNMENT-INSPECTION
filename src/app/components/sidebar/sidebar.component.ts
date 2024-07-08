@@ -13,13 +13,13 @@ export const ROUTES: RouteInfo[] = [
    { path: '/dashboard', title: 'หน้าหลัก',  icon: 'dashboard', class: '' },
     // { path: '/table-list', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '' },
     { path: '/table-main', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '' },
-    
+    { path: '/map', title: 'แผนที่ประเทศไทย', icon: 'map', class:''},
     // { path: '/user-profile', title: 'User Profile',  icon:'person', class: '' },
     // { path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' },
     // { path: '/typography', title: 'Typography',  icon:'library_books', class: '' },
     // { path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' },
     { path: '/signature', title: 'Signature',  icon:'content_paste', class: '' },
-    // { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
+    { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
     // { path: '/upgrade', title: 'Upgrade to PRO',  icon:'unarchive', class: 'active-pro' },
 ];
 
