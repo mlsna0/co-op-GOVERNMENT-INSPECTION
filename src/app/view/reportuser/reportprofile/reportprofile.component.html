@@ -1,83 +1,79 @@
 <div class="main-content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header card-header-danger">
-                        <h4 class="card-title">Edit Profile</h4>
-                    </div>
-                    <div class="card-body">
-                        <form *ngFor="let users of user ;">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <mat-form-field class="example-full-width">
-                                      <input matInput placeholder="Email address" type="email">
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                  <mat-form-field class="example-full-width">
-                                    <input matInput placeholder="Fist Name" type="text">
-                                  </mat-form-field>
-                                </div>
-                                <div class="col-md-6">
-                                  <mat-form-field class="example-full-width">
-                                    <input matInput placeholder="Last Name" type="text">
-                                  </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                  <mat-form-field class="example-full-width">
-                                    <input matInput placeholder="Adress" type="text">
-                                  </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                  <mat-form-field class="example-full-width">
-                                    <input matInput placeholder="City" type="text">
-                                  </mat-form-field>
-                                </div>
-                                <div class="col-md-4">
-                                  <mat-form-field class="example-full-width">
-                                    <input matInput placeholder="Country" type="text">
-                                  </mat-form-field>
-                                </div>
-                                <div class="col-md-4">
-                                  <mat-form-field class="example-full-width">
-                                    <input matInput placeholder="Postal Code" type="text">
-                                  </mat-form-field>
-                                </div>
-                            </div>
-                            
-                            <!-- update profile button -->
-                            <!-- <button mat-raised-button type="submit" class="btn btn-danger pull-right">Update Profile</button> -->
+  <div class="container-fluid">
 
-                            <div class="clearfix"></div>
-                        </form>
+    <div class="row">
+      <div class="col-sm-11">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">การจัดการผู้ใช้งาน</h4>
+          </div>
+
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-8">
+                <div class="userInfo">
+                  <div class="title"> ข้อมูลผู้ใช้</div>
+                  <div class="user-content" >
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <mat-form-field>
+                          <input matInput placeholder="ชื่อ" type="text">
+                         
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-6">
+                        <mat-form-field>
+                          <input matInput placeholder="นามสกุล" type="text">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-6">
+                        <mat-form-field>
+                          <input matInput placeholder="ที่อยู่" type="text">
+                        </mat-form-field>
+                      </div>
                     </div>
+                  </div>
                 </div>
+                <div class="userContect">
+                  <div class="title"> ข้อมูลติดต่อ</div>
+                  <div class="user-content">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <mat-form-field class="example-full-width">
+                          <input matInput placeholder="อีเมล" type="email">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-12">
+                        <mat-form-field class="example-full-width">
+                          <input matInput placeholder="เบอร์โทร" type="text">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+              </div>
+              <div class="col-sm-4">
+                <div class="card-profile">
+                  <div class="card-avatar">
+                    <a href="javascript:void(0)">
+                      <img class="img" src="./assets/img/faces/marc.jpg" />
+                    </a>
+                  </div>
+
+                </div>
+
+              </div>
             </div>
 
-            <!-- profile pic --!>
 
-            <!-- <div class="col-md-4">
-                <div class="card card-profile">
-                    <div class="card-avatar">
-                        <a href="javascript:void(0)">
-                            <img class="img" src="./assets/img/faces/marc.jpg" />
-                        </a>
-                    </div>
-                    <div class="card-body">
-                        <h6 class="card-category text-gray">CEO / Co-Founder</h6>
-                        <h4 class="card-title">Alec Thompson</h4>
-                      
-                    </div>
-                </div>
-            </div> -->
+          </div>
         </div>
+
+      </div>
     </div>
+
   </div>
-  
+</div>

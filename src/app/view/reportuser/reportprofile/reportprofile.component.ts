@@ -12,14 +12,14 @@ export class ReportprofileComponent implements OnInit {
   user: any[] = [];
   loading: boolean = true;
   error: string = '';
-
+  users :any[] = [];
   constructor(
     private ls :loginservice,
     private router: Router,
   ) { }
 
   ngOnInit(): void {
-    this.ls.getUserReport().subscribe(
+    this.ls.getUserReportProfile().subscribe(
       data => {
         if (data && data.length > 0) {
           this.user = data[0]; // Assuming data is an array, set the first user as the current user

@@ -25,6 +25,7 @@ import { HistoryComponent } from './view/history/history.component';
 
 
 
+
 @NgModule({
   imports: [
     BrowserAnimationsModule,

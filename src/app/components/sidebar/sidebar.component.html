@@ -21,7 +21,7 @@
         </div>
       </span>
     </form>
-
+    
     <ul class="nav navbar-nav nav-mobile-menu">
 
       <!-- <li class="nav-item">
@@ -61,7 +61,31 @@
         </a>
       </li> -->
     </ul>
+  
+    
   </div>
+
+
+  <!-- <ul class="nav">
+    <li routerLinkActive="active" *ngFor="let menuItem of menuItems"
+        class="{{menuItem.class}} nav-item" [class.dropdown]="menuItem.children && menuItem.children.length">
+      <a class="nav-link" [routerLink]="[menuItem.path]" *ngIf="!menuItem.children">
+        <i class="material-icons">{{menuItem.icon}}</i>
+        <p>{{menuItem.title}}</p>
+      </a>
+      <a href="javascript:void(0)" class="nav-link" *ngIf="menuItem.children" data-toggle="dropdown">
+        <i class="material-icons">{{menuItem.icon}}</i>
+        <p>{{menuItem.title}}</p>
+      </a>
+      <div class="dropdown-menu" *ngIf="menuItem.children">
+        <a class="dropdown-item" *ngFor="let child of menuItem.children" [routerLink]="[child.path]">
+          <i class="material-icons">{{child.icon}}</i>
+          <p>{{child.title}}</p>
+        </a>
+      </div>
+    </li>
+  </ul> -->
+
   <ul class="nav">
   <li routerLinkActive="active" *ngFor="let menuItem of menuItems"
     class="{{menuItem.class}} nav-item">
