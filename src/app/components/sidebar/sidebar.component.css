@@ -2,3 +2,120 @@
     width: 200px;
     height: auto;
   }
+
+  /* Existing styles for reference */
+.sidebar-wrapper {
+  padding: 15px 0px;
+}
+
+.nav {
+  margin-bottom: 20px;
+}
+
+.nav li a {
+  margin: 10px 15px;
+  border-radius: 3px;
+  color: #3C4858;
+  padding: 10px 15px;
+  width: calc(100% - 30px);
+  display: flex;
+  align-items: center;
+}
+
+.nav li a:hover, .nav li a:focus {
+  background-color: #eee;
+  color: #3C4858;
+}
+
+.nav li.active a {
+  background-color: rgb(255, 209, 0); /* Highlight color */
+  color: white;
+  box-shadow: 0 12px 20px -10px rgba(255, 255, 255, 0.28), 0 4px 20px 0 rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(255, 235, 59, 0.2);
+}
+
+.nav li.active a i, .nav li.active a p {
+  color: white;
+}
+
+.submenu, .subsubmenu {
+  margin-left: 15px;
+}
+
+.submenu.open, .subsubmenu.open {
+  display: block;
+}
+
+.submenu a, .subsubmenu a {
+  width: calc(100% - 45px); /* Adjust for nested items */
+  padding: 10px 15px;
+  margin: 5px 15px;
+}
+
+.submenu a:hover, .subsubmenu a:hover, .submenu a:focus, .subsubmenu a:focus {
+  background-color: #eee;
+}
+
+.submenu a.active, .subsubmenu a.active {
+  background-color:rgb(255, 209, 0); /* Highlight color */
+  color: white;
+}
+
+.sidebar-wrapper {
+  padding: 15px 0px;
+}
+
+.nav {
+  margin-bottom: 20px;
+}
+
+.nav li a {
+  margin: 10px 15px;
+  border-radius: 3px;
+  color: #3C4858;
+  padding: 10px 15px;
+  width: calc(100% - 30px);
+  display: flex;
+  align-items: center;
+}
+
+.nav li a:hover, .nav li a:focus {
+  background-color: #eee;
+  color: #3C4858;
+}
+
+.nav li.active a {
+  background-color: rgb(255, 209, 0); /* Highlight color */
+  color: white;
+  box-shadow: 0 12px 20px -10px rgba(255, 255, 255, 0.28), 0 4px 20px 0 rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(255, 235, 59, 0.2);
+}
+
+.nav li.active a i, .nav li.active a p {
+  color: white;
+}
+
+.submenu {
+  margin-left: 15px;
+}
+
+.submenu.open {
+  display: block;
+}
+
+.submenu a {
+  width: calc(100% - 45px); /* Adjust for nested items */
+  padding: 10px 15px;
+  margin: 5px 15px;
+}
+
+.submenu a:hover, .submenu a:focus {
+  background-color: #eee;
+}
+
+.submenu a.active {
+  background-color: rgb(255, 209, 0); /* Highlight color */
+  color: white;
+}
+
+.toggle-icon {
+  margin-left: auto;
+}

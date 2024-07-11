@@ -1,4 +1,4 @@
-<div class="register-card">
+<!-- <div class="register-card">
   <h2>สมัครสมาชิก</h2>
   <form [formGroup]="regisForm" (ngSubmit)="onSubmit(regisForm.data)">
     <div class="form-group">
@@ -50,6 +50,66 @@
     <div class="form-group">
       <label for="phone" style="font-size: 16px;">เบอร์โทรศัพท์</label>
       <input type="tel" id="phone" [(ngModel)]="phone" name="phone" required placeholder="กรอกเบอร์โทรศัทพ์ของคุณ">
+    </div>
+    <button type="submit" class="btn-create-account">สร้างบัญชี</button>
+  </form>
+  <div class="footer-links">
+    <a style="font-size: 14px; color: #24a0ed;"> มีบัญชีอยู่เเล้ว? </a> &nbsp; <a routerLink="/login" class="login-link"
+      style="font-size: 14px;">เข้าสู่ระบบ</a>
+  </div>
+</div> -->
+
+
+<div class="register-card">
+  <h2>สมัครสมาชิก</h2>
+  <form [formGroup]="regisForm" (ngSubmit)="onSubmit(regisForm.data)">
+    <div class="form-group">
+      <label for="firstname" style="font-size: 16px;">ชื่อ</label>
+      <input type="text" id="firstname" formControlName="firstname" required placeholder="กรอกชื่อของคุณ"
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      <div *ngIf="regisForm.controls.firstname.invalid && (regisForm.controls.firstname.touched || regisForm.controls.firstname.dirty)">
+        <small class="error-text">กรุณากรอกชื่อของคุณ</small>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="lastname" style="font-size: 16px;">นามสกุล</label>
+      <input type="text" id="lastname" formControlName="lastname" required placeholder="กรอกนามสกุลของคุณ"
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      <div *ngIf="regisForm.controls.lastname.invalid && (regisForm.controls.lastname.touched || regisForm.controls.lastname.dirty)">
+        <small class="error-text">กรุณากรอกนามสกุลของคุณ</small>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="email" style="font-size: 16px;">อีเมล</label>
+      <input type="email" id="email" formControlName="email" required placeholder="กรอกอีเมลของคุณ"
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      <div *ngIf="regisForm.controls.email.invalid && (regisForm.controls.email.touched || regisForm.controls.email.dirty)">
+        <small class="error-text">กรุณากรอกอีเมลของคุณ</small>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="password" style="font-size: 16px;">รหัสผ่าน</label>
+      <input type="password" id="password" formControlName="password" required placeholder="กรอกรหัสผ่านของคุณ"
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      <div *ngIf="regisForm.controls.password.invalid && (regisForm.controls.password.touched || regisForm.controls.password.dirty)">
+        <small class="error-text">รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร</small>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="confirmpassword" style="font-size: 16px;">ยืนยัน รหัสผ่าน</label>
+      <input type="password" id="confirmpassword" formControlName="confirmpassword" required placeholder="กรอกรหัสผ่านของคุณ"
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      <div *ngIf="regisForm.controls.confirmpassword.invalid && (regisForm.controls.confirmpassword.touched || regisForm.controls.confirmpassword.dirty)">
+        <small class="error-text">รหัสผ่านไม่ตรงกัน</small>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="phone" style="font-size: 16px;">เบอร์โทรศัพท์</label>
+      <input type="tel" id="phone" formControlName="phone" required placeholder="กรอกเบอร์โทรศัทพ์ของคุณ"
+        style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+      <div *ngIf="regisForm.controls.phone.invalid && (regisForm.controls.phone.touched || regisForm.controls.phone.dirty)">
+        <small class="error-text">กรุณากรอกเบอร์โทรศัทพ์ของคุณ</small>
+      </div>
     </div>
     <button type="submit" class="btn-create-account">สร้างบัญชี</button>
   </form>

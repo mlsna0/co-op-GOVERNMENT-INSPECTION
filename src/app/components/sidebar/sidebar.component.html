@@ -87,12 +87,24 @@
   </ul> -->
 
   <ul class="nav">
-  <li routerLinkActive="active" *ngFor="let menuItem of menuItems"
-    class="{{menuItem.class}} nav-item">
-    <a class="nav-link" [routerLink]="[menuItem.path]">
-      <i class="material-icons">{{menuItem.icon}}</i>
-      <p>{{menuItem.title}}</p>
-    </a>
-  </li>
+    <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class="nav-item">
+      <a class="nav-link" [routerLink]="[menuItem.path]" *ngIf="!menuItem.children">
+        <i class="material-icons">{{menuItem.icon}}</i>
+        <p>{{menuItem.title}}</p>
+      </a>
+      <a href="javascript:void(0)" class="nav-link" *ngIf="menuItem.children" (click)="toggleMenu(menuItem)">
+        <i class="material-icons">{{menuItem.icon}}</i>
+        <p>{{menuItem.title}}</p>
+        <i class="material-icons toggle-icon">{{ menuItem.open ? 'expand_less' : 'expand_more' }}</i>
+      </a>
+      <div class="submenu" *ngIf="menuItem.children && menuItem.open">
+        <ng-container *ngFor="let child of menuItem.children">
+          <a class="dropdown-item" [routerLink]="[child.path]" *ngIf="!child.children" [ngClass]="{ 'active': isActive(child.path) }">
+            <i class="material-icons">{{child.icon}}</i>
+            <p>{{child.title}}</p>
+          </a>
+        </ng-container>
+      </div>
+    </li>
   </ul>
 </div>

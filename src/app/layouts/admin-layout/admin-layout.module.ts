@@ -32,6 +32,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ReportuserComponent } from 'app/view/reportuser/reportuser.component';
 import { ReportprofileComponent } from '../../view/reportuser/reportprofile/reportprofile.component';
+import { ReportuserbuildComponent } from '../../view/reportuser/reportuserbuild/reportuserbuild.component';
 
 @NgModule({
   imports: [
@@ -69,6 +70,7 @@ import { ReportprofileComponent } from '../../view/reportuser/reportprofile/repo
   
     ReportuserComponent,
     ReportprofileComponent,
+    ReportuserbuildComponent
   ]
 })
 
