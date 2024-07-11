@@ -1,4 +1,5 @@
-import RegisterModel from '../models/registerModel';
+import RegisterModel from '../models/registerModel'; // นำเข้า RegisterModel
+import User from '../models/userModel'; // นำเข้า User
 import BaseCtrl from './base';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -6,7 +7,6 @@ import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import multer from 'multer';
 import path from 'path';
-
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -18,43 +18,62 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-
 class RegisterModelCtrl extends BaseCtrl {
-    model = RegisterModel;
+    model = RegisterModel; // ใช้ RegisterModel สำหรับ Employee
+    modelUser = User; // ใช้ User สำหรับ userModel
 
     create = async (req, res) => {
         try {
             const { firstname, lastname, email, password, confirmpassword, phone, role } = req.body;
 
+    
             if (!password || !confirmpassword) {
                 return res.status(400).json({ msg: 'Password fields are required' });
             }
-
+    
             if (password !== confirmpassword) {
                 return res.status(400).json({ msg: 'Passwords do not match' });
             }
-
-            let user = await this.model.findOne({ email });
-            if (user) {
-                return res.status(400).json({ msg: 'User already exists' });
+    
+            let employee = await this.model.findOne({ email });
+            if (employee) {
+                return res.status(400).json({ msg: 'Employee already exists' });
             }
-
+    
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
-
-            user = new this.model({
+    
+            employee = new this.model({
                 firstname,
                 lastname,
                 email,
                 password: hashedPassword,
                 phone,
-                role
             });
-
-            await user.save();
+    
+            await employee.save();
+            console.log('Employee saved:', employee);
+    
+            const newUser = new User({
+                email: email,
+                password: hashedPassword,
+                role: role || 'user',
+                employeeId: employee._id
+            });
+    
+    
+            await newUser.save();
+            // console.log('User saved:', newUser);
+    
+            const savedUser = await this.modelUser.findById(newUser._id);
+            console.log('Saved User:', savedUser);
+    
             res.status(201).json({ msg: 'User registered successfully' });
         } catch (error) {
             console.error('Error in create function:', error.message);
+            if (error.name === 'ValidationError') {
+                return res.status(400).json({ msg: error.message });
+            }
             res.status(500).send('Server error');
         }
     };
@@ -67,18 +86,17 @@ class RegisterModelCtrl extends BaseCtrl {
                 return res.status(400).json({ msg: 'Email is required' });
             }
 
-            let user = await this.model.findOne({ email });
+            let employee = await this.model.findOne({ email });
 
-            if (!user) {
-                return res.status(404).json({ msg: 'User not found' });
+            if (!employee) {
+                return res.status(404).json({ msg: 'Employee not found' });
             }
 
             res.status(200).json({
-                firstname: user.firstname,
-                lastname: user.lastname,
-                email: user.email,
-                phone: user.phone,
-                role: user.role
+                firstname: employee.firstname,
+                lastname: employee.lastname,
+                email: employee.email,
+                phone: employee.phone,
             });
         } catch (error) {
             console.error('Error in getEmp function:', error.message);
@@ -88,8 +106,8 @@ class RegisterModelCtrl extends BaseCtrl {
 
     getAllUsers = async (req, res) => {
         try {
-            const users = await this.model.find({});
-            res.status(200).json(users);
+            const employees = await this.model.find({});
+            res.status(200).json(employees);
         } catch (error) {
             console.error('Error in getAllUsers function:', error.message);
             res.status(500).send('Server error');
@@ -100,19 +118,16 @@ class RegisterModelCtrl extends BaseCtrl {
         try {
             const { email, password } = req.body;
 
-            // ตรวจสอบว่าผู้ใช้มีอยู่แล้วหรือไม่
-            let user = await this.model.findOne({ email });
+            let user = await this.modelUser.findOne({ email });
             if (!user) {
                 return res.status(400).json({ msg: 'Invalid email or password' });
             }
 
-            // ตรวจสอบรหัสผ่าน
             const isMatch = await bcrypt.compare(password, user.password);
             if (!isMatch) {
                 return res.status(400).json({ msg: 'Invalid email or password' });
             }
 
-            // สร้าง JWT
             const payload = {
                 user: {
                     id: user.id,
@@ -122,7 +137,7 @@ class RegisterModelCtrl extends BaseCtrl {
 
             const token = jwt.sign(
                 payload,
-                process.env.JWT_SECRET || 'your_jwt_secret_key', // ใช้ process.env.JWT_SECRET หรือ default key
+                process.env.JWT_SECRET || 'your_jwt_secret_key',
                 { expiresIn: '1h' }
             );
 
@@ -135,134 +150,134 @@ class RegisterModelCtrl extends BaseCtrl {
 
     forgotPassword = async (req, res) => {
         try {
-          const { email } = req.body;
-          let user = await this.model.findOne({ email });
-          if (!user) {
-            return res.status(400).json({ msg: 'User not found' });
-          }
-      
-          const resetToken = crypto.randomBytes(20).toString('hex');
-          const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
-      
-          user.resetPasswordToken = resetToken;
-          user.resetPasswordExpires = resetTokenExpiry;
-          await user.save();
-      
-          const resetUrl = `http://${req.headers.host}/resetPassword/${resetToken}`;
-      
-          const transporter = nodemailer.createTransport({
-            service: 'Gmail',
-            auth: {
-              user: process.env.EMAIL,
-              pass: process.env.EMAIL_PASSWORD
+            const { email } = req.body;
+            let employee = await this.model.findOne({ email });
+            if (!employee) {
+                return res.status(400).json({ msg: 'Employee not found' });
             }
-          });
-      
-          const mailOptions = {
-            to: user.email,
-            from: process.env.EMAIL,
-            subject: 'Password Reset',
-            text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
-                   Please click on the following link, or paste this into your browser to complete the process:\n\n
-                   ${resetUrl}\n\n
-                   If you did not request this, please ignore this email and your password will remain unchanged.\n`
-          };
-      
-          await transporter.sendMail(mailOptions);
-          res.status(200).json({ msg: 'An email has been sent to reset your password' });
+
+            const resetToken = crypto.randomBytes(20).toString('hex');
+            const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
+
+            employee.resetPasswordToken = resetToken;
+            employee.resetPasswordExpires = resetTokenExpiry;
+            await employee.save();
+
+            const resetUrl = `http://${req.headers.host}/resetPassword/${resetToken}`;
+
+            const transporter = nodemailer.createTransport({
+                service: 'Gmail',
+                auth: {
+                    user: process.env.EMAIL,
+                    pass: process.env.EMAIL_PASSWORD
+                }
+            });
+
+            const mailOptions = {
+                to: employee.email,
+                from: process.env.EMAIL,
+                subject: 'Password Reset',
+                text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
+                    Please click on the following link, or paste this into your browser to complete the process:\n\n
+                    ${resetUrl}\n\n
+                    If you did not request this, please ignore this email and your password will remain unchanged.\n`
+            };
+
+            await transporter.sendMail(mailOptions);
+            res.status(200).json({ msg: 'An email has been sent to reset your password' });
         } catch (error) {
-          console.error('Error in forgotPassword:', error);
-          res.status(500).send('Server error');
+            console.error('Error in forgotPassword:', error);
+            res.status(500).send('Server error');
         }
-      };
-      
-      resetPassword = async (req, res) => {
+    };
+
+    resetPassword = async (req, res) => {
         try {
-          const { resetToken, newPassword, confirmPassword } = req.body;
-          if (newPassword !== confirmPassword) {
-            return res.status(400).json({ msg: 'Passwords do not match' });
-          }
-      
-          let user = await this.model.findOne({
-            resetPasswordToken: resetToken,
-            resetPasswordExpires: { $gt: Date.now() }
-          });
-      
-          if (!user) {
-            return res.status(400).json({ msg: 'Password reset token is invalid or has expired' });
-          }
-      
-          const salt = await bcrypt.genSalt(10);
-          const hashedPassword = await bcrypt.hash(newPassword, salt);
-      
-          user.password = hashedPassword;
-          user.resetPasswordToken = undefined;
-          user.resetPasswordExpires = undefined;
-          await user.save();
-      
-          res.status(200).json({ msg: 'Password has been reset successfully' });
+            const { resetToken, newPassword, confirmPassword } = req.body;
+            if (newPassword !== confirmPassword) {
+                return res.status(400).json({ msg: 'Passwords do not match' });
+            }
+
+            let employee = await this.model.findOne({
+                resetPasswordToken: resetToken,
+                resetPasswordExpires: { $gt: Date.now() }
+            });
+
+            if (!employee) {
+                return res.status(400).json({ msg: 'Password reset token is invalid or has expired' });
+            }
+
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+            employee.password = hashedPassword;
+            employee.resetPasswordToken = undefined;
+            employee.resetPasswordExpires = undefined;
+            await employee.save();
+
+            res.status(200).json({ msg: 'Password has been reset successfully' });
         } catch (error) {
-          console.error(error.message);
-          res.status(500).send('Server error');
+            console.error(error.message);
+            res.status(500).send('Server error');
         }
     };
 
     updateUserDetails = async (req, res) => {
         try {
-            const { id } = req.params; // Assume the user ID is passed in the URL parameters
+            const { id } = req.params;
             const { firstname, lastname, phone, role, address, provine, district, subDistrict, postcode, detail } = req.body;
-    
-            let user = await this.model.findById(id);
-            if (!user) {
-                return res.status(404).json({ msg: 'User not found' });
+
+            let employee = await this.model.findById(id);
+            if (!employee) {
+                return res.status(404).json({ msg: 'Employee not found' });
             }
-    
-            user.firstname = firstname || user.firstname;
-            user.lastname = lastname || user.lastname;
-            user.phone = phone || user.phone;
-            user.role = role || user.role;
-            user.address = address || user.address;
-            user.provine = provine || user.provine;
-            user.district = district || user.district;
-            user.subDistrict = subDistrict || user.subDistrict;
-            user.postcode = postcode || user.postcode;
-            user.detail = detail || user.detail;
-    
-            await user.save();
-            res.status(200).json({ msg: 'User updated successfully' });
+
+            employee.firstname = firstname || employee.firstname;
+            employee.lastname = lastname || employee.lastname;
+            employee.phone = phone || employee.phone;
+            employee.address = address || employee.address;
+            employee.provine = provine || employee.provine;
+            employee.district = district || employee.district;
+            employee.subDistrict = subDistrict || employee.subDistrict;
+            employee.postcode = postcode || employee.postcode;
+            employee.detail = detail || employee.detail;
+
+            await employee.save();
+            res.status(200).json({ msg: 'Employee updated successfully' });
         } catch (error) {
             console.error('Error in updateUserDetails function:', error.message);
             res.status(500).send('Server error');
         }
     };
+
     updateProfile = async (req, res) => {
         try {
-            const userId = req.user.id; // Assuming the user ID is available in req.user.id
+            const employeeId = req.user.id;
             const { firstname, lastname, phone, address, provine, district, subDistrict, postcode, detail } = req.body;
 
-            let user = await this.model.findById(userId);
-            if (!user) {
-                return res.status(404).json({ msg: 'User not found' });
+            let employee = await this.model.findById(employeeId);
+            if (!employee) {
+                return res.status(404).json({ msg: 'Employee not found' });
             }
 
-            // อัปเดตข้อมูลโปรไฟล์
-            user.firstname = firstname || user.firstname;
-            user.lastname = lastname || user.lastname;
-            user.phone = phone || user.phone;
-            user.address = address || user.address;
-            user.provine = provine || user.provine;
-            user.district = district || user.district;
-            user.subDistrict = subDistrict || user.subDistrict;
-            user.postcode = postcode || user.postcode;
-            user.detail = detail || user.detail;
+            employee.firstname = firstname || employee.firstname;
+            employee.lastname = lastname || employee.lastname;
+            employee.phone = phone || employee.phone;
+            employee.address = address || employee.address;
+            employee.provine = provine || employee.provine;
+            employee.district = district || employee.district;
+            employee.subDistrict = subDistrict || employee.subDistrict;
+            employee.postcode = postcode || employee.postcode;
+            employee.detail = detail || employee.detail;
 
-            // อัปเดตไฟล์โปรไฟล์ถ้ามีการอัปโหลดไฟล์ใหม่
             if (req.file) {
-                user.profileImage = req.file.path;
+                employee.profileImage = req.file.path;
             }
 
-            await user.save();
+            await employee.save();
             res.status(200).json({ msg: 'Profile updated successfully' });
+       
+
         } catch (error) {
             console.error('Error in updateProfile function:', error.message);
             res.status(500).send('Server error');

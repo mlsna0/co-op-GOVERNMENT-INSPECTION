@@ -30,7 +30,7 @@ export class SignatureComponent implements OnInit {
   };
   signatureImg: string;
   step = 0
-  useProfileSign
+  useProfileSign = false
   signatureProfile
   typeSignature
   caPass
@@ -436,7 +436,7 @@ export class SignatureComponent implements OnInit {
       })
     }
     await this.loadingFuction()
-  }
+  }   
   loadingFuction() {
     this.loading = true
   }
@@ -467,8 +467,10 @@ export class SignatureComponent implements OnInit {
     //   }
     // })
   }
-  useProfileSignCheckbox(value) {
-    this.useProfileSign = value.checked
+  useProfileSignCheckbox(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.useProfileSign = inputElement.checked;
+    console.log('useProfileSign:', this.useProfileSign);
   }
   choseTypeSignature(value) {
     this.typeSignature = value
