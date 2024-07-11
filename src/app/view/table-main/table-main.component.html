@@ -55,7 +55,7 @@
                 </thead>
                 <tbody>
                   <!---->
-                  <tr *ngFor="let item of items?.records">
+                  <tr *ngFor="let item of items">
 
 
                     <td style=" text-align: center;">
@@ -228,10 +228,10 @@
 
                     <!-- <form action method="post" [formGroup]="addPersonalForm"> -->
                     <div class="row inputLabel" [formGroup]="addItemForm">
-                      <div class="col-sm-3">
+                      <div class="col-sm-4">
                         <label>
 
-                          ยศ/ตำแหน่ง
+                          ตำแหน่ง/คำนำหน้า
                           <span
                             *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty || Submitted)"
                             class="text-validate"> *</span>
@@ -268,7 +268,7 @@
                       <div *ngFor="let person of addItemForm.get('personal')['controls']; let i = index"
                         [formGroup]="addItemForm">
                         <div class="row " [formGroup]="person">
-                          <div class="col-sm-3">
+                          <div class="col-sm-4">
                             <div class="form-group position-relative">
 
                               <input type="text" id="rank-{{i}}" formControlName="rank" class="form-control"

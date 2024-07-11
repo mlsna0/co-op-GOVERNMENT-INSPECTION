@@ -49,7 +49,7 @@ export class TableMainComponent implements OnInit { [x: string]: any;
   items:any= [];
   viewData=[];
   Submitted:boolean =false;
-  location: string;
+  location: string;  
   detailItems: any = {}; 
   PersonINT :number = 0;
   personInputs: FormArray;
@@ -193,7 +193,7 @@ export class TableMainComponent implements OnInit { [x: string]: any;
 
     });
 
-    this.sv.getData().subscribe(res => {
+    this.sv.getRecord().subscribe(res => {
       console.log("res getRecord:", res);
       this.items = res;
       this.loading = false;

@@ -14,8 +14,8 @@ export const ROUTES: RouteInfo[] = [
    { path: '/dashboard', title: 'หน้าหลัก',  icon: 'dashboard', class: '' },
     // { path: '/table-list', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '' },
     { path: '/table-main', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '' },
-    { path: '/reportuser', title: 'รายงานสมัครเข้าใช้งาน' , icon:'person', class:''},
-    { path: '/map', title: 'แผนที่ประเทศไทย', icon: 'map', class:''},
+    { path: '/reportuser', title: 'รายงานสมัครเข้าใช้งาน' , icon:'manage_accounts', class:''},
+    // { path: '/map', title: 'แผนที่ประเทศไทย', icon: 'map', class:''},
     // { path: '/reportuser', title: 'รายงานสมัครเข้าใช้งาน' , icon:'person', class:'',
     //   children: [
     //     { path: '/reportuser/reportuser', title: 'Sub Report 1', icon: 'person', class: '' },
@@ -26,7 +26,7 @@ export const ROUTES: RouteInfo[] = [
     // { path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' },
     // { path: '/typography', title: 'Typography',  icon:'library_books', class: '' },
     // { path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' },
-    { path: '/signature', title: 'การลงเซ็น',  icon:'edit', class: '' },
+    { path: '/signature', title: 'การลงเซ็น',  icon:'note_alt', class: '' },
     // { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
     // { path: '/upgrade', title: 'Upgrade to PRO',  icon:'unarchive', class: 'active-pro' },
 ];

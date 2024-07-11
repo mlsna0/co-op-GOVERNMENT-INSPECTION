@@ -66,8 +66,8 @@ export class TableDetailComponent implements OnInit {
   isFileDocument = false;
 
   isSignModalVisible: boolean[] = [];
-  private canvas2: HTMLCanvasElement;
-  private ctx2: CanvasRenderingContext2D;
+  private canvas: HTMLCanvasElement;
+  private ctx: CanvasRenderingContext2D;
   penColor2: string = 'black';
   penSize2: number = 1;
 
@@ -76,7 +76,8 @@ export class TableDetailComponent implements OnInit {
   private offsetX = 0;
   private offsetY = 0;
   testFile: any;
-
+  canvasList: any[] = [];
+  ctxList: CanvasRenderingContext2D[] = [];
 
 
 
@@ -172,13 +173,20 @@ export class TableDetailComponent implements OnInit {
 
   //////////////////////////////////////////////////////////////////////
   setupSignCanvas(index: number) {
-    this.canvas2 = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
-    if (this.canvas2) {
-      this.ctx2 = this.canvas2.getContext('2d');
+    this.canvas = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
+    let canvasitem = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
+    this.canvasList.push(canvasitem)
+    console.log("this. canvas :", this.canvasList);
+    
+    if (this.canvas) {
+      this.ctx =  this.canvasList[index].getContext('2d');
+      this.ctxList.push(this.canvasList[index].getContext('2d'))
       let painting = false;
 
-      this.canvas2.width = this.canvas2.clientWidth;
-      this.canvas2.height = this.canvas2.clientHeight;
+      this.canvas.width = this.canvas.clientWidth;
+      this.canvas.height = this.canvas.clientHeight;
+      this.canvasList[index].width = canvasitem.clientWidth;
+      this.canvasList[index].height = canvasitem.clientHeight;
 
       const startPosition = (e: MouseEvent) => {
         painting = true;
@@ -188,98 +196,49 @@ export class TableDetailComponent implements OnInit {
 
       const endPosition = () => {
         painting = false;
-        if (this.ctx2) { // Ensure ctx2 is not undefined
-          this.ctx2.beginPath();
+        if (this.ctxList[index]) { // Ensure ctx is not undefined
+          this.ctxList[index].beginPath();
         }
         // console.log('Mouse up');
-        this.canvas2.style.border = "none";
+        this.canvasList[index].style.border = "none";
       };
 
       const draw = (e: MouseEvent) => {
         if (!painting) return;
 
-        if (this.ctx2) { // Ensure ctx2 is not undefined
-          this.ctx2.lineWidth = this.penSize2;
-          this.ctx2.lineCap = 'round';
-          this.ctx2.strokeStyle = this.penColor2;
+        if (this.ctxList[index]) { // Ensure ctx is not undefined
+          this.ctxList[index].lineWidth = this.penSize2;
+          this.ctxList[index].lineCap = 'round';
+          this.ctxList[index].strokeStyle = this.penColor2;
 
-          const rect = this.canvas2.getBoundingClientRect();
+          const rect =  this.canvasList[index].getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
 
-          this.ctx2.lineTo(x, y);
-          this.ctx2.stroke();
-          this.ctx2.beginPath();
-          this.ctx2.moveTo(x, y);
+          this.ctxList[index].lineTo(x, y);
+          this.ctxList[index].stroke();
+          this.ctxList[index].beginPath();
+          this.ctxList[index].moveTo(x, y);
 
           // console.log("Drawing at: ",x,y);
         }
       };
 
-      this.canvas2.addEventListener('mousedown', startPosition);
-      this.canvas2.addEventListener('mouseup', endPosition);
-      this.canvas2.addEventListener('mousemove', draw);
+       this.canvasList[index].addEventListener('mousedown', startPosition);
+       this.canvasList[index].addEventListener('mouseup', endPosition);
+       this.canvasList[index].addEventListener('mousemove', draw);
 
       console.log('Sign canvas setup complete');
     } else {
-      console.error('Sign canvas element not found', this.canvas2);
+      console.error('Sign canvas element not found',  this.canvasList[index]);
     }
   }
-  refreshCanvas() {
-    if (this.ctx2) {
-      this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
+  refreshCanvas(index) {
+    if (this.ctxList[index]) {
+      this.ctxList[index].clearRect(0, 0,  this.canvasList[index].width,  this.canvasList[index].height);
     }
   }
-  // setupSignCanvas(index: number) {
-  //   this.canvas2 = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
-  //   if (this.canvas2) {
-  //     this.ctx2 = this.canvas2.getContext('2d');
-  //     let painting = false;
 
-  //     this.canvas2.width = this.canvas2.clientWidth;
-  //     this.canvas2.height = this.canvas2.clientHeight;
-
-  //     const startPosition = (e: MouseEvent) => {
-  //       painting = true;
-  //       draw(e);
-  //     };
-
-  //     const endPosition = () => {
-  //       painting = false;
-  //       if (this.ctx2) { // Ensure ctx2 is not undefined
-  //         this.ctx2.beginPath();
-  //       }
-  //       this.canvas2.style.border="none";
-  //     };
-
-  //     const draw = (e: MouseEvent) => {
-  //       if (!painting) return;
-
-  //       if (this.ctx2) { // Ensure ctx2 is not undefined
-  //         this.ctx2.lineWidth = this.penSize2;
-  //         this.ctx2.lineCap = 'round';
-  //         this.ctx2.strokeStyle = this.penColor2;
-
-  //         const rect = this.canvas2.getBoundingClientRect();
-  //         const x = e.clientX - rect.left;
-  //         const y = e.clientY - rect.top;
-
-  //         this.ctx2.lineTo(x, y);
-  //         this.ctx2.stroke();
-  //         this.ctx2.beginPath();
-  //         this.ctx2.moveTo(x, y);
-  //       }
-  //     };
-
-  //     this.canvas2.addEventListener('mousedown', startPosition);
-  //     this.canvas2.addEventListener('mouseup', endPosition);
-  //     this.canvas2.addEventListener('mousemove', draw);
-
-  //     console.log('Sign canvas setup complete');
-  //   } else {
-  //     console.error('Sign canvas element not found', this.canvas2);
-  //   }
-  // }
 
   openSignModalx(i){
     console.log("openSignModalx  x "+ i);
@@ -297,19 +256,23 @@ export class TableDetailComponent implements OnInit {
     this.cdr.detectChanges();
 
     setTimeout(() => {
-      const elementsArray = this.writteSignElements.toArray();
-      const writteSignElement = elementsArray.find((_, i) => i === index)?.nativeElement as HTMLElement;
+      // const elementsArray = this.writteSignElements.toArray();
+      // const writteSignElement = elementsArray.find((_, i) => i === index)?.nativeElement as HTMLElement;
 
-      // const writteSignElement = elementsArray[index]?.nativeElement as HTMLElement;
-      console.log("writteSignElement :",this.writteSignElements);
+      let signboxEL = this.el.nativeElement as HTMLElement;
+      let signboxItem = signboxEL.querySelector<HTMLElement>(`#SignModal-${index}`)
+      console.log("signboxItem : ", signboxItem);
       
-      if (writteSignElement) {
+      // const writteSignElement = elementsArray[index]?.nativeElement as HTMLElement;
+      // console.log("writteSignElement :",this.writteSignElements);
+      
+      if (signboxItem) {
         this.cdr.detectChanges();
-        writteSignElement.style.display = 'flex';
+        // writteSignElement.style.display = 'flex';
         this.setupSignCanvas(index);
         console.log("Setup activated for canvas index: ", index);
       } else {
-        console.error('writteSignElement is null or undefined', this.writteSignElements.toArray()[index]);
+        console.error('writteSignElement is null or undefined', signboxItem);//this.writteSignElements.toArray()[index]
       }
     }, 200);
 
@@ -541,6 +504,10 @@ onDragEnd(event: DragEvent, index: number): void {
       // console.log('isContentOverflow:', this.isContentOverflow);
     }
   }
+  //ตัวช่วยการลด re-render
+  trackByFn(index: number, item: any): number {
+    return index; // หรือใช้ unique identifier ของ item
+  }
 
 
   //show content table
@@ -549,8 +516,8 @@ onDragEnd(event: DragEvent, index: number): void {
       console.log("no content ", content);
       return "";
     }
-    const maxLength = 1950;
-    const AddLength = 1960;
+    const maxLength = 1520;
+    const AddLength = 900;
     const textcontent = content?.substring(0, maxLength);
     
     this.remainingContent = content?.substring(maxLength);

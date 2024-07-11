@@ -1,4 +1,5 @@
 import RegisterModel from '../models/registerModel';
+import userModel from 'models/userModel';
 import BaseCtrl from './base';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -48,8 +49,15 @@ class RegisterModelCtrl extends BaseCtrl {
                 email,
                 password: hashedPassword,
                 phone,
-                role
+        //         req.body.personal.forEach(async (element) => {
+        //   const obj1 = await new this.modelUser({
+        //     email: element.email,
+        //     password: element.password,
+        //         role : Element.role,
+        //   }).save();
+        // });
             });
+            
 
             await user.save();
             res.status(201).json({ msg: 'User registered successfully' });
@@ -78,7 +86,6 @@ class RegisterModelCtrl extends BaseCtrl {
                 lastname: user.lastname,
                 email: user.email,
                 phone: user.phone,
-                role: user.role
             });
         } catch (error) {
             console.error('Error in getEmp function:', error.message);
@@ -116,14 +123,17 @@ class RegisterModelCtrl extends BaseCtrl {
             const payload = {
                 user: {
                     id: user.id,
-                    role: user.role
+                    firstname:user.firstname,
+                    lastname:user.lastname,
+                    phone:user.phone,
+                    
                 }
             };
 
             const token = jwt.sign(
                 payload,
                 process.env.JWT_SECRET || 'your_jwt_secret_key', // ใช้ process.env.JWT_SECRET หรือ default key
-                { expiresIn: '1h' }
+                { expiresIn: '1h' } //กำหนดเวลา 1 ชั่วโมง เพื่อ?
             );
 
             res.json({ token });
@@ -133,6 +143,35 @@ class RegisterModelCtrl extends BaseCtrl {
         }
     };
 
+    auth = async (req, res, next) => {
+        const token = req.header('Authorization').replace('Bearer ', '');
+        console.log("auth Middleware: ",token)
+        if (!token) {
+          return res.status(401).json({ msg: 'No token, authorization denied' });
+        }
+      
+        try {
+          const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_key');
+          req.user = decoded.user;
+          next();
+        } catch (err) {
+          res.status(401).json({ msg: 'Token is not valid' });
+        }
+      };
+
+      getUserProfile = async (req, res) => {
+        try {
+            const userId = req.user.id; // Assuming the user ID is available in req.user.id
+            let user = await this.model.findById(userId).select('-password');
+            if (!user) {
+                return res.status(404).json({ msg: 'User not found' });
+            }
+            res.status(200).json(user);
+        } catch (error) {
+            console.error('Error in getUserProfile function:', error.message);
+            res.status(500).send('Server error');
+        }
+    };
     forgotPassword = async (req, res) => {
         try {
           const { email } = req.body;
@@ -220,7 +259,6 @@ class RegisterModelCtrl extends BaseCtrl {
             user.firstname = firstname || user.firstname;
             user.lastname = lastname || user.lastname;
             user.phone = phone || user.phone;
-            user.role = role || user.role;
             user.address = address || user.address;
             user.provine = provine || user.provine;
             user.district = district || user.district;

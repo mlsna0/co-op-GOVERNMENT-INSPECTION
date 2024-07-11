@@ -6,7 +6,6 @@ const registerSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     phone: String,
-    role: { type: String, required: true, enum: ['user', 'admin', 'superadmin'], default: 'user' },
     address: String,
     provine : String,
     district : String,

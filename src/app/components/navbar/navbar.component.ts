@@ -6,6 +6,8 @@ import {
   PathLocationStrategy,
 } from "@angular/common";
 import { Router } from "@angular/router";
+import { AuthService } from '../../layouts/auth-layout/auth-layout.Service'
+
 
 @Component({
   selector: "app-navbar",
@@ -25,7 +27,8 @@ export class NavbarComponent implements OnInit {
   constructor(
     location: Location,
     private element: ElementRef,
-    private router: Router
+    private router: Router,
+    private auth: AuthService,
   ) {
     this.location = location;
     this.sidebarVisible = false;
@@ -144,7 +147,8 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(["/profile"]);
   }
   openLogin(){
-    this.router.navigate(["/login"]);
+    this.auth.logout()
+    // this.router.navigate(["/login"]);
 
   }
 }

@@ -1,17 +1,15 @@
 import * as mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-    rank: String,
-    star_date: String,
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role: { type: String, required: true, enum: ['user', 'admin', 'superadmin'], default: 'user' },
+
+    RegisterModelId: { type: mongoose.Schema.Types.ObjectId, ref: 'registerModel' }
    
 });
 
 const userModel = mongoose.model('userModel', userSchema);
-export interface AnnoucementModel {
-    rank: String,
-    fullname: String,
-  
-  }
 export default userModel;
 
 
