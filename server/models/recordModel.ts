@@ -1,5 +1,4 @@
 import * as mongoose from 'mongoose';
-import viewSchema from './viewModel' //petch add this
 
 const recordSchema = new mongoose.Schema({
     record_id: String,
@@ -17,7 +16,9 @@ const recordSchema = new mongoose.Schema({
     // record_district: String,
     // record_sub_district: String,
     // record_address: String,
-    record_place: String
+    record_place: String,
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
+  
     //     record_data_: Buffer,
     //     record_contentType: String
     //   }  

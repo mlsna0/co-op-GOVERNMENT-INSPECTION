@@ -1,6 +1,6 @@
 import * as express from 'express';
 
-import ItemModelCtrl from './controller/itemController';
+
 import RecordModelCtrl from './controller/recordController';
 import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
@@ -14,7 +14,7 @@ import uploadService from './service/uploadservice.service';
 
 function setRoutes(app): void {
   const router = express.Router();
-  const itemModelCtrl = new ItemModelCtrl();
+
   const recordModelCtrl = new RecordModelCtrl();
   const userModelCtrl = new UserModelCtrl();
   const viewModelCtrl = new ViewModelCtrl();
@@ -24,27 +24,21 @@ function setRoutes(app): void {
 
   // const aggregateRecordsAndView = new AggRecordNViewCon(); //petch edit add this
 
-  // ItemModel routes
-  router.route('/itemModel').get(itemModelCtrl.getAll);
-  router.route('/itemModel/count').get(itemModelCtrl.count);
-  router.route('/itemModel').post(itemModelCtrl.insert);
+
   // router.route('/postPersonData').post(itemModelCtrl.postItemToView);
 
-  router.route('/record/savepdf').put(itemModelCtrl.savePDF);
-  router.route('/pdf/:id').get(itemModelCtrl.getPDF);
-  router.route('/data').get(itemModelCtrl.getData);
+  router.route('/record/savepdf').put(recordModelCtrl.savePDF);
+  router.route('/pdf/:id').get(recordModelCtrl.getPDF);
+  router.route('/data').get(recordModelCtrl.getData);
   // router.route('/pdf').get(itemModelCtrl.getPDF);
 
-  router.route('/record/updateContent').put(itemModelCtrl.updateRecordContent);
+  router.route('/record/updateContent').put(recordModelCtrl.updateRecordContent);
   // router.route('/record/updatePDF').put(itemModelCtrl.updateRecordPDF);
 
-  router.route('/postItemData').post(itemModelCtrl.postItemToView);
-  router.route('/postTyproText').post(itemModelCtrl.postItemToView);
+  router.route('/postItemData').post(recordModelCtrl.postItemToView);
+  router.route('/postTyproText').post(recordModelCtrl.postItemToView);
   // router.route('/postAddDetail').post(itemModelCtrl.addDetail);
-  router.route('/itemModel/:id').get(itemModelCtrl.get);
-  router.route('/itemModel/:id').put(itemModelCtrl.update);
-  router.route('/itemModel/:id').delete(itemModelCtrl.delete);
-  router.route('/postDataTest').post(uploadService.none(),itemModelCtrl.postItemToView)
+  router.route('/postDataTest').post(uploadService.none(),recordModelCtrl.postItemToView)
 
   // RecordModel routes
   router.route('/recordModel').get(recordModelCtrl.getAll);

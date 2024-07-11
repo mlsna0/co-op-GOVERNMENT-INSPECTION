@@ -107,3 +107,12 @@
     border-color: #00087c9f;
     /* box-shadow: 0 14px 14px -12px #24a0ed51, 0 4px 14px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px #24a0ed51; */
   }
+  .page-input {
+    border: 1px solid #000;
+    border-radius: 5px;
+    font-size: 18px;
+    padding: 5px 10px;
+    width: 60px;  /* หรือปรับเป็นขนาดที่ต้องการ */
+    margin: 10px 0 0 40px;
+    text-align: center;
+}
