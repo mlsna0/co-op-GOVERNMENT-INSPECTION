@@ -193,7 +193,7 @@ export class TableMainComponent implements OnInit { [x: string]: any;
 
     });
 
-    this.sv.getData().subscribe(res => {
+    this.sv.getRecord().subscribe(res => {
       console.log("res getRecord:", res);
       this.items = res;
       this.loading = false;
