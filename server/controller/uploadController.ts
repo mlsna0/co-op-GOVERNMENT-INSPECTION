@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import html_to_pdf from 'html-pdf-node';
 import ejs from 'ejs';
 import recordModel from '../models/recordModel';
-import ItemModel from '../models/itemModel';
+
 
 
 class recordCtrl {
