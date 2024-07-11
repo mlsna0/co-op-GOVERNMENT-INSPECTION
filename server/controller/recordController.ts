@@ -18,15 +18,15 @@ const upload = multer({ storage: storage }).single('pdf');
 
 
 class recorCon extends BaseCtrl {
-  model = ViewModel;
-  modelRecord = recordModel;
+  model = recordModel;
+  modelView = ViewModel;
     
   
   postItemToView = async (req, res) => {
     console.log(req.body);
     
     try {
-      const obj = await new this.modelRecord({
+      const obj = await new this.model({
         record_id: req.body.id,
         record_star_date: req.body.startDate,
         record_end_date: req.body.endDate,
@@ -73,7 +73,7 @@ updateRecordContent = async (req, res) => {
 console.log("Updating record content: ", req.body);
 try {
   const { id, content } = req.body;
-  const record = await this.modelRecord.findByIdAndUpdate(id, { record_content: content }, { new: true });
+  const record = await this.model.findByIdAndUpdate(id, { record_content: content }, { new: true });
   if (!record) {
     res.status(404).send('Record not found');
   } else {
@@ -117,7 +117,7 @@ upload(req, res, async (err) => {
     }
 
     try {
-      const record = await this.modelRecord.findByIdAndUpdate(id, { record_filename: newFilename }, { new: true });
+      const record = await this.model.findByIdAndUpdate(id, { record_filename: newFilename }, { new: true });
       if (!record) {
         return res.status(404).send('Record not found');
       }
@@ -160,7 +160,7 @@ postDataTest = async (req,res)=>{
 
 getData = async (req, res) => {
   try {
-    const records = await this.modelRecord.find() // การจัดเรียงลำดับที่ฐานข้อมูล
+    const records = await this.model.find() // การจัดเรียงลำดับที่ฐานข้อมูล
     records.sort((a:any, b:any) => { return b.record_id - a.record_id})
     const views = await this.model.find();
     // const details = await this.modelDetail.find();

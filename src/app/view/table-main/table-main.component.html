@@ -73,7 +73,7 @@
 
                     <td class="text-center" style=" white-space: nowrap;">
                       <!-- {{item.record_location}} -->
-                      <button class="searchLocation" (click)="searchLocation(item.record_location)">ดูพิกัด</button>
+                      <button class="searchLocation" (click)="searchLocation(item?.record_location)">ดูพิกัด</button>
 
                     </td>
                     <td style="vertical-align: middle; white-space: nowrap; text-align: center;">
@@ -85,13 +85,13 @@
 
                     <td class="text-center" style=" width:1% ;white-space: nowrap;">
 
-                      <button (click)="onRecord(item._id)" style="border: none; background: none; color: black;">
+                      <button (click)="onRecord(item?._id)" style="border: none; background: none; color: black;">
                         <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top"
                           class="fa fa-pencil-square-o Record"></i>
                       </button>
 
 
-                      <button (click)="openDetailModal(item._id)" style="border: none; background: none; color: black;">
+                      <button (click)="openDetailModal(item?._id)" style="border: none; background: none; color: black;">
                         <i data-toggle="tooltip" title="ดูรายละเอียด" data-placement="top"
                           class="fa fa-file-text-o ModalIcon "></i>
                       </button>
