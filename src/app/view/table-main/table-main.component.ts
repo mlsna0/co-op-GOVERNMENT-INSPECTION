@@ -9,7 +9,7 @@ import { GeocodingServiceService } from '../../services/geocodingService/geocodi
 import { DataTableDirective } from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { DataTablesModule } from "angular-datatables"; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
-import { Items } from '../../../../server/models/itemModel';
+import { RecordModel } from '../../../../server/models/recordModel';
 import Swal from 'sweetalert2';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import jsPDF from 'jspdf';
