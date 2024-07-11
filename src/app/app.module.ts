@@ -21,6 +21,8 @@ import { NgxLoadingModule } from 'ngx-loading';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { SignatureComponent } from './signature/signature.component';
+import { HistoryComponent } from './view/history/history.component';
+
 
 
 
@@ -47,7 +49,8 @@ import { SignatureComponent } from './signature/signature.component';
     AdminLayoutComponent,
     AuthLayoutComponent,
     SignatureComponent,
-    
+    HistoryComponent,
+
   ],
   providers: [SharedService],
   bootstrap: [AppComponent],

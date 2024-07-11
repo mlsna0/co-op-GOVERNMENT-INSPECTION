@@ -18,7 +18,8 @@ export class RegisterComponent implements OnInit {
   phone: string;
 
   regisForm: any;
-
+  Submitted = false;
+  
   constructor(
     private fb: FormBuilder,
     private lc: loginservice,

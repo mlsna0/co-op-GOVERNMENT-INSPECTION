@@ -17,7 +17,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser'; //Typro and 
 import { ActivatedRoute } from '@angular/router';
 
 import { NgxExtendedPdfViewerService, pdfDefaultOptions } from 'ngx-extended-pdf-viewer';
-
+import * as QRCode from 'qrcode';
 
 // import { PdfViewerModule } from 'ng2-pdf-viewer';
 
@@ -76,8 +76,7 @@ export class TableDetailComponent implements OnInit {
   private offsetX = 0;
   private offsetY = 0;
   testFile: any;
-
-
+  qrCodeUrl: string | null = null;
 
 
   constructor(
@@ -837,5 +836,20 @@ onDragEnd(event: DragEvent, index: number): void {
 
   test(){
     alert("1")
+  }
+
+  generateQRCode(): void {
+    if (this.recordId) {
+      const urlToEncode = `http://localhost:4200/#/table-detail/${this.recordId}`;
+      QRCode.toDataURL(urlToEncode, (err, url) => {
+        if (err) {
+          console.error(err);
+        } else {
+          this.qrCodeUrl = url;
+        }
+      });
+    } else {
+      console.error('Detail ID is empty.');
+    }
   }
 }

@@ -37,9 +37,9 @@
   font-size: 18px;
 }
 
-/* 7. Add padding to .card-body */
 .card-body {
-  padding: 20px;
+  padding: 50px 40px 20px 40px !important;
+
 }
 
 /* 8. Add bottom padding to .form-group */
@@ -59,7 +59,9 @@
   font-size: 18px;
   padding: 15px 30px;
 }
-
+i{
+  cursor: pointer;
+}
 /*userInfo*/
 .title{
   padding: 10px;
