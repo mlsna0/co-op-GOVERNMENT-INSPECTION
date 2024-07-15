@@ -78,7 +78,7 @@
   background-color: rgb(255, 209, 0);
 }
 .Box1,.Box2 ,.Box3{
-  height:250px;
+  /* height:250px; */
   width: auto;
   background-color: white;
   
@@ -103,3 +103,9 @@
   box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgb(255, 209, 0,0.4);
 
 }
+/* 
+#chart {
+  max-width: 380px;
+  margin: 35px auto;
+  padding: 0;
+} */

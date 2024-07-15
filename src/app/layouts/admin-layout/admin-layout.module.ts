@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -33,6 +33,11 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ReportuserComponent } from 'app/view/reportuser/reportuser.component';
 import { ReportprofileComponent } from '../../view/reportuser/reportprofile/reportprofile.component';
 import { ReportuserbuildComponent } from '../../view/reportuser/reportuserbuild/reportuserbuild.component';
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import { NgApexchartsModule } from "ng-apexcharts";
+import { AppComponent } from 'app/app.component';
+
+
 
 @NgModule({
   imports: [
@@ -51,6 +56,9 @@ import { ReportuserbuildComponent } from '../../view/reportuser/reportuserbuild/
     DataTablesModule,
     AngularEditorModule,
     PdfViewerModule,
+    CanvasJSAngularChartsModule,
+    NgApexchartsModule,
+   
   ],
   declarations: [
     DashboardComponent,
@@ -71,7 +79,10 @@ import { ReportuserbuildComponent } from '../../view/reportuser/reportuserbuild/
     ReportuserComponent,
     ReportprofileComponent,
     ReportuserbuildComponent
-  ]
+  ],
+  providers: [],
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA] // Add this line if needed
 })
 
 export class AdminLayoutModule {}

@@ -23,7 +23,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { SignatureComponent } from './signature/signature.component';
 import { HistoryComponent } from './view/history/history.component';
 import { TokenInterceptor } from './layouts/auth-layout/token.interceptor';
-
+import { NgApexchartsModule } from "ng-apexcharts";
 
 
 
@@ -44,6 +44,7 @@ import { TokenInterceptor } from './layouts/auth-layout/token.interceptor';
     DragDropModule,
     PdfViewerModule,
     NgxLoadingModule.forRoot({}),
+    NgApexchartsModule,
   ],
   declarations: [
     AppComponent,

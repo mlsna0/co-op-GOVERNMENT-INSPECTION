@@ -8,7 +8,7 @@
             <a style="font-size: 18px;">เอกสารตรวจสอบ</a>
           </div>
           <div class="card-body">
-            <div class="number">2,569,789</div>
+           <canvasjs-chart [options]="chartOptions"></canvasjs-chart>    
           </div>
           
         </div>
@@ -21,7 +21,9 @@
           </div>
 
           <div class="card-body">
-            <p>1,987,654</p>
+            <div>
+              <canvasjs-chart [options]="chartOptions"></canvasjs-chart>    
+          </div>    
           </div>
 
         </div>
@@ -32,12 +34,27 @@
             <a style="font-size: 18px;">เอกสารที่ถูกสร้าง</a>
           </div>
           <div class="card-body">
-            <p>1,987,654</p>
+            <div>
+              <canvasjs-chart [options]="chartOptions"></canvasjs-chart>    
+          </div>    
           </div>
         </div>
       </div>
     </div>
     <app-thaicounty></app-thaicounty>
   <app-map></app-map>
+  
+
+<!-- <div id="chart">
+  <apx-chart
+    [series]="chartOptions.series"
+    [chart]="chartOptions.chart"
+    [labels]="chartOptions.labels"
+    [responsive]="chartOptions.responsive"
+  ></apx-chart>
+</div> -->
+  
   </div>
 </div>
+
+
