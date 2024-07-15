@@ -10,7 +10,7 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navigation">
             <div class="dropdown">
-                <div class="Profile" (click)="toggleDropdown()">
+                <div class="Profile" (click)="toggleDropdown($event)">
                     <img src="./assets/img/Person-icon.jpg" alt="img not fond" style="border-radius: 15px; border: 1 solid black; height: 32px; width: 32px;">
                 </div>
                 <div class="dropdown-menu"  [class.show]="dropdownOpen">

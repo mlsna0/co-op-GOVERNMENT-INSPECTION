@@ -18,10 +18,10 @@ export const ROUTES: RouteInfo[] = [
     // { path: '/table-list', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '' },
     { path: '/table-main', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '' },
     { path: '/signature', title: 'การลงเซ็น',  icon:'note_alt', class: '' },
-    { path: ' ', title: 'รายงาน' , icon:'person', class:'',
+    { path: ' ', title: 'รายงาน' , icon:'assignment', class:'',
       children: [
-        { path: '/reportuser', title: 'รายงานสมัครเข้าใช้งาน', icon: 'person', class: '' },
-        { path: '/reportbuild', title: 'รายงานการสร้างฟอร์ม', icon: 'person', class: '' }
+        { path: '/reportuser', title: 'รายงานสมัครเข้าใช้งาน', icon: 'manage_accounts', class: '' },
+        { path: '/reportbuild', title: 'รายงานการสร้างฟอร์ม', icon: 'badge', class: '' }
       ]
     },
     // { path: '/user-profile', title: 'User Profile',  icon:'person', class: '' },

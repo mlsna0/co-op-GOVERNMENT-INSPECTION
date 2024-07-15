@@ -51,6 +51,11 @@ export class loginservice {
 
   getUserProfile(): Observable<any> {
     const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found in localStorage');
+      return throwError('No token found');
+    }
+    
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`${this.baseUrl}/registerModel/profile`, { headers });
   }

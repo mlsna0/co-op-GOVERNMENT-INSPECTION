@@ -118,7 +118,7 @@ class RegisterModelCtrl extends BaseCtrl {
         try {
             const { email, password } = req.body;
 
-            let user = await this.modelUser.findOne({ email });
+            let user = await this.model.findOne({ email });
             if (!user) {
                 return res.status(400).json({ msg: 'Invalid email or password' });
             }
@@ -129,11 +129,18 @@ class RegisterModelCtrl extends BaseCtrl {
             }
 
             const payload = {
-                employee: {
+                user: {
                     id: user.id,
-                    // firstname:user.firstname,
-                    // lastname:user.lastname,
-                    // phone:user.phone,
+                    email: user.email,
+                    firstname:user.firstname,
+                    lastname:user.lastname,
+                    phone:user.phone,
+                    address:user.address,
+                    district:user.district,
+                    subDistrict:user.subDistrict,
+                    postCode:user.postcode,
+                    detail:user.detail,
+                    profileImg:user.profileImage
                     
                 }
             };
@@ -141,7 +148,7 @@ class RegisterModelCtrl extends BaseCtrl {
             const token = jwt.sign(
                 payload,
                 process.env.JWT_SECRET || 'your_jwt_secret_key', // ใช้ process.env.JWT_SECRET หรือ default key
-                { expiresIn: '1h' } //กำหนดเวลา 1 ชั่วโมง เพื่อ?
+                { expiresIn: '24h' } //กำหนดเวลา 1 ชั่วโมง เพื่อ?
             );
 
             res.json({ token });
@@ -166,6 +173,16 @@ class RegisterModelCtrl extends BaseCtrl {
           res.status(401).json({ msg: 'Token is not valid' });
         }
       };
+
+    checkRole = (role) => {
+        return (req, res, next) => {
+            if (req.user && req.user.role === role) {
+                next();
+            } else {
+                res.status(403).json({ msg: 'Forbidden' });
+            }
+        };
+    };
 
       getUserProfile = async (req, res) => {
         try {

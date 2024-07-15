@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from "@angular/core";
+import { Component, OnInit, ElementRef,Renderer2, HostListener } from "@angular/core";
 import { ROUTES } from "../sidebar/sidebar.component";
 import {
   Location,
@@ -29,6 +29,7 @@ export class NavbarComponent implements OnInit {
     private element: ElementRef,
     private router: Router,
     private auth: AuthService,
+    private renderer: Renderer2,
   ) {
     this.location = location;
     this.sidebarVisible = false;
@@ -140,8 +141,16 @@ export class NavbarComponent implements OnInit {
 
   ////////////////////////////////////////////////////////////////
 
-  toggleDropdown() {
+  toggleDropdown(event: Event) {
     this.dropdownOpen = !this.dropdownOpen;
+    event.stopPropagation();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    if (!this.element.nativeElement.contains(event.target)) {
+      this.dropdownOpen = false;
+    }
   }
   openProfile() {
     this.router.navigate(["/profile"]);

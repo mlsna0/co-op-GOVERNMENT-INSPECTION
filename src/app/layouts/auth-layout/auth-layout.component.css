@@ -1,9 +1,13 @@
 .auth-layout{
-    background-color:  rgb(255, 219, 61);
-    height: 100vh !important;
-    width: 100vw !important;
-    position: relative !important;
-    justify-content: center !important;
-    justify-items: center !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;  /* ความสูงขั้นต่ำ 100vh เพื่อให้ครอบคลุมหน้าจอ */
+    width: 100%;  /* ความกว้างเต็ม */
+    background-color: rgb(255, 219, 61);  /* พื้นหลัง */
+    overflow: auto;  /* จัดการ overflow */
 }
-
+.auth-layout > * {
+    width: 100%;
+}

@@ -174,20 +174,19 @@ export class TableDetailComponent implements OnInit {
 
   //////////////////////////////////////////////////////////////////////
   setupSignCanvas(index: number) {
-    this.canvas = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
+    console.log("index sign: " ,index);
+    
     let canvasitem = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
     this.canvasList.push(canvasitem)
-    console.log("this. canvas :", this.canvasList);
     
-    if (this.canvas) {
-      this.ctx =  this.canvasList[index].getContext('2d');
-      this.ctxList.push(this.canvasList[index].getContext('2d'))
+    if (canvasitem) {
+      let canvasFind = this.canvasList.find(x => x.id == `writteSignCanvas-${index}`)
+      this.ctxList.push(canvasFind.getContext('2d'))
+      let ctxFind = this.ctxList.find(x => x.canvas?.id == `writteSignCanvas-${index}`)
+      
       let painting = false;
-
-      this.canvas.width = this.canvas.clientWidth;
-      this.canvas.height = this.canvas.clientHeight;
-      this.canvasList[index].width = canvasitem.clientWidth;
-      this.canvasList[index].height = canvasitem.clientHeight;
+      canvasFind.width = canvasitem.clientWidth;
+      canvasFind.height = canvasitem.clientHeight;
 
       const startPosition = (e: MouseEvent) => {
         painting = true;
@@ -197,46 +196,49 @@ export class TableDetailComponent implements OnInit {
 
       const endPosition = () => {
         painting = false;
-        if (this.ctxList[index]) { // Ensure ctx is not undefined
-          this.ctxList[index].beginPath();
+        if (ctxFind) { // Ensure ctx is not undefined
+          ctxFind.beginPath();
         }
         // console.log('Mouse up');
-        this.canvasList[index].style.border = "none";
+        canvasFind.style.border = "none";
       };
 
       const draw = (e: MouseEvent) => {
         if (!painting) return;
 
-        if (this.ctxList[index]) { // Ensure ctx is not undefined
-          this.ctxList[index].lineWidth = this.penSize2;
-          this.ctxList[index].lineCap = 'round';
-          this.ctxList[index].strokeStyle = this.penColor2;
+        if (ctxFind) { // Ensure ctx is not undefined
+          ctxFind.lineWidth = this.penSize2;
+          ctxFind.lineCap = 'round';
+          ctxFind.strokeStyle = this.penColor2;
 
-          const rect =  this.canvasList[index].getBoundingClientRect();
+          const rect =  canvasFind.getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
 
-          this.ctxList[index].lineTo(x, y);
-          this.ctxList[index].stroke();
-          this.ctxList[index].beginPath();
-          this.ctxList[index].moveTo(x, y);
+          ctxFind.lineTo(x, y);
+          ctxFind.stroke();
+          ctxFind.beginPath();
+          ctxFind.moveTo(x, y);
 
           // console.log("Drawing at: ",x,y);
         }
       };
 
-       this.canvasList[index].addEventListener('mousedown', startPosition);
-       this.canvasList[index].addEventListener('mouseup', endPosition);
-       this.canvasList[index].addEventListener('mousemove', draw);
+       canvasFind.addEventListener('mousedown', startPosition);
+       canvasFind.addEventListener('mouseup', endPosition);
+       canvasFind.addEventListener('mousemove', draw);
 
       console.log('Sign canvas setup complete');
     } else {
-      console.error('Sign canvas element not found',  this.canvasList[index]);
+      console.error('Sign canvas element not found',  canvasitem);
     }
   }
+
   refreshCanvas(index) {
-    if (this.ctxList[index]) {
-      this.ctxList[index].clearRect(0, 0,  this.canvasList[index].width,  this.canvasList[index].height);
+    let canvasFind = this.canvasList.find(x => x.id == `writteSignCanvas-${index}`)
+    let ctxFind = this.ctxList.find(x => x.canvas?.id == `writteSignCanvas-${index}`)
+    if (ctxFind) {
+      ctxFind.clearRect(0, 0, canvasFind.width, canvasFind.height);
     }
   }
 
@@ -257,16 +259,12 @@ export class TableDetailComponent implements OnInit {
     this.cdr.detectChanges();
 
     setTimeout(() => {
-      // const elementsArray = this.writteSignElements.toArray();
-      // const writteSignElement = elementsArray.find((_, i) => i === index)?.nativeElement as HTMLElement;
 
       let signboxEL = this.el.nativeElement as HTMLElement;
       let signboxItem = signboxEL.querySelector<HTMLElement>(`#SignModal-${index}`)
       console.log("signboxItem : ", signboxItem);
       
-      // const writteSignElement = elementsArray[index]?.nativeElement as HTMLElement;
-      // console.log("writteSignElement :",this.writteSignElements);
-      
+  
       if (signboxItem) {
         this.cdr.detectChanges();
         // writteSignElement.style.display = 'flex';
@@ -275,41 +273,11 @@ export class TableDetailComponent implements OnInit {
       } else {
         console.error('writteSignElement is null or undefined', signboxItem);//this.writteSignElements.toArray()[index]
       }
-    }, 200);
+    },0);
 
    
   }
-  // openSignModalWithDelay(index: number, delay: number) {
-  //   this.isSignModalVisible[index] = true;
 
-  //   setTimeout(() => {
-  //     const writteSignElement = this.writteSignElements.toArray()[index]?.nativeElement as HTMLElement;
-  //     if (writteSignElement) {
-  //       writteSignElement.style.display = 'flex';
-  //       this.setupSignCanvas(index);
-  //       console.log("Setup activated for canvas index with delay: ", index);
-  //     } else {
-  //       console.error('writteSignElement is null or undefined', this.writteSignElements.toArray()[index]);
-  //     }
-  //   }, delay);
-
-  //   console.log("it openSign status with delay: ", this.isSignModalVisible);
-  // }
-  // openSignModal(index: number){
-  //   this.isSignModalVisible[index] = true;
-
-  //   setTimeout(() => {
-  //     if (this.writteSignElements) {
-  //       this.setupSignCanvas(index);
-  //       const writteSignElement = this.writteSignElements.toArray()[index]?.nativeElement as HTMLElement;
-  //       writteSignElement.style.display = 'flex';
-  //       console.log("Setup activate or not: ",this.setupSignCanvas)
-  //     } else {
-  //       console.error('writteSignElement is null or undefined',this.writteSignElements);
-  //     }
-  //   }, 0);  
-  //   console.log("it openSign status : ",this.isSignModalVisible)
-  // }
   addBox() {
     this.boxes.push({ top: '0px', left: '0px' });
     this.isSignModalVisible.push(false);
@@ -489,7 +457,7 @@ onDragEnd(event: DragEvent, index: number): void {
   }
   //page break
 
-
+//การเลยขนนาดของ หน้าจอ 
   checkContentOverflow() {
     const mainDetailElement = document.getElementById('myDetail');
     console.log("mainDetailElement :",mainDetailElement);
@@ -505,7 +473,7 @@ onDragEnd(event: DragEvent, index: number): void {
       // console.log('isContentOverflow:', this.isContentOverflow);
     }
   }
-  //ตัวช่วยการลด re-render
+  //ตัวช่วยการลด re-render ของ tag div etc.
   trackByFn(index: number, item: any): number {
     return index; // หรือใช้ unique identifier ของ item
   }
@@ -545,16 +513,7 @@ onDragEnd(event: DragEvent, index: number): void {
       return parts;
   }
 
-  // printPDF = () => {
-  //     console.log("working PDF..");
-  //     const elementToPrint = document.getElementById('myDetail');
-  //     html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
-  //       const pdf = new jsPDF('p','mm','a4');
-  //       pdf.addImage(canvas.toDataURL('image/png'), 'PDF',0 ,0,210,297);
-  //       pdf.save('การลงตรวจสอบ.pdf')
-  //     });
-  //     // this.fetchData()
-  // }
+
 
   printPDF() {
     const pdf = new jsPDF('p', 'mm', 'a4');

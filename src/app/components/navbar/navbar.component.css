@@ -5,13 +5,18 @@
     border: 2px solid rgb(0, 198, 0);
 }
 
-
-.dropdown-menu.show{
+.dropdown-menu {
+    display: none;
     position: absolute;
-    display: block;
     left: -145px;
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 1s ease-in-out, transform 0.2s ease-in-out;
+    font-family: 'Sarabun',sans-serif;
+  }
+.dropdown-menu.show{
+    display: block;
     opacity: 1;
     transform: scale(1);
-
-
+    font-family: 'Sarabun',sans-serif;
 }
