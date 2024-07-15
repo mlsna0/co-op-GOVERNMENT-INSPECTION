@@ -39,6 +39,7 @@ function setRoutes(app): void {
   router.route('/postTyproText').post(recordModelCtrl.postItemToView);
   // router.route('/postAddDetail').post(itemModelCtrl.addDetail);
   router.route('/postDataTest').post(uploadService.none(),recordModelCtrl.postItemToView)
+ 
 
   // RecordModel routes
   router.route('/recordModel').get(recordModelCtrl.getAll);
@@ -78,8 +79,9 @@ function setRoutes(app): void {
   router.route('/registerModel/forgotPassword').post(registerModelCtrl.forgotPassword);
   router.route('/registerModel/resetPassword').post(registerModelCtrl.resetPassword);
   router.route('/getEmp').get(registerModelCtrl.getEmp); 
-  router.route('/allUsers').get(registerModelCtrl.getAllUsers);
+  router.route('/allUsers').get(registerModelCtrl.getAllUsers); 
   router.route('/user/:id').put(registerModelCtrl.updateUserDetails);
+  router.route('/userModel/getUserById/:id').get(userModelCtrl.getUserById);
   
   //agg $lookup Record and View model routes //petch edit add this
   // router.route('/aggRecordNview/:id').get(AggRecordNViewCon.get);
