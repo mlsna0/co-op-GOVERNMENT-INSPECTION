@@ -43,7 +43,19 @@
     width: 400px;
     height: 200px;
   }
-  
+  .main-content{
+    position: relative;
+    /* max-height: 1235.9px; */
+    top: 50px;
+    bottom: 50px;
+    height: auto;
+    margin: 50px 0 50px 0;
+    left: 50%;
+    transform: translateX(-50%);
+    justify-content: center;
+    font-family: "Sarabun", sans-serif;
+    background: white;
+  }
   .deleteBtn {
     font-size: 22px;
     color: #f43643;

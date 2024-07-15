@@ -5,6 +5,7 @@ import { Observable,of } from 'rxjs';
 
 
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -24,6 +25,7 @@ export class AuthService {
     if (user) {
       this.currentUserRole = user.role;
       this.currentUser =user;
+      // localStorage.setItem('token', user.token);
       return of(user)
     } else {
       alert('Invalid credentials');
@@ -31,19 +33,29 @@ export class AuthService {
     }
   }
 
+  private generateId(): string {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  }
+
   register(email: string, password: string) {
     const userExists = this.users.find(u => u.email === email);
     if (!userExists) {
-      this.users.push({ email, password, role: 'user' });
+      const newUser = { id: this.generateId(), email, password, role: 'user', firstname: '', lastname: '' };
+      this.users.push(newUser);
       this.currentUserRole = 'user';
+      this.currentUser = newUser;
       this.router.navigate(['/dashboard']);
+      return of(newUser);
     } else {
       alert('User already exists');
+      return of(null);
     }
   }
 
   logout() {
     this.currentUserRole = null;
+    this.currentUser = null;
+    localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
 

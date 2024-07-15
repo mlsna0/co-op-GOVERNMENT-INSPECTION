@@ -18,6 +18,8 @@ export class RegisterComponent implements OnInit {
   phone: string;
 
   regisForm: any;
+  Submitted:boolean=false;
+  
 
   constructor(
     private fb: FormBuilder,
@@ -30,7 +32,7 @@ export class RegisterComponent implements OnInit {
       email: ["", [Validators.required, Validators.email]],
       password: ["",[Validators.required, Validators.minLength(8)]],
       confirmpassword: ["", [Validators.required, Validators.minLength(8)]],
-      phone: ["", Validators.required],
+      phone: ["", Validators.required, Validators.minLength(10)],
     }, { validator: this.passwordMatchValidator });
   }  
 
@@ -38,6 +40,7 @@ export class RegisterComponent implements OnInit {
 
 
   onSubmit(data) {
+    this.Submitted = true; 
     if (this.regisForm.invalid) {
       if (this.regisForm.controls.password.errors?.minlength || this.regisForm.controls.confirmpassword.errors?.minlength) {
         Swal.fire({

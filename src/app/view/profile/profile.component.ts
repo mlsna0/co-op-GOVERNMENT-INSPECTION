@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { loginservice } from 'app/layouts/login.services.';
 import { SharedService } from "../../services/shared.service";
+import { AuthService } from "../../layouts/auth-layout/auth-layout.Service"
 import Swal from 'sweetalert2';
 import $ from "jquery";
 import 'bootstrap';
@@ -28,6 +29,8 @@ export class ProfileComponent implements OnInit {
     private fb:FormBuilder,
     private http:HttpClient,
     private sv:SharedService,
+    private authService: AuthService,
+    private loginSV:loginservice,
     private router: Router,
   ) { 
 
@@ -43,11 +46,11 @@ export class ProfileComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.sv.getUserReport().subscribe(res=>{
+    this.loginSV.getUserProfile().subscribe(res => {
       this.UserData = res;
-      console.log("onInit get RegisterData: ",this.UserData)
-
-    })
+      console.log("onInit get UserData: ", this.UserData);
+      this.UserInfoForm.patchValue(this.UserData);
+    });
   }
 
   editProfile() {

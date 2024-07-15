@@ -72,6 +72,9 @@ i{
   border-radius: 5px;
   border: 1px solid #000000;
 }
+.Info-text{
+  padding: 0.4375em 0;
+}
 .userContect{
   border-radius: 5px;
   border: 1px solid #000000;

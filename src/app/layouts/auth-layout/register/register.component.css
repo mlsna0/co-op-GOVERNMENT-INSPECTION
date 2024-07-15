@@ -28,14 +28,28 @@
   .form-group label {
     display: block;
     margin-bottom: 5px;
-  }
+  }  
   
   .form-group input {
     width: calc(100% - 20px);
     padding: 8px 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 14px;
+    font-family: 'Sarabun', sans-serif;
   }
+
+  /*invalidate style*/
+  .error-text{
+    font-size: 14px;
+    font-family: 'Sarabun', sans-serif;
+    color: red;
+  }
+  .form-group input.box-validate {
+    border: 1px solid red;
+    border-radius: 5px;
+  }
+
   
   .btn-create-account {
     background-color: #24a0ed;;

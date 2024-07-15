@@ -147,68 +147,7 @@
             </div>
 
 
-            <!--page2?-->
-
-            <!-- <div id="myDetail" class="modal-body-detail"
-                [ngStyle]="{'display': (testFile ||!remainingContent) ? 'none' : 'block', width: '210mm' }">
-
-                <form action method="get">
-                    <div #mainCenterPanel class="mainCenter-panel ">
-
-
-                        <div class="main-detail">
-                            <table>
-
-                                <tbody>
-                                    <tr>
-                                        <td>
-
-                                        </td>
-                                        <td [innerHTML]="getSafeHtml(remainingContent)" style="width: 90%;"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div *ngIf="!remainingContent" class="sign-content"
-                            [ngStyle]="{'display':!remainingContent ? 'flex' : 'none'}">
-                            <div class="form-group" style="width: auto;">
-                                <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
-                                <div *ngFor="let person of viewData; let i = index">
-                                    <div class="UploadContentBox">
-
-                                        <div class="openSignModal" (click)="openSignModal(i)"
-                                            [ngStyle]="{'display':isSignModalVisible[i] ? 'none':'flex'}">
-                                            <a>คลิกเพื่อเซ็น</a>
-
-                                        </div>
-
-                                        <div class="Writte-sign" #writteSignElement id="SignModal-{{i}}"
-                                            *ngIf="isSignModalVisible[i]">
-                                            <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">Error
-                                                someting
-                                                with
-                                                canvas</canvas>
-
-                                        </div>
-
-
-                                    </div>
-
-                                    <a style="position: relative; font-size: 16px; display: inline;">( {{
-                                        person.view_rank }} &nbsp; {{ person.view_first_name }} &nbsp;{{
-                                        person.view_last_name }} )</a>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </form>
-
-            </div> -->
-
-            <div *ngFor="let part of contentParts; let last = last, let i = index">
+            <div *ngFor="let part of contentParts; let last = last, let i = index,trackBy: trackByFn">
                 <div id="myDetail" class="modal-body-detail"
                     [ngStyle]="{'display': testFile ? 'none' : 'block', width: '210mm' }">
 
@@ -287,6 +226,12 @@
             <button type="button" class="btn btn-success pull-center" (click)="printPDF()">
                 <i class="fa fa-download"></i>&nbsp; ดาว์โหลด
             </button>
+            <!-- <button type="button" class="btn btn-success pull-center" (click)="generateQRCode()">
+                <i class="fa fa-download"></i>&nbsp; QRcode
+            </button>
+            <div *ngIf="qrCodeUrl">
+                <img [src]="qrCodeUrl" alt="QR Code">
+              </div> -->
             <button type="button" class="btn btn-add" (click)="saveRCPDF()">
                 <i class="fa fa-save"></i>&nbsp; บันทึก
             </button>

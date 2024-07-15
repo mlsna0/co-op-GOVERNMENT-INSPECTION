@@ -129,16 +129,19 @@ class RegisterModelCtrl extends BaseCtrl {
             }
 
             const payload = {
-                user: {
+                employee: {
                     id: user.id,
-                    role: user.role
+                    // firstname:user.firstname,
+                    // lastname:user.lastname,
+                    // phone:user.phone,
+                    
                 }
             };
 
             const token = jwt.sign(
                 payload,
-                process.env.JWT_SECRET || 'your_jwt_secret_key',
-                { expiresIn: '1h' }
+                process.env.JWT_SECRET || 'your_jwt_secret_key', // ใช้ process.env.JWT_SECRET หรือ default key
+                { expiresIn: '1h' } //กำหนดเวลา 1 ชั่วโมง เพื่อ?
             );
 
             res.json({ token });
@@ -148,6 +151,35 @@ class RegisterModelCtrl extends BaseCtrl {
         }
     };
 
+    auth = async (req, res, next) => {
+        const token = req.header('Authorization').replace('Bearer ', '');
+        console.log("auth Middleware: ",token)
+        if (!token) {
+          return res.status(401).json({ msg: 'No token, authorization denied' });
+        }
+      
+        try {
+          const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_key');
+          req.user = decoded.user;
+          next();
+        } catch (err) {
+          res.status(401).json({ msg: 'Token is not valid' });
+        }
+      };
+
+      getUserProfile = async (req, res) => {
+        try {
+            const userId = req.user.id; // Assuming the user ID is available in req.user.id
+            let user = await this.model.findById(userId).select('-password');
+            if (!user) {
+                return res.status(404).json({ msg: 'User not found' });
+            }
+            res.status(200).json(user);
+        } catch (error) {
+            console.error('Error in getUserProfile function:', error.message);
+            res.status(500).send('Server error');
+        }
+    };
     forgotPassword = async (req, res) => {
         try {
             const { email } = req.body;

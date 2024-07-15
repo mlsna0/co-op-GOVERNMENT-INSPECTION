@@ -1,7 +1,7 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
@@ -22,6 +22,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { SignatureComponent } from './signature/signature.component';
 import { HistoryComponent } from './view/history/history.component';
+import { TokenInterceptor } from './layouts/auth-layout/token.interceptor';
+
 
 
 
@@ -50,7 +52,10 @@ import { HistoryComponent } from './view/history/history.component';
     SignatureComponent,
     HistoryComponent
   ],
-  providers: [SharedService],
+  providers: [SharedService,
+    // { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+  ],
+ 
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA] // Optional, only if you face schema issues
   

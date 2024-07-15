@@ -6,6 +6,8 @@ import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
 import RegisterModelCtrl from './controller/registerController';
 import uploadService from './service/uploadservice.service';
+
+ 
 // import PdfCtrl from './controller/pdfController';
 // import DetailModelCtrl from 'controller/detailController';
 // import AggRecordNViewCon from 'controller/aggRecordNviewController'; //petch edit add this
@@ -66,6 +68,7 @@ function setRoutes(app): void {
   router.route('/viewModel/:id').delete(viewModelCtrl.delete);
 
   router.route('/registerModel').get(registerModelCtrl.getAll);
+  router.route('/registerModel/profile').get(registerModelCtrl.auth, registerModelCtrl.getUserProfile);//petch add
   router.route('/registerModel/count').get(registerModelCtrl.count);
   router.route('/registerModel').post(registerModelCtrl.create);
   router.route('/registerModel/:id').get(registerModelCtrl.get);
