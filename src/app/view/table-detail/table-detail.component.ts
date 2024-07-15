@@ -5,11 +5,7 @@ import 'bootstrap';
 import { HttpClient } from '@angular/common/http';
 import { SharedService } from "../../services/shared.service";
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
-<<<<<<< HEAD
 import { RecordModel } from '../../../../server/models/recordModel';
-=======
-import {  RecordModel } from '../../../../server/models/recordModel';
->>>>>>> d1cf44cb709313ef15333279675601d3b6b35572
 import { SafeResourceUrl } from '@angular/platform-browser';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';

@@ -24,24 +24,6 @@ const recordSchema = new mongoose.Schema({
     //   }  
     // ]
   });
-<<<<<<< HEAD
-  export interface RecordModel {
-    id: number | null;
-    times: number | null;
-    startDate: Date; //petch ปรับเปลี่ยน จาก string เป็น date
-    endDate: Date; //petch ปรับเปลี่ยน จาก string เป็น date
-    location: string;
-    task: string;
-    rank: string;
-    fullName: string;
-    details: string;
-    viewData: {
-      view_rank: string;
-      view_full_name: string;
-    };
-    note: string;
-  }
-=======
 export interface RecordModel {
   id: number | null;
   times: number | null;
@@ -58,7 +40,6 @@ export interface RecordModel {
   };
   note: string;
 }
->>>>>>> d1cf44cb709313ef15333279675601d3b6b35572
 const RecordModel = mongoose.model('RecordModel', recordSchema);
 export default RecordModel;
 
