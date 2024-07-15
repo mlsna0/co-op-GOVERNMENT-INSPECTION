@@ -106,8 +106,20 @@ class RegisterModelCtrl extends BaseCtrl {
 
     getAllUsers = async (req, res) => {
         try {
-            const employees = await this.model.find({});
-            res.status(200).json(employees);
+            // ทำการดึงข้อมูลจากฐานข้อมูล employee และ user พร้อมกัน
+            const [employees, users] = await Promise.all([
+                this.model.find({}), // สมมติว่า this.model คือ model ของ employee
+                this.modelUser.find({}) // this.modelUser คือ model ของ user
+            ]);
+
+            // รวมผลลัพธ์เข้าด้วยกัน
+            const combinedResults = {
+                employees,
+                users
+            };
+
+            // ส่งผลลัพธ์กลับไปให้ client
+            res.status(200).json(combinedResults);
         } catch (error) {
             console.error('Error in getAllUsers function:', error.message);
             res.status(500).send('Server error');
