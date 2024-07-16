@@ -6,6 +6,7 @@ import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
 import RegisterModelCtrl from './controller/registerController';
 import uploadService from './service/uploadservice.service';
+import uploadservice from './service/uploadservice.service';
 
  
 // import PdfCtrl from './controller/pdfController';
@@ -78,11 +79,15 @@ function setRoutes(app): void {
   router.route('/registerModel/login').post(registerModelCtrl.login);
   router.route('/registerModel/forgotPassword').post(registerModelCtrl.forgotPassword);
   router.route('/registerModel/resetPassword').post(registerModelCtrl.resetPassword);
-  router.route('/getEmp').get(registerModelCtrl.getEmp); 
+  // router.route('/getEmp').get(registerModelCtrl.getEmp); 
   router.route('/allUsers').get(registerModelCtrl.getAllUsers); 
-  router.route('/user/:id').put(registerModelCtrl.updateUserDetails);
+  // router.route('/user/:id').put(registerModelCtrl.updateUserDetails);
   router.route('/userModel/getUserById/:id').get(userModelCtrl.getUserById);
   
+  router.route('/registerModel/updateProfile').put(registerModelCtrl.auth, registerModelCtrl.updateEmployeeProfile);
+  router.route('/registerModel/updateRole/:id').put(registerModelCtrl.auth, registerModelCtrl.checkRole('admin'), registerModelCtrl.updateUserRole);
+  router.route('/registerModel/uploadProfile')
+    .put(registerModelCtrl.auth, uploadservice.single('profile'), registerModelCtrl.uploadProfile);
   //agg $lookup Record and View model routes //petch edit add this
   // router.route('/aggRecordNview/:id').get(AggRecordNViewCon.get);
 

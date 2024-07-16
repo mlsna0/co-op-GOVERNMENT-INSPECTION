@@ -4,7 +4,7 @@ import multer, { StorageEngine } from 'multer';
 import { Request, Response } from 'express';
 // import DetailModel from 'models/detailModel';
 import BaseCtrl from './base';
-import { buffer } from 'stream/consumers';
+// import { buffer } from 'stream/consumers';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -34,6 +34,7 @@ class recorCon extends BaseCtrl {
         record_location: req.body.location,
         record_topic: req.body.topic,
         record_content: req.body.content,
+        record_provine: req.body.provine,
         // record_postcode: req.body.postcode,
         // record_province: req.body.province,
         // record_district: req.body.district,
