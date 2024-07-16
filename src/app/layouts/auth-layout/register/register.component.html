@@ -114,10 +114,10 @@
           <div class="col-sm-12" style="padding-right: 0;">
            
             <div class="form-group">
-              <label for="phone" style="font-size: 16px;">ที่อยู่</label>
-              <input type="tel" id="phone" formControlName="address" required placeholder="กรอกที่่อยู่"
+              <label for="address" style="font-size: 16px;">ที่อยู่</label>
+              <input type="tel" id="address" formControlName="address" required placeholder="กรอกที่่อยู่"
                 >
-              <div *ngIf="regisForm.controls.phone.invalid && (regisForm.controls.phone.touched || regisForm.controls.phone.dirty)">
+              <div *ngIf="regisForm.controls.address.invalid && (regisForm.controls.address.touched || regisForm.controls.address.dirty)">
                 <small class="error-text">กรุณากรอกข้อมูล****</small>
               </div>
             </div>
@@ -127,7 +127,7 @@
               <div class="col-sm-4" >
            
                 <div class="form-group">
-                  <label for="phone" style="font-size: 16px;">จังหวัด</label>
+                  <label for="province" style="font-size: 16px;">จังหวัด</label>
                   <select  class="form-select" (change)="onProvinceChange($event.target.value)">
                     <option *ngFor="let province of provinces" [value]="province.id">{{ province.name }}</option>
                   </select>
@@ -137,7 +137,7 @@
               <div class="col-sm-4" >
            
                 <div class="form-group">
-                  <label for="phone" style="font-size: 16px;">อำเภอ</label>
+                  <label for="district" style="font-size: 16px;">อำเภอ</label>
                   <select  class="form-select" (change)="onDistrictChange($event.target.value)" [disabled]="!selectedProvince">
                     <option *ngFor="let district of districts" [value]="district.id">{{ district.name }}</option>
                   </select>
@@ -147,7 +147,7 @@
               <div class="col-sm-4" style="padding-right: 0;" >
            
                 <div class="form-group">
-                  <label for="phone" style="font-size: 16px;">ตำบล</label>
+                  <label for="subDistrict" style="font-size: 16px;">ตำบล</label>
                   <select    class="form-select" [disabled]="!selectedDistrict">
                     <option *ngFor="let subDistrict of subDistricts" [value]="subDistrict.id">{{ subDistrict.name }}</option>
                   </select>
