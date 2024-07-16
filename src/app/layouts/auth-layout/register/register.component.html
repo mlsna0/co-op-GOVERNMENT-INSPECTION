@@ -48,60 +48,120 @@
 
         </div>
         <div class="row box">
-          <div class="col-sm-6">
-            <div class="form-group">
-              <label for="firstname" style="font-size: 16px;">ชื่อ</label>
-              <input type="text" id="firstname" formControlName="firstname" required placeholder="กรอกชื่อของคุณ"
-               >
-              <div *ngIf="regisForm.controls.firstname.invalid && (regisForm.controls.firstname.touched || regisForm.controls.firstname.dirty)">
-                <small class="error-text">กรุณากรอกข้อมูล**</small>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6" style="padding-right: 0;">
-            <div class="form-group">
-              <label for="lastname" style="font-size: 16px;">นามสกุล</label>
-              <input type="text" id="lastname" formControlName="lastname" required placeholder="กรอกนามสกุลของคุณ"
-               >
-              <div *ngIf="regisForm.controls.lastname.invalid && (regisForm.controls.lastname.touched || regisForm.controls.lastname.dirty)">
-                <small class="error-text">กรุณากรอกข้อมูล**</small>
-              </div>
-            </div>
-          </div>
+
+       
          
-  
+
+         <div class="col-sm-12">
+          <div class="row">
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="firstname" style="font-size: 16px;">ชื่อ</label>
+                <input type="text" id="firstname" formControlName="firstname" required placeholder="กรอกชื่อของคุณ"
+                 >
+                <div *ngIf="regisForm.controls.firstname.invalid && (regisForm.controls.firstname.touched || regisForm.controls.firstname.dirty)">
+                  <small class="error-text">กรุณากรอกข้อมูล**</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6" style="padding-right: 0;">
+              <div class="form-group">
+                <label for="lastname" style="font-size: 16px;">นามสกุล</label>
+                <input type="text" id="lastname" formControlName="lastname" required placeholder="กรอกนามสกุลของคุณ"
+                 >
+                <div *ngIf="regisForm.controls.lastname.invalid && (regisForm.controls.lastname.touched || regisForm.controls.lastname.dirty)">
+                  <small class="error-text">กรุณากรอกข้อมูล**</small>
+                </div>
+              </div>
+            </div>
+          </div>
+       </div>
+          
         </div>
 
         <div class="row box">
-          <div class="col-sm-12">
+
+          <!-- <div class="col-sm-12" style="padding-right: 0;">
             <div class="title">ที่อยู่</div>
-          </div>
+          </div> -->
          
           <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="organization" style="font-size: 16px;">ชื่อองค์กร</label>
+                  <input type="text" id="organization" formControlName="organization" required placeholder="กรอกชื่อองค์กร"
+                   >
+                  <div *ngIf="regisForm.controls.organization.invalid && (regisForm.controls.organization.touched || regisForm.controls.organization.dirty)">
+                    <small class="error-text">กรุณากรอกข้อมูล**</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="bearings" style="font-size: 16px;">ตำแหน่ง/หน้าที่</label>
+                  <input type="text" id="bearings" formControlName="bearings" required placeholder="กรอกต่ำแหน่ง"
+                   >
+                  <div *ngIf="regisForm.controls.bearings.invalid && (regisForm.controls.bearings.touched || regisForm.controls.bearings.dirty)">
+                    <small class="error-text">กรุณากรอกข้อมูล**</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+           </div>
+          <div class="col-sm-12" style="padding-right: 0;">
            
             <div class="form-group">
-              <label for="phone" style="font-size: 16px;">จังหวัด</label>
-              <input type="tel" id="phone" formControlName="phone" required placeholder="กรอกจังหวัด"
+              <label for="phone" style="font-size: 16px;">ที่อยู่</label>
+              <input type="tel" id="phone" formControlName="address" required placeholder="กรอกที่่อยู่"
                 >
               <div *ngIf="regisForm.controls.phone.invalid && (regisForm.controls.phone.touched || regisForm.controls.phone.dirty)">
                 <small class="error-text">กรุณากรอกข้อมูล****</small>
               </div>
             </div>
           </div>
-          <div class="col-sm-12" >
-         
-            <div class="form-group">
-              <label for="phone" style="font-size: 16px;">จังหวัด</label>
-              <input type="tel" id="phone" formControlName="phone" required placeholder="กรอกจังหวัด"
-                >
-              <div *ngIf="regisForm.controls.phone.invalid && (regisForm.controls.phone.touched || regisForm.controls.phone.dirty)">
-                <small class="error-text">กรุณากรอกข้อมูล****</small>
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-4" >
+           
+                <div class="form-group">
+                  <label for="phone" style="font-size: 16px;">จังหวัด</label>
+                  <select  class="form-select" (change)="onProvinceChange($event.target.value)">
+                    <option *ngFor="let province of provinces" [value]="province.id">{{ province.name }}</option>
+                  </select>
+                 
+                </div>
               </div>
+              <div class="col-sm-4" >
+           
+                <div class="form-group">
+                  <label for="phone" style="font-size: 16px;">อำเภอ</label>
+                  <select  class="form-select" (change)="onDistrictChange($event.target.value)" [disabled]="!selectedProvince">
+                    <option *ngFor="let district of districts" [value]="district.id">{{ district.name }}</option>
+                  </select>
+                
+                </div>
+              </div>
+              <div class="col-sm-4" style="padding-right: 0;" >
+           
+                <div class="form-group">
+                  <label for="phone" style="font-size: 16px;">ตำบล</label>
+                  <select    class="form-select" [disabled]="!selectedDistrict">
+                    <option *ngFor="let subDistrict of subDistricts" [value]="subDistrict.id">{{ subDistrict.name }}</option>
+                  </select>
+                </div>
+              </div>
+       
             </div>
+
           </div>
-   
+        
+        
           
         </div>
+
       <div class="row box">
         <div class="col-sm-12" style="padding-right: 0;">
           <div class="title" >ข้อมูลติดต่อ</div>
@@ -114,7 +174,14 @@
             </div>
           </div>
         </div>
-       
+      </div>
+      <div class="row">
+        <div class="col-sm-12" style="padding-right: 0;">
+          <div class="title">อัปโหลดรูปภาพโปรไฟล์</div>
+          <div class="uploadPicture">
+              <i class="fa fa-upload"></i>
+          </div>
+        </div>
       </div>
       
         <button type="submit" class="btn-create-account">สร้างบัญชี</button>

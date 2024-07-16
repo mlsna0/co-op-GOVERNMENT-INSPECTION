@@ -30,14 +30,24 @@
   .form-group {
     margin-bottom: 15px;
     text-align: left;
+    font-family: 'Sarabun', sans-serif;
   }
   
   .form-group label {
     display: block;
     margin-bottom: 5px;
+    font-family: 'Sarabun', sans-serif;
   }  
   
   .form-group input {
+    width: calc(100% - 20px);
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: 'Sarabun', sans-serif;
+  }
+  .form-select{
     width: calc(100% - 20px);
     padding: 8px 10px;
     border: 1px solid #ccc;
@@ -55,6 +65,19 @@
   .title{
     display: flex;
     justify-content: flex-start;
+  }
+  .uploadPicture{
+    display: flex;
+    height: 90px;
+    border: 1px solid  #525252;
+    border-radius: 5px;
+    background: repeating-linear-gradient(-45deg,  #ccc 4px, transparent,  transparent 10px ) ;
+    opacity: 0.5;
+    border-style:dashed ;
+    margin: 25px;
+    justify-content: center;
+    align-items: center;
+
   }
   /*invalidate style*/
   .error-text{

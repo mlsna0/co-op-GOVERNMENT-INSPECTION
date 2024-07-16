@@ -4,6 +4,8 @@ import { Router } from "@angular/router";
 import { loginservice } from "app/layouts/login.services.";
 import Swal from "sweetalert2";
 
+import { ThaiApiAddressService } from '../../../services/thai-api-address.service'
+
 @Component({
   selector: "app-register",
   templateUrl: "./register.component.html",
@@ -19,12 +21,20 @@ export class RegisterComponent implements OnInit {
 
   regisForm: any;
   Submitted:boolean=false;
+
+  provinces: any[] = [];
+  districts: any[] = [];
+  subDistricts: any[] = [];
+
+  selectedProvince: any;
+  selectedDistrict: any;
   
 
   constructor(
     private fb: FormBuilder,
     private lc: loginservice,
-    private router: Router
+    private router: Router,
+    private ThaiAd : ThaiApiAddressService
   ) {
     this.regisForm = this.fb.group({
       firstname: ["", Validators.required],
@@ -37,7 +47,13 @@ export class RegisterComponent implements OnInit {
     }, { validator: this.passwordMatchValidator });
   }  
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.ThaiAd.getProvinces().subscribe(data =>{
+      this.provinces =data;
+      console.log("จังหวัด : ",this.provinces)
+    })
+
+  }
 
 
   onSubmit(data) {
@@ -127,4 +143,19 @@ export class RegisterComponent implements OnInit {
       confirmPassword?.setErrors(null);
     }
   }
+
+  onProvinceChange(provinceId: number) {
+    this.ThaiAd.getDistricts(provinceId).subscribe(data => {
+      this.districts = data;
+      this.subDistricts = [];  // Reset sub-districts when province changes
+    });
+  }
+
+  onDistrictChange(districtId: number) {
+    this.ThaiAd.getSubDistricts(districtId).subscribe(data => {
+      this.subDistricts = data;
+    });
+  }
+
+
 }

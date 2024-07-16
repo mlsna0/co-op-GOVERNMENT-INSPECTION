@@ -450,6 +450,9 @@ onDragEnd(event: DragEvent, index: number): void {
   BackRoot() {
     this.router.navigate(['/table-main']);
   }
+  onSignPage(){
+    this.router.navigate(['/signature']);
+  }
   //add page??
   addDetail() {
     console.log("addDetail work")

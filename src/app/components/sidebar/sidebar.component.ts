@@ -17,7 +17,7 @@ export const ROUTES: RouteInfo[] = [
    { path: '/dashboard', title: 'หน้าหลัก',  icon: 'dashboard', class: '' },
     // { path: '/table-list', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '' },
     { path: '/table-main', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '' },
-    { path: '/signature', title: 'การลงเซ็น',  icon:'note_alt', class: '' },
+    // { path: '/signature', title: 'การลงเซ็น',  icon:'note_alt', class: '' },
     { path: ' ', title: 'รายงาน' , icon:'assignment', class:'',
       children: [
         { path: '/reportuser', title: 'รายงานสมัครเข้าใช้งาน', icon: 'manage_accounts', class: '' },

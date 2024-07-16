@@ -24,6 +24,8 @@ import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and s
 import Tesseract from 'tesseract.js'; // Default import Tesseract.js
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
+import { error } from 'console';
+
 @Component({
   selector: 'app-table-main',
   templateUrl: './table-main.component.html',
@@ -193,10 +195,12 @@ export class TableMainComponent implements OnInit { [x: string]: any;
 
     });
 
-    this.sv.getRecord().subscribe(res => {
+    this.sv.getData().subscribe(res => {
       console.log("res getRecord:", res);
       this.items = res;
       this.loading = false;
+
+
 
     },(err) => {
       console.log("err : ",err);
@@ -226,23 +230,7 @@ export class TableMainComponent implements OnInit { [x: string]: any;
     window.open(`https://www.google.com/maps?q=(${lat},${lng})` , "_blank");
   }
 
-  // ngOnDestroy() {
-  //   this.dtTrigger.unsubscribe();
-  // }
 
-  // fetchData() {
-  //   this.fetchData;
-  //   this.sv.getData().subscribe(
-  //     res => {
-  //       this.items = res.records; // ใช้ res.records แทน res
-  //       console.log('Items fetched successfully:', this.items);
-  //     },
-  //     error => {
-  //       console.error('Error fetching items:', error);
-  //     }
-  //   );
-    
-  // } 
  
 
   //Writter section
@@ -655,8 +643,10 @@ get personal(): FormArray {
   let nextId: number;
   if (this.items.records && this.items.records.length >= 0){
     nextId = this.items.records.length + 1;
+    console.log("items record :",this.items.records)
   } else {
     nextId= 1;
+   
   }
   const currentDate = moment().format('YYYY-MM-DD');
 

@@ -55,7 +55,7 @@
                 </thead>
                 <tbody>
                   <!---->
-                  <tr *ngFor="let item of items ">
+                  <tr *ngFor="let item of items?.records ">
 
 
                     <td style=" text-align: center;">
@@ -85,13 +85,13 @@
 
                     <td class="text-center" style=" width:1% ;white-space: nowrap;">
 
-                      <button (click)="onRecord(item?._id)" style="border: none; background: none; color: black;">
+                      <button *ngIf="!item.record_filename" (click)="onRecord(item?._id)" style="border: none; background: none; color: black;">
                         <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top"
                           class="fa fa-pencil-square-o Record"></i>
                       </button>
 
 
-                      <button (click)="openDetailModal(item?._id)" style="border: none; background: none; color: black;">
+                      <button *ngIf="!item.record_filename" (click)="openDetailModal(item?._id)" style="border: none; background: none; color: black;">
                         <i data-toggle="tooltip" title="ดูรายละเอียด" data-placement="top"
                           class="fa fa-file-text-o ModalIcon "></i>
                       </button>
@@ -356,15 +356,21 @@
                     <div class="form-group">
                       <label for="location">สถานที่
                         <span
-                          *ngIf="addItemForm.controls['location'].invalid && (addItemForm.controls['location'].touched || addItemForm.controls['location'].dirty || Submitted)"
+                          *ngIf="addItemForm.controls['location'].invalid &&
+                                (addItemForm.controls['location'].touched ||
+                                 addItemForm.controls['location'].dirty || Submitted)"
                           class="text-validate">*</span>
                       </label>
                       <input type="text" id="location" formControlName="location" class="form-control"
                         placeholder="--เลือกสถานที่--"
-                        [ngClass]="{'box-validate': addItemForm.controls['location'].invalid && (addItemForm.controls['location'].touched || addItemForm.controls['location'].dirty || Submitted)}"
+                        [ngClass]="{'box-validate': addItemForm.controls['location'].invalid && 
+                                                    (addItemForm.controls['location'].touched || 
+                                                    addItemForm.controls['location'].dirty || Submitted)}"
                         readonly>
                       <span class="border-errorLocation"
-                        *ngIf="addItemForm.controls['location'].invalid && (addItemForm.controls['location'].touched || addItemForm.controls['location'].dirty || Submitted)">กรุณาเลือกสถานที่</span>
+                        *ngIf="addItemForm.controls['location'].invalid && 
+                        (addItemForm.controls['location'].touched || 
+                          addItemForm.controls['location'].dirty || Submitted)">กรุณาเลือกสถานที่</span>
                     </div>
                     <button type="button" class="btn btn-add" (click)="getCurrentLocation()">
                       <i class="fa fa-location-dot">&nbsp;</i>เลือกสถานที่

@@ -689,8 +689,10 @@ get personal(): FormArray {
 
   if (this.items.records && this.items.records.length >=0) {
     nextId =this.items.records.length +1;
+    console.log("items record :",this.items.records)
   }else {
     nextId = 1;
+    console.log("not fond")
   }
   const currentDate = moment().format('YYYY-MM-DD');
 
