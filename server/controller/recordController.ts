@@ -60,7 +60,7 @@ class recorCon extends BaseCtrl {
       if(req.body.personal){ 
         let newField = req.body.personal.map( x=> {return { view_rank : x.rank, view_first_name: x.firstname,view_last_name: x.lastname,RecordModelId: obj._id }});
 
-        let result = await this.model.insertMany(newField)
+        let result = await this.modelView.insertMany(newField)
       }
       
 
@@ -163,7 +163,7 @@ getData = async (req, res) => {
   try {
     const records = await this.model.find() // การจัดเรียงลำดับที่ฐานข้อมูล
     records.sort((a:any, b:any) => { return b.record_id - a.record_id})
-    const views = await this.model.find();
+    const views = await this.modelView.find();
     // const details = await this.modelDetail.find();
 
     res.status(200).json({
