@@ -31,6 +31,13 @@ export class MapComponent implements AfterViewInit {
 
     this.map.fitBounds(bounds);
 
+    const customIcon = L.icon({
+      iconUrl: 'assets/img/icon.png', // Path to your custom icon
+      iconSize: [32, 32], // Size of the icon
+      iconAnchor: [16, 32], // Point of the icon which will correspond to marker's location
+      popupAnchor: [0, -32] // Point from which the popup should open relative to the iconAnchor
+    });
+
     // Add markers for provinces
     const provinces = [
       { name: 'Chiang Mai', coords: [18.7883, 98.9853], content: 'Chiang Mai is known for its beautiful temples.' },
@@ -114,8 +121,8 @@ export class MapComponent implements AfterViewInit {
     ];
 
     provinces.forEach(province => {
-      L.marker(L.latLng(province.coords as [number, number]))
-        .bindPopup(`<b>${province.content}</b>`)
+      L.marker(L.latLng(province.coords as [number, number]), { icon: customIcon })
+        .bindPopup(`<b>${province.name}</b><br>${province.content}`)
         .addTo(this.map);
     });
   }

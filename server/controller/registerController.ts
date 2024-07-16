@@ -18,91 +18,127 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+
 class RegisterModelCtrl extends BaseCtrl {
     model = RegisterModel; // ใช้ RegisterModel สำหรับ Employee
     modelUser = User; // ใช้ User สำหรับ userModel
 
     create = async (req, res) => {
-        try {
-            const { firstname, lastname, email, password, confirmpassword, phone, role } = req.body;
-
-    
-            if (!password || !confirmpassword) {
-                return res.status(400).json({ msg: 'Password fields are required' });
+        upload.single('profileImage')(req, res, async (err) => {
+            if (err) {
+                return res.status(400).json({ msg: 'Error uploading file' });
             }
     
-            if (password !== confirmpassword) {
-                return res.status(400).json({ msg: 'Passwords do not match' });
+            try {
+                const { firstname, lastname, email, password, confirmpassword, company, bearing, phone, address, provine, district, subDistrict, postcode, role } = req.body;
+    
+                if (!password || !confirmpassword) {
+                    return res.status(400).json({ msg: 'Password fields are required' });
+                }
+    
+                if (password !== confirmpassword) {
+                    return res.status(400).json({ msg: 'Passwords do not match' });
+                }
+    
+                let user = await this.modelUser.findOne({ email });
+                if (user) {
+                    return res.status(400).json({ msg: 'User already exists' });
+                }
+    
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(password, salt);
+    
+                // เพิ่มการอัปโหลดรูปภาพ
+                const profileImage = req.file ? req.file.path : null;
+    
+                const employee = new this.model({
+                    firstname,
+                    lastname,
+                    phone,
+                    company,
+                    bearing,
+                    address,
+                    provine,
+                    district,
+                    subDistrict,
+                    postcode,
+                    profileImage
+                });
+    
+                await employee.save();
+    
+                const newUser = new this.modelUser({
+                    email,
+                    password: hashedPassword,
+                    role: role || 'user',
+                    employeeId: employee._id
+                });
+    
+                await newUser.save();
+    
+                res.status(201).json({ msg: 'User registered successfully' });
+            } catch (error) {
+                console.error('Error in create function:', error.message);
+                if (error.name === 'ValidationError') {
+                    return res.status(400).json({ msg: error.message });
+                }
+                res.status(500).send('Server error');
             }
-    
-            let employee = await this.model.findOne({ email });
-            if (employee) {
-                return res.status(400).json({ msg: 'Employee already exists' });
-            }
-    
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(password, salt);
-    
-            employee = new this.model({
-                firstname,
-                lastname,
-                email,
-                password: hashedPassword,
-                phone,
-            });
-    
-            await employee.save();
-            console.log('Employee saved:', employee);
-    
-            const newUser = new User({
-                email: email,
-                password: hashedPassword,
-                role: role || 'user',
-                employeeId: employee._id
-            });
-    
-    
-            await newUser.save();
-            // console.log('User saved:', newUser);
-    
-            const savedUser = await this.modelUser.findById(newUser._id);
-            console.log('Saved User:', savedUser);
-    
-            res.status(201).json({ msg: 'User registered successfully' });
-        } catch (error) {
-            console.error('Error in create function:', error.message);
-            if (error.name === 'ValidationError') {
-                return res.status(400).json({ msg: error.message });
-            }
-            res.status(500).send('Server error');
-        }
+        });
     };
-
-    getEmp = async (req, res) => {
+    
+    public uploadProfile = async (req, res) => {
         try {
-            const { email } = req.query;
-
-            if (!email) {
-                return res.status(400).json({ msg: 'Email is required' });
-            }
-
-            let employee = await this.model.findOne({ email });
-
-            if (!employee) {
-                return res.status(404).json({ msg: 'Employee not found' });
-            }
-
-            res.status(200).json({
-                firstname: employee.firstname,
-                lastname: employee.lastname,
-                email: employee.email,
-                phone: employee.phone,
-            });
-        } catch (error) {
-            console.error('Error in getEmp function:', error.message);
-            res.status(500).send('Server error');
+          if (!req.file) {
+            return res.status(400).send({ message: 'Please upload a file.' });
+          }
+    
+          const userId = req.user.id; // Assumes `req.user.id` is set from auth middleware
+          const profileUrl = `/uploads/${req.file.filename}`;
+    
+          const user = await User.findById(userId);
+          if (!user) {
+            return res.status(404).send({ message: 'User not found.' });
+          }
+    
+          const employee = await RegisterModel.findById(user.employeeId);
+          if (!employee) {
+            return res.status(404).send({ message: 'Employee not found.' });
+          }
+    
+          employee.profileImage = profileUrl;
+          await employee.save();
+    
+          res.status(200).send({ message: 'Profile uploaded successfully.', employee });
+        } catch (err) {
+          res.status(500).send(err);
         }
-    };
+      };
+      
+    // getEmp = async (req, res) => {
+    //     try {
+    //         const { email } = req.query;
+
+    //         if (!email) {
+    //             return res.status(400).json({ msg: 'Email is required' });
+    //         }
+
+    //         let employee = await this.model.findOne({ email });
+
+    //         if (!employee) {
+    //             return res.status(404).json({ msg: 'Employee not found' });
+    //         }
+
+    //         res.status(200).json({
+    //             firstname: employee.firstname,
+    //             lastname: employee.lastname,
+    //             phone: employee.phone,
+    //         });
+    //     } catch (error) {
+    //         console.error('Error in getEmp function:', error.message);
+    //         res.status(500).send('Server error');
+    //     }
+    // };
 
     getAllUsers = async (req, res) => {
         try {
@@ -129,40 +165,47 @@ class RegisterModelCtrl extends BaseCtrl {
     login = async (req, res) => {
         try {
             const { email, password } = req.body;
-
-            let user = await this.model.findOne({ email });
+    
+            let user = await this.modelUser.findOne({ email });
             if (!user) {
                 return res.status(400).json({ msg: 'Invalid email or password' });
             }
-
+    
             const isMatch = await bcrypt.compare(password, user.password);
             if (!isMatch) {
                 return res.status(400).json({ msg: 'Invalid email or password' });
             }
-
+    
+            let employee = await this.model.findById(user.employeeId);
+            if (!employee) {
+                return res.status(400).json({ msg: 'Invalid email or password' });
+            }
+    
             const payload = {
                 user: {
                     id: user.id,
                     email: user.email,
-                    firstname:user.firstname,
-                    lastname:user.lastname,
-                    phone:user.phone,
-                    address:user.address,
-                    district:user.district,
-                    subDistrict:user.subDistrict,
-                    postCode:user.postcode,
-                    detail:user.detail,
-                    profileImg:user.profileImage
-                    
+                    role: user.role,
+                    firstname: employee.firstname,
+                    lastname: employee.lastname,
+                    phone: employee.phone,
+                    company: employee.company,
+                    bearing: employee.bearing,
+                    address: employee.address,
+                    district: employee.district,
+                    subDistrict: employee.subDistrict,
+                    postCode: employee.postcode,
+                    detail: employee.detail,
+                    profileImg: employee.profileImage
                 }
             };
-
+    
             const token = jwt.sign(
                 payload,
-                process.env.JWT_SECRET || 'your_jwt_secret_key', // ใช้ process.env.JWT_SECRET หรือ default key
-                { expiresIn: '24h' } //กำหนดเวลา 1 ชั่วโมง เพื่อ?
+                process.env.JWT_SECRET || 'your_jwt_secret_key',
+                { expiresIn: '24h' }
             );
-
+    
             res.json({ token });
         } catch (error) {
             console.error(error.message);
@@ -212,20 +255,20 @@ class RegisterModelCtrl extends BaseCtrl {
     forgotPassword = async (req, res) => {
         try {
             const { email } = req.body;
-            let employee = await this.model.findOne({ email });
-            if (!employee) {
-                return res.status(400).json({ msg: 'Employee not found' });
+            let user = await this.modelUser.findOne({ email });
+            if (!user) {
+                return res.status(400).json({ msg: 'User not found' });
             }
-
+    
             const resetToken = crypto.randomBytes(20).toString('hex');
             const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
-
-            employee.resetPasswordToken = resetToken;
-            employee.resetPasswordExpires = resetTokenExpiry;
-            await employee.save();
-
+    
+            user.resetPasswordToken = resetToken;
+            user.resetPasswordExpires = resetTokenExpiry;
+            await user.save();
+    
             const resetUrl = `http://${req.headers.host}/resetPassword/${resetToken}`;
-
+    
             const transporter = nodemailer.createTransport({
                 service: 'Gmail',
                 auth: {
@@ -233,9 +276,9 @@ class RegisterModelCtrl extends BaseCtrl {
                     pass: process.env.EMAIL_PASSWORD
                 }
             });
-
+    
             const mailOptions = {
-                to: employee.email,
+                to: user.email,
                 from: process.env.EMAIL,
                 subject: 'Password Reset',
                 text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
@@ -243,7 +286,7 @@ class RegisterModelCtrl extends BaseCtrl {
                     ${resetUrl}\n\n
                     If you did not request this, please ignore this email and your password will remain unchanged.\n`
             };
-
+    
             await transporter.sendMail(mailOptions);
             res.status(200).json({ msg: 'An email has been sent to reset your password' });
         } catch (error) {
@@ -251,96 +294,103 @@ class RegisterModelCtrl extends BaseCtrl {
             res.status(500).send('Server error');
         }
     };
-
+    
     resetPassword = async (req, res) => {
         try {
             const { resetToken, newPassword, confirmPassword } = req.body;
             if (newPassword !== confirmPassword) {
                 return res.status(400).json({ msg: 'Passwords do not match' });
             }
-
-            let employee = await this.model.findOne({
+    
+            let user = await this.modelUser.findOne({
                 resetPasswordToken: resetToken,
                 resetPasswordExpires: { $gt: Date.now() }
             });
-
-            if (!employee) {
+    
+            if (!user) {
                 return res.status(400).json({ msg: 'Password reset token is invalid or has expired' });
             }
-
+    
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-            employee.password = hashedPassword;
-            employee.resetPasswordToken = undefined;
-            employee.resetPasswordExpires = undefined;
-            await employee.save();
-
+    
+            user.password = hashedPassword;
+            user.resetPasswordToken = undefined;
+            user.resetPasswordExpires = undefined;
+            await user.save();
+    
             res.status(200).json({ msg: 'Password has been reset successfully' });
         } catch (error) {
             console.error(error.message);
             res.status(500).send('Server error');
         }
     };
+    
+    
 
-    updateUserDetails = async (req, res) => {
+    updateEmployeeProfile = async (req, res) => {
+        // เพิ่ม upload.single('profileImage') ก่อนฟังก์ชั่น async
+        upload.single('profileImage')(req, res, async (err) => {
+            if (err) {
+                return res.status(400).json({ msg: 'Error uploading file' });
+            }
+    
+            try {
+                const { id } = req.params; // ใช้ ID จากพารามิเตอร์ถ้ามี
+                const employeeId = id || req.user.id; // ถ้าไม่มี ID ในพารามิเตอร์ ให้ใช้ ID ของผู้ใช้ที่ล็อกอิน
+    
+                const { firstname, lastname, phone, address, provine, district, subDistrict, postcode, detail } = req.body;
+    
+                let employee = await this.model.findById(employeeId);
+                if (!employee) {
+                    return res.status(404).json({ msg: 'Employee not found' });
+                }
+    
+                employee.firstname = firstname || employee.firstname;
+                employee.lastname = lastname || employee.lastname;
+                employee.phone = phone || employee.phone;
+                employee.address = address || employee.address;
+                employee.provine = provine || employee.provine;
+                employee.district = district || employee.district;
+                employee.subDistrict = subDistrict || employee.subDistrict;
+                employee.postcode = postcode || employee.postcode;
+                employee.detail = detail || employee.detail;
+    
+                // อัปเดตโปรไฟล์รูปภาพถ้ามีไฟล์อัปโหลด
+                if (req.file) {
+                    employee.profileImage = req.file.path;
+                }
+    
+                await employee.save();
+                res.status(200).json({ msg: 'Employee profile updated successfully' });
+    
+            } catch (error) {
+                console.error('Error in updateEmployeeProfile function:', error.message);
+                res.status(500).send('Server error');
+            }
+        });
+    };
+    updateUserRole = async (req, res) => {
         try {
             const { id } = req.params;
-            const { firstname, lastname, phone, role, address, provine, district, subDistrict, postcode, detail } = req.body;
-
-            let employee = await this.model.findById(id);
-            if (!employee) {
-                return res.status(404).json({ msg: 'Employee not found' });
+            const { role } = req.body;
+    
+            if (!role) {
+                return res.status(400).json({ msg: 'Role is required' });
             }
-
-            employee.firstname = firstname || employee.firstname;
-            employee.lastname = lastname || employee.lastname;
-            employee.phone = phone || employee.phone;
-            employee.address = address || employee.address;
-            employee.provine = provine || employee.provine;
-            employee.district = district || employee.district;
-            employee.subDistrict = subDistrict || employee.subDistrict;
-            employee.postcode = postcode || employee.postcode;
-            employee.detail = detail || employee.detail;
-
-            await employee.save();
-            res.status(200).json({ msg: 'Employee updated successfully' });
+    
+            let user = await this.modelUser.findById(id);
+            if (!user) {
+                return res.status(404).json({ msg: 'User not found' });
+            }
+    
+            user.role = role;
+            await user.save();
+    
+            res.status(200).json({ msg: 'User role updated successfully' });
+    
         } catch (error) {
-            console.error('Error in updateUserDetails function:', error.message);
-            res.status(500).send('Server error');
-        }
-    };
-
-    updateProfile = async (req, res) => {
-        try {
-            const employeeId = req.user.id;
-            const { firstname, lastname, phone, address, provine, district, subDistrict, postcode, detail } = req.body;
-
-            let employee = await this.model.findById(employeeId);
-            if (!employee) {
-                return res.status(404).json({ msg: 'Employee not found' });
-            }
-
-            employee.firstname = firstname || employee.firstname;
-            employee.lastname = lastname || employee.lastname;
-            employee.phone = phone || employee.phone;
-            employee.address = address || employee.address;
-            employee.provine = provine || employee.provine;
-            employee.district = district || employee.district;
-            employee.subDistrict = subDistrict || employee.subDistrict;
-            employee.postcode = postcode || employee.postcode;
-            employee.detail = detail || employee.detail;
-
-            if (req.file) {
-                employee.profileImage = req.file.path;
-            }
-
-            await employee.save();
-            res.status(200).json({ msg: 'Profile updated successfully' });
-       
-
-        } catch (error) {
-            console.error('Error in updateProfile function:', error.message);
+            console.error('Error in updateUserRole function:', error.message);
             res.status(500).send('Server error');
         }
     };
