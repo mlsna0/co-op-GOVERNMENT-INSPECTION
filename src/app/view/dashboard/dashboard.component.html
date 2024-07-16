@@ -1,5 +1,17 @@
 <div class="dashboard">
 
+  <div class="header">
+    <label for="province" class="province-label">เลือกจังหวัด:</label>
+    <select id="province" class="province-select form-control" [(ngModel)]="selectedProvince" (change)="onProvinceChange($event)">
+        <option value="">เลือกทั้งหมด</option> <!-- เพิ่มหัวข้อเลือกทั้งหมด -->
+        <option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}</option>
+    </select>
+</div>
+
+<div *ngIf="provinces.length === 0">
+    <p>ยังไม่มีข้อมูลจังหวัด</p>
+</div>
+
   <div class="global-sales">
     <div class="BoxTotal row">
       <div class="col-sm-4">
@@ -8,7 +20,7 @@
             <a style="font-size: 18px;">เอกสารตรวจสอบ</a>
           </div>
           <div class="card-body">
-           <canvasjs-chart [options]="chartOptions"></canvasjs-chart>    
+          
           </div>
           
         </div>
@@ -22,7 +34,7 @@
 
           <div class="card-body">
             <div>
-              <canvasjs-chart [options]="chartOptions"></canvasjs-chart>    
+              
           </div>    
           </div>
 
@@ -35,7 +47,7 @@
           </div>
           <div class="card-body">
             <div>
-              <canvasjs-chart [options]="chartOptions"></canvasjs-chart>    
+              
           </div>    
           </div>
         </div>
