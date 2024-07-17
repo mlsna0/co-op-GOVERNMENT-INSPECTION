@@ -2,7 +2,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { response } from 'express';
 import { environment } from '../../environments/environment';
-import { Observable, catchError } from 'rxjs';
+import { Observable, catchError,map } from 'rxjs';
 
 
 
@@ -30,6 +30,15 @@ export class SharedService {
     return this.http.get(`${this.baseUrl}/recordModel`).pipe(
       catchError(error=>{
         console.error('Error fatching data:',error);
+        throw 'ไม่สามารถดึงข้อมูลได้';
+      })
+    );
+  }
+  getRecordCount(): Observable<number> {
+    return this.http.get<any[]>(`${this.baseUrl}/recordModel`).pipe(
+      map(records => records.length), // นับจำนวนเอกสาร
+      catchError(error => {
+        console.error('Error fetching data:', error);
         throw 'ไม่สามารถดึงข้อมูลได้';
       })
     );

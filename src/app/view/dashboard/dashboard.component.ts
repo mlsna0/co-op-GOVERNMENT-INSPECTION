@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { CanvasJSAngularChartsModule } from "@canvasjs/angular-charts";
 import { ProvinceService } from "../thaicounty/thaicounty.service";
+import { SharedService } from "app/services/shared.service";
+import { subscribeOn } from "rxjs";
 
 @Component({
   selector: "app-dashboard",
@@ -11,11 +13,25 @@ export class DashboardComponent implements OnInit {
   provinces: { name: string }[] = []; // เปลี่ยนเป็น provinces
   selectedProvince: string;
   // provinces: any[] = [];
+  recordCount:number
 
-  constructor(private provinceService: ProvinceService) {}
+  constructor(
+    private provinceService: ProvinceService,
+    private sv:SharedService
+  ) {}
 
   ngOnInit(): void {
     this.loadProvinces();
+
+    this.sv.getRecordCount().subscribe(
+      count => {
+        this.recordCount = count;
+      },
+      error => {
+        console.error(error);
+      }
+    );
+  
   }
 
   loadProvinces(): void {
@@ -45,4 +61,5 @@ export class DashboardComponent implements OnInit {
       console.log("Selected Province:", selectedProvinceData);
     }
   }
+
 }

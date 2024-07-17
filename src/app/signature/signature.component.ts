@@ -153,9 +153,15 @@ export class SignatureComponent implements OnInit {
     this.stageMarkSign = true;
   }
   pageInitialized(e) {
-    this.totalPage = e.source._pages.length
-    this.dragList = [];
-    this.addDrag(0, { x: 0, y: 0 })
+   
+    if(this.selectedFile === null || this.selectedFile ===''){
+      this.totalPage =0;
+    } else{
+      this.totalPage = e.source._pages.length
+      this.dragList = [];
+      this.addDrag(0, { x: 0, y: 0 })
+    };
+   
   }
   addDrag(page, pos) {
     console.log("addDrag pos : ", pos);

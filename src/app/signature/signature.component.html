@@ -10,10 +10,12 @@
         <i class="fa fa-times"></i>
       </button>
     </div>
-    <div class="card-body">
-      <div class="col-12" *ngIf="loading">
-        <div>จำนวนหน้า : {{totalPage}} <input class="form-control col-4 col-sm-2 col-md-2 col-lg-1 mb-1"
-            style="border: none;" type="number" [(ngModel)]="pageVariable" /></div>
+    <div class="card-body" >
+      <div class="col-sm-12" *ngIf="loading">
+        <div>จำนวนหน้า : {{totalPage}} 
+          <input class="form-control"
+            style="border: none;" type="number" [(ngModel)]="pageVariable" />
+        </div>
 
 
 
@@ -64,8 +66,9 @@
         <button *ngIf="step == 2" (click)="reload()" style="height: 40px;" type="button"
           class="btn btn-danger ms-2">ลงนามเอกสารอีกครั้ง</button>
       </div>
+
     </div>
-    <div class="card-body">
+    <div class="card-body" *ngIf="selectedFile">
       <div class="col-12 mt-2" *ngIf="loading">
         <pdf-viewer *ngIf="step == 1 || step == 0" [src]="pdfFile" [render-text]="false" [original-size]="true"
           [show-all]="false" [(page)]="pageVariable" (pages-initialized)="pageInitialized($event)"
