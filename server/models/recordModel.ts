@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 
 const recordSchema = new mongoose.Schema({
     record_id: String,
-    record_start_date: Date,
+    record_star_date: Date,
     record_end_date: Date,
     record_detail: String,
     record_location: String,
