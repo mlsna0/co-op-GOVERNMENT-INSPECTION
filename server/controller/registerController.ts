@@ -30,7 +30,7 @@ class RegisterModelCtrl extends BaseCtrl {
             }
     
             try {
-                const { firstname, lastname, email, password, confirmpassword, company, bearing, phone, address, provine, district, subDistrict, postcode, role } = req.body;
+                const { firstname, lastname, email, password, confirmpassword, organization, bearing, phone, address, province, amphure, tambon, postCode, role } = req.body;
     
                 if (!password || !confirmpassword) {
                     return res.status(400).json({ msg: 'Password fields are required' });
@@ -55,13 +55,13 @@ class RegisterModelCtrl extends BaseCtrl {
                     firstname,
                     lastname,
                     phone,
-                    company,
+                    organization,
                     bearing,
                     address,
-                    provine,
-                    district,
-                    subDistrict,
-                    postcode,
+                    province,
+                    amphure,
+                    tambon,
+                    postCode,
                     profileImage
                 });
     
@@ -189,12 +189,12 @@ class RegisterModelCtrl extends BaseCtrl {
                     firstname: employee.firstname,
                     lastname: employee.lastname,
                     phone: employee.phone,
-                    company: employee.company,
+                    organization: employee.organization,
                     bearing: employee.bearing,
                     address: employee.address,
-                    district: employee.district,
-                    subDistrict: employee.subDistrict,
-                    postCode: employee.postcode,
+                    amphure: employee.amphure,
+                    tambon: employee.tambon,
+                    postCode: employee.postCode,
                     detail: employee.detail,
                     profileImg: employee.profileImage
                 }
@@ -339,7 +339,7 @@ class RegisterModelCtrl extends BaseCtrl {
                 const { id } = req.params; // ใช้ ID จากพารามิเตอร์ถ้ามี
                 const employeeId = id || req.user.id; // ถ้าไม่มี ID ในพารามิเตอร์ ให้ใช้ ID ของผู้ใช้ที่ล็อกอิน
     
-                const { firstname, lastname, phone, address, provine, district, subDistrict, postcode, detail } = req.body;
+                const { firstname, lastname, phone, address, province, amphure, tambon, postCode, detail } = req.body;
     
                 let employee = await this.model.findById(employeeId);
                 if (!employee) {
@@ -350,10 +350,10 @@ class RegisterModelCtrl extends BaseCtrl {
                 employee.lastname = lastname || employee.lastname;
                 employee.phone = phone || employee.phone;
                 employee.address = address || employee.address;
-                employee.provine = provine || employee.provine;
-                employee.district = district || employee.district;
-                employee.subDistrict = subDistrict || employee.subDistrict;
-                employee.postcode = postcode || employee.postcode;
+                employee.province = province || employee.province;
+                employee.amphure = amphure || employee.amphure;
+                employee.tambon = tambon || employee.tambon;
+                employee.postCode = postCode || employee.postCode;
                 employee.detail = detail || employee.detail;
     
                 // อัปเดตโปรไฟล์รูปภาพถ้ามีไฟล์อัปโหลด

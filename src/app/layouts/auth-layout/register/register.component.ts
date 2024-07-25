@@ -5,7 +5,7 @@ import { loginservice } from "app/layouts/login.services.";
 import Swal from "sweetalert2";
 
 import { ThaiApiAddressService } from '../../../services/thai-api-address.service'
-
+import { ProvinceService } from "app/view/thaicounty/thaicounty.service";
 @Component({
   selector: "app-register",
   templateUrl: "./register.component.html",
@@ -18,23 +18,30 @@ export class RegisterComponent implements OnInit {
   password: string;
   confirmpassword: string; // เพิ่มบรรทัดนี้
   phone: string;
-
   regisForm: any;
   Submitted:boolean=false;
 
   provinces: any[] = [];
-  districts: any[] = [];
-  subDistricts: any[] = [];
-
-  selectedProvince: any;
-  selectedDistrict: any;
+  amphures: any[] = [];
   
+  tambons: any[] = [];
+  nameTambons: string[] = [];
+
+  zipCode: any[] = [];
+  selectedProvince: any = null;
+  selectedTambon: any = null;
+  selectedAmphures: any = null;
+  postCode: any[] = [];
+
+  filteredAmphures = [];
+  filteredTambons = [];
 
   constructor(
     private fb: FormBuilder,
     private lc: loginservice,
     private router: Router,
-    private ThaiAd : ThaiApiAddressService
+   
+    private ts :ProvinceService,
   ) {
     this.regisForm = this.fb.group({
       firstname: ["", Validators.required],
@@ -42,17 +49,23 @@ export class RegisterComponent implements OnInit {
       email: ["", [Validators.required, Validators.email]],
       password: ["",[Validators.required, Validators.minLength(8)]],
       confirmpassword: ["", [Validators.required, Validators.minLength(8)]],
+      organization:['', Validators.required],
       address:["", Validators.required],
-      phone: ["", Validators.required, Validators.minLength(10)],
+      phone: ["", Validators.required, Validators.pattern('^[0-9]{10}$')],
+      province: ['', Validators.required],
+      amphure: ['', Validators.required],
+      tambon: ['', Validators.required],
+      postCode: ['', Validators.required],
+      role: ['', Validators.required],
     }, { validator: this.passwordMatchValidator });
   }  
 
   ngOnInit(): void {
-    this.ThaiAd.getProvinces().subscribe(data =>{
-      this.provinces =data;
-      console.log("จังหวัด : ",this.provinces)
-    })
+    // this.loadProvinces();
+    // this.loadAmphures();
+    // this.loadTambon()
 
+    this.loadProvinces(); // Load provinces when the component initializes
   }
 
 
@@ -92,11 +105,18 @@ export class RegisterComponent implements OnInit {
       email: this.regisForm.value.email,
       password: this.regisForm.value.password,
       confirmpassword: this.regisForm.value.confirmpassword,
+      organization: this.regisForm.value.organization,
+      address:this.regisForm.value.address,
       phone: this.regisForm.value.phone,
-      role: "admin",
+      province: this.regisForm.value.province,
+      amphure: this.regisForm.value.amphure,
+      tambon: this.regisForm.value.tambon,
+      postCode : this.regisForm.value.postCode,
+      role: this.regisForm.value.role,
     };
 
     this.lc.register(newUser).subscribe(
+
       (response) => {
         console.log("User registered successfully", response);
         Swal.fire({
@@ -144,18 +164,49 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  loadProvinces() {
+    this.ts.getProvincesWithDetails().subscribe(data => {
+      this.provinces = data;
+    });
+  }
+
   onProvinceChange(provinceId: number) {
-    this.ThaiAd.getDistricts(provinceId).subscribe(data => {
-      this.districts = data;
-      this.subDistricts = [];  // Reset sub-districts when province changes
+    this.regisForm.controls['amphure'].setValue('');
+    this.regisForm.controls['tambon'].setValue('');
+    this.filteredTambons = [];
+
+    this.loadAmphures(provinceId); 
+  }
+  
+
+  loadAmphures(provinceId: any) {
+    this.ts.getamphures().subscribe(data => {
+      this.amphures = data.filter(amphure => amphure.province_id === parseInt(provinceId));
+      this.filteredAmphures = this.amphures;
     });
   }
 
-  onDistrictChange(districtId: number) {
-    this.ThaiAd.getSubDistricts(districtId).subscribe(data => {
-      this.subDistricts = data;
+  onAmphuresChange(amphureId: any) {
+    this.regisForm.controls['tambon'].setValue('');
+
+    this.loadTambons(amphureId,); // Load tambons for the selected amphure
+  }
+
+  loadTambons(amphureId: any) {
+    this.ts.gettambons().subscribe(data => {
+      this.tambons = data.filter(tambon => tambon.amphure_id === parseInt(amphureId));
+      this.filteredTambons = this.tambons;
+      this.nameTambons = this.tambons.map(tambon => tambon.name_th);
     });
   }
 
+  onTambonChange(tambonId: any) {
+    const selectedTambon = this.filteredTambons.find(tambon => tambon.id === parseInt(tambonId));
+    if (selectedTambon) {
+      this.zipCode = selectedTambon.zip_code; 
+      this.regisForm.controls['zipCode'].setValue(this.zipCode); 
+    }
+  }
 
+ 
 }

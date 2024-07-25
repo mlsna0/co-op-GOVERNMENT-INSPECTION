@@ -15,7 +15,7 @@ export class loginservice {
 
   // private baseUrl = 'mongodb://127.0.0.1:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private baseUrl = 'http://localhost:3000/api'; // ปรับ URL ให้ตรงกับ API ของคุณ
- 
+  
   constructor(private http: HttpClient) { }
 
  
