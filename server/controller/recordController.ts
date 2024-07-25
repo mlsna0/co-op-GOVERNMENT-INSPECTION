@@ -7,6 +7,7 @@ import BaseCtrl from './base';
 // import { buffer } from 'stream/consumers';
 import * as path from 'path';
 import * as fs from 'fs';
+import jwt from 'jsonwebtoken';
 
 
 interface MulterRequest extends Request {
@@ -20,12 +21,29 @@ const upload = multer({ storage: storage }).single('pdf');
 class recorCon extends BaseCtrl {
   model = recordModel;
   modelView = ViewModel;
-    
+  
+  auth = async (req, res, next) => {
+    const token = req.header('Authorization').replace('Bearer ', '');
+    console.log("auth Middleware: ", token);
+    if (!token) {
+      return res.status(401).json({ msg: 'No token, authorization denied' });
+    }
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_key');
+      req.user = decoded.user;
+      next();
+    } catch (err) {
+      res.status(401).json({ msg: 'Token is not valid' });
+    }
+  };
   
   postItemToView = async (req, res) => {
     console.log(req.body);
-    
+
     try {
+      const userID = req.user.id; // ใช้ userID จาก req.user
+
       const obj = await new this.model({
         record_id: req.body.id,
         record_star_date: req.body.startDate,
@@ -35,34 +53,17 @@ class recorCon extends BaseCtrl {
         record_topic: req.body.topic,
         record_content: req.body.content,
         record_provine: req.body.provine,
-        // record_postcode: req.body.postcode,
-        // record_province: req.body.province,
-        // record_district: req.body.district,
-        // record_sub_district: req.body.subDistrict,
-        // record_address: req.body.address,
         record_place: req.body.place,
-        // pdfs: [
-        //   {
         record_filename: req.body.filename,
-        //     record_data_: Buffer.from(req.body.data_, 'base64'),
-        //     record_contentType: req.body.contentType
-        //   }
-        // ]
-  
+        userId: userID // เก็บ userID ใน record
       }).save();
-      // req.body.personal.forEach(async (element) => {
-      //   const obj1 = await new this.modelView({
-      //     view_rank: element.rank,
-      //     view_full_name: element.fullname,
-      //   }).save();
-      // });
-      console.log("obj _Id: ",obj._id)
-      if(req.body.personal){ 
-        let newField = req.body.personal.map( x=> {return { view_rank : x.rank, view_first_name: x.firstname,view_last_name: x.lastname,RecordModelId: obj._id }});
 
-        let result = await this.modelView.insertMany(newField)
+      console.log("obj _Id: ", obj._id);
+      if (req.body.personal) {
+        let newField = req.body.personal.map(x => { return { view_rank: x.rank, view_first_name: x.firstname, view_last_name: x.lastname, RecordModelId: obj._id }; });
+
+        let result = await this.modelView.insertMany(newField);
       }
-      
 
       res.status(200).json("ok");
     } catch (err) {

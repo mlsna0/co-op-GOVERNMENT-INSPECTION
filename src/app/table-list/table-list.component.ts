@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray,AbstractControl } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { dataflow } from 'googleapis/build/src/apis/dataflow';
 import { SharedService } from "../services/shared.service";
 import { GeocodingServiceService } from '../services/geocodingService/geocoding-service.service'; //พยายามแก้ไข location
@@ -759,9 +759,11 @@ get personal(): FormArray {
     // this.sv.postItemData(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
     //   console.log("res postItemData:", res);
     // });
+    const token = this.sv.getToken(); // ดึง token จากบริการที่คุณใช้
 
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     
-    this.sv.postDataTest(this.addItemForm.value).subscribe(res => {
+    this.sv.postDataTest(this.addItemForm.value, token).subscribe(res => {
       console.log("res submitted successfully", res);
       Swal.fire({
               title: 'เพิ่มผู้ใช้สำเร็จ!!',

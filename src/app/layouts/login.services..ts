@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { response } from 'express';
 import { environment } from '../../environments/environment';
 import { Observable, catchError, throwError } from 'rxjs';
+import { SharedService } from 'app/services/shared.service';
 
 
 
@@ -16,7 +17,7 @@ export class loginservice {
   // private baseUrl = 'mongodb://127.0.0.1:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private baseUrl = 'http://localhost:3000/api'; // ปรับ URL ให้ตรงกับ API ของคุณ
  
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private sv:SharedService) { }
 
  
   register(userData: any): Observable<any> {
@@ -62,5 +63,8 @@ export class loginservice {
   getUserReportProfile(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/registerModel/:id`);
   }
-
+  handleLoginResponse(response: any): void {
+    const token = response.token;
+    this.sv.setToken(token); // เก็บ token ใน LocalStorage ผ่าน TokenService
+  }
 }

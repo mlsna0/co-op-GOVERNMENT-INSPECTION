@@ -8,11 +8,6 @@ import RegisterModelCtrl from './controller/registerController';
 import uploadService from './service/uploadservice.service';
 import uploadservice from './service/uploadservice.service';
 
- 
-// import PdfCtrl from './controller/pdfController';
-// import DetailModelCtrl from 'controller/detailController';
-// import AggRecordNViewCon from 'controller/aggRecordNviewController'; //petch edit add this
-
 function setRoutes(app): void {
   const router = express.Router();
 
@@ -20,13 +15,6 @@ function setRoutes(app): void {
   const userModelCtrl = new UserModelCtrl();
   const viewModelCtrl = new ViewModelCtrl();
   const registerModelCtrl = new RegisterModelCtrl();
-  // const pdfCtrl = new PdfCtrl();
-  // const detailModelCtrl = new DetailModelCtrl();
-
-  // const aggregateRecordsAndView = new AggRecordNViewCon(); //petch edit add this
-
-
-  // router.route('/postPersonData').post(itemModelCtrl.postItemToView);
 
   router.route('/record/savepdf').put(recordModelCtrl.savePDF);
   router.route('/pdf/:id').get(recordModelCtrl.getPDF);
@@ -36,10 +24,10 @@ function setRoutes(app): void {
   router.route('/record/updateContent').put(recordModelCtrl.updateRecordContent);
   // router.route('/record/updatePDF').put(itemModelCtrl.updateRecordPDF);
 
-  router.route('/postItemData').post(recordModelCtrl.postItemToView);
+  router.route('/postItemData').post(recordModelCtrl.auth, recordModelCtrl.postItemToView);
   router.route('/postTyproText').post(recordModelCtrl.postItemToView);
   // router.route('/postAddDetail').post(itemModelCtrl.addDetail);
-  router.route('/postDataTest').post(uploadService.none(),recordModelCtrl.postItemToView)
+  router.route('/postDataTest').post(uploadService.none(), recordModelCtrl.auth, recordModelCtrl.postItemToView);
  
 
   // RecordModel routes
@@ -88,8 +76,6 @@ function setRoutes(app): void {
   router.route('/registerModel/updateRole/:id').put(registerModelCtrl.auth, registerModelCtrl.checkRole('admin'), registerModelCtrl.updateUserRole);
   router.route('/registerModel/uploadProfile')
     .put(registerModelCtrl.auth, uploadservice.single('profile'), registerModelCtrl.uploadProfile);
-  //agg $lookup Record and View model routes //petch edit add this
-  // router.route('/aggRecordNview/:id').get(AggRecordNViewCon.get);
 
   app.use('/api', router);
 }

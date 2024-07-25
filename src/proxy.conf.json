@@ -1,0 +1,12 @@
+{
+    "/api": {
+      "target": "https://doc.oca.go.th",
+      "secure": false,
+      "changeOrigin": true,
+      "logLevel": "debug",
+      "pathRewrite": {
+        "^/api": ""
+      }
+    }
+  }
+  

@@ -6,9 +6,18 @@ import setRoutes from './routes';
 import * as path from 'path';
 import dotenv from 'dotenv';
 
+dotenv.config();
 
 const app = express();
-app.use(cors());
+
+const corsOptions = {
+  origin: 'http://localhost:4200', // Your frontend origin
+  optionsSuccessStatus: 200,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+};
+
+app.use(cors(corsOptions));
 // app.use(bodyParser.json());
 
 app.use(express.json());  

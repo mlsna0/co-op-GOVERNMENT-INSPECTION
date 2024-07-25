@@ -238,14 +238,19 @@ class RegisterModelCtrl extends BaseCtrl {
             }
         };
     };
-
-      getUserProfile = async (req, res) => {
+    
+    getUserProfile = async (req, res) => {
         try {
             const userId = req.user.id; // Assuming the user ID is available in req.user.id
-            let user = await this.model.findById(userId).select('-password');
+    
+            let user = await this.modelUser.findById(userId).select('-password').populate('employeeId');
+    
             if (!user) {
                 return res.status(404).json({ msg: 'User not found' });
             }
+    
+            console.log('Populated user:', user); // Log user data for debugging
+    
             res.status(200).json(user);
         } catch (error) {
             console.error('Error in getUserProfile function:', error.message);
