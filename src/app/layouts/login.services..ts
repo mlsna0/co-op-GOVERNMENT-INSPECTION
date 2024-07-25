@@ -15,8 +15,21 @@ export class loginservice {
 
   // private baseUrl = 'mongodb://127.0.0.1:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private baseUrl = 'http://localhost:3000/api'; // ปรับ URL ให้ตรงกับ API ของคุณ
+  private tokenKey = 'token';
  
   constructor(private http: HttpClient) { }
+
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  setToken(token: string): void {
+    localStorage.setItem(this.tokenKey, token);
+  }
+
+  clearToken(): void {
+    localStorage.removeItem(this.tokenKey);
+  }
 
  
   register(userData: any): Observable<any> {
@@ -50,7 +63,7 @@ export class loginservice {
   }
 
   getUserProfile(): Observable<any> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem(this.tokenKey);
     if (!token) {
       console.error('No token found in localStorage');
       return throwError('No token found');
@@ -59,6 +72,7 @@ export class loginservice {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`${this.baseUrl}/registerModel/profile`, { headers });
   }
+  
   getUserReportProfile(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/registerModel/:id`);
   }

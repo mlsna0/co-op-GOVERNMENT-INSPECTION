@@ -52,6 +52,7 @@
 
   }
   .cancleIcon{
+    position: relative;
     display: flex;
     width: auto;
     padding: 4px 8px;

@@ -33,7 +33,6 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ReportuserComponent } from 'app/view/reportuser/reportuser.component';
 import { ReportprofileComponent } from '../../view/reportuser/reportprofile/reportprofile.component';
 import { ReportuserbuildComponent } from '../../view/reportuser/reportuserbuild/reportuserbuild.component';
-import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { AppComponent } from 'app/app.component';
 
@@ -56,7 +55,6 @@ import { AppComponent } from 'app/app.component';
     DataTablesModule,
     AngularEditorModule,
     PdfViewerModule,
-    CanvasJSAngularChartsModule,
     NgApexchartsModule,
    
   ],

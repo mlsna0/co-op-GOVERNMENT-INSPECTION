@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 
 const recordSchema = new mongoose.Schema({
     record_id: String,
-    record_star_date: Date,
+    record_start_date: Date,
     record_end_date: Date,
     record_detail: String,
     record_location: String,
@@ -18,8 +18,8 @@ const recordSchema = new mongoose.Schema({
     // record_sub_district: String,
     // record_address: String,
     record_place: String,
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
-  
+    // userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' }, 
     //     record_data_: Buffer,
     //     record_contentType: String
     //   }  

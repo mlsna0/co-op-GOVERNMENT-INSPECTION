@@ -23,6 +23,7 @@ import moment from 'moment';
 import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
 import Tesseract from 'tesseract.js'; // Default import Tesseract.js
 import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { jwtDecode } from 'jwt-decode'; // นำเข้า jwt-decode
 
 import { error } from 'console';
 
@@ -141,7 +142,7 @@ export class TableMainComponent implements OnInit { [x: string]: any;
       rank: ['',Validators.required],
       firstname: ['',Validators.required],
       lastname: ['',Validators.required],
-    });
+    }); //ช้อมูลไม่ได้มาด้วยนะ
     
     this.personInputs = this.addItemForm.get('personal') as FormArray;
     this.addPersonInput(); // Add initial input group
@@ -671,7 +672,7 @@ get personal(): FormArray {
     this.Submitted = true; 
     // console.log(data);
     console.log('Item form:',this.addItemForm.value);
-    console.log('PernalForm : ',this.addPersonalForm.value);
+ 
     console.log('Personal array form : ',this.personal.value)
     console.log("onInsertSubmit..?data : ",data);
     // console.log(this.addPersonalForm.value);
@@ -706,16 +707,40 @@ get personal(): FormArray {
       return;
     }
    
-    // }
-    // console.log(this.items);
-    // ส่งข้อมูลไปยัง controller
+    ///การดึงข้อมูลจากผู้สร้างเอกสาร
+    const token = localStorage.getItem('token'); // ดึง token จาก localStorage
+    console.log("token: ",token)
+    if (!token) {
+      Swal.fire({
+        title: 'เกิดข้อผิดพลาด!',
+        text: 'ไม่สามารถรับข้อมูลผู้ใช้ได้ หา token ไม่เจอ',
+        icon: 'error',
+        confirmButtonText: 'ตกลง',
+        customClass: {
+          confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+        }
+      });
+      return;
+    }
 
-    // this.sv.postItemData(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
-    //   console.log("res postItemData:", res);
-    // });
+    const decodedToken: any = jwtDecode(token); // Decode JWT token
+    console.log("decodedToken: ", decodedToken);
 
+    const createdBy = {
+        _id: decodedToken?.user?.id || decodedToken?._id,
+        firstname: decodedToken?.user?.firstname,
+        lastname: decodedToken?.user?.lastname,
+        email: decodedToken?.user?.email,
+    };
+ 
+console.log("CreateBy data :",createdBy)
+    const postData = {
+      ...this.addItemForm.value,
+      createdBy
+    };
+    // console.log("postData : ",postData)
     
-    this.sv.postDataTest(this.addItemForm.value).subscribe(res => {
+    this.sv.postDataTest(postData).subscribe(res => {
       console.log("res submitted successfully", res);
       Swal.fire({
               title: 'เพิ่มรายการสำเร็จ!!',

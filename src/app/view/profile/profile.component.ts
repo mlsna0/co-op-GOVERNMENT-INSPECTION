@@ -25,6 +25,7 @@ export class ProfileComponent implements OnInit {
   PersonINT:any=0;
   EditStatus: boolean=false;
 
+  profileImgUrl:string;
   constructor(
     private fb:FormBuilder,
     private http:HttpClient,
@@ -46,11 +47,13 @@ export class ProfileComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.loginSV.getUserProfile().subscribe(res => {
+    this.loginSV.getUserProfile().subscribe(
+      res => {
       this.UserData = res;
       console.log("onInit get UserData: ", this.UserData);
       this.UserInfoForm.patchValue(this.UserData);
     });
+    this.sv.currentProfileImageUrl.subscribe(url=> this.profileImgUrl= url)
   }
 
   editProfile() {
@@ -72,7 +75,7 @@ export class ProfileComponent implements OnInit {
 
   }
   cancelEdit(){
-
+    this.EditStatus= false;
   }
   
 }

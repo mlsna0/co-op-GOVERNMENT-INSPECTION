@@ -8,6 +8,8 @@ import RegisterModelCtrl from './controller/registerController';
 import uploadService from './service/uploadservice.service';
 import uploadservice from './service/uploadservice.service';
 
+import auth from './middleware/auth/auth'
+
  
 // import PdfCtrl from './controller/pdfController';
 // import DetailModelCtrl from 'controller/detailController';
@@ -39,7 +41,7 @@ function setRoutes(app): void {
   router.route('/postItemData').post(recordModelCtrl.postItemToView);
   router.route('/postTyproText').post(recordModelCtrl.postItemToView);
   // router.route('/postAddDetail').post(itemModelCtrl.addDetail);
-  router.route('/postDataTest').post(uploadService.none(),recordModelCtrl.postItemToView)
+  router.route('/postDataTest').post(auth.authorize,uploadService.none(),recordModelCtrl.postItemToView)
  
 
   // RecordModel routes
@@ -70,24 +72,24 @@ function setRoutes(app): void {
   router.route('/viewModel/:id').delete(viewModelCtrl.delete);
 
   router.route('/registerModel').get(registerModelCtrl.getAll);
-  router.route('/registerModel/profile').get(registerModelCtrl.auth, registerModelCtrl.getUserProfile);//petch add
+  router.route('/registerModel/profile').get(auth.authorize, registerModelCtrl.getUserProfile);//petch add
   router.route('/registerModel/count').get(registerModelCtrl.count);
   router.route('/registerModel').post(registerModelCtrl.create);
+  router.route('/registerModel/login').post(registerModelCtrl.login);
+  router.route('/registerModel/resetPassword').post(registerModelCtrl.resetPassword);
+  router.route('/registerModel/forgotPassword').post(registerModelCtrl.forgotPassword); 
   router.route('/registerModel/:id').get(registerModelCtrl.get);
   router.route('/registerModel/:id').put(registerModelCtrl.update);
   router.route('/registerModel/:id').delete(registerModelCtrl.delete);
-  router.route('/registerModel/login').post(registerModelCtrl.login);
-  router.route('/registerModel/forgotPassword').post(registerModelCtrl.forgotPassword);
-  router.route('/registerModel/resetPassword').post(registerModelCtrl.resetPassword);
   // router.route('/getEmp').get(registerModelCtrl.getEmp); 
   router.route('/allUsers').get(registerModelCtrl.getAllUsers); 
   // router.route('/user/:id').put(registerModelCtrl.updateUserDetails);
   router.route('/userModel/getUserById/:id').get(userModelCtrl.getUserById);
-  
-  router.route('/registerModel/updateProfile').put(registerModelCtrl.auth, registerModelCtrl.updateEmployeeProfile);
-  router.route('/registerModel/updateRole/:id').put(registerModelCtrl.auth, registerModelCtrl.checkRole('admin'), registerModelCtrl.updateUserRole);
+                                                    //,
+  router.route('/registerModel/updateProfile').put( auth.authorize,registerModelCtrl.updateEmployeeProfile);
+  router.route('/registerModel/updateRole/:id').put( auth.authorize,registerModelCtrl.updateUserRole);
   router.route('/registerModel/uploadProfile')
-    .put(registerModelCtrl.auth, uploadservice.single('profile'), registerModelCtrl.uploadProfile);
+    .put(auth.authorize, uploadservice.single('profile'), registerModelCtrl.uploadProfile);
   //agg $lookup Record and View model routes //petch edit add this
   // router.route('/aggRecordNview/:id').get(AggRecordNViewCon.get);
 

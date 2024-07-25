@@ -88,20 +88,20 @@
 
           <div class="col-sm-12">
             <div class="form-group">
-              <label for="organization" >ชื่อองค์กร</label>
-              <input type="text" id="organization" formControlName="organization" required placeholder="กรอกชื่อองค์กร">
+              <label for="company" >ชื่อองค์กร</label>
+              <input type="text" id="company" formControlName="company" required placeholder="กรอกชื่อองค์กร">
               <div
-                *ngIf="regisForm.controls.organization.invalid && (regisForm.controls.organization.touched || regisForm.controls.organization.dirty)">
+                *ngIf="regisForm.controls.company.invalid && (regisForm.controls.company.touched || regisForm.controls.company.dirty)">
                 <small class="error-text">กรุณากรอกข้อมูล**</small>
               </div>
             </div>
           </div>
           <div class="col-sm-12">
             <div class="form-group">
-              <label for="bearings" >ตำแหน่ง/หน้าที่</label>
-              <input type="text" id="bearings" formControlName="bearings" required placeholder="กรอกต่ำแหน่ง">
+              <label for="bearing" >ตำแหน่ง/หน้าที่</label>
+              <input type="text" id="bearing" formControlName="bearing" required placeholder="กรอกตำแหน่ง">
               <div
-                *ngIf="regisForm.controls.bearings.invalid && (regisForm.controls.bearings.touched || regisForm.controls.bearings.dirty)">
+                *ngIf="regisForm.controls.bearing.invalid && (regisForm.controls.bearing.touched || regisForm.controls.bearing.dirty)">
                 <small class="error-text">กรุณากรอกข้อมูล**</small>
               </div>
             </div>
@@ -111,10 +111,10 @@
 
             <div class="form-group">
               <label for="address" >ที่อยู่</label>
-              <input type="tel" id="address" formControlName="address" required placeholder="กรอกที่่อยู่">
+              <input type="address" id="address" formControlName="address" required placeholder="กรอกที่่อยู่">
               <div
                 *ngIf="regisForm.controls.address.invalid && (regisForm.controls.address.touched || regisForm.controls.address.dirty)">
-                <small class="error-text">กรุณากรอกข้อมูล****</small>
+                <small class="error-text">กรุณากรอกข้อมูล**</small>
               </div>
             </div>
           </div>
@@ -168,11 +168,12 @@
               <input type="tel" id="phone" formControlName="phone" required placeholder="กรอกเบอร์โทรศัทพ์ของคุณ">
               <div
                 *ngIf="regisForm.controls.phone.invalid && (regisForm.controls.phone.touched || regisForm.controls.phone.dirty)">
-                <small class="error-text">กรุณากรอกข้อมูล****</small>
+                <small class="error-text">กรุณากรอกข้อมูล**</small>
               </div>
             </div>
           </div>
         </div>
+
         <div class="row">
           <div class="col-sm-12" style="padding-right: 0;">
             <div class="title">อัปโหลดรูปภาพโปรไฟล์</div>

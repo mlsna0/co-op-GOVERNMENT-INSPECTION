@@ -1,8 +1,8 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule,HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { response } from 'express';
 import { environment } from '../../environments/environment';
-import { Observable, catchError,map } from 'rxjs';
+import { Observable, catchError,map,BehaviorSubject } from 'rxjs';
 
 
 
@@ -15,6 +15,10 @@ export class SharedService {
 
   // private baseUrl = 'mongodb://127.0.0.1:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private baseUrl = 'http://localhost:3000/api'; // ปรับ URL ให้ตรงกับ API ของคุณ
+  private tokenKey = 'token';
+
+  private profileImageUrl = new BehaviorSubject<string>('./assets/img/Person-icon.jpg');
+  currentProfileImageUrl = this.profileImageUrl.asObservable();
   private typroText: string = '';
   constructor(private http: HttpClient) { }
 
@@ -103,19 +107,27 @@ export class SharedService {
     return this.http.post(`${this.baseUrl}/postItemData`, data);
   }
 
-  postDataTest(data:any,){
+  postDataTest(data:any ){
+    const token = localStorage.getItem('token');  // ดึง token จาก localStorage หรือที่เก็บอื่น ๆ
+    const headers = new HttpHeaders().set('Authorization', ` ${token}`);
+   
     console.log("DATA : ",data)
-    let formData = new FormData
-    formData.append("endDate",data.endDate)
-    formData.append("id",data.id)
-    formData.append("location",data.location)
-    formData.append("startDate",data.startDate)
-    formData.append("topic",data.topic)
-    formData.append("detail",data.detail)
-  //   for (let person of personal) {
-  //     formData.append("personal[]", JSON.stringify(person));
-  // }
-    return this.http.post(`${this.baseUrl}/postDataTest/`,data);
+  const jsonPayload = {
+         id: data.id,
+         startDate: data.startDate,
+         endDate: data.endDate,
+         detail: data.detail,
+         location: data.location,
+         topic: data.topic,
+         content: data.content,
+         filename: data.filename,
+         place: data.place,
+         personal: data.personal,
+         createdBy: data.createdBy
+  };
+ 
+  console.log("jasonPayload Data: ",jsonPayload)
+    return this.http.post(`${this.baseUrl}/postDataTest/`,jsonPayload ,{ headers });
   }
 
   postItemData(data: any,personal:any): Observable<any> {
@@ -143,6 +155,9 @@ export class SharedService {
   }
   updateUserProfile(updatedData:any):Observable<any>{
     return this.http.put(`${this.baseUrl}/registerModel`, updatedData);
+  }
+  profileImg(url:string){
+    this.profileImageUrl.next(url);
   }
 
 }

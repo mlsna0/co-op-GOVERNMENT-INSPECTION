@@ -1,5 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { CanvasJSAngularChartsModule } from "@canvasjs/angular-charts";
 import { ProvinceService } from "../thaicounty/thaicounty.service";
 import { SharedService } from "app/services/shared.service";
 import { subscribeOn } from "rxjs";

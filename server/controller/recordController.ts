@@ -1,5 +1,6 @@
 import recordModel from '../models/recordModel';
 import ViewModel from '../models/viewModel';
+
 import multer, { StorageEngine } from 'multer';
 import { Request, Response } from 'express';
 // import DetailModel from 'models/detailModel';
@@ -20,15 +21,18 @@ const upload = multer({ storage: storage }).single('pdf');
 class recorCon extends BaseCtrl {
   model = recordModel;
   modelView = ViewModel;
+
     
   
   postItemToView = async (req, res) => {
-    console.log(req.body);
+    const decodedToken = req.decodedToken;
+    console.log("request body: ",req.body);
+    console.log("Decoded Token: ", decodedToken);
     
     try {
       const obj = await new this.model({
         record_id: req.body.id,
-        record_star_date: req.body.startDate,
+        record_star_date: req.body.startDate, //start..
         record_end_date: req.body.endDate,
         record_detail: req.body.detail,
         record_location: req.body.location,
@@ -44,6 +48,12 @@ class recorCon extends BaseCtrl {
         // pdfs: [
         //   {
         record_filename: req.body.filename,
+        createdBy: {
+          _id: decodedToken.user.id || decodedToken._id,
+          firstname: decodedToken.user.firstname,
+          lastname: decodedToken.user.lastname,
+          email: decodedToken.user.email,
+        },
         //     record_data_: Buffer.from(req.body.data_, 'base64'),
         //     record_contentType: req.body.contentType
         //   }

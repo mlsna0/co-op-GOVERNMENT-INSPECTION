@@ -6,7 +6,8 @@ import {
   PathLocationStrategy,
 } from "@angular/common";
 import { Router } from "@angular/router";
-import { AuthService } from '../../layouts/auth-layout/auth-layout.Service'
+import { AuthService } from '../../layouts/auth-layout/auth-layout.Service';
+import { SharedService } from "../../services/shared.service";
 
 
 @Component({
@@ -23,13 +24,14 @@ export class NavbarComponent implements OnInit {
 
   ////////////////////////////////
   dropdownOpen = false;
-
+  profileImgUrl:string;
   constructor(
     location: Location,
     private element: ElementRef,
     private router: Router,
     private auth: AuthService,
     private renderer: Renderer2,
+    private sv:SharedService
   ) {
     this.location = location;
     this.sidebarVisible = false;
@@ -47,6 +49,8 @@ export class NavbarComponent implements OnInit {
         this.mobile_menu_visible = 0;
       }
     });
+
+    this.sv.currentProfileImageUrl.subscribe(url=> this.profileImgUrl =url)
   }
 
   sidebarOpen() {

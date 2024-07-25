@@ -213,45 +213,51 @@ class RegisterModelCtrl extends BaseCtrl {
         }
     };
 
-    auth = async (req, res, next) => {
-        const token = req.header('Authorization').replace('Bearer ', '');
-        console.log("auth Middleware: ",token)
-        if (!token) {
-          return res.status(401).json({ msg: 'No token, authorization denied' });
-        }
+    // auth = async (req, res, next) => {
+    //     const token = req.header('Authorization').replace('Bearer ', '');
+    //     console.log("auth Middleware: ",token)
+    //     if (!token) {
+    //       return res.status(401).json({ msg: 'No token, authorization denied' });
+    //     }
       
-        try {
-          const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_key');
-          req.user = decoded.user;
-          next();
-        } catch (err) {
-          res.status(401).json({ msg: 'Token is not valid' });
-        }
-      };
+    //     try {
+    //       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_key');
+    //       req.user = decoded.user;
+    //       next();
+    //     } catch (err) {
+    //       res.status(401).json({ msg: 'Token is not valid' });
+    //     }
+    //   };
 
-    checkRole = (role) => {
-        return (req, res, next) => {
-            if (req.user && req.user.role === role) {
-                next();
-            } else {
-                res.status(403).json({ msg: 'Forbidden' });
-            }
-        };
-    };
+    // checkRole = (role) => {
+    //     return (req, res, next) => {
+    //         if (req.user && req.user.role === role) {
+    //             next();
+    //         } else {
+    //             res.status(403).json({ msg: 'Forbidden' });
+    //         }
+    //     };
+    // };
 
       getUserProfile = async (req, res) => {
+        console.log("decodeToken : ",req.decodeToken)
         try {
             const userId = req.user.id; // Assuming the user ID is available in req.user.id
-            let user = await this.model.findById(userId).select('-password');
+            console.log("User ID:",userId);
+            let user = await this.modelUser.findById(userId).select('-password').populate('employeeId'); // ใช้ populate เพื่อรวมข้อมูล employee
             if (!user) {
+                console.log("User not found in database.");
                 return res.status(404).json({ msg: 'User not found' });
             }
+            console.log("Data user: ",user)
             res.status(200).json(user);
         } catch (error) {
             console.error('Error in getUserProfile function:', error.message);
             res.status(500).send('Server error');
         }
     };
+
+
     forgotPassword = async (req, res) => {
         try {
             const { email } = req.body;
