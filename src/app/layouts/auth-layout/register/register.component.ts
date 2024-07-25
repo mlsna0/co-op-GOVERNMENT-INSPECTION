@@ -203,8 +203,8 @@ export class RegisterComponent implements OnInit {
   onTambonChange(tambonId: any) {
     const selectedTambon = this.filteredTambons.find(tambon => tambon.id === parseInt(tambonId));
     if (selectedTambon) {
-      this.zipCode = selectedTambon.zip_code; 
-      this.regisForm.controls['zipCode'].setValue(this.zipCode); 
+      this.zipCode = selectedTambon.zip_code;
+      this.postCode = [this.zipCode]; // Update postCode as an array
     }
   }
 

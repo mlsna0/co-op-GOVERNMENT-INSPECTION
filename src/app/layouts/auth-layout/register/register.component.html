@@ -118,8 +118,10 @@
               </div>
               <div class="col-sm-6" style="padding-right: 0;">
                 <div class="form-group">
-                  <label for="postCode" style="font-size: 16px;">เลขไปรษณี</label>
-                  <input class="form-control" formControlName="postCode" [value]="zipCode" >
+                  <label for="postCode" style="font-size: 16px;">รหัสไปรษณีย์</label>
+                  <select class="form-select" formControlName="postCode">
+                    <option *ngFor="let code of postCode" [value]="code">{{ code }}</option>
+                  </select>
                 </div>
               </div>
             </div>

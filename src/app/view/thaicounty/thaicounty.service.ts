@@ -46,4 +46,4 @@ export class ProvinceService {
     return this.http.get<any>(this.tambonsUrl);
   }
 }
-    
+      
