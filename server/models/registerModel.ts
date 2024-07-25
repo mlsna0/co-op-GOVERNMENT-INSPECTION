@@ -5,8 +5,7 @@ const registerSchema = new mongoose.Schema({
     lastname: String,
     organization: String,
     bearing: String,
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+
     // email: { type: String, required: true, unique: true },
     // password: { type: String, required: true },
     // email: String,

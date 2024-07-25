@@ -20,6 +20,7 @@ const recordSchema = new mongoose.Schema({
     record_place: String,
     // userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' }, 
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
     //     record_data_: Buffer,
     //     record_contentType: String
     //   }  
