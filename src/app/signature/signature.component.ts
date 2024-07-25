@@ -482,4 +482,6 @@ export class SignatureComponent implements OnInit {
     this.typeSignature = value
     this.step++;
   }
+
+
 }

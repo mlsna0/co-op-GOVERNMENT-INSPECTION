@@ -31,6 +31,8 @@ export class loginservice {
   clearToken(): void {
     localStorage.removeItem(this.tokenKey);
   }
+  
+
 
  
   register(userData: any): Observable<any> {

@@ -57,6 +57,15 @@ width: 180px;
 .page-break {
   page-break-before: always;
 }
+.nextPage{
+  padding-left: 60px;
+  cursor: pointer;
+}
+
+.nextPage:hover{
+  cursor: pointer;
+  text-decoration: line;
+}
 
 /*end page break*/
 

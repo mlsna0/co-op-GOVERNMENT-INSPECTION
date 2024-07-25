@@ -102,7 +102,7 @@ export class TableDetailComponent implements OnInit {
       this.recordId = params.get('id');
 
       // ทำงานอื่น ๆ ที่คุณต้องการใช้กับ itemId นี้
-      console.log(this.recordId); // ทดสอบการดึงค่า id
+      console.log("recordID it send? >",this.recordId); // ทดสอบการดึงค่า id
     });
 
     this.sv.getDataById(this.recordId).subscribe(res => {

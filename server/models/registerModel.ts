@@ -3,18 +3,25 @@ import mongoose from 'mongoose';
 const registerSchema = new mongoose.Schema({
     firstname: String,
     lastname: String,
-    company: String,
+    organization: String,
     bearing: String,
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    // email: { type: String, required: true, unique: true },
+    // password: { type: String, required: true },
+    // email: String,
+    // password: String,
+    confirmpassword: String,
     phone: String,
     address: String,
-    provine: String,
-    district: String,
-    subDistrict: String,
-    postcode: String,
+    province: String,
+    amphure: String,
+    tambon: String,
+    postCode: String,
     detail: String,
     profileImage: String, // เพิ่มฟิลด์สำหรับเก็บไฟล์โปรไฟล์
+
+   
 
 });
 

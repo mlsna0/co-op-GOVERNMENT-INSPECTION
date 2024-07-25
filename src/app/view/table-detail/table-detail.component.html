@@ -15,8 +15,8 @@
         
         <div class="uploadFilePDF">
             <label for="fileInput" style="padding: 0 0 0 15px;">อัปโหลดไฟล์ของคุณ</label>
-             <div (click)="onSignPage()">
-                ไปที่หน้าการเซ็น
+             <div class="nextPage" (click)="onSignPage()">
+                ไปที่หน้าการเซ็น<i class="fa fa-arrow-right"></i>
              </div>
             <input id="fileInput" type="file" class="fileUpload" accept="application/pdf,image/*"
                 (change)="onFileSelected($event)" style="font-size: 14px;">
