@@ -61,4 +61,25 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  // getDataCount() {
+  //   this.sv.getData().subscribe(data => {
+  //     console.log('Data received from API:', data);
+  //     if (data && data.records && data.records.length > 0) {
+  //       // ใช้ record_id จาก data.records แทน
+  //       const ids = data.records.map(item => Number(item.record_id));
+  //       console.log('Record IDs from data:', ids);
+  //       // this.lastDataId = Math.max(...ids);
+  //     } else {
+  //       console.warn('No data received or records are empty');
+  //     }
+  //     // console.log('Last Data ID:', this.lastDataId);
+  //     // this.cdr.detectChanges(); // Trigger change detection
+  //   }, error => {
+  //     console.error('Error fetching data count:', error);
+  //   });
+  // }
+
+  // getDifference(): number {
+  //   return this.lastDataId - this.pdfButtonCount;
+  // }
 }

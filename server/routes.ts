@@ -22,13 +22,6 @@ function setRoutes(app): void {
   const userModelCtrl = new UserModelCtrl();
   const viewModelCtrl = new ViewModelCtrl();
   const registerModelCtrl = new RegisterModelCtrl();
-  // const pdfCtrl = new PdfCtrl();
-  // const detailModelCtrl = new DetailModelCtrl();
-
-  // const aggregateRecordsAndView = new AggRecordNViewCon(); //petch edit add this
-
-
-  // router.route('/postPersonData').post(itemModelCtrl.postItemToView);
 
   router.route('/record/savepdf').put(recordModelCtrl.savePDF);
   router.route('/pdf/:id').get(recordModelCtrl.getPDF);
@@ -38,10 +31,11 @@ function setRoutes(app): void {
   router.route('/record/updateContent').put(recordModelCtrl.updateRecordContent);
   // router.route('/record/updatePDF').put(itemModelCtrl.updateRecordPDF);
 
-  router.route('/postItemData').post(recordModelCtrl.postItemToView);
+  router.route('/postItemData').post(recordModelCtrl.auth, recordModelCtrl.postItemToView);
   router.route('/postTyproText').post(recordModelCtrl.postItemToView);
   // router.route('/postAddDetail').post(itemModelCtrl.addDetail);
-  router.route('/postDataTest').post(auth.authorize,uploadService.none(),recordModelCtrl.postItemToView)
+  router.route('/postDataTest').post(recordModelCtrl.auth,uploadService.none(),recordModelCtrl.postItemToView)
+  // router.route('/postDataTest').post(uploadService.none(), auth.authorize, recordModelCtrl.postItemToView);
  
 
   // RecordModel routes

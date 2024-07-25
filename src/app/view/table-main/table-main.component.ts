@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,AfterViewInit  } from '@angular/core';
 import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray,AbstractControl } from '@angular/forms';
 import $ from "jquery";
 import 'bootstrap';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { dataflow } from 'googleapis/build/src/apis/dataflow';
 import { SharedService } from "../../services/shared.service";
 import { GeocodingServiceService } from '../../services/geocodingService/geocoding-service.service'; //พยายามแก้ไข location
@@ -32,7 +32,7 @@ import { error } from 'console';
   templateUrl: './table-main.component.html',
   styleUrls: ['./table-main.component.css']
 })
-export class TableMainComponent implements OnInit { [x: string]: any;
+export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: any;
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
   @ViewChild('textArea') textArea: ElementRef;
 
@@ -47,6 +47,7 @@ export class TableMainComponent implements OnInit { [x: string]: any;
   addRecordForm:FormGroup;
   addPersonalForm:FormGroup;
   public pdfUrl: SafeResourceUrl;
+  buttonCount: number = 0;
 
   
   items:any= [];
@@ -156,7 +157,10 @@ export class TableMainComponent implements OnInit { [x: string]: any;
   
   documentImageUrl = 'assets/img/sampleA4-1.png';
 
- 
+  // onIconSelect() {
+  //   let selectedIconCount = /* logic ในการนับไอคอนที่ถูกเลือก */;
+  //   this.sv.updateIconCount(selectedIconCount);
+  // }
 
  
   ngOnInit(){
@@ -210,9 +214,16 @@ export class TableMainComponent implements OnInit { [x: string]: any;
     
 
     document.addEventListener('keydown', this.handleKeydown.bind(this));
+
+    this.updateButtonCount();
   }
   ngOnDestroy() {
     document.removeEventListener('keydown', this.handleKeydown.bind(this));
+  }
+
+  updateButtonCount() {
+    this.buttonCount = this.items.filter(item => item.record_filename).length;
+    this.dataService.updateButtonCount(this.buttonCount);
   }
 
   //parsetLatLang คือการทำงานเกี่ยวกับการแยก lat และ long ให้เป็นสองส่วน แล้วเก็บไปที่ตัวแปร lat ,lng 12/06
@@ -708,39 +719,15 @@ get personal(): FormArray {
     }
    
     ///การดึงข้อมูลจากผู้สร้างเอกสาร
-    const token = localStorage.getItem('token'); // ดึง token จาก localStorage
-    console.log("token: ",token)
-    if (!token) {
-      Swal.fire({
-        title: 'เกิดข้อผิดพลาด!',
-        text: 'ไม่สามารถรับข้อมูลผู้ใช้ได้ หา token ไม่เจอ',
-        icon: 'error',
-        confirmButtonText: 'ตกลง',
-        customClass: {
-          confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-        }
-      });
-      return;
-    }
 
-    const decodedToken: any = jwtDecode(token); // Decode JWT token
-    console.log("decodedToken: ", decodedToken);
+    // this.sv.postItemData(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
+    //   console.log("res postItemData:", res);
+    // });
+    const token = this.sv.getToken(); // ดึง token จากบริการที่คุณใช้
 
-    const createdBy = {
-        _id: decodedToken?.user?.id || decodedToken?._id,
-        firstname: decodedToken?.user?.firstname,
-        lastname: decodedToken?.user?.lastname,
-        email: decodedToken?.user?.email,
-    };
- 
-console.log("CreateBy data :",createdBy)
-    const postData = {
-      ...this.addItemForm.value,
-      createdBy
-    };
-    // console.log("postData : ",postData)
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     
-    this.sv.postDataTest(postData).subscribe(res => {
+    this.sv.postDataTest(this.addItemForm.value, token).subscribe(res => {
       console.log("res submitted successfully", res);
       Swal.fire({
               title: 'เพิ่มรายการสำเร็จ!!',
@@ -1092,5 +1079,3 @@ loadContent() {
 
 
 
-
- ///////////////////เเบ่งหoOnIn้า///////////////////////////////////

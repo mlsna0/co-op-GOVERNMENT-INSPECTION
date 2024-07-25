@@ -1,39 +1,58 @@
-import { HttpClient, HttpClientModule,HttpHeaders } from '@angular/common/http';
+
 import { Injectable } from '@angular/core';
-import { response } from 'express';
-import { environment } from '../../environments/environment';
-import { Observable, catchError,map,BehaviorSubject } from 'rxjs';
-
-
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, BehaviorSubject, catchError, map} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
-
-  
-
-  // private baseUrl = 'mongodb://127.0.0.1:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private baseUrl = 'http://localhost:3000/api'; // ปรับ URL ให้ตรงกับ API ของคุณ
   private tokenKey = 'token';
 
   private profileImageUrl = new BehaviorSubject<string>('./assets/img/Person-icon.jpg');
   currentProfileImageUrl = this.profileImageUrl.asObservable();
   private typroText: string = '';
+
+  // BehaviorSubject สำหรับเก็บจำนวนปุ่มที่ถูกแสดง
+  
+
+  private pdfButtonCountSource = new BehaviorSubject<number>(0);
+  pdfButtonCount$ = this.pdfButtonCountSource.asObservable();
+
+  updateButtonCount(count: number) {
+    this.pdfButtonCountSource.next(count);
+  }
+
   constructor(private http: HttpClient) { }
 
+
+  setToken(token: string): void {
+    localStorage.setItem(this.tokenKey, token);
+  }
+
+  getToken(): string {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  clearToken(): void {
+    localStorage.removeItem(this.tokenKey);
+  }
+  
   getData(): Observable<any> {
     return this.http.get(`${this.baseUrl}/data`).pipe(
-      catchError(error=>{
-        console.error('Error fatching data:',error);
+      catchError(error => {
+        console.error('Error fetching data:', error);
         throw 'ไม่สามารถดึงข้อมูลได้';
       })
     );
   }
-  getRecord():Observable<any>{
+
+  // ฟังก์ชันอื่นๆ ที่คุณมีใน SharedService
+  getRecord(): Observable<any> {
     return this.http.get(`${this.baseUrl}/recordModel`).pipe(
-      catchError(error=>{
-        console.error('Error fatching data:',error);
+      catchError(error => {
+        console.error('Error fetching data:', error);
         throw 'ไม่สามารถดึงข้อมูลได้';
       })
     );
@@ -50,7 +69,8 @@ export class SharedService {
   getDataById(id: number): Observable<any>{
     return this.http.get(`${this.baseUrl}/recordModel/${id}`);
   }
-  getViewByRecordId(record_id){
+
+  getViewByRecordId(record_id: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/viewModel/getViewByRecordId/${record_id}`);
   }
 
@@ -66,10 +86,11 @@ export class SharedService {
   postTyproText(data: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/postTyproText`, data);
   }
-  getTyproText(record_id){
+
+  getTyproText(record_id: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/dtModel/getTyproText/${record_id}`);
   }
-  
+
   updateRecordContent(data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/record/updateContent`, data).pipe(
       catchError(error => {
@@ -78,9 +99,8 @@ export class SharedService {
       })
     );
   }
+
   savePDF(data: FormData): Observable<any> {
-    console.log('Data:',data);
-    
     return this.http.put(`${this.baseUrl}/record/savepdf`, data).pipe(
       catchError(error => {
         console.error('Error saving PDF:', error);
@@ -88,6 +108,7 @@ export class SharedService {
       })
     );
   }
+
   getPDF(id: string): Observable<Blob> {
     return this.http.get(`${this.baseUrl}/pdf/${id}`, { responseType: 'blob' }).pipe(
       catchError(error => {
@@ -96,8 +117,6 @@ export class SharedService {
       })
     );
   }
-  
-  
 
   postData(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/postData`, data);
@@ -107,53 +126,37 @@ export class SharedService {
     return this.http.post(`${this.baseUrl}/postItemData`, data);
   }
 
-  postDataTest(data:any ){
-    const token = localStorage.getItem('token');  // ดึง token จาก localStorage หรือที่เก็บอื่น ๆ
-    const headers = new HttpHeaders().set('Authorization', ` ${token}`);
-   
-    console.log("DATA : ",data)
-  const jsonPayload = {
-         id: data.id,
-         startDate: data.startDate,
-         endDate: data.endDate,
-         detail: data.detail,
-         location: data.location,
-         topic: data.topic,
-         content: data.content,
-         filename: data.filename,
-         place: data.place,
-         personal: data.personal,
-         createdBy: data.createdBy
-  };
- 
-  console.log("jasonPayload Data: ",jsonPayload)
-    return this.http.post(`${this.baseUrl}/postDataTest/`,jsonPayload ,{ headers });
+  postDataTest(data: any, token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(`${this.baseUrl}/postDataTest/`, data, { headers }).pipe(
+      catchError(error => {
+        console.error('Error submitting data:', error);
+        throw 'ไม่สามารถส่งข้อมูลได้';
+      })
+    );
   }
 
-  postItemData(data: any,personal:any): Observable<any> {
-  
-    // console.log('data in service post item',data);
-    // console.log('personal in service ',personal);
-
-    const formData :any={
+  postItemData(data: any, personal: any): Observable<any> {
+    const formData: any = {
       item: data,
       personal: personal
-    }
-    console.log("URL ",this.baseUrl)
-    
-    return this.http.post(`${this.baseUrl}/postItemData`,formData);
+    };
+    return this.http.post(`${this.baseUrl}/postItemData`, formData);
   }
 
   searchData(query: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/searchData?query=${query}`);
   }
-  // getItems(): Observable<any[]> {
-  //   return this.http.get<any[]>(`${this.baseUrl}/items`);
-  // }
+
   getUserReport(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/registerModel`);
   }
-  updateUserProfile(updatedData:any):Observable<any>{
+
+  updateUserProfile(updatedData: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/registerModel`, updatedData);
   }
   profileImg(url:string){
