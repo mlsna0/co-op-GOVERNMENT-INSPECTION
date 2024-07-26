@@ -53,7 +53,7 @@ class RegisterModelCtrl extends BaseCtrl {
                 const profileImage = req.file ? req.file.path : null;
     
                 const employee = new this.model({
-                    email,
+                  
                     firstname,
                     lastname,
                     email,
