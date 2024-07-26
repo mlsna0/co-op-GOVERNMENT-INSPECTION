@@ -1,5 +1,6 @@
 import RegisterModel from '../models/registerModel'; // นำเข้า RegisterModel
 import User from '../models/userModel'; // นำเข้า User
+import authorize from 'middleware/auth/auth';
 import BaseCtrl from './base';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -54,6 +55,7 @@ class RegisterModelCtrl extends BaseCtrl {
                 const employee = new this.model({
                     firstname,
                     lastname,
+                    email,
                     phone,
                     organization,
                     bearing,
@@ -161,6 +163,7 @@ class RegisterModelCtrl extends BaseCtrl {
             res.status(500).send('Server error');
         }
     };
+  
 
     login = async (req, res) => {
         try {
@@ -239,8 +242,10 @@ class RegisterModelCtrl extends BaseCtrl {
     //     };
     // };
 
+
       getUserProfile = async (req, res) => {
-        console.log("decodeToken : ",req.decodeToken)
+   
+     
         try {
             const userId = req.user.id; // Assuming the user ID is available in req.user.id
             console.log("User ID:",userId);

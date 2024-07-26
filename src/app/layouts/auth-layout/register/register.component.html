@@ -94,7 +94,7 @@
               <div class="col-sm-6" style="padding-left: 0;">
                 <div class="form-group">
                   <label for="amphure" style="font-size: 16px;">อำเภอ</label>
-                  <select class="form-select" formControlName="amphure" (change)="onAmphuresChange($event.target.value)">
+                  <select class="form-select" formControlName="amphure" (change)="onAmphuresChange($event.target.value)" [attr.disabled]="isAmphureDisabled ? true : null">
                     <option *ngFor="let amphure of amphures" [value]="amphure.id">{{ amphure.name_th}}</option>
                   </select>
                 </div>
@@ -103,7 +103,7 @@
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="tambon" style="font-size: 16px;">ตำบล</label>
-                  <select class="form-select" formControlName="tambon" (change)="onTambonChange($event.target.value)" >
+                  <select class="form-select" formControlName="tambon" (change)="onTambonChange($event.target.value)" [attr.disabled]="isTambonDisabled ? true : null" >
                     <option *ngFor="let tambon of tambons" [value]="tambon.id">{{ tambon.name_th }}</option>
                   </select>
                 </div>
@@ -112,7 +112,7 @@
               <div class="col-sm-6" style="padding-left: 0;">
                 <div class="form-group">
                   <label for="postCode" style="font-size: 16px;">รหัสไปรษณีย์</label>
-                  <select class="form-select" formControlName="postCode">
+                  <select class="form-select" formControlName="postCode" [attr.disabled]="isPostCodeDisabled ? true : null">
                     <option *ngFor="let code of postCode" [value]="code">{{ code }}</option>
                   </select>
                 </div>

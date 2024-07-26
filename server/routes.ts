@@ -47,6 +47,7 @@ function setRoutes(app): void {
   router.route('/recordModel/:id').delete(recordModelCtrl.delete);
 
   router.route('/viewModel/getViewByRecordId/:id').get(viewModelCtrl.getViewByRecordId);
+  router.route('/recordModel/getRecordWithUserAndEmployee/:id').get(recordModelCtrl.getRecordWithUserAndEmployee)
   
 
   // UserModel routes
@@ -77,6 +78,7 @@ function setRoutes(app): void {
   router.route('/registerModel/:id').delete(registerModelCtrl.delete);
   // router.route('/getEmp').get(registerModelCtrl.getEmp); 
   router.route('/allUsers').get(registerModelCtrl.getAllUsers); 
+
   // router.route('/user/:id').put(registerModelCtrl.updateUserDetails);
   router.route('/userModel/getUserById/:id').get(userModelCtrl.getUserById);
                                                     //,

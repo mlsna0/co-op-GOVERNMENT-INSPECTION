@@ -212,6 +212,10 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
       this.loading = false;
     });
     
+    this.sv.getRecordWithUserAndEmployee(this.record_id).subscribe(res=>{
+      this.item= res;
+      this.loadig =false;
+    })
 
     document.addEventListener('keydown', this.handleKeydown.bind(this));
 

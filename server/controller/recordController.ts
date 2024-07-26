@@ -28,13 +28,14 @@ class recorCon extends BaseCtrl {
   
   auth = async (req, res, next) => {
     const token = req.header('Authorization').replace('Bearer ', '');
-    console.log("auth Middleware: ", token);
+    console.log("auth ", token);
     if (!token) {
       return res.status(401).json({ msg: 'No token, authorization denied' });
     }
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_key');
+      console.log("decoded record : ",decoded)
       req.user = decoded.user;
       next();
     } catch (err) {
@@ -180,6 +181,30 @@ getData = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 }
+
+ getRecordWithUserAndEmployee = async (req, res) => {
+  try {
+    const recordId = req.params.recordId;
+
+    const record = await this.model.findById(recordId)
+      .populate({
+        path: 'userId',
+        populate: {
+          path: 'employeeId',
+          model: 'Employee'
+        }
+      });
+
+    if (!record) {
+      return res.status(404).json({ msg: 'Record not found' });
+    }
+
+    res.status(200).json(record);
+  } catch (error) {
+    console.error('Error in getRecordWithUserAndEmployee function:', error.message);
+    res.status(500).send('Server error');
+  }
+};
     
   }
 

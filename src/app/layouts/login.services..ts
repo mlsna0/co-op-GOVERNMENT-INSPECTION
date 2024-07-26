@@ -7,6 +7,7 @@ import { SharedService } from 'app/services/shared.service';
 
 
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -31,7 +32,9 @@ export class loginservice {
   clearToken(): void {
     localStorage.removeItem(this.tokenKey);
   }
-  
+
+
+  ///////////////////////////////////////////////////////////////////////////
 
 
  
@@ -43,6 +46,7 @@ export class loginservice {
       })
     );
   }
+
 
   login(email: string, password: string, role: string ): Observable<any> {
     console.log("email",email)
@@ -67,14 +71,26 @@ export class loginservice {
 
   getUserProfile(): Observable<any> {
     const token = localStorage.getItem(this.tokenKey);
+   
     if (!token) {
       console.error('No token found in localStorage');
       return throwError('No token found');
     }
     
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any>(`${this.baseUrl}/registerModel/profile`, { headers });
+    return this.http.get<any>(`${this.baseUrl}/registerModel/profile`, { headers })
+    .pipe(
+      catchError(error => {
+        console.error('Error fetching user profile:', error);
+        return throwError(error);
+      })
+    );
+  
   }
+
+  // getUserProfileฺฺById(id:number): Observable<any>{
+  //   return this.http.get<any>(`${this.baseUrl}/registerModel/profile/${id}`)
+  // }
   
   getUserReportProfile(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/registerModel/:id`);

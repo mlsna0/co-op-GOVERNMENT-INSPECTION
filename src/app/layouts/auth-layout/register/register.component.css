@@ -56,6 +56,10 @@
     font-size: 14px;
     font-family: 'Sarabun', sans-serif;
   }
+  .form-select:disabled {
+    background-color: #ccc; /* Light gray color for disabled state */
+    cursor: not-allowed; /* Show a 'not-allowed' cursor when hovering over the disabled select */
+  }
 
   /*resume ประวิติ*/
 

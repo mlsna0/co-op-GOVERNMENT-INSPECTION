@@ -73,6 +73,9 @@ export class SharedService {
   getViewByRecordId(record_id: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/viewModel/getViewByRecordId/${record_id}`);
   }
+  getRecordWithUserAndEmployee(record_id: number):Observable<any>{
+    return this.http.get(`${this.baseUrl}/recordModel/getRecordWithUserAndEmployee/${record_id}`)
+  }
 
   getAggregatedData(): Observable<any> {
     return this.http.get(`${this.baseUrl}/aggregateRecordsAndView`).pipe(

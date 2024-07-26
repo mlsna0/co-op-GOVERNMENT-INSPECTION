@@ -43,6 +43,8 @@ export class LoginComponent implements OnInit {
 
         if (response.token) {
           localStorage.setItem('token', response.token);
+
+          // const userId = this.
         } 
         Swal.fire({
           title: 'เข้าสู่ระบบสำเร็จ!',
