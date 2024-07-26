@@ -93,7 +93,7 @@
 
               <div class="col-sm-6" style="padding-left: 0;">
                 <div class="form-group">
-                  <label for="amphure" style="font-size: 16px;">อำเภอ</label>
+                  <label for="amphure" style="font-size: 16px;">อำเภอ/เขต</label>
                   <select class="form-select" formControlName="amphure" (change)="onAmphuresChange($event.target.value)" [attr.disabled]="isAmphureDisabled ? true : null">
                     <option *ngFor="let amphure of amphures" [value]="amphure.id">{{ amphure.name_th}}</option>
                   </select>
@@ -102,7 +102,7 @@
 
               <div class="col-sm-6">
                 <div class="form-group">
-                  <label for="tambon" style="font-size: 16px;">ตำบล</label>
+                  <label for="tambon" style="font-size: 16px;">ตำบล/แขวง</label>
                   <select class="form-select" formControlName="tambon" (change)="onTambonChange($event.target.value)" [attr.disabled]="isTambonDisabled ? true : null" >
                     <option *ngFor="let tambon of tambons" [value]="tambon.id">{{ tambon.name_th }}</option>
                   </select>
@@ -140,7 +140,11 @@
             <div class="title">อัปโหลดรูปภาพโปรไฟล์</div>
             <div class="uploadPicture">
               <i class="fa fa-cloud-arrow-up"></i> 
-              <input type="file" >
+              <input type="file" (change)="onFileUploadImgChange($event)" >
+
+            </div>
+            <div class="profile-image-container" *ngIf="imageSrc">
+              <img [src]="imageSrc" alt="Profile Img" class="profile-image">
             </div>
           
           

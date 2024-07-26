@@ -40,6 +40,8 @@ export class RegisterComponent implements OnInit {
   isTambonDisabled = true;
   isPostCodeDisabled = true;
 
+  imageSrc: string | ArrayBuffer | null = null;
+
   constructor(
     private fb: FormBuilder,
     private lc: loginservice,
@@ -217,6 +219,16 @@ export class RegisterComponent implements OnInit {
       this.zipCode = selectedTambon.zip_code;
       this.postCode = [this.zipCode]; // Update postCode as an array
       this.isPostCodeDisabled = false;
+    }
+  }
+  onFileUploadImgChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imageSrc = reader.result; // Update imageSrc with the file data
+      };
+      reader.readAsDataURL(file); // Convert file to base64
     }
   }
 
