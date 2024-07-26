@@ -8,7 +8,8 @@ const registerSchema = new mongoose.Schema({
 
     // email: { type: String, required: true, unique: true },
     // password: { type: String, required: true },
-    // email: String,
+    email: String,
+
     // password: String,
     confirmpassword: String,
     phone: String,

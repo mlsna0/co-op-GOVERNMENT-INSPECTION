@@ -2,7 +2,7 @@ import { HttpClient, HttpClientModule,HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { response } from 'express';
 import { environment } from '../../environments/environment';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, forkJoin, throwError } from 'rxjs';
 import { SharedService } from 'app/services/shared.service';
 
 
@@ -57,12 +57,15 @@ export class loginservice {
   }
 
   resetPassword(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}//registerModel/resetPassword`, { email, password });
+    return this.http.post(`${this.baseUrl}/registerModel/resetPassword`, { email, password });
 
   }
 
   getUserReport(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/registerModel`);
+    const registerModel$ = this.http.get<any[]>(`${this.baseUrl}/registerModel`);
+    const userModel$ = this.http.get<any[]>(`${this.baseUrl}/userModel`);
+    
+    return forkJoin([registerModel$, userModel$]);
   }
 
   getUserProfile(): Observable<any> {

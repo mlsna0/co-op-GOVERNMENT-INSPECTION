@@ -46,16 +46,25 @@ export class ReportuserComponent implements OnInit {
       }
       
     };
-    this.ls.getUserReport().subscribe(
-      data => {
-        this.user = data;
-        this.loading = false;
-      },
-      err => {
-        this.error = 'Failed to load data';
-        this.loading = false;
-      }
-    );
+    this.ls.getUserReport().subscribe(([registerData, userData]) => {
+      this.user = this.mergeUserData(registerData, userData);
+      this.loading = false;
+    }, error => {
+      console.error('Error fetching user data:', error);
+      this.loading = false;
+    });
+  }
+
+  mergeUserData(registerData: any[], userData: any[]): any[] {
+    return registerData.map(regUser => {
+      const user = userData.find(u => u.id === regUser.id); // แก้ไขให้ตรงกับ key ที่ใช้เชื่อมโยง
+      return {
+        firstname: regUser.firstname,
+        lastname: regUser.lastname,
+        email: regUser.email,
+        role: user ? user.role : 'N/A' // หากไม่พบข้อมูล role
+      };
+    });
   }
   getUserReportProfile(id:any) {
     
