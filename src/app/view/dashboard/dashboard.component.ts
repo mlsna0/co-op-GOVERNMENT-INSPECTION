@@ -13,7 +13,7 @@ export class DashboardComponent implements OnInit {
   selectedProvince: string;
   // provinces: any[] = [];
   recordCount:number
-
+  buttonCount: number = 0;
   constructor(
     private provinceService: ProvinceService,
     private sv:SharedService
@@ -31,6 +31,10 @@ export class DashboardComponent implements OnInit {
       }
     );
   
+    this.sv.buttonCount$.subscribe(count => {
+      this.buttonCount = count;
+      console.log('Received count:', count); // Debugging
+    });
   }
 
   loadProvinces(): void {

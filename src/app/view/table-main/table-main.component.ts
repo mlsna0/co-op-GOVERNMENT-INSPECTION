@@ -222,8 +222,9 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
   }
 
   updateButtonCount() {
-    this.buttonCount = this.items.filter(item => item.record_filename).length;
-    this.dataService.updateButtonCount(this.buttonCount);
+    const count = this.items.filter(item => item.record_filename).length;
+    this.sv.updateButtonCount(count);
+    console.log('Updated count:', count); // Debugging
   }
 
   //parsetLatLang คือการทำงานเกี่ยวกับการแยก lat และ long ให้เป็นสองส่วน แล้วเก็บไปที่ตัวแปร lat ,lng 12/06
