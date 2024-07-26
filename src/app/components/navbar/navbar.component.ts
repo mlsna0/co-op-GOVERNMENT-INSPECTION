@@ -8,6 +8,7 @@ import {
 import { Router } from "@angular/router";
 import { AuthService } from '../../layouts/auth-layout/auth-layout.Service';
 import { SharedService } from "../../services/shared.service";
+import { loginservice } from "app/layouts/login.services.";
 
 
 @Component({
@@ -25,13 +26,15 @@ export class NavbarComponent implements OnInit {
   ////////////////////////////////
   dropdownOpen = false;
   profileImgUrl:string;
+  user: any;
   constructor(
     location: Location,
     private element: ElementRef,
     private router: Router,
     private auth: AuthService,
     private renderer: Renderer2,
-    private sv:SharedService
+    private sv:SharedService,
+    private LoginSV:loginservice,
   ) {
     this.location = location;
     this.sidebarVisible = false;
@@ -51,6 +54,8 @@ export class NavbarComponent implements OnInit {
     });
 
     this.sv.currentProfileImageUrl.subscribe(url=> this.profileImgUrl =url)
+
+ 
   }
 
   sidebarOpen() {
@@ -157,6 +162,7 @@ export class NavbarComponent implements OnInit {
     }
   }
   openProfile() {
+  
     this.router.navigate(["/profile"]);
   }
   openLogin(){

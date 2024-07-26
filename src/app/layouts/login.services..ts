@@ -2,8 +2,9 @@ import { HttpClient, HttpClientModule,HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { response } from 'express';
 import { environment } from '../../environments/environment';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, forkJoin, throwError } from 'rxjs';
 import { SharedService } from 'app/services/shared.service';
+
 
 
 
@@ -31,7 +32,9 @@ export class loginservice {
   clearToken(): void {
     localStorage.removeItem(this.tokenKey);
   }
-  
+
+
+  ///////////////////////////////////////////////////////////////////////////
 
 
  
@@ -43,6 +46,7 @@ export class loginservice {
       })
     );
   }
+
 
   login(email: string, password: string, role: string ): Observable<any> {
     console.log("email",email)
@@ -57,24 +61,39 @@ export class loginservice {
   }
 
   resetPassword(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}//registerModel/resetPassword`, { email, password });
+    return this.http.post(`${this.baseUrl}/registerModel/resetPassword`, { email, password });
 
   }
 
   getUserReport(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/registerModel`);
+    const registerModel$ = this.http.get<any[]>(`${this.baseUrl}/registerModel`);
+    const userModel$ = this.http.get<any[]>(`${this.baseUrl}/userModel`);
+    
+    return forkJoin([registerModel$, userModel$]);
   }
 
   getUserProfile(): Observable<any> {
     const token = localStorage.getItem(this.tokenKey);
+   
     if (!token) {
       console.error('No token found in localStorage');
       return throwError('No token found');
     }
     
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any>(`${this.baseUrl}/registerModel/profile`, { headers });
+    return this.http.get<any>(`${this.baseUrl}/registerModel/profile`, { headers })
+    .pipe(
+      catchError(error => {
+        console.error('Error fetching user profile:', error);
+        return throwError(error);
+      })
+    );
+  
   }
+
+  // getUserProfileฺฺById(id:number): Observable<any>{
+  //   return this.http.get<any>(`${this.baseUrl}/registerModel/profile/${id}`)
+  // }
   
   getUserReportProfile(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/registerModel/:id`);

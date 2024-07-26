@@ -36,6 +36,10 @@ export class RegisterComponent implements OnInit {
   filteredAmphures = [];
   filteredTambons = [];
 
+  isAmphureDisabled = true;
+  isTambonDisabled = true;
+  isPostCodeDisabled = true;
+
   constructor(
     private fb: FormBuilder,
     private lc: loginservice,
@@ -175,6 +179,10 @@ export class RegisterComponent implements OnInit {
     this.regisForm.controls['tambon'].setValue('');
     this.filteredTambons = [];
 
+    this.isAmphureDisabled = !provinceId;
+    this.isTambonDisabled = true;
+    this.isPostCodeDisabled = true;
+
     this.loadAmphures(provinceId); 
   }
   
@@ -188,6 +196,9 @@ export class RegisterComponent implements OnInit {
 
   onAmphuresChange(amphureId: any) {
     this.regisForm.controls['tambon'].setValue('');
+
+    this.isTambonDisabled = !amphureId;
+    this.isPostCodeDisabled = true;
 
     this.loadTambons(amphureId,); // Load tambons for the selected amphure
   }
@@ -205,6 +216,7 @@ export class RegisterComponent implements OnInit {
     if (selectedTambon) {
       this.zipCode = selectedTambon.zip_code;
       this.postCode = [this.zipCode]; // Update postCode as an array
+      this.isPostCodeDisabled = false;
     }
   }
 
