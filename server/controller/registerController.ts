@@ -165,7 +165,6 @@ class RegisterModelCtrl extends BaseCtrl {
         }
     };
   
-
     login = async (req, res) => {
         try {
             const { email, password } = req.body;
@@ -210,12 +209,14 @@ class RegisterModelCtrl extends BaseCtrl {
                 { expiresIn: '24h' }
             );
     
-            res.json({ token });
+            // ส่งข้อมูลผู้ใช้และโทเค็นกลับไป
+            res.json({ token, user: payload.user });
         } catch (error) {
             console.error(error.message);
             res.status(500).send('Server error');
         }
     };
+    
 
     // auth = async (req, res, next) => {
     //     const token = req.header('Authorization').replace('Bearer ', '');

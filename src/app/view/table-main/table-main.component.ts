@@ -23,6 +23,7 @@ import moment from 'moment';
 import { DomSanitizer,SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
 import Tesseract from 'tesseract.js'; // Default import Tesseract.js
 import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 import { jwtDecode } from 'jwt-decode'; // นำเข้า jwt-decode
 
 import { error } from 'console';
@@ -115,6 +116,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     private router: Router,
     private geocodingService: GeocodingServiceService,
     private sanitizer: DomSanitizer,
+    private authService: AuthService
     
 
   ) { 
@@ -161,7 +163,21 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
   //   let selectedIconCount = /* logic ในการนับไอคอนที่ถูกเลือก */;
   //   this.sv.updateIconCount(selectedIconCount);
   // }
+  get isAdmin(): boolean {
+    return this.authService.hasRole('admin');
+  }
 
+  get isSuperAdmin(): boolean {
+    return this.authService.hasRole('superadmin');
+  }
+
+  get isNotSuper(): boolean {
+    return this.isAdmin || this.isUser;
+  }
+
+  get isUser(): boolean {
+    return this.authService.hasRole('user');
+  }
  
   ngOnInit(){
     

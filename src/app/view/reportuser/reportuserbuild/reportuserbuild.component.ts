@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { loginservice } from 'app/layouts/login.services.';
 import { Router } from '@angular/router';
+import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 
 @Component({
   selector: 'app-reportuserbuild',
@@ -23,7 +24,20 @@ export class ReportuserbuildComponent implements OnInit {
     private http: HttpClient,
     private ls: loginservice,
     private router: Router,
+    private authService: AuthService
   ) { }
+
+  get isAdmin(): boolean {
+    return this.authService.hasRole('admin');
+  }
+
+  get isSuperAdmin(): boolean {
+    return this.authService.hasRole('superadmin');
+  }
+
+  get isUser(): boolean {
+    return this.authService.hasRole('user');
+  }
 
   ngOnInit(): void {
     this.dtOptions = {

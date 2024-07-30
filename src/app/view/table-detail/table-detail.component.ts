@@ -15,7 +15,7 @@ import { content } from 'html2canvas/dist/types/css/property-descriptors/content
 import { environment } from 'environments/environment';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser'; //Typro and show of Detail
 import { ActivatedRoute } from '@angular/router';
-
+import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 import { NgxExtendedPdfViewerService, pdfDefaultOptions } from 'ngx-extended-pdf-viewer';
 import * as QRCode from 'qrcode';
 
@@ -93,7 +93,24 @@ export class TableDetailComponent implements OnInit {
     private pdfService: NgxExtendedPdfViewerService,
     private el: ElementRef,
     private renderer: Renderer2,
+    private authService: AuthService
   ) { }
+
+  get isAdmin(): boolean {
+    return this.authService.hasRole('admin');
+  }
+
+  get isSuperAdmin(): boolean {
+    return this.authService.hasRole('superadmin');
+  }
+
+  get isNotSuper(): boolean {
+    return this.isAdmin || this.isUser;
+  }
+  
+  get isUser(): boolean {
+    return this.authService.hasRole('user');
+  }
 
   ngOnInit(): void {
 

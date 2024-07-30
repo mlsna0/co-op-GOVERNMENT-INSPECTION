@@ -7,7 +7,7 @@ class ViewModelCtrl extends BaseCtrl {
 
     getViewByRecordId= async (req,res)=>{
 
-      let data = await this.model.find({RecordModelId: req.params.id})
+      let data = await this.model.find({documentId: req.params.id})
       res.status(200).json(data)
     }
   }
