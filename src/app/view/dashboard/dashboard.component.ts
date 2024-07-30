@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ProvinceService } from "../thaicounty/thaicounty.service";
 import { SharedService } from "app/services/shared.service";
+import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 import { subscribeOn } from "rxjs";
 
 
@@ -22,9 +23,26 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private provinceService: ProvinceService,
-    private sv:SharedService
+    private sv:SharedService,
+    private authService: AuthService
   ) {}
+  get isAdmin(): boolean {
+    return this.authService.hasRole('admin');
+  }
 
+  get isSuperAdmin(): boolean {
+    const isSuperAdmin = this.authService.hasRole('superadmin');
+    console.log('isSuperAdmin:', isSuperAdmin); // ตรวจสอบค่า
+    return isSuperAdmin;
+  }
+
+  get isTwoRole(): boolean {
+    return this.isAdmin || this.isUser;
+  }
+
+  get isUser(): boolean {
+    return this.authService.hasRole('user');
+  }
   ngOnInit(): void {
     this.loadProvinces();
 
@@ -37,6 +55,10 @@ export class DashboardComponent implements OnInit {
       }
     );
   
+    // this.sv.buttonCount$.subscribe(count => {
+    //   this.buttonCount = count;
+    //   console.log('Received count:', count); // Debugging
+    // });
   }
 
   // loadProvinces(): void {

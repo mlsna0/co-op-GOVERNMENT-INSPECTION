@@ -1,36 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 
 declare const $: any;
+
 declare interface RouteInfo {
     path: string;
     title: string;
     icon: string;
     class: string;
-    children?: RouteInfo[]; 
-    open?: boolean; // Add this to keep track of the menu state
-    
+    children?: RouteInfo[];
+    open?: boolean; // เพิ่มเพื่อเก็บสถานะของเมนู
+    roles?: string[]; // เพิ่มเพื่อกำหนดบทบาทที่สามารถเห็นเมนูนี้ได้
 }
+
 export const ROUTES: RouteInfo[] = [
-
-
-   { path: '/dashboard', title: 'หน้าหลัก',  icon: 'dashboard', class: '' },
-    // { path: '/table-list', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '' },
-    { path: '/table-main', title: 'การลงตรวจอิเล็กทรอนิค',  icon:'content_paste', class: '' },
-    // { path: '/signature', title: 'การลงเซ็น',  icon:'note_alt', class: '' },
-    { path: ' ', title: 'รายงาน' , icon:'assignment', class:'',
-      children: [
-        { path: '/reportuser', title: 'รายงานสมัครเข้าใช้งาน', icon: 'manage_accounts', class: '' },
-        { path: '/reportbuild', title: 'รายงานการสร้างฟอร์ม', icon: 'badge', class: '' }
-      ]
-    },
-    // { path: '/user-profile', title: 'User Profile',  icon:'person', class: '' },
-    // { path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' },
-    // { path: '/typography', title: 'Typography',  icon:'library_books', class: '' },
-    // { path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' },
-   
-    // { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
-    // { path: '/upgrade', title: 'Upgrade to PRO',  icon:'unarchive', class: 'active-pro' },
+    { path: '/dashboard', title: 'หน้าหลัก', icon: 'dashboard', class: '', roles: ['superadmin'] },
+    { path: '/table-main', title: 'การลงตรวจอิเล็กทรอนิค', icon: 'content_paste', class: '', roles: ['admin', 'user'] },
+    {
+        path: ' ', title: 'รายงาน', icon: 'assignment', class: '',
+        children: [
+            { path: '/reportuser', title: 'รายงานสมัครเข้าใช้งาน', icon: 'manage_accounts', class: '', roles: ['superadmin'] },
+            { path: '/reportbuild', title: 'รายงานการสร้างฟอร์ม', icon: 'badge', class: '', roles: ['superadmin'] }
+        ],
+        roles: ['superadmin']
+    }
 ];
 
 @Component({
@@ -41,32 +35,37 @@ export const ROUTES: RouteInfo[] = [
 export class SidebarComponent implements OnInit {
   menuItems: any[];
   activeRoute: string;
-  
-  constructor(
-    private router: Router, 
-    private route: ActivatedRoute
-  ) {
 
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService
+  ) {
     this.router.events.subscribe(() => {
       this.activeRoute = this.router.url;
     });
-   }
-
-  ngOnInit() {
-    this.menuItems = ROUTES.filter(menuItem => menuItem);
   }
+
+ 
+  ngOnInit() {
+    const role = this.authService.getRole();
+    console.log('Role in sidebar.component.ts:', role); // ตรวจสอบบทบาทในคอมโพเนนต์
+    this.menuItems = ROUTES.filter(menuItem => 
+      !menuItem.roles || menuItem.roles.includes(role)
+    );
+    console.log('Filtered menuItems:', this.menuItems); // ตรวจสอบรายการเมนูหลังการกรอง
+  }
+
+
   isMobileMenu() {
-      if ($(window).width() > 991) {
-          return false;
-      }
-      return true;
-  };
- toggleMenu(menuItem) {
+    return $(window).width() <= 991;
+  }
+
+  toggleMenu(menuItem) {
     menuItem.open = !menuItem.open;
   }
 
   isActive(path: string): boolean {
     return this.activeRoute === path;
   }
-
 }

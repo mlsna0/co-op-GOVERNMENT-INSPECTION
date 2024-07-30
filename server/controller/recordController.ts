@@ -65,7 +65,7 @@ class recorCon extends BaseCtrl {
 
       console.log("obj _Id: ", obj._id);
       if (req.body.personal) {
-        let newField = req.body.personal.map(x => { return { view_rank: x.rank, view_first_name: x.firstname, view_last_name: x.lastname, RecordModelId: obj._id }; });
+        let newField = req.body.personal.map(x => { return { view_rank: x.rank, view_first_name: x.firstname, view_last_name: x.lastname, documentId: obj._id }; });
 
         let result = await this.modelView.insertMany(newField);
       }
@@ -184,9 +184,9 @@ getData = async (req, res) => {
 
  getRecordWithUserAndEmployee = async (req, res) => {
   try {
-    const recordId = req.params.recordId;
+    const documentId = req.params.documentId;
 
-    const record = await this.model.findById(recordId)
+    const record = await this.model.findById(documentId)
       .populate({
         path: 'userId',
         populate: {

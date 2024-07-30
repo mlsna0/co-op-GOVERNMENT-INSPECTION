@@ -16,12 +16,11 @@ export class SharedService {
 
   // BehaviorSubject สำหรับเก็บจำนวนปุ่มที่ถูกแสดง
   
-
-  private pdfButtonCountSource = new BehaviorSubject<number>(0);
-  pdfButtonCount$ = this.pdfButtonCountSource.asObservable();
+  private buttonCountSource = new BehaviorSubject<number>(0);
+  buttonCount$ = this.buttonCountSource.asObservable();
 
   updateButtonCount(count: number) {
-    this.pdfButtonCountSource.next(count);
+    this.buttonCountSource.next(count);
   }
 
   constructor(private http: HttpClient) { }
