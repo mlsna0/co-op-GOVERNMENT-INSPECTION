@@ -24,7 +24,14 @@
             <td class="small-name"> {{ users.firstname }} </td>
             <td class="small-name"> {{ users.lastname }} </td>
             <td class="small-name"> {{ users.email }} </td>
-            <td class="small-cell"> {{ users.role }} </td>
+            <td class="small-cell">
+              <select [(ngModel)]="users.role" (change)="onRoleChange(users)">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+                <option value="superadmin">Superadmin</option>
+              </select>
+              <!-- {{ users.role }} -->
+            </td>
             <td class="small-cell-text">
             <button (click)="getUserReportProfile(users.id)" style="border: none; background: none; color: black; text-align: center;" >
               <i data-toggle="tooltip" title="ดูรายละเอียด" data-placement="top"
