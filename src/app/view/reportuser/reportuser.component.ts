@@ -70,5 +70,20 @@ export class ReportuserComponent implements OnInit {
     
     this.router.navigate(['/profilereport']);
   }
+
+  onRoleChange(user: any) {
+    this.ls.updateUserRole(user.id, user.role).subscribe(
+      (response) => {
+        console.log('Role updated successfully:', response);
+        // Optionally show a success message to the user
+      },
+      (error) => {
+        console.error('Error updating role:', error);
+        // Optionally show an error message to the user
+      }
+    );
+  }
+
+
 }
 

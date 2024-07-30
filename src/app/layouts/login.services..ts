@@ -102,4 +102,9 @@ export class loginservice {
     const token = response.token;
     this.sv.setToken(token); // เก็บ token ใน LocalStorage ผ่าน TokenService
   }
+
+  updateUserRole(userId: number, role: string) {
+    return this.http.put(`${this.baseUrl}/userModel/${userId}/role`, { role });
+  }
+
 }
