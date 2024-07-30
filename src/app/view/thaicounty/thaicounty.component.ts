@@ -46,13 +46,13 @@ export class ThaicountyComponent implements OnInit {
     };
 
     this.provinceService.getProvinces().subscribe(data => {
-      console.log('Data from API:', data);
+      // console.log('Data from API:', data);
       this.provinces = data.map(province => ({
         name: province.name_th,
         count: Math.floor(Math.random() * 1000),
         percentage: parseFloat((Math.random() * 100).toFixed(2))
       }));
-      console.log('Provinces:', this.provinces);
+      // console.log('Provinces:', this.provinces);
       this.loading = false;
       this.dtTrigger.next(this.provinces);
     });

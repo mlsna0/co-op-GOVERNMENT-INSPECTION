@@ -3,16 +3,22 @@ import { ProvinceService } from "../thaicounty/thaicounty.service";
 import { SharedService } from "app/services/shared.service";
 import { subscribeOn } from "rxjs";
 
+
 @Component({
   selector: "app-dashboard",
   templateUrl: "./dashboard.component.html",
   styleUrls: ["./dashboard.component.css"],
 })
 export class DashboardComponent implements OnInit {
-  provinces: { name: string }[] = []; // เปลี่ยนเป็น provinces
+  //  provinces: { id: number, name_th: string, selected: boolean }[] = []; // เปลี่ยนเป็น provinces
+  provinces:any[] = []; 
+
   selectedProvince: string;
-  // provinces: any[] = [];
   recordCount:number
+  isFilterActive: boolean = false;
+  filteredProvinces: any[] = [];
+  searchTerm: string = '';
+  selectedProvinces: Set<number> = new Set<number>();
 
   constructor(
     private provinceService: ProvinceService,
@@ -33,18 +39,20 @@ export class DashboardComponent implements OnInit {
   
   }
 
-  loadProvinces(): void {
-    this.provinceService.getProvinces().subscribe(
-      (data) => {
-        console.log("Data from API:", data);
-        this.provinces = data.map((province) => ({ name: province.name_th }));
-        console.log("Provinces:", this.provinces);
-      },
-      (error) => {
-        console.error("Error fetching provinces:", error);
-      }
-    );
-  }
+  // loadProvinces(): void {
+  //   this.provinceService.getProvinces().subscribe(
+  //     (data) => {
+  //       console.log("Data from API:", data);
+  //       this.provinces = data.map((province) => ({ name: province.name_th }));
+  //       console.log("Provinces:", this.provinces);
+  //     },
+  //     (error) => {
+  //       console.error("Error fetching provinces:", error);
+  //     }
+  //   );
+  // }
+
+
 
   onProvinceChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
@@ -82,4 +90,69 @@ export class DashboardComponent implements OnInit {
   // getDifference(): number {
   //   return this.lastDataId - this.pdfButtonCount;
   // }
+
+  DetailFilterShow(){
+    this.isFilterActive = !this.isFilterActive;
+  }
+  loadProvinces(): void {
+    this.provinceService.getProvinces().subscribe(
+      (data) => {
+        // console.log("Data from API:", data);
+        this.provinces = data.map((province) => ({
+          id: province.id,
+          name_th: province.name_th,
+          selected: false
+        }));
+        this.filteredProvinces = [...this.provinces];
+        console.log("Provinces:", this.provinces);
+      },
+      (error) => {
+        console.error("Error fetching provinces:", error);
+      }
+    );
+  }
+
+  onSearch(event: any) {
+    const searchTerm = event.target.value.toLowerCase();
+    this.searchTerm = searchTerm; // อัปเดต searchTerm
+    this.filteredProvinces = this.provinces.filter(province =>
+      province.name_th.toLowerCase().includes(searchTerm)
+    );
+  }
+  onSelectAll(event: any) {
+    const isChecked = event.target.checked;
+    this.filteredProvinces.forEach(province => {
+      province.selected = isChecked;
+      if (isChecked) {
+        this.selectedProvinces.add(province.id);
+      } else {
+        this.selectedProvinces.delete(province.id);
+      }
+    });
+  }
+  applyFilter() {
+    const selectedProvincesArray = Array.from(this.selectedProvinces);
+    console.log('Selected Provinces:', selectedProvincesArray);
+    // Implement the logic to filter the data based on selected provinces
+  }
+  clearFilter() {
+    // Clear the selected provinces
+    this.selectedProvinces.clear();
+
+    // Uncheck all checkboxes
+    const checkboxes = document.querySelectorAll('.province-checklist input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+      (checkbox as HTMLInputElement).checked = false;
+    });
+
+    // Clear the search input
+    (document.querySelector('.inputSearch') as HTMLInputElement).value = '';
+    this.searchTerm = '';
+
+    // Reset filtered provinces
+    this.filteredProvinces.forEach(province => {
+      province.selected = false;
+    });
+    this.loadProvinces();
+  }
 }

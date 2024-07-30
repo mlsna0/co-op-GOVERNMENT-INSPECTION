@@ -59,26 +59,26 @@
                             ที่อยู่ :  {{ UserData?.employeeId.address }}
                           </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                           <div class="Info-text">
                            
                             ตำบล : {{ UserData?.employeeId.tambon }}
                           </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                           <div class="Info-text">
                            
                             อำเภอ :  {{ UserData?.employeeId.amphure }}
                           </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                           <div class="Info-text">
                            
                             จังหวัด :  {{ UserData?.employeeId.province }}
                           </div>
                         </div>
                     
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                           <div class="Info-text">
                             รหัสไปรษณีย์ :{{ UserData?.employeeId.postCode }}
                           </div>
@@ -127,26 +127,36 @@
                           </div>
                           <div class="col-sm-12">
                             <mat-form-field>
+                              <input matInput placeholder="ตำแหน่ง/หน้าที่" formControlName="bearing" type="text">
+                            </mat-form-field>
+                          </div>
+                          <div class="col-sm-12">
+                            <mat-form-field>
+                              <input matInput placeholder="บริษัท/องค์กร" formControlName="company" type="text">
+                            </mat-form-field>
+                          </div>
+                          <div class="col-sm-12">
+                            <mat-form-field>
                               <input matInput placeholder="ที่อยู่" formControlName="address" type="text">
                             </mat-form-field>
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-6">
                             <mat-form-field class="example-full-width">
                               <input matInput placeholder="ตำบล" formControlName="subDistrict" type="text">
                             </mat-form-field>
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-6">
                             <mat-form-field class="example-full-width">
                               <input matInput placeholder="อำเภอ" formControlName="district" type="text">
                             </mat-form-field>
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-6">
                             <mat-form-field class="example-full-width">
                               <input matInput placeholder="จังหวัด" formControlName="province" type="text">
                             </mat-form-field>
                           </div>
                         
-                          <div class="col-md-3">
+                          <div class="col-md-6">
                             <mat-form-field class="example-full-width">
                               <input matInput placeholder="รหัสไปรษณีย์" formControlName="postalCode" type="text">
                             </mat-form-field>

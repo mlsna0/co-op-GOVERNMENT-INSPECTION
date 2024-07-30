@@ -1,71 +1,102 @@
 <div class="dashboard">
 
-  <div class="header">
+  <!-- <div class="header">
     <label for="province" class="province-label">เลือกจังหวัด:</label>
     <select id="province" class="province-select form-control" [(ngModel)]="selectedProvince" (change)="onProvinceChange($event)">
-        <option value="">เลือกทั้งหมด</option> <!-- เพิ่มหัวข้อเลือกทั้งหมด -->
+        <option value="">เลือกทั้งหมด</option>
         <option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}</option>
     </select>
 </div>
 
 <div *ngIf="provinces.length === 0">
     <p>ยังไม่มีข้อมูลจังหวัด</p>
-</div>
+</div> -->
+  <div class="filter-container">
+    <div class="tab-filter" (click)="DetailFilterShow()" [ngClass]="{'active': isFilterActive}">
+      <i class="fa fa-chevron-right" style="color: white; transition: 0.3s ease;" *ngIf="!isFilterActive"></i>
+      <i class="fa fa-chevron-left" style="color: white;" *ngIf="isFilterActive"></i>
+    </div>
+    <div class="detail-filter" [ngClass]="{'active': isFilterActive}">
+      <h3 style="padding-left: 15px; font-family: 'Sarabun',sans-serif;">กรอกข้อมูล</h3>
+      <input class="form-control form-control-sm inputSearch" type="text" placeholder="ค้นหา..."
+        (input)="onSearch($event)">
+      <div class="selected-all">
+        <input type="checkbox" id="select-all" (change)="onSelectAll($event)">
+        &nbsp; <label for="select-all">ทั้งหมด</label>
+      </div>
+      <div class="province-checklist">
+        <div *ngFor="let province of filteredProvinces">
+          <input type="checkbox" [id]="province.id" [value]="province.id" (change)="onProvinceSelect($event)"
+            [checked]="province.selected">
+
+          &nbsp; <label [for]="province.id">{{ province.name_th }}</label>
+        </div>
+      </div>
+      <div class="button-inline">
+        <button class="apply-filter" (click)="applyFilter()">ยืนยัน</button>
+        <button class="clear-filter" (click)=" clearFilter()">ล้าง</button>
+      </div>
+
+    </div>
+  </div>
+
+
 
   <div class="global-sales">
     <div class="BoxTotal row">
-      <div class="col-sm-4">
+      <div class="col-sm-3"  style="padding-right:0 ;">
         <div class="Box1 card">
-          <div class="card-header card-header-danger">
-            <a style="font-size: 18px;">เอกสารตรวจสอบ</a>
-          </div>
           <div class="card-body">
+            <a style="font-size: 18px;">เอกสารทั้งหมด</a>
             <div class="row">
               <div class="col-sm-6">
                 <div class="number">
-                  {{recordCount}}  
-          </div> 
+                  {{recordCount}}
+                </div>
               </div>
-              <div class="col-sm-4">
-                <div class="nameCount">
-                  ( ฉบับ ) 
-               </div>
-              </div>
+
             </div>
-            
+
           </div>
         </div>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-3" style="padding-right:0 ;">
         <div class="Box2 card">
-          <div class="card-header card-header-danger">
-            <a style="font-size: 18px;">เอกสารที่ยังไม่ถูกเซ็น</a>
-          </div>
           <div class="card-body">
+            <a style="font-size: 18px;">เอกสารที่ถูกเซ็นแล้ว</a>
             <div>
-              
-          </div>    
+
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-3" style="padding-right:0 ;">
         <div class="Box3 card">
-          <div class="card-header card-header-danger">
-            <a style="font-size: 18px;">เอกสารที่ถูกเซ็นแล้ว</a>
-          </div>
           <div class="card-body">
+            <a style="font-size: 18px;">จำนวนกระดาษ</a>
             <div>
-              
-          </div>    
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-3">
+        <div class="Box4 card">
+          <div class="card-body">
+            <a style="font-size: 18px;">เอกสารที่ถูกเซ็นแล้ว</a>
+            <div>
+
+            </div>
           </div>
         </div>
       </div>
     </div>
     <app-thaicounty></app-thaicounty>
-  <app-map></app-map>
-  
+    <app-map></app-map>
 
-<!-- <div id="chart">
+
+    <!-- <div id="chart">
   <apx-chart
     [series]="chartOptions.series"
     [chart]="chartOptions.chart"
@@ -73,8 +104,6 @@
     [responsive]="chartOptions.responsive"
   ></apx-chart>
 </div> -->
-  
+
   </div>
 </div>
-
-

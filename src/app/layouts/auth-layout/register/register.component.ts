@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit,  ElementRef } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { loginservice } from "app/layouts/login.services.";
@@ -63,6 +63,7 @@ export class RegisterComponent implements OnInit {
       tambon: ['', Validators.required],
       postCode: ['', Validators.required],
       role: ['', Validators.required],
+      profileImage:[null]
     }, { validator: this.passwordMatchValidator });
   }  
 
@@ -225,11 +226,21 @@ export class RegisterComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => {
-        this.imageSrc = reader.result; // Update imageSrc with the file data
+      reader.onload = (e: any) => {
+        this.imageSrc = e.target.result;
+        this.regisForm.patchValue({
+          profileImage: file
+        });
       };
       reader.readAsDataURL(file); // Convert file to base64
     }
+  }
+  deletedFileUpload(fileInput:  ElementRef){
+    this.imageSrc = null;
+    fileInput.nativeElement.value = '';
+    this.regisForm.patchValue({
+      profileImage: null
+    });
   }
 
  

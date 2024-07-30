@@ -43,6 +43,127 @@
 .nameCount{
   font-size: 16px;
 }
+
+/* fitter*/
+.filter-container {
+  position: relative;
+}
+.tab-filter{
+  position: absolute;
+  top: 10px; 
+  left: -65px; 
+  display: flex;
+  padding: 10px;
+  width: 80px;
+  height: 40px;
+  background-color: rgb(241, 7, 7);
+  justify-content: flex-end;
+  border-radius: 5px;
+  z-index: 9;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+.tab-filter:hover{
+  left: -40px;
+  z-index: 9;
+}
+
+.detail-filter{
+  position: absolute;
+  background-color: rgb(255, 255, 255);
+  left:-265px;
+  width: 250px;
+  height: auto;
+  border-radius: 5px;
+  transition:  0.3s ease-in-out;
+  z-index: 10;
+}
+.tab-filter.active{
+  left: 190px;
+}
+.detail-filter.active {
+  left: -10px;
+}
+.inputSearch{
+  margin: 0px 0 0 15px;
+  padding: 0px 0 0 10px;
+  margin-bottom: 10px;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  width: 220px;
+  font-family: 'Sarabun',sans-serif;
+}
+.inputSearch input{
+  padding: 5px;
+  background-color: transparent;
+  margin-left: 3px;
+}
+.selected-all{
+  padding: 10px 0 0 15px;
+  margin-bottom: 10px;
+}
+.province-checklist {
+  position: relative;
+  padding-left: 15px;
+  max-height: 300px; /* Adjust height if necessary */
+  font-family: 'Sarabun',sans-serif;
+  overflow-y: auto;
+  /* z-index: 10; */
+  /* -ms-overflow-style: none; */
+  scroll-behavior: smooth; /* Smooth scrolling */
+}
+
+/* .province-checklist::-webkit-scrollbar {
+  display: none;
+} */
+
+.province-checklist div {
+  margin-bottom: 10px;
+}
+.button-inline{
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px;
+}
+.apply-filter{
+  position: relative;
+  display: flex;
+  width: auto;
+  padding: 4px 8px;
+  margin: 5px;
+  color:#449d44; 
+  background-color: #dcffdc;
+  /* border: 1px solid #449d44; */
+  border: transparent;
+  border-radius: 5px;
+  align-items: center;
+  text-align: center;
+  transition: 0.3s ease;
+}
+.apply-filter:hover{
+  background-color: #ccffcc;
+  border: 1px solid #449d44;
+}
+.clear-filter{
+  position: relative;
+  display: flex;
+  width: auto;
+  padding: 4px 8px;
+  margin: 5px;
+  color:#db1900; 
+   background-color: #fff0ee;
+  /* border: 1px solid #db1900 ; */
+  border: transparent;
+  border-radius: 5px;
+  align-items: center;
+  text-align: center;
+  transition: 0.3s ease;
+}
+.clear-filter:hover{
+  background-color: #ffe4e0;
+    border: 1px solid #db1900 ;
+}
 :host ::ng-deep .dataTables_wrapper .dataTables_paginate .paginate_button {
   box-sizing: border-box;
   display: inline-block;
@@ -97,11 +218,11 @@
 
 .BoxTotal {
   position: relative;
-  height: 300px;
+  height: 151px;
   /* background-color: rgb(255, 209, 0); */
 }
 
-.Box1, .Box2, .Box3 {
+.Box1, .Box2, .Box3 .Box4 {
   width: auto;
   background-color: white;
 }
