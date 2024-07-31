@@ -23,7 +23,7 @@ export class ReportuserComponent implements OnInit {
     private provinceService: ProvinceService,
     private http: HttpClient,
     private ls: loginservice,
-    private router: Router,
+    private router: Router, 
 
   ) { }
 

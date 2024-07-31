@@ -35,7 +35,7 @@ import { ReportprofileComponent } from '../../view/reportuser/reportprofile/repo
 import { ReportuserbuildComponent } from '../../view/reportuser/reportuserbuild/reportuserbuild.component';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { AppComponent } from 'app/app.component';
-
+import { ManageuserComponent } from '../../view/manageuser/manageuser.component';
 
 
 @NgModule({
@@ -76,7 +76,8 @@ import { AppComponent } from 'app/app.component';
   
     ReportuserComponent,
     ReportprofileComponent,
-    ReportuserbuildComponent
+    ReportuserbuildComponent,
+    ManageuserComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],
