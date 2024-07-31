@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import TimeStamp from 'models/timeStampModel';
+
+import TimeStamp from '../models/timeStampModel';
 import BaseCtrl from './base';
 import RegisterModel from 'models/registerModel';
 
@@ -18,7 +18,7 @@ class timeStampModelCtrl extends BaseCtrl {
     
           const savedTimeStamp = await newTimeStamp.save();
     
-          await RegisterModel.findByIdAndUpdate(userId, {
+          await TimeStamp.findByIdAndUpdate(userId, {
             $push: { timestamps: savedTimeStamp._id }
           });
     

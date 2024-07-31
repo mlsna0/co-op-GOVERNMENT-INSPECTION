@@ -7,7 +7,8 @@ import ViewModelCtrl from './controller/viewController';
 import RegisterModelCtrl from './controller/registerController';
 import uploadService from './service/uploadservice.service';
 import uploadservice from './service/uploadservice.service';
-import timeStampModelCtrl from 'controller/timeStampController';
+import timeStampModelCtrl from './controller/timeStampController';
+
 
 
 import auth from './middleware/auth/auth'
