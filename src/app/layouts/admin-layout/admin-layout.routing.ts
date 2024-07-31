@@ -16,6 +16,8 @@ import { ProfileComponent} from '../../view/profile/profile.component';
 import { ReportuserComponent } from '../../view/reportuser/reportuser.component';
 import { ReportprofileComponent } from '../../view/reportuser/reportprofile/reportprofile.component';
 import { ReportuserbuildComponent } from '../../view/reportuser/reportuserbuild/reportuserbuild.component';
+import { ManageuserComponent } from '../../view/manageuser/manageuser.component';
+
 
 import { MapComponent } from '../../view/map/map.component';
 export const AdminLayoutRoutes: Routes = [
@@ -69,6 +71,8 @@ export const AdminLayoutRoutes: Routes = [
     { path:'login',             component:LoginComponent },
     { path: 'profilereport', component: ReportprofileComponent},
     { path: 'reportbuild', component: ReportuserbuildComponent},
+    { path: 'manageuser', component: ManageuserComponent},
+
     // { path:'login',             component:LoginComponent },
     { path: 'table-detail/:id', component: TableDetailComponent },
     { path: 'typography',       component: TypographyComponent },

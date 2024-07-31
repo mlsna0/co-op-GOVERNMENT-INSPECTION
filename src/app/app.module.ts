@@ -24,7 +24,7 @@ import { SignatureComponent } from './signature/signature.component';
 import { HistoryComponent } from './view/history/history.component';
 import { TokenInterceptor } from './layouts/auth-layout/token.interceptor';
 import { NgApexchartsModule } from "ng-apexcharts";
-import { ManageuserComponent } from './view/manageuser/manageuser.component';
+
 
 
 
@@ -53,7 +53,7 @@ import { ManageuserComponent } from './view/manageuser/manageuser.component';
     AuthLayoutComponent,
     SignatureComponent,
     HistoryComponent,
-    ManageuserComponent
+
   ],
   providers: [SharedService,
     // { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
