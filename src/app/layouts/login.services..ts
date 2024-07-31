@@ -65,12 +65,9 @@ export class loginservice {
 
   }
 
-  getUserReport(): Observable<any[]> {
-    const registerModel$ = this.http.get<any[]>(`${this.baseUrl}/registerModel`);
-    const userModel$ = this.http.get<any[]>(`${this.baseUrl}/userModel`);
-    
-    return forkJoin([registerModel$, userModel$]);
-  }
+  getUserReport(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/allusers`);
+}
 
   getUserProfile(): Observable<any> {
     const token = localStorage.getItem(this.tokenKey);
@@ -103,8 +100,14 @@ export class loginservice {
     this.sv.setToken(token); // เก็บ token ใน LocalStorage ผ่าน TokenService
   }
 
-  updateUserRole(userId: number, role: string) {
-    return this.http.put(`${this.baseUrl}/userModel/${userId}/role`, { role });
+  updateUserRole(userId: string, role: string): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/registerModel/updateRole/${userId}`, { role })
+      .pipe(
+        catchError(error => {
+          console.error('Error updating role:', error);
+          return throwError('Error updating role');
+        })
+      );
   }
 
 }
