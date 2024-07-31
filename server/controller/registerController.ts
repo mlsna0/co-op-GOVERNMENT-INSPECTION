@@ -387,12 +387,14 @@ class RegisterModelCtrl extends BaseCtrl {
         try {
             const { id } = req.params;
             const { role } = req.body;
+            console.log('Received update role request for user id:', id); // เพิ่มบรรทัดนี้
+            console.log('Role to update:', role); // เพิ่มบรรทัดนี้
     
             if (!role) {
                 return res.status(400).json({ msg: 'Role is required' });
             }
     
-            let user = await this.modelUser.findById(id);
+            let user = await User.findById(id);
             if (!user) {
                 return res.status(404).json({ msg: 'User not found' });
             }
@@ -401,9 +403,20 @@ class RegisterModelCtrl extends BaseCtrl {
             await user.save();
     
             res.status(200).json({ msg: 'User role updated successfully' });
-    
         } catch (error) {
             console.error('Error in updateUserRole function:', error.message);
+            res.status(500).send('Server error');
+        }
+    };
+    getUsers = async (req, res) => {
+        try {
+            // ดึงข้อมูล user ทั้งหมดจากฐานข้อมูล
+            const users = await this.modelUser.find({}).select('-password'); // ใช้ select เพื่อละเว้น password
+
+            // ส่งผลลัพธ์กลับไปให้ client
+            res.status(200).json(users);
+        } catch (error) {
+            console.error('Error in getUsers function:', error.message);
             res.status(500).send('Server error');
         }
     };
