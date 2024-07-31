@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const registerSchema = new mongoose.Schema({
     firstname: String,
@@ -18,11 +18,27 @@ const registerSchema = new mongoose.Schema({
     tambon: String,
     postCode: String,
     detail: String,
-    profileImage: String, // เพิ่มฟิลด์สำหรับเก็บไฟล์โปรไฟล์
-
-   
-
+    profileImage: String, 
+    timestamps: [{ type: Schema.Types.ObjectId, ref: 'TimeStamp' }] // ฟิลด์ timestamps
 });
+
+export interface registerModel{
+    firstname: string;
+    lastname: string;
+    organization: string;
+    bearing: string;
+    email: string;
+    confirmpassword: string;
+    phone: string;
+    address: string;
+    province: string;
+    amphure: string;
+    tambon: string;
+    postCode: string;
+    detail: string;
+    profileImage: string;
+    timestamps: mongoose.Types.ObjectId[]; // ฟิลด์ timestamps
+  }
 
 const RegisterModel = mongoose.model('Employee', registerSchema);
 

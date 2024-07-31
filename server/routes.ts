@@ -7,6 +7,9 @@ import ViewModelCtrl from './controller/viewController';
 import RegisterModelCtrl from './controller/registerController';
 import uploadService from './service/uploadservice.service';
 import uploadservice from './service/uploadservice.service';
+import timeStampModelCtrl from './controller/timeStampController';
+
+
 
 import auth from './middleware/auth/auth'
 
@@ -22,6 +25,7 @@ function setRoutes(app): void {
   const userModelCtrl = new UserModelCtrl();
   const viewModelCtrl = new ViewModelCtrl();
   const registerModelCtrl = new RegisterModelCtrl();
+  const timestampModelCtrl = new timeStampModelCtrl();
 
   router.route('/record/savepdf').put(recordModelCtrl.savePDF);
   router.route('/pdf/:id').get(recordModelCtrl.getPDF);
@@ -51,12 +55,22 @@ function setRoutes(app): void {
   
 
   // UserModel routes
-  router.route('/userModel').get(userModelCtrl.getAll);
-  router.route('/userModel/count').get(userModelCtrl.count);
-  router.route('/userModel').post(userModelCtrl.insert);
-  router.route('/userModel/:id').get(userModelCtrl.get);
-  router.route('/userModel/:id').put(userModelCtrl.update);
-  router.route('/userModel/:id').delete(userModelCtrl.delete);
+  router.route('/timeStampModel').get(userModelCtrl.getAll);
+  router.route('/timeStampModel/count').get(userModelCtrl.count);
+  router.route('/timeStampModel').post(userModelCtrl.insert);
+  router.route('/timeStampModel/:id').get(userModelCtrl.get);
+  router.route('/timeStampModel/:id').put(userModelCtrl.update);
+  router.route('/timeStampModel/:id').delete(userModelCtrl.delete);
+
+
+
+  //TimeStampModel routes
+  router.route('/userModel').get(timestampModelCtrl.getAll);
+  router.route('/userModel/count').get(timestampModelCtrl.count);
+  router.route('/userModel').post(timestampModelCtrl.insert);
+  router.route('/userModel/:id').get(timestampModelCtrl.get);
+  router.route('/userModel/:id').put(timestampModelCtrl.update);
+  router.route('/userModel/:id').delete(timestampModelCtrl.delete);
 
   // ViewModel routes
   router.route('/viewModel').get(viewModelCtrl.getAll);
