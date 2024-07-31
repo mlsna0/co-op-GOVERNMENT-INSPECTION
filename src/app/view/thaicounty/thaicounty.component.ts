@@ -2,12 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { ProvinceService } from '../../../app/view/thaicounty/thaicounty.service';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Subject } from 'rxjs';
+// import 'datatables.net';
+// import 'datatables.net-dt/css/jquery.dataTables.css';
+import * as $ from 'jquery';
 
 interface Province {
   name: string;
   count: number;
   percentage: number;
 }
+
 
 @Component({
   selector: 'app-thaicounty',
@@ -17,7 +21,7 @@ interface Province {
 export class ThaicountyComponent implements OnInit {
 
   provinces: Province[] = [];
-  dtOptions: any = {}; //datatable settings
+  dtOptions: DataTables.Settings = {};
   dtTrigger: BehaviorSubject<any> = new BehaviorSubject([]); 
   loading: boolean = true;
   
@@ -36,6 +40,7 @@ export class ThaicountyComponent implements OnInit {
         info: 'แสดงหน้า _PAGE_ จากทั้งหมด _PAGES_ หน้า',
         infoEmpty: 'แสดง 0 ของ 0 รายการ',
         zeroRecords: 'ไม่พบข้อมูล',
+
         paginate: {
           first: 'หน้าแรก',
           last: 'หน้าสุดท้าย',
@@ -54,9 +59,10 @@ export class ThaicountyComponent implements OnInit {
       }));
       // console.log('Provinces:', this.provinces);
       this.loading = false;
-      this.dtTrigger.next(this.provinces);
+      this.dtTrigger.next(this.provinces);         
     });
   }
+
 
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();

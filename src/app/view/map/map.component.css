@@ -1,4 +1,16 @@
   #map {
-    height: 500px;
-    width: 600px;
+    position: relative;
+    display: flex;
+    height: 700px;
+    width: auto;
+   margin-top: 0;
+    border-radius: 5px;
+  }
+  .mapBG{
+    position: relative;
+    padding: 25px;
+    height: 750px;
+    background: white;
+    border-radius: 20px;
+    justify-content: center;
   }

@@ -45,12 +45,12 @@
 
   <div class="global-sales">
     <div class="BoxTotal row">
-      <div class="col-sm-3"  style="padding-right:0 ;">
+      <div class="col-sm-3" style="padding:0 3px 0 0 ;">
         <div class="Box1 card">
           <div class="card-body">
             <a style="font-size: 18px;">เอกสารทั้งหมด</a>
             <div class="row">
-              <div class="col-sm-6">
+              <div class="col-sm-12">
                 <div class="number">
                   {{recordCount}}
                 </div>
@@ -61,7 +61,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-3" style="padding-right:0 ;">
+      <div class="col-sm-3" style="padding:0 3px 0 0 ;">
         <div class="Box2 card">
           <div class="card-body">
             <a style="font-size: 18px;">เอกสารที่ถูกเซ็นแล้ว</a>
@@ -71,7 +71,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-3" style="padding-right:0 ;">
+      <div class="col-sm-3" style="padding:0 3px 0 0 ;">
         <div class="Box3 card">
           <div class="card-body">
             <a style="font-size: 18px;">จำนวนกระดาษ</a>
@@ -82,10 +82,10 @@
         </div>
       </div>
 
-      <div class="col-sm-3">
+      <div class="col-sm-3" style="padding:0 3px 0 0 ;">
         <div class="Box4 card">
           <div class="card-body">
-            <a style="font-size: 18px;">เอกสารที่ถูกเซ็นแล้ว</a>
+            <a style="font-size: 18px;">จำนวนผู้ใช้</a>
             <div>
 
             </div>
@@ -93,8 +93,24 @@
         </div>
       </div>
     </div>
-    <app-thaicounty></app-thaicounty>
-    <app-map></app-map>
+
+    <div class="content-dashboard">
+      <div class="row">
+        <div class="col-sm-8" style="padding-left: 0;">
+          <app-thaicounty></app-thaicounty>
+        </div>
+        <div class="col-sm-4">
+          <app-map></app-map>
+        </div>
+        <div class="col-sm-8">
+          <canvas id="myLineChart">
+
+          </canvas>
+        </div>
+      </div>
+    </div>
+   
+ 
 
 
     <!-- <div id="chart">

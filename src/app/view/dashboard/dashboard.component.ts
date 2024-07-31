@@ -3,6 +3,7 @@ import { ProvinceService } from "../thaicounty/thaicounty.service";
 import { SharedService } from "app/services/shared.service";
 import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 import { subscribeOn } from "rxjs";
+import { Chart, registerables } from 'chart.js';
 
 
 @Component({
@@ -20,6 +21,9 @@ export class DashboardComponent implements OnInit {
   filteredProvinces: any[] = [];
   searchTerm: string = '';
   selectedProvinces: Set<number> = new Set<number>();
+
+  //chart
+  chart: any;
 
   constructor(
     private provinceService: ProvinceService,
@@ -54,6 +58,10 @@ export class DashboardComponent implements OnInit {
         console.error(error);
       }
     );
+
+
+    // Create the chart
+ 
   
     // this.sv.buttonCount$.subscribe(count => {
     //   this.buttonCount = count;
@@ -61,6 +69,10 @@ export class DashboardComponent implements OnInit {
     // });
   }
 
+  ngAfterViewInit(): void {
+    Chart.register(...registerables);
+    this.createChart();
+  }
   // loadProvinces(): void {
   //   this.provinceService.getProvinces().subscribe(
   //     (data) => {
@@ -176,5 +188,31 @@ export class DashboardComponent implements OnInit {
       province.selected = false;
     });
     this.loadProvinces();
+  }
+
+  //chart
+  createChart(): void {
+    const ctx = document.getElementById('myLineChart') as HTMLCanvasElement;
+    
+    this.chart = new Chart(ctx, {
+      type: 'line', // Specify the type of chart
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+          label: 'My First Dataset',
+          data: [65, 59, 80, 81, 56, 55, 40],
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+          tension: 0.1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
   }
 }

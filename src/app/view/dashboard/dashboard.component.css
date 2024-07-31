@@ -1,5 +1,5 @@
 .dashboard {
-  padding: 60px 15px;
+  padding: 60px 30px;
   display: flex;
   flex-wrap: wrap;
 }
@@ -38,7 +38,8 @@
 
 .number {
   height: 50px;
-  font-size: 3cqw;
+  font-size: 30px;
+  font-weight: 500;
 }
 .nameCount{
   font-size: 16px;
@@ -71,7 +72,7 @@
 .detail-filter{
   position: absolute;
   background-color: rgb(255, 255, 255);
-  left:-265px;
+  left:-278px;
   width: 250px;
   height: auto;
   border-radius: 5px;
@@ -164,6 +165,10 @@
   background-color: #ffe4e0;
     border: 1px solid #db1900 ;
 }
+
+canvas {
+  max-width: 100%;
+}
 :host ::ng-deep .dataTables_wrapper .dataTables_paginate .paginate_button {
   box-sizing: border-box;
   display: inline-block;
@@ -218,13 +223,23 @@
 
 .BoxTotal {
   position: relative;
-  height: 151px;
+ 
   /* background-color: rgb(255, 209, 0); */
 }
 
-.Box1, .Box2, .Box3 .Box4 {
+.Box1, .Box2, .Box3 ,.Box4 {
   width: auto;
-  background-color: white;
+  height: 151px;
+  /* background-color: rgb(255, 209, 0); */
+}  
+.Box1{
+border-radius: 5px 0 5px 0px;
+}
+.Box4{
+border-radius: 0px 5px 0px 5px;
+}
+.Box2, .Box3{
+  border-radius: 0;
 }
 
 .card-box {

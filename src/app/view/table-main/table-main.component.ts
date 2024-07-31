@@ -97,6 +97,8 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
   htmlContent: string = '';
 
   private _typroText: string = '';
+  private originalFormat: string = '';
+  public isReadonly: boolean = true;
   
   get typroText(): string {
     return this._typroText;
@@ -814,14 +816,41 @@ get personal(): FormArray {
       navigator.geolocation.getCurrentPosition((position) => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
+        this.originalFormat = `Lat: ${lat}, Lng: ${lng}`;
         this.addItemForm.patchValue({
-          location:` Lat: ${lat}, Lng: ${lng}`
+          location: this.originalFormat
         });
+        this.isReadonly = false; // ทำให้ input field สามารถพิมพ์ได้
       }, (error) => {
         console.error(error);
       });
     } else {
       console.error('Geolocation is not supported by this browser.');
+    }
+  }
+
+  onInputChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+
+    // Regular expression to match the format "Lat: xxxxx, Lng: xxxxx"
+    const regex = /^Lat: ([\d\.\-]+), Lng: ([\d\.\-]+)$/;
+    const matches = currentValue.match(regex);
+
+    if (matches) {
+      const lat = matches[1];
+      const lng = matches[2];
+
+      // Validate the lat and lng values if needed
+
+      this.addItemForm.patchValue({
+        location: `Lat: ${lat}, Lng: ${lng}`
+      });
+    } else {
+      // Revert to original format if invalid
+      this.addItemForm.patchValue({
+        location: this.originalFormat
+      });
     }
   }
   //insert end here

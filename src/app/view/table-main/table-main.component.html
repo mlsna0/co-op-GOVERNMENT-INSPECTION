@@ -47,11 +47,11 @@
                     <th style="width: 2%; white-space: nowrap; text-align: center; color: black;  font-size: 16px;">
                       ครั้งที่</th>
                     <th style="color: black;  font-size: 16px;">หัวข้อการตรวจสอบ</th>
-                    <th style="width: 10%; color: black; font-size: 16px;">วันที่เริ่มตรวจสอบ</th>
+                    <th style="width: 9%; color: black; font-size: 16px;">วันที่เริ่มตรวจสอบ</th>
                     <th style="width: 5%; color: black;  font-size: 16px;">ผู้สร้างเอกสาร</th>
                     
                     <th style="width: 5%; color: black;  font-size: 16px;">สถานที่</th>        
-                    <th style="width: 10%; color: black;  font-size: 16px; text-align: center;">สถานะ</th>
+                    <th style="width: 5%; color: black;  font-size: 16px; text-align: center;">สถานะ</th>
                     <th class="text-center" style="color: black;  font-size: 16px;"><i class="fa fa-gear"></i></th>
                   </tr>
                 </thead>
@@ -372,7 +372,8 @@
                         [ngClass]="{'box-validate': addItemForm.controls['location'].invalid && 
                                                     (addItemForm.controls['location'].touched || 
                                                     addItemForm.controls['location'].dirty || Submitted)}"
-                        readonly>
+                         [readonly]="isReadonly"
+                         (input)="onInputChange($event)" >
                       <span class="border-errorLocation"
                         *ngIf="addItemForm.controls['location'].invalid && 
                         (addItemForm.controls['location'].touched || 
