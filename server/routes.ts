@@ -92,12 +92,13 @@ function setRoutes(app): void {
   router.route('/registerModel/:id').delete(registerModelCtrl.delete);
   // router.route('/getEmp').get(registerModelCtrl.getEmp); 
   router.route('/allUsers').get(registerModelCtrl.getAllUsers); 
+  router.route('/user').get(registerModelCtrl.getUsers);
 
   // router.route('/user/:id').put(registerModelCtrl.updateUserDetails);
   router.route('/userModel/getUserById/:id').get(userModelCtrl.getUserById);
                                                     //,
   router.route('/registerModel/updateProfile').put( auth.authorize,registerModelCtrl.updateEmployeeProfile);
-  router.route('/registerModel/updateRole/:id').put( auth.authorize,registerModelCtrl.updateUserRole);
+  router.route('/registerModel/updateRole/:id').put(registerModelCtrl.updateUserRole);
   router.route('/registerModel/uploadProfile')
     .put(auth.authorize, uploadservice.single('profile'), registerModelCtrl.uploadProfile);
   //agg $lookup Record and View model routes //petch edit add this
