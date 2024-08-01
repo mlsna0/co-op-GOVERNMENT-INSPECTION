@@ -84,7 +84,7 @@ function setRoutes(app): void {
   router.route('/registerModel/profile').get(auth.authorize, registerModelCtrl.getUserProfile);//petch add
   router.route('/registerModel/count').get(registerModelCtrl.count);
   router.route('/registerModel').post(registerModelCtrl.create);
-  router.route('/registerModel/login').post(registerModelCtrl.login);
+  router.route('/registerModel/login').post(auth.authorize, registerModelCtrl.login); // Ensure authorize middleware is used
   router.route('/registerModel/resetPassword').post(registerModelCtrl.resetPassword);
   router.route('/registerModel/forgotPassword').post(registerModelCtrl.forgotPassword); 
   router.route('/registerModel/:id').get(registerModelCtrl.get);
