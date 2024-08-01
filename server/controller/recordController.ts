@@ -182,29 +182,29 @@ getData = async (req, res) => {
   }
 }
 
- getRecordWithUserAndEmployee = async (req, res) => {
+getRecordWithUserAndEmployee = async (req, res) => {
+  const userId = req.params.userId; // ตรวจสอบและรับค่า userId จากพารามิเตอร์
+  console.log(`Params: ${JSON.stringify(req.params)}`); // เพิ่ม console.log เพื่อตรวจสอบค่า params
+  console.log(`Received userId: ${userId}`); // เพิ่ม console.log เพื่อตรวจสอบค่า userId
+
+  if (!userId) {
+    console.log('User ID is missing');
+    return res.status(400).send('User ID is required');
+  }
+
   try {
-    const documentId = req.params.documentId;
-
-    const record = await this.model.findById(documentId)
-      .populate({
-        path: 'userId',
-        populate: {
-          path: 'employeeId',
-          model: 'Employee'
-        }
-      });
-
-    if (!record) {
-      return res.status(404).json({ msg: 'Record not found' });
+    const records = await recordModel.find({ userId: userId });
+    console.log(`Found records: ${records}`); // เพิ่ม console.log เพื่อตรวจสอบข้อมูลที่ได้จากฐานข้อมูล
+    if (records.length === 0) {
+      console.log('No records found');
+      return res.status(404).send('No records found');
     }
-
-    res.status(200).json(record);
+    res.status(200).json({ records });
   } catch (error) {
     console.error('Error in getRecordWithUserAndEmployee function:', error.message);
     res.status(500).send('Server error');
   }
-};
+}
     
   }
 

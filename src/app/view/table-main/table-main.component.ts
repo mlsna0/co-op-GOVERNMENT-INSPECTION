@@ -27,6 +27,7 @@ import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 import { jwtDecode } from 'jwt-decode'; // นำเข้า jwt-decode
 
 import { error } from 'console';
+import { loginservice } from 'app/layouts/login.services.';
 
 @Component({
   selector: 'app-table-main',
@@ -92,7 +93,8 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
   records: any;
   pdfSrc: SafeResourceUrl;
   loadig:boolean = false;
-  
+  currentUserId: string;
+  filteredItems: any[] = [];
   initialFontSize: number = 14;
   htmlContent: string = '';
 
@@ -115,6 +117,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     private fb:FormBuilder,
     private http:HttpClient,
     private sv:SharedService,
+    private lg:loginservice,
     private router: Router,
     private geocodingService: GeocodingServiceService,
     private sanitizer: DomSanitizer,
@@ -238,6 +241,13 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     document.addEventListener('keydown', this.handleKeydown.bind(this));
 
     this.updateButtonCount();
+
+    // this.currentUserId = this.sv.getToken(); // หรือใช้ localStorage.getItem('userId') ถ้าคุณเก็บ userId
+    // if (this.currentUserId) {
+    //   this.loadData();
+    // } else {
+    //   console.error('User ID is not available.');
+    // }
   }
   ngOnDestroy() {
     document.removeEventListener('keydown', this.handleKeydown.bind(this));
@@ -266,7 +276,18 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
   }
 
 
- 
+  
+  // loadData(): void {
+  //   this.sv.getRecord().subscribe(
+  //     (response) => {
+  //       this.items = response.records;
+  //       this.filteredItems = this.items.filter(item => item.userId === this.currentUserId);
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching items:', error);
+  //     }
+  //   );
+  // }
 
   //Writter section
   ngAfterViewInit(): void {

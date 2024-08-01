@@ -51,7 +51,7 @@ function setRoutes(app): void {
   router.route('/recordModel/:id').delete(recordModelCtrl.delete);
 
   router.route('/viewModel/getViewByRecordId/:id').get(viewModelCtrl.getViewByRecordId);
-  router.route('/recordModel/getRecordWithUserAndEmployee/:id').get(recordModelCtrl.getRecordWithUserAndEmployee)
+  router.route('/recordModel/getuser/:userId').get(recordModelCtrl.getRecordWithUserAndEmployee);
   
 
   // UserModel routes
