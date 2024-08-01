@@ -1,7 +1,7 @@
 
-
+// import TimeStampModelCtrl from "../../controller/timeStampController";
 const jwt = require('jsonwebtoken')
-const TimeStampModelCtrl = require('../controller/timeStampController'); // Import the TimeStampModelCtrl
+
 const handleResponse = (req, res) => res.status(req.response.status).json(req.response.data);
 
 const forbidden = (req, res) => {
@@ -20,14 +20,15 @@ const forbidden = (req, res) => {
     console.log("decoded middleware : ",decoded)
     req.user = decoded.user;
 
-    const timeStampCtrl = new TimeStampModelCtrl();
-    await timeStampCtrl.addTimeStamp(req, res);
-    
+    // const timeStampCtrl = new TimeStampModelCtrl();
+    // await timeStampCtrl.addTimeStamp(req, res);
+
     next();
   } catch (err) {
     res.status(401).json({ msg: 'Token is not valid' });
   }
 };
+
 
 
 export default { 

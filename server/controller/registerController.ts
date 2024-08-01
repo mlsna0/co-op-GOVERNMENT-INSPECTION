@@ -1,6 +1,7 @@
 import RegisterModel from '../models/registerModel'; // นำเข้า RegisterModel
 import User from '../models/userModel'; // นำเข้า User
 import authorize from 'middleware/auth/auth';
+import TimeStampModelCtrl from './timeStampController';
 import BaseCtrl from './base';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -203,6 +204,10 @@ class RegisterModelCtrl extends BaseCtrl {
                 }
             };
     
+             // เพิ่มการบันทึก timestamp
+             const timeStampCtrl = new TimeStampModelCtrl();
+             await timeStampCtrl.addTimeStamp(user.id);
+
             const token = jwt.sign(
                 payload,
                 process.env.JWT_SECRET || 'your_jwt_secret_key',

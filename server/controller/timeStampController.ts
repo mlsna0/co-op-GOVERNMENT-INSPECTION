@@ -5,11 +5,11 @@ class TimeStampModelCtrl extends BaseCtrl {
   model = TimeStamp;
 
   // Method to add a timestamp
-  addTimeStamp = async (req, res) => {
+  addTimeStamp = async (userId) => {
     try {
-      const userId = req.user.id;
-      const date = new Date().toISOString().split('T')[0];
-      const time = new Date().toISOString().split('T')[1].split('.')[0];
+      const now = new Date();
+      const date = now.toLocaleDateString(); // วันที่ตามเขตเวลาท้องถิ่น
+      const time = now.toLocaleTimeString(); // เวลาตามเขตเวลาท้องถิ่น
 
       const newTimeStamp = new TimeStamp({
         userId,
@@ -18,10 +18,10 @@ class TimeStampModelCtrl extends BaseCtrl {
       });
 
       const savedTimeStamp = await newTimeStamp.save();
-
-      res.status(201).json(savedTimeStamp);
+      return savedTimeStamp;
     } catch (error) {
-      res.status(500).json({ message: 'Error adding timestamp', error });
+      console.error('Error adding timestamp:', error);
+      throw error;
     }
   };
 }
