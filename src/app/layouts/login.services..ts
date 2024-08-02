@@ -69,6 +69,8 @@ export class loginservice {
     return this.http.get<any>(`${this.baseUrl}/allusers`);
 }
 
+
+
   getUserProfile(): Observable<any> {
     const token = localStorage.getItem(this.tokenKey);
    

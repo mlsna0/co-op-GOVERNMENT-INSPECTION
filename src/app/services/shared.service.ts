@@ -56,6 +56,15 @@ export class SharedService {
       })
     );
   }
+
+  getUsers(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/registerModel`);
+  }
+
+  getEmployees(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/viewModel`);
+  }
+
   getRecordCount(): Observable<number> {
     return this.http.get<any[]>(`${this.baseUrl}/recordModel`).pipe(
       map(records => records.length), // นับจำนวนเอกสาร
@@ -72,6 +81,8 @@ export class SharedService {
   getViewByRecordId(record_id: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/viewModel/getViewByRecordId/${record_id}`);
   }
+
+
   getRecordWithUserAndEmployee(userId: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/recordModel/getuser/${userId}`).pipe(
       catchError(error => {
@@ -80,6 +91,7 @@ export class SharedService {
       })
     );
   }
+  
   getAggregatedData(): Observable<any> {
     return this.http.get(`${this.baseUrl}/aggregateRecordsAndView`).pipe(
       catchError(error => {
@@ -168,5 +180,10 @@ export class SharedService {
   profileImg(url:string){
     this.profileImageUrl.next(url);
   }
+
+  
+getUserReportBuild(userId): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/recordModel/getuser/${userId}`);
+}
 
 }

@@ -5,6 +5,9 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { loginservice } from 'app/layouts/login.services.';
 import { Router } from '@angular/router';
 import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
+import { SharedService } from 'app/services/shared.service';
+import { FormBuilder, Validators } from '@angular/forms';
+
 
 @Component({
   selector: 'app-reportuserbuild',
@@ -13,7 +16,9 @@ import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 })
 export class ReportuserbuildComponent implements OnInit {
 
-  user: any[] = [];
+  record: any[] =[];
+  user: any[] =[];
+ 
   dtOptions: any ={}; //datatable.setting ={}
   dtTrigger: Subject<any> = new Subject();
   loading: boolean = true;
@@ -24,22 +29,17 @@ export class ReportuserbuildComponent implements OnInit {
     private http: HttpClient,
     private ls: loginservice,
     private router: Router,
-    private authService: AuthService
-  ) { }
-
-  get isAdmin(): boolean {
-    return this.authService.hasRole('admin');
+    private authService: AuthService,
+    private sv: SharedService,
+    private fb:FormBuilder,
+  ) { 
+    
+   
   }
 
-  get isSuperAdmin(): boolean {
-    return this.authService.hasRole('superadmin');
-  }
 
-  get isUser(): boolean {
-    return this.authService.hasRole('user');
-  }
 
-  ngOnInit(): void {
+ ngOnInit(): void {
     this.dtOptions = {
       order: [[0, 'desc']],
       pagingType: 'full_numbers',
@@ -56,21 +56,58 @@ export class ReportuserbuildComponent implements OnInit {
           previous: 'ย้อนกลับ'
         }
       }
-      
     };
-    this.ls.getUserReport().subscribe(
-      data => {
-        this.user = data;
-        this.loading = false;
-      },
-      err => {
-        this.error = 'Failed to load data';
-        this.loading = false;
-      }
-    );
+  //   this.ls.getUserById().subscribe(
+  //     userIdData => {
+  //       const userId = userIdData.id; // Adjust according to your response structure
+
+  //       this.sv.getRecordWithUserAndEmployee(userId).subscribe(
+  //         data => {
+  //           this.user = this.mergeUserData(data.record, data.users, data.employees);
+  //           console.log('Record:', data.record);
+  //           console.log('Users:', data.users);
+  //           console.log('Employees:', data.employees);
+  //           this.loading = false;
+  //         },
+  //         error => {
+  //           console.error('Error fetching user data:', error);
+  //           this.error = error;
+  //           this.loading = false;
+  //         }
+  //       );
+  //     },
+  //     error => {
+  //       console.error('Error fetching user ID:', error);
+  //       this.error = 'Error fetching user ID';
+  //       this.loading = false;
+  //     }
+  //   );
+  // }
+  
+
+  
+
+  // mergeUserData(record: any[], users: any[], employees: any[]): any[] {
+  //   console.log(record)
+  //   console.log(users)
+  //   console.log(employees)
+
+  //   return record.map(record => {
+  //     // Find the user that matches the userId from the record
+  //     const user = users.find(u => u._id === record.userId);
+  
+  //     // Find the employee that matches the employeeId from the user
+  //     const employee = user ? employees.find(e => e._id === user.employeeId) : null;
+  
+  //     return {
+  //       ...record,
+  //       user: user || null,        // Add user info to record
+  //       employee: employee || null // Add employee info to record if needed
+  //     };
+  //   });
   }
-  getUserReportProfile(id:any) {
-    
+
+  getUserReportProfile(id: any) {
     this.router.navigate(['/profilereport']);
   }
 }
