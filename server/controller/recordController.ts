@@ -48,10 +48,14 @@ class recorCon extends BaseCtrl {
 
     try {
       const userID = req.user.id; // ใช้ userID จาก req.user
+      const now = new Date();
+      const localDate = now.toLocaleDateString('th-TH', { timeZone: 'Asia/Bangkok' }); // วันที่ตามเขตเวลาท้องถิ่น
+      const localTime = now.toLocaleTimeString('th-TH', { timeZone: 'Asia/Bangkok' }); // เวลาตามเขตเวลาท้องถิ่น
+
 
       const obj = await new this.model({
         record_id: req.body.id,
-        record_star_date: req.body.startDate, //start..
+        record_star_date: req.body.startDate, // start..
         record_end_date: req.body.endDate,
         record_detail: req.body.detail,
         record_location: req.body.location,
@@ -60,7 +64,9 @@ class recorCon extends BaseCtrl {
         record_provine: req.body.provine,
         record_place: req.body.place,
         record_filename: req.body.filename,
-        userId: userID // เก็บ userID ใน record
+        userId: userID, // เก็บ userID ใน record
+        createdDate: localDate, // เก็บวันที่ตามเขตเวลาท้องถิ่น
+        createdTime: localTime // เก็บเวลาตามเขตเวลาท้องถิ่น
       }).save();
 
       console.log("obj _Id: ", obj._id);
@@ -75,6 +81,7 @@ class recorCon extends BaseCtrl {
       return res.status(400).json({ error: err.message });
     }
   }
+
 
 updateRecordContent = async (req, res) => {
 console.log("Updating record content: ", req.body);
@@ -182,29 +189,29 @@ getData = async (req, res) => {
   }
 }
 
- getRecordWithUserAndEmployee = async (req, res) => {
+getRecordWithUserAndEmployee = async (req, res) => {
+  const userId = req.params.userId; // ตรวจสอบและรับค่า userId จากพารามิเตอร์
+  console.log(`Params: ${JSON.stringify(req.params)}`); // เพิ่ม console.log เพื่อตรวจสอบค่า params
+  console.log(`Received userId: ${userId}`); // เพิ่ม console.log เพื่อตรวจสอบค่า userId
+
+  if (!userId) {
+    console.log('User ID is missing');
+    return res.status(400).send('User ID is required');
+  }
+
   try {
-    const documentId = req.params.documentId;
-
-    const record = await this.model.findById(documentId)
-      .populate({
-        path: 'userId',
-        populate: {
-          path: 'employeeId',
-          model: 'Employee'
-        }
-      });
-
-    if (!record) {
-      return res.status(404).json({ msg: 'Record not found' });
+    const records = await recordModel.find({ userId: userId });
+    console.log(`Found records: ${records}`); // เพิ่ม console.log เพื่อตรวจสอบข้อมูลที่ได้จากฐานข้อมูล
+    if (records.length === 0) {
+      console.log('No records found');
+      return res.status(404).send('No records found');
     }
-
-    res.status(200).json(record);
+    res.status(200).json({ records });
   } catch (error) {
     console.error('Error in getRecordWithUserAndEmployee function:', error.message);
     res.status(500).send('Server error');
   }
-};
+}
     
   }
 

@@ -51,7 +51,7 @@ function setRoutes(app): void {
   router.route('/recordModel/:id').delete(recordModelCtrl.delete);
 
   router.route('/viewModel/getViewByRecordId/:id').get(viewModelCtrl.getViewByRecordId);
-  router.route('/recordModel/getRecordWithUserAndEmployee/:id').get(recordModelCtrl.getRecordWithUserAndEmployee)
+  router.route('/recordModel/getuser/:userId').get(recordModelCtrl.getRecordWithUserAndEmployee);
   
 
   // UserModel routes
@@ -84,7 +84,7 @@ function setRoutes(app): void {
   router.route('/registerModel/profile').get(auth.authorize, registerModelCtrl.getUserProfile);//petch add
   router.route('/registerModel/count').get(registerModelCtrl.count);
   router.route('/registerModel').post(registerModelCtrl.create);
-  router.route('/registerModel/login').post(registerModelCtrl.login);
+  router.route('/registerModel/login').post(registerModelCtrl.login); // Ensure authorize middleware is used
   router.route('/registerModel/resetPassword').post(registerModelCtrl.resetPassword);
   router.route('/registerModel/forgotPassword').post(registerModelCtrl.forgotPassword); 
   router.route('/registerModel/:id').get(registerModelCtrl.get);

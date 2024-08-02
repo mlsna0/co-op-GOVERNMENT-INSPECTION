@@ -72,10 +72,14 @@ export class SharedService {
   getViewByRecordId(record_id: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/viewModel/getViewByRecordId/${record_id}`);
   }
-  getRecordWithUserAndEmployee(record_id: number):Observable<any>{
-    return this.http.get(`${this.baseUrl}/recordModel/getRecordWithUserAndEmployee/${record_id}`)
+  getRecordWithUserAndEmployee(userId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/recordModel/getuser/${userId}`).pipe(
+      catchError(error => {
+        console.error('Error fetching data:', error);
+        throw 'ไม่สามารถดึงข้อมูลได้';
+      })
+    );
   }
-
   getAggregatedData(): Observable<any> {
     return this.http.get(`${this.baseUrl}/aggregateRecordsAndView`).pipe(
       catchError(error => {
