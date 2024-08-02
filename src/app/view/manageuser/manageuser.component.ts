@@ -14,17 +14,15 @@ import { Router } from '@angular/router';
 export class ManageuserComponent implements OnInit {
 
   user: any[] = [];
-  dtOptions: any ={}; //datatable.setting ={}
+  dtOptions: any = {}; // datatable.setting = {}
   dtTrigger: Subject<any> = new Subject();
   loading: boolean = true;
   error: string = '';
- 
+
   constructor(
-    private provinceService: ProvinceService,
     private http: HttpClient,
     private ls: loginservice,
     private router: Router,
-
   ) { }
 
   ngOnInit(): void {
@@ -44,10 +42,9 @@ export class ManageuserComponent implements OnInit {
           previous: 'ย้อนกลับ'
         }
       }
-      
     };
-    this.ls.getUserReport().subscribe(([registerData, userData]) => {
-      this.user = this.mergeUserData(registerData, userData);
+    this.ls.getUserReport().subscribe(data => {
+      this.user = this.mergeUserData(data.employees, data.users);
       this.loading = false;
     }, error => {
       console.error('Error fetching user data:', error);
@@ -57,8 +54,9 @@ export class ManageuserComponent implements OnInit {
 
   mergeUserData(registerData: any[], userData: any[]): any[] {
     return registerData.map(regUser => {
-      const user = userData.find(u => u.id === regUser.id); // แก้ไขให้ตรงกับ key ที่ใช้เชื่อมโยง
+      const user = userData.find(u => u.employeeId === regUser._id); // ตรวจสอบให้แน่ใจว่าใช้ key ที่ถูกต้อง
       return {
+        id: user ? user._id : null, // ใช้ ID ของ `user` แทน `employee`
         firstname: regUser.firstname,
         lastname: regUser.lastname,
         email: regUser.email,
@@ -66,25 +64,37 @@ export class ManageuserComponent implements OnInit {
       };
     });
   }
-  getUserReportProfile(id:any) {
-    
-    this.router.navigate(['/profilereport']);
-  }
+
+  // getUserReportProfile(id: any) {
+  //   this.router.navigate([`/profileuser/${id}`]).catch(err => {
+  //     console.error('Navigation Error:', err);
+  //   });
+  //   console.log('id',id)
+  // }
+
+      getUserReportProfile(id: any) {
+    this.router.navigate(['/profileuser', id]);
+    }
+
+
 
   onRoleChange(user: any) {
-    this.ls.updateUserRole(user.id, user.role).subscribe(
-      (response) => {
-        console.log('Role updated successfully:', response);
-        // Optionally show a success message to the user
-      },
-      (error) => {
-        console.error('Error updating role:', error);
-        // Optionally show an error message to the user
-      }
-    );
+    console.log('User ID:', user.id); // เพิ่มบรรทัดนี้เพื่อตรวจสอบค่า user.id
+    if (user.id) { // ตรวจสอบว่ามี user.id ก่อนทำการอัปเดต
+      this.ls.updateUserRole(user.id, user.role).subscribe(
+        (response) => {
+          console.log('Role updated successfully:', response);
+          // Optionally show a success message to the user
+        },
+        (error) => {
+          console.error('Error updating role:', error);
+          // Optionally show an error message to the user
+        }
+      );
+    } else {
+      console.error('User ID is missing');
+      // Optionally show an error message to the user
+    }
   }
-
- 
-
-
 }
+

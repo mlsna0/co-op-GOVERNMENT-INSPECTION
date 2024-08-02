@@ -31,12 +31,12 @@ import {TableMainComponent } from '../../view/table-main/table-main.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ReportuserComponent } from 'app/view/reportuser/reportuser.component';
-import { ReportprofileComponent } from '../../view/reportuser/reportprofile/reportprofile.component';
+
 import { ReportuserbuildComponent } from '../../view/reportuser/reportuserbuild/reportuserbuild.component';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { AppComponent } from 'app/app.component';
 import { ManageuserComponent } from '../../view/manageuser/manageuser.component';
-
+import { ProfileuserComponent } from 'app/view/manageuser/profileuser/profileuser.component';
 
 @NgModule({
   imports: [
@@ -75,9 +75,10 @@ import { ManageuserComponent } from '../../view/manageuser/manageuser.component'
     // SignatureComponent,
   
     ReportuserComponent,
-    ReportprofileComponent,
+   
     ReportuserbuildComponent,
     ManageuserComponent,
+    ProfileuserComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -110,4 +110,12 @@ export class loginservice {
       );
   }
 
+  getUsers(): Observable<any[]> {
+    return this.http.get<any[]>(this.baseUrl);
+  }
+
+  getUserById(userId: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/${userId}`);
+  }
+
 }
