@@ -25,7 +25,7 @@ import Tesseract from 'tesseract.js'; // Default import Tesseract.js
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 import { jwtDecode } from 'jwt-decode'; // นำเข้า jwt-decode
-
+import { ActivatedRoute } from '@angular/router';
 import { error } from 'console';
 import { loginservice } from 'app/layouts/login.services.';
 
@@ -60,7 +60,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
   PersonINT :number = 0;
   personInputs: FormArray;
   // currentRecordId: string;
-  
+  userId: string;
   addItemForm: any;
   addDataForm: any;
   activeButton: string='typro';
@@ -121,7 +121,8 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     private router: Router,
     private geocodingService: GeocodingServiceService,
     private sanitizer: DomSanitizer,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute
     
 
   ) { 
@@ -248,6 +249,15 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     // } else {
     //   console.error('User ID is not available.');
     // }
+
+    // this.route.params.subscribe(params => {
+    //   this.userId = params['userId'];
+    //   if (this.userId) {
+    //     this.loadUserRecords(this.userId);
+    //   } else {
+    //     console.error('User ID is missing');
+    //   }
+    // });
   }
   ngOnDestroy() {
     document.removeEventListener('keydown', this.handleKeydown.bind(this));
@@ -277,14 +287,13 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
 
 
   
-  // loadData(): void {
-  //   this.sv.getRecord().subscribe(
-  //     (response) => {
-  //       this.items = response.records;
-  //       this.filteredItems = this.items.filter(item => item.userId === this.currentUserId);
+  // loadUserRecords(userId: string) {
+  //   this.sv.getRecordWithUserAndEmployee(userId).subscribe(
+  //     data => {
+  //       this.detailItems = data.records;
   //     },
-  //     (error) => {
-  //       console.error('Error fetching items:', error);
+  //     error => {
+  //       console.error('Error loading user records:', error);
   //     }
   //   );
   // }

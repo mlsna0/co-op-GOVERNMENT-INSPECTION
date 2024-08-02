@@ -48,10 +48,14 @@ class recorCon extends BaseCtrl {
 
     try {
       const userID = req.user.id; // ใช้ userID จาก req.user
+      const now = new Date();
+      const localDate = now.toLocaleDateString('th-TH', { timeZone: 'Asia/Bangkok' }); // วันที่ตามเขตเวลาท้องถิ่น
+      const localTime = now.toLocaleTimeString('th-TH', { timeZone: 'Asia/Bangkok' }); // เวลาตามเขตเวลาท้องถิ่น
+
 
       const obj = await new this.model({
         record_id: req.body.id,
-        record_star_date: req.body.startDate, //start..
+        record_star_date: req.body.startDate, // start..
         record_end_date: req.body.endDate,
         record_detail: req.body.detail,
         record_location: req.body.location,
@@ -60,7 +64,9 @@ class recorCon extends BaseCtrl {
         record_provine: req.body.provine,
         record_place: req.body.place,
         record_filename: req.body.filename,
-        userId: userID // เก็บ userID ใน record
+        userId: userID, // เก็บ userID ใน record
+        createdDate: localDate, // เก็บวันที่ตามเขตเวลาท้องถิ่น
+        createdTime: localTime // เก็บเวลาตามเขตเวลาท้องถิ่น
       }).save();
 
       console.log("obj _Id: ", obj._id);
@@ -75,6 +81,7 @@ class recorCon extends BaseCtrl {
       return res.status(400).json({ error: err.message });
     }
   }
+
 
 updateRecordContent = async (req, res) => {
 console.log("Updating record content: ", req.body);

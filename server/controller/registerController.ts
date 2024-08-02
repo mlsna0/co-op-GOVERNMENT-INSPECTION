@@ -202,7 +202,7 @@ class RegisterModelCtrl extends BaseCtrl {
                     detail: employee.detail,
                     profileImg: employee.profileImage
                 }
-            };
+            }; 
     
              // เพิ่มการบันทึก timestamp
              const timeStampCtrl = new TimeStampModelCtrl();

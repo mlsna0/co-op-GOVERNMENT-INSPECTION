@@ -18,9 +18,12 @@ const recordSchema = new mongoose.Schema({
     // record_sub_district: String,
     // record_address: String,
     record_place: String,
+    createdDate: String, // เพิ่มฟิลด์สำหรับเก็บวันที่
+    createdTime: String, // เพิ่มฟิลด์สำหรับเก็บเวลา
     // userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' }, 
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
+  
     //     record_data_: Buffer,
     //     record_contentType: String
     //   }  
