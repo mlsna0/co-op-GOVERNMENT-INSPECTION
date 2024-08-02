@@ -1,6 +1,7 @@
 import recordModel from '../models/recordModel';
 import ViewModel from '../models/viewModel';
-
+import RegisterModel from '../models/registerModel'; // เพิ่มการนำเข้า model ของ employee
+import User from '../models/userModel'; // เพิ่มการนำเข้า model ของ user
 import multer, { StorageEngine } from 'multer';
 import { Request, Response } from 'express';
 // import DetailModel from 'models/detailModel';
@@ -25,6 +26,8 @@ class recorCon extends BaseCtrl {
   // }
   model = recordModel;
   modelView = ViewModel;
+  employeeModel = RegisterModel;
+  userModel = User; 
   
   auth = async (req, res, next) => {
     const token = req.header('Authorization').replace('Bearer ', '');
@@ -190,9 +193,9 @@ getData = async (req, res) => {
 }
 
 getRecordWithUserAndEmployee = async (req, res) => {
-  const userId = req.params.userId; // ตรวจสอบและรับค่า userId จากพารามิเตอร์
-  console.log(`Params: ${JSON.stringify(req.params)}`); // เพิ่ม console.log เพื่อตรวจสอบค่า params
-  console.log(`Received userId: ${userId}`); // เพิ่ม console.log เพื่อตรวจสอบค่า userId
+  const userId = req.params.userId;
+  console.log(`Params: ${JSON.stringify(req.params)}`);
+  console.log(`Received userId: ${userId}`);
 
   if (!userId) {
     console.log('User ID is missing');
@@ -200,13 +203,30 @@ getRecordWithUserAndEmployee = async (req, res) => {
   }
 
   try {
-    const records = await recordModel.find({ userId: userId });
-    console.log(`Found records: ${records}`); // เพิ่ม console.log เพื่อตรวจสอบข้อมูลที่ได้จากฐานข้อมูล
-    if (records.length === 0) {
-      console.log('No records found');
-      return res.status(404).send('No records found');
+    // ดึงข้อมูลของ documents ตาม userId
+    const documents = await this.model.find({ userId: userId });
+    console.log(`Found documents: ${documents}`);
+    if (documents.length === 0) {
+      console.log('No documents found');
+      return res.status(404).send('No documents found');
     }
-    res.status(200).json({ records });
+
+    // ดึงข้อมูลของ user ตาม userId
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      console.log('User not found');
+      return res.status(404).send('User not found');
+    }
+
+    // ดึงข้อมูลของ employee ตาม employeeId ที่ได้จาก user
+    const employees = await Promise.all(
+      documents.map(async (document) => {
+        // ใช้ employeeId จาก user เพื่อดึงข้อมูลของ employee
+        return this.employeeModel.findById(user.employeeId);
+      })
+    );
+
+    res.status(200).json({ user, documents, employees });
   } catch (error) {
     console.error('Error in getRecordWithUserAndEmployee function:', error.message);
     res.status(500).send('Server error');
