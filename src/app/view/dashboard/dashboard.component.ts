@@ -1,9 +1,11 @@
-  import { Component, OnInit } from "@angular/core";
+  import { Component, OnInit,ViewChild,ViewChildren } from "@angular/core";
   import { ProvinceService } from "../thaicounty/thaicounty.service";
   import { SharedService } from "app/services/shared.service";
   import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
-  import { subscribeOn } from "rxjs";
+  import { subscribeOn,Subscription } from "rxjs";
   import { Chart, registerables } from 'chart.js';
+  import { Router, NavigationEnd } from '@angular/router';
+  import { MatSelect } from '@angular/material/select';
 
 
   @Component({
@@ -14,21 +16,35 @@
   export class DashboardComponent implements OnInit {
     //  provinces: { id: number, name_th: string, selected: boolean }[] = []; // เปลี่ยนเป็น provinces
     provinces:any[] = []; 
+    recordCount:number;
+    userCount:number;
 
-    selectedProvince: string;
-    recordCount:number
+    //filter
     isFilterActive: boolean = false;
     filteredProvinces: any[] = [];
     searchTerm: string = '';
     selectedProvinces: Set<number> = new Set<number>();
+    isProvinceDropdownOpen: boolean = false;
+    isDateDropdownOpen: boolean = false;
+    startDate: string | null = null;
+    endDate: string | null = null;
+    selectedProvince: string;
 
     //chart
     chart: any;
+    displayedProvinces: any[] = [];
+    currentPage: number = 1;
+    itemsPerPage: number = 10;
+    totalPages: number = 0;
+    routerSubscription: Subscription;
 
+
+    @ViewChild('provinceSelect') provinceSelect: MatSelect;
     constructor(
       private provinceService: ProvinceService,
       private sv:SharedService,
-      private authService: AuthService
+      private authService: AuthService,    
+      private router: Router
     ) {}
     get isAdmin(): boolean {
       return this.authService.hasRole('admin');
@@ -59,9 +75,27 @@
         }
       );
 
+      this.sv.getUserCount().subscribe(res=>{
+        this.userCount = res;
+        // console.log("user count: ",this.userCount)
+      },
+      error => {
+        console.error(error);
+      });
 
       // Create the chart
-  
+      this.routerSubscription = this.router.events.subscribe(event => {
+        if (event instanceof NavigationEnd) {
+          if (event.url === '/dashboard') {
+            this.createChart();
+            // this.createDonutChart()
+          } else {
+            if (this.chart) {
+              this.chart.destroy();
+            }
+          }
+        }
+      })
     
       // this.sv.buttonCount$.subscribe(count => {
       //   this.buttonCount = count;
@@ -72,19 +106,16 @@
     ngAfterViewInit(): void {
       Chart.register(...registerables);
       this.createChart();
+      // this.createDonutChart()
     }
-    // loadProvinces(): void {
-    //   this.provinceService.getProvinces().subscribe(
-    //     (data) => {
-    //       console.log("Data from API:", data);
-    //       this.provinces = data.map((province) => ({ name: province.name_th }));
-    //       console.log("Provinces:", this.provinces);
-    //     },
-    //     (error) => {
-    //       console.error("Error fetching provinces:", error);
-    //     }
-    //   );
-    // }
+    ngOnDestroy(): void {
+      if (this.chart) {
+        this.chart.destroy();
+      }
+      if (this.routerSubscription) {
+        this.routerSubscription.unsubscribe();
+      }
+    }
 
 
 
@@ -103,27 +134,6 @@
       }
     }
 
-    // getDataCount() {
-    //   this.sv.getData().subscribe(data => {
-    //     console.log('Data received from API:', data);
-    //     if (data && data.records && data.records.length > 0) {
-    //       // ใช้ record_id จาก data.records แทน
-    //       const ids = data.records.map(item => Number(item.record_id));
-    //       console.log('Record IDs from data:', ids);
-    //       // this.lastDataId = Math.max(...ids);
-    //     } else {
-    //       console.warn('No data received or records are empty');
-    //     }
-    //     // console.log('Last Data ID:', this.lastDataId);
-    //     // this.cdr.detectChanges(); // Trigger change detection
-    //   }, error => {
-    //     console.error('Error fetching data count:', error);
-    //   });
-    // }
-
-    // getDifference(): number {
-    //   return this.lastDataId - this.pdfButtonCount;
-    // }
 
     DetailFilterShow(){
       this.isFilterActive = !this.isFilterActive;
@@ -139,11 +149,27 @@
           }));
           this.filteredProvinces = [...this.provinces];
           console.log("Provinces:", this.provinces);
+
+          this.totalPages = Math.ceil(this.provinces.length / this.itemsPerPage);
+          this.updateDisplayedProvinces();
         },
         (error) => {
           console.error("Error fetching provinces:", error);
         }
       );
+    }
+
+    toggleDropdown(type: string): void {
+      if (type === 'province') {
+        this.isProvinceDropdownOpen = !this.isProvinceDropdownOpen;
+        this.isDateDropdownOpen = false; // ปิด dropdown วันที่ เมื่อเปิด dropdown จังหวัด
+      } else if (type === 'date') {
+        this.isDateDropdownOpen = !this.isDateDropdownOpen;
+        this.isProvinceDropdownOpen = false; // ปิด dropdown จังหวัด เมื่อเปิด dropdown วันที่
+      }
+    }
+    openDatePicker(): void {
+      this.toggleDropdown('date');
     }
 
     onSearch(event: any) {
@@ -164,9 +190,24 @@
         }
       });
     }
+    onProvinceSelect(event: any) {
+      const isChecked = event.target.checked;
+      const provinceId = Number(event.target.value);
+      const province = this.provinces.find(p => p.id === provinceId);
+  
+      if (province) {
+        province.selected = isChecked;
+        if (isChecked) {
+          this.selectedProvinces.add(provinceId);
+        } else {
+          this.selectedProvinces.delete(provinceId);
+        }
+      }
+    }
     applyFilter() {
       const selectedProvincesArray = Array.from(this.selectedProvinces);
       console.log('Selected Provinces:', selectedProvincesArray);
+      this.updateDisplayedProvinces(); 
       // Implement the logic to filter the data based on selected provinces
     }
     clearFilter() {
@@ -190,29 +231,182 @@
       this.loadProvinces();
     }
 
+    //date filter
+    onDateChange(): void {
+      // ฟังก์ชันเปลี่ยนวันที่
+      console.log('Start Date:', this.startDate);
+      console.log('End Date:', this.endDate);
+    }
+
+
+
     //chart
+    updateDisplayedProvinces(): void {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      this.displayedProvinces = this.provinces.slice(start, end);
+      if (this.chart) {
+        this.chart.destroy();
+        this.createChart();
+      }
+    }
+    nextPage(): void {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+        this.updateDisplayedProvinces();
+      }
+    }
+  
+    prevPage(): void {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.updateDisplayedProvinces();
+      }
+    }
     createChart(): void {
-      const ctx = document.getElementById('myLineChart') as HTMLCanvasElement;
-      
+      const canvas = document.getElementById('myLineChart') as HTMLCanvasElement | null;
+    
+      if (!canvas) {
+        console.error('Canvas element with ID "myLineChart" not found');
+        return;
+      }
+    
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        console.error('Failed to get canvas context');
+        return;
+      }
+      if (this.chart) {
+        this.chart.destroy();
+      }
+      const provinceLabels = this.filteredProvinces
+    .filter(province => province.selected)
+    .map(province => province.name_th);
       this.chart = new Chart(ctx, {
-        type: 'line', // Specify the type of chart
+        type: 'bar',
         data: {
-          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-          datasets: [{
-            label: 'My First Dataset',
-            data: [65, 59, 80, 81, 56, 55, 40],
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-          }]
+          labels: provinceLabels,
+          datasets: [
+            {
+              label: 'เอกสารที่ถูกสร้าง',
+              data: [65, 59, 80, 81, 56, 55, 40,80, 81, 56].slice(0, this.displayedProvinces.length),
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderColor: 'rgb(255, 99, 132)',
+              borderWidth: 1
+            },
+            {
+              label: 'ผู้ใข้งาน',
+              data: [65, 48, 40, 19, 86, 27, 90,48, 40, 19].slice(0, this.displayedProvinces.length),
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderColor: 'rgb(54, 162, 235)',
+              borderWidth: 1
+            }
+          ]
         },
         options: {
+          responsive: true,
           scales: {
+            x: {
+              stacked: false // เปลี่ยนเป็น false เพื่อแสดงแท่งข้างกัน
+            },
             y: {
+              stacked: false,
               beginAtZero: true
             }
           }
         }
       });
     }
+    
+    // createDonutChart(): void {
+    //   const canvas = document.getElementById('signedDocumentsChart') as HTMLCanvasElement | null;
+  
+    //   if (!canvas) {
+    //     console.error('Canvas element with ID "signedDocumentsChart" not found');
+    //     return;
+    //   }
+  
+    //   const ctx = canvas.getContext('2d');
+    //   if (!ctx) {
+    //     console.error('Failed to get canvas context');
+    //     return;
+    //   }
+  
+    //   this.chart = new Chart(ctx, {
+    //     type: 'doughnut',
+    //     data: {
+    //       labels: ['Signed Documents', 'Unsigned Documents'],
+    //       datasets: [{
+    //         label: 'Documents',
+    //         data: [13025, 5025], // เปลี่ยนข้อมูลตามจริง
+    //         backgroundColor: [
+    //           'rgba(75, 192, 192, 0.2)',
+    //           'rgba(255, 99, 132, 0.2)'
+    //         ],
+    //         borderColor: [
+    //           'rgba(75, 192, 192, 1)',
+    //           'rgba(255, 99, 132, 1)'
+    //         ],
+    //         borderWidth: 1
+    //       }]
+    //     },
+    //     options: {
+    //       responsive: true,
+    //       maintainAspectRatio: false
+    //     }
+    //   });
+    // }
+    
+    // createChart(): void {
+    //   const canvas = document.getElementById('myLineChart') as HTMLCanvasElement | null;
+  
+    //   if (!canvas) {
+    //     console.error('Canvas element with ID "myLineChart" not found');
+    //     return;
+    //   }
+  
+    //   const ctx = canvas.getContext('2d');
+    //   if (!ctx) {
+    //     console.error('Failed to get canvas context');
+    //     return;
+    //   }
+  
+      
+    //   this.chart = new Chart(ctx, {
+    //     type: 'bar',
+    //     data: {
+    //       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    //       datasets: [{
+    //         label: 'My First Dataset',
+    //         data: [65, 59, 80, 81, 56, 55, 40],
+    //         backgroundColor: [
+    //           'rgba(255, 99, 132, 0.2)',
+    //           'rgba(255, 159, 64, 0.2)',
+    //           'rgba(255, 205, 86, 0.2)',
+    //           'rgba(75, 192, 192, 0.2)',
+    //           'rgba(54, 162, 235, 0.2)',
+    //           'rgba(153, 102, 255, 0.2)',
+    //           'rgba(201, 203, 207, 0.2)'
+    //         ],
+    //         borderColor: [
+    //           'rgb(255, 99, 132)',
+    //           'rgb(255, 159, 64)',
+    //           'rgb(255, 205, 86)',
+    //           'rgb(75, 192, 192)',
+    //           'rgb(54, 162, 235)',
+    //           'rgb(153, 102, 255)',
+    //           'rgb(201, 203, 207)'
+    //         ],
+    //         borderWidth: 1
+    //       }]
+    //     },
+    //     options: {
+    //       scales: {
+    //         y: {
+    //           beginAtZero: true
+    //         }
+    //       }
+    //     }
+    //   });
+    // }
   }

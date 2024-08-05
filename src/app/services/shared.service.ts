@@ -1,7 +1,8 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, catchError, map} from 'rxjs';
+import { Observable, BehaviorSubject, catchError, map,throwError} from 'rxjs';
+import User from '../../../server/models/userModel';
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +57,8 @@ export class SharedService {
       })
     );
   }
+
+  //for data for dashboard
   getRecordCount(): Observable<number> {
     return this.http.get<any[]>(`${this.baseUrl}/recordModel`).pipe(
       map(records => records.length), // นับจำนวนเอกสาร
@@ -65,6 +68,22 @@ export class SharedService {
       })
     );
   }
+  getUserCount(): Observable<number> {
+    return this.http.get<any[]>(`${this.baseUrl}/user`).pipe(
+      map(users => {
+        if (Array.isArray(users)) {
+          return users.length; // นับจำนวนผู้ใช้งาน
+        } else {
+          throw new Error('Data is not an array');
+        }
+      }),
+      catchError(error => {
+        console.error('Error fetching data:', error);
+        return throwError('ไม่สามารถดึงข้อมูลได้');
+      })
+    );
+  }
+/////////////////////////////////////////////////////////////////////////
   getDataById(id: number): Observable<any>{
     return this.http.get(`${this.baseUrl}/recordModel/${id}`);
   }

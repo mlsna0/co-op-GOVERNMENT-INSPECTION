@@ -9,8 +9,15 @@
   .mapBG{
     position: relative;
     padding: 25px;
-    height: 750px;
+    height: 900px;
     background: white;
-    border-radius: 20px;
+    border-radius: 10px;
     justify-content: center;
+  }
+.title{
+  padding:0 20px 20px 0;
+}
+  h4{
+    font-family: 'Sarabun',sans-serif;
+    font-weight: 900;
   }

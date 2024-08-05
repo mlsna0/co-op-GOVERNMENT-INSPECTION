@@ -33,7 +33,7 @@ export class ThaicountyComponent implements OnInit {
   ngOnInit(): void {
     this.dtOptions = {
       order: [[1, 'desc']],
-      pagingType: 'full_numbers',
+      pagingType: 'simple_numbers',
       language: {
         lengthMenu: 'แสดง _MENU_ รายการ',
         search: 'ค้นหา',
