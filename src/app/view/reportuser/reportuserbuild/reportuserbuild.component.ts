@@ -58,50 +58,37 @@ export class ReportuserbuildComponent implements OnInit {
       }
     };
     
-  //       this.sv.getRecordWithUserAndEmployee().subscribe(
-  //         data => {
-  //           this.user = this.mergeUserData(data.record, data.users, data.employees);
-  //           console.log('Record:', data.record);
-  //           console.log('Users:', data.users);
-  //           console.log('Employees:', data.employees);
-  //           this.loading = false;
-  //         },
-  //         error => {
-  //           console.error('Error fetching user data:', error);
-  //           this.error = error;
-  //           this.loading = false;
-  //         }
-  //       );
-     
-  //     error => {
-  //       console.error('Error fetching user ID:', error);
-  //       this.error = 'Error fetching user ID';
-  //       this.loading = false;
-  //     }
-  
-  // }
-  
+    this.sv.getallRecordWithUserAndEmployee().subscribe(data => {
+      this.user = this.mergeUserData(data.employees, data.users, data.documents);
+      this.loading = false;
+    }, error => {
+      console.error('Error fetching user data:', error);
+      this.loading = false;
+    });
 
-  
+  }
 
-  // mergeUserData(record: any[], users: any[], employees: any[]): any[] {
-  //   console.log(record)
-  //   console.log(users)
-  //   console.log(employees)
-
-  //   return record.map(record => {
-  //     // Find the user that matches the userId from the record
-  //     const user = users.find(u => u._id === record.userId);
+  mergeUserData(registerData: any[], userData: any[], documentData: any): any[] {
+    return documentData.map(document => {
+      // หาผู้ใช้ที่ตรงกับ userId ใน document
+      const user = userData.find(u => u._id === document.userId);
+      
+      // หากพบผู้ใช้ใน userData, หาพนักงานที่ตรงกับ employeeId ใน user
+      const employee = user ? registerData.find(e => e._id === user.employeeId) : null;
   
-  //     // Find the employee that matches the employeeId from the user
-  //     const employee = user ? employees.find(e => e._id === user.employeeId) : null;
-  
-  //     return {
-  //       ...record,
-  //       user: user || null,        // Add user info to record
-  //       employee: employee || null // Add employee info to record if needed
-  //     };
-  //   });
+      return {
+        documentId: document._id,
+        record_topic:document.record_topic ,
+        createdDate:document.createdDate ,
+        createdTime:document.createdTime ,
+        firstname: employee ? employee.firstname : 'N/A',
+        lastname: employee ? employee.lastname : 'N/A',
+        email: employee ? employee.email : 'N/A',
+        role: user ? user.role : 'N/A'
+        
+      };
+    });
+    
   }
 
   getUserReportProfile(id: any) {

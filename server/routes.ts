@@ -52,8 +52,10 @@ function setRoutes(app): void {
 
   router.route('/viewModel/getViewByRecordId/:id').get(viewModelCtrl.getViewByRecordId);
   /////report crate
+
+  router.route('/getall').get(recordModelCtrl.getAllRecordsRenamed);
+  router.route('/timeStampLogin').get(timestampModelCtrl.getTimeLogin);
   router.route('/recordModel/getuser/:userId').get(recordModelCtrl.getRecordWithUserAndEmployee);
-  
 
   // UserModel routes
   router.route('/timeStampModel').get(userModelCtrl.getAll);
@@ -62,8 +64,8 @@ function setRoutes(app): void {
   router.route('/timeStampModel/:id').get(userModelCtrl.get);
   router.route('/timeStampModel/:id').put(userModelCtrl.update);
   router.route('/timeStampModel/:id').delete(userModelCtrl.delete);
-
-
+  
+  // router.route('/timeStampModel').get(userModelCtrl.getTimeLogin);
 
   //TimeStampModel routes
   router.route('/userModel').get(timestampModelCtrl.getAll);
@@ -72,6 +74,8 @@ function setRoutes(app): void {
   router.route('/userModel/:id').get(timestampModelCtrl.get);
   router.route('/userModel/:id').put(timestampModelCtrl.update);
   router.route('/userModel/:id').delete(timestampModelCtrl.delete);
+
+  
 
   // ViewModel routes
   router.route('/viewModel').get(viewModelCtrl.getAll);

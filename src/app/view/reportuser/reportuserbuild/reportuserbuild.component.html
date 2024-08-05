@@ -14,7 +14,7 @@
               <th class="small-name">หัวข้อการสร้าง</th>
               <th class="small-name">ชื่อ</th>
               <th class="small-name">นามสกุล</th>
-              <th class="small-name">วันที่ส้ราง</th>
+              <th class="small-name">วันที่สร้าง</th>
               <th class="small-name">เวลาที่สร้าง</th>
               <!-- <th class="small-cell">ตำเเหน่ง</th> -->
               <th class="small-cell" style="color: black;  font-size: 16px; text-align: center;"><i
@@ -22,13 +22,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let record of user ; let i = index">
+            <tr *ngFor="let users of user ; let i = index">
               <td class="small-cell" style="text-align: center; width: 5%;">{{ i + 1 }}</td>
-              <td class="small-name"> {{ record.record_topic }} </td>
-              <td class="small-name"> {{ record.user?.firstname|| 'N/A'  }} </td>
-              <td class="small-name"> {{ record.user?.lastname|| 'N/A'   }} </td>
-              <td class="small-name"> {{ record.createdDate }} </td>
-              <td class="small-name"> {{ record.createdTime }} </td>
+              <td class="small-name"> {{ users.record_topic }} </td>
+              <td class="small-name"> {{ users.firstname }} </td>
+              <td class="small-name"> {{ users.lastname }} </td>
+              <td class="small-name"> {{ users.createdDate }} </td>
+              <td class="small-name"> {{ users.createdTime }} </td>
               <!-- <td class="small-cell"> {{ users.role }} </td> -->
               <td class="small-cell-text">
               <button (click)="getUserReportProfile(users.id)" style="border: none; background: none; color: black; text-align: center;" >

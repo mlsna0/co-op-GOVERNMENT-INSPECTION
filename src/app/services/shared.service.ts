@@ -92,6 +92,14 @@ export class SharedService {
     );
   }
   
+  getallRecordWithUserAndEmployee(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/getall`);
+  }
+
+  getLoginTime(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/timeStampLogin`);
+  }
+
   getAggregatedData(): Observable<any> {
     return this.http.get(`${this.baseUrl}/aggregateRecordsAndView`).pipe(
       catchError(error => {

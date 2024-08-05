@@ -192,6 +192,44 @@ getData = async (req, res) => {
   }
 }
 
+getAllRecordsRenamed = async (req, res) => {
+  try {
+    // ดึงข้อมูลของ users ทั้งหมด
+    const users = await this.userModel.find({});
+    console.log(`Found users: ${users}`);
+
+    if (users.length === 0) {
+      console.log('No users found');
+      return res.status(404).send('No users found');
+    }
+
+    // ดึงข้อมูลของ employees ทั้งหมด
+    const employees = await this.employeeModel.find({});
+    console.log(`Found employees: ${employees}`);
+
+    if (employees.length === 0) {
+      console.log('No employees found');
+      return res.status(404).send('No employees found');
+    }
+
+    // ดึงข้อมูลของ documents ทั้งหมด
+    const documents = await this.model.find({});
+    console.log(`Found documents: ${documents}`);
+
+    if (documents.length === 0) {
+      console.log('No documents found');
+      return res.status(404).send('No documents found');
+    }
+
+    res.status(200).json({ users, employees, documents });
+  } catch (error) {
+    console.error('Error in getAllRecords function:', error.message);
+    res.status(500).send('Server error');
+  }
+}
+
+
+
 getRecordWithUserAndEmployee = async (req, res) => {
   const userId = req.params.userId;
   console.log(`Params: ${JSON.stringify(req.params)}`);
@@ -203,7 +241,6 @@ getRecordWithUserAndEmployee = async (req, res) => {
   }
 
   try {
-    // ดึงข้อมูลของ documents ตาม userId
     const documents = await this.model.find({ userId: userId });
     console.log(`Found documents: ${documents}`);
     if (documents.length === 0) {
@@ -211,17 +248,14 @@ getRecordWithUserAndEmployee = async (req, res) => {
       return res.status(404).send('No documents found');
     }
 
-    // ดึงข้อมูลของ user ตาม userId
     const user = await this.userModel.findById(userId);
     if (!user) {
       console.log('User not found');
       return res.status(404).send('User not found');
     }
 
-    // ดึงข้อมูลของ employee ตาม employeeId ที่ได้จาก user
     const employees = await Promise.all(
       documents.map(async (document) => {
-        // ใช้ employeeId จาก user เพื่อดึงข้อมูลของ employee
         return this.employeeModel.findById(user.employeeId);
       })
     );
