@@ -57,11 +57,8 @@ export class ReportuserbuildComponent implements OnInit {
         }
       }
     };
-  //   this.ls.getUserById().subscribe(
-  //     userIdData => {
-  //       const userId = userIdData.id; // Adjust according to your response structure
-
-  //       this.sv.getRecordWithUserAndEmployee(userId).subscribe(
+    
+  //       this.sv.getRecordWithUserAndEmployee().subscribe(
   //         data => {
   //           this.user = this.mergeUserData(data.record, data.users, data.employees);
   //           console.log('Record:', data.record);
@@ -75,13 +72,13 @@ export class ReportuserbuildComponent implements OnInit {
   //           this.loading = false;
   //         }
   //       );
-  //     },
+     
   //     error => {
   //       console.error('Error fetching user ID:', error);
   //       this.error = 'Error fetching user ID';
   //       this.loading = false;
   //     }
-  //   );
+  
   // }
   
 
