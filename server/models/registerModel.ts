@@ -28,7 +28,6 @@ export interface registerModel{
     organization: string;
     bearing: string;
     email: string;
-    confirmpassword: string;
     phone: string;
     address: string;
     province: string;
@@ -37,7 +36,6 @@ export interface registerModel{
     postCode: string;
     detail: string;
     profileImage: string;
-    timestamps: mongoose.Types.ObjectId[]; // ฟิลด์ timestamps
   }
 
 const RegisterModel = mongoose.model('Employee', registerSchema);
