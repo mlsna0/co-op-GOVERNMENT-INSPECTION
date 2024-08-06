@@ -235,6 +235,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     });
     
     this.sv.getRecordWithUserAndEmployee(this.record_id).subscribe(res=>{
+      console.log("ddd",this.item)
       this.item= res;
       this.loadig =false;
     })

@@ -4,7 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { loginservice } from 'app/layouts/login.services.';
 import { SharedService } from "../../services/shared.service";
-import { AuthService } from "../../layouts/auth-layout/auth-layout.Service"
+import { AuthService } from "../../layouts/auth-layout/auth-layout.Service";
+import { ProvinceService } from '../thaicounty/thaicounty.service';
 import Swal from 'sweetalert2';
 import $ from "jquery";
 import 'bootstrap';
@@ -26,6 +27,12 @@ export class ProfileComponent implements OnInit {
   EditStatus: boolean=false;
 
   profileImgUrl:string;
+
+  provinces: any[] = [];  // ตัวแปรสำหรับเก็บข้อมูลจังหวัด
+  amphures: any[] = [];   // ตัวแปรสำหรับเก็บข้อมูลอำเภอ
+  tambons: any[] = [];    // ตัวแปรสำหรับเก็บข้อมูลตำบล
+
+
   constructor(
     private fb:FormBuilder,
     private http:HttpClient,
@@ -33,6 +40,7 @@ export class ProfileComponent implements OnInit {
     private authService: AuthService,
     private loginSV:loginservice,
     private router: Router,
+    private ts: ProvinceService,
   ) { 
 
     this.UserInfoForm = this.fb.group({
@@ -50,17 +58,62 @@ export class ProfileComponent implements OnInit {
     this.loginSV.getUserProfile().subscribe(
       res => {
       this.UserData = res;
-      console.log("onInit get UserData: ", this.UserData);
+      // console.log("onInit get UserData: ", this.UserData);
       this.UserInfoForm.patchValue(this.UserData);
     });
-    this.sv.currentProfileImageUrl.subscribe(url=> this.profileImgUrl= url)
+    this.sv.currentProfileImageUrl.subscribe(url=> this.profileImgUrl= url);
+
+    this.ts.getProvincesWithDetails().subscribe(data => {
+      this.provinces = data;
+      this.amphures = data.flatMap(province => province.amphures);
+      this.tambons = this.amphures.flatMap(amphure => amphure.tambons);
+  
+      // ตรวจสอบข้อมูลที่โหลดมา
+      // console.log('Provinces:', this.provinces);
+      // console.log('Amphures:', this.amphures);
+      // console.log('Tambons:', this.tambons);
+
+    });
   }
+
+ // Method to get province name from id
+ getProvinceName(id: number): string {
+  // ตรวจสอบประเภทของ id และแปลงให้ตรงกันถ้าจำเป็น
+  const provinceId = Number(id);
+  // ตรวจสอบข้อมูลใน provinces
+  // console.log('All Provinces:', this.provinces);
+  const province = this.provinces.find(p => p.id === provinceId);
+  // console.log(`Searching for Province ID: ${provinceId}. Found:`, province);
+  return province ? province.name_th : 'Not Found';
+}
+  
+  // Method to get amphure name from id
+  getAmphureName(id: number): string {
+    // console.log('All Amphures:', this.amphures);
+    // แปลง id เป็น number เพื่อให้ตรงกับข้อมูลใน array
+    const amphureId = Number(id);
+    const amphure = this.amphures.find(a => a.id === amphureId);
+    // console.log(`Searching for Amphure ID: ${amphureId}. Found:`, amphure);
+    return amphure ? amphure.name_th : 'Not Found';
+  }
+  
+  getTambonName(id: number): string {
+    // console.log('All Tambons:', this.tambons);
+    // แปลง id เป็น number เพื่อให้ตรงกับข้อมูลใน array
+    const tambonId = Number(id);
+    const tambon = this.tambons.find(t => t.id === tambonId);
+    // console.log(`Searching for Tambon ID: ${tambonId}. Found:`, tambon);
+    return tambon ? tambon.name_th : 'Not Found';
+  } 
+
+
+
 
   editProfile() {
     // Add your edit profile logic here
     this.EditStatus= true;
     this.PersonINT++;
-    console.log('Edit profile clicked',this.PersonINT);
+    // console.log('Edit profile clicked',this.PersonINT);
   }
 
   SaveUserInfo(){
@@ -69,6 +122,7 @@ export class ProfileComponent implements OnInit {
       // ส่งข้อมูลที่แก้ไขแล้วไปยังเซิร์ฟเวอร์
       this.sv.updateUserProfile(updatedData).subscribe(response => {
         this.UserData = response;
+        console.log('UserData', this.UserData)
         this.EditStatus = false;
       });
     }

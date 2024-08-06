@@ -46,12 +46,12 @@
                     
                         <div class="col-sm-12">
                           <div class="Info-text">
-                            ตำแหน่ง/หน้าที่ :  {{ UserData?.employeeId.bearing }}
+                            ตำแหน่ง/หน้าที่ :  {{ UserData?.role }}
                           </div>
                         </div>
                         <div class="col-sm-12">
                           <div class="Info-text">
-                            องค์กร/บริษัท :  {{ UserData?.employeeId.company }}
+                            องค์กร/บริษัท :  {{ UserData?.employeeId.organization }}
                           </div>
                         </div>
                         <div class="col-sm-12">
@@ -62,19 +62,19 @@
                         <div class="col-md-6">
                           <div class="Info-text">
                            
-                            ตำบล : {{ UserData?.employeeId.tambon }}
+                            ตำบล : {{ getTambonName(UserData?.employeeId.tambon) }}
                           </div>
                         </div>
                         <div class="col-md-6">
                           <div class="Info-text">
                            
-                            อำเภอ :  {{ UserData?.employeeId.amphure }}
+                            อำเภอ :  {{ getAmphureName(UserData?.employeeId.amphure) }}
                           </div>
                         </div>
                         <div class="col-md-6">
                           <div class="Info-text">
                            
-                            จังหวัด :  {{ UserData?.employeeId.province }}
+                            จังหวัด :  {{ getProvinceName(UserData?.employeeId.province) }}
                           </div>
                         </div>
                     

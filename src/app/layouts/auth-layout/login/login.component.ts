@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
         }).then((result) => {
           if (result.isConfirmed) {
             document.querySelector('.swal2-confirm').setAttribute('style', 'background-color: #24a0ed; color: white;');
-
+  
             switch (response.user.role) {
               case 'superadmin':
                 this.router.navigate(['/dashboard']);
