@@ -25,8 +25,9 @@ import Tesseract from 'tesseract.js'; // Default import Tesseract.js
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 import { jwtDecode } from 'jwt-decode'; // นำเข้า jwt-decode
-
+import { ActivatedRoute } from '@angular/router';
 import { error } from 'console';
+import { loginservice } from 'app/layouts/login.services.';
 
 @Component({
   selector: 'app-table-main',
@@ -59,7 +60,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
   PersonINT :number = 0;
   personInputs: FormArray;
   // currentRecordId: string;
-  
+  userId: string;
   addItemForm: any;
   addDataForm: any;
   activeButton: string='typro';
@@ -92,7 +93,8 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
   records: any;
   pdfSrc: SafeResourceUrl;
   loadig:boolean = false;
-  
+  currentUserId: string;
+  filteredItems: any[] = [];
   initialFontSize: number = 14;
   htmlContent: string = '';
 
@@ -115,10 +117,12 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     private fb:FormBuilder,
     private http:HttpClient,
     private sv:SharedService,
+    private lg:loginservice,
     private router: Router,
     private geocodingService: GeocodingServiceService,
     private sanitizer: DomSanitizer,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute
     
 
   ) { 
@@ -231,6 +235,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     });
     
     this.sv.getRecordWithUserAndEmployee(this.record_id).subscribe(res=>{
+      console.log("ddd",this.item)
       this.item= res;
       this.loadig =false;
     })
@@ -238,6 +243,22 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     document.addEventListener('keydown', this.handleKeydown.bind(this));
 
     this.updateButtonCount();
+
+    // this.currentUserId = this.sv.getToken(); // หรือใช้ localStorage.getItem('userId') ถ้าคุณเก็บ userId
+    // if (this.currentUserId) {
+    //   this.loadData();
+    // } else {
+    //   console.error('User ID is not available.');
+    // }
+
+    // this.route.params.subscribe(params => {
+    //   this.userId = params['userId'];
+    //   if (this.userId) {
+    //     this.loadUserRecords(this.userId);
+    //   } else {
+    //     console.error('User ID is missing');
+    //   }
+    // });
   }
   ngOnDestroy() {
     document.removeEventListener('keydown', this.handleKeydown.bind(this));
@@ -266,7 +287,17 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
   }
 
 
- 
+  
+  // loadUserRecords(userId: string) {
+  //   this.sv.getRecordWithUserAndEmployee(userId).subscribe(
+  //     data => {
+  //       this.detailItems = data.records;
+  //     },
+  //     error => {
+  //       console.error('Error loading user records:', error);
+  //     }
+  //   );
+  // }
 
   //Writter section
   ngAfterViewInit(): void {

@@ -1,6 +1,7 @@
 import recordModel from '../models/recordModel';
 import ViewModel from '../models/viewModel';
-
+import RegisterModel from '../models/registerModel'; // เพิ่มการนำเข้า model ของ employee
+import User from '../models/userModel'; // เพิ่มการนำเข้า model ของ user
 import multer, { StorageEngine } from 'multer';
 import { Request, Response } from 'express';
 // import DetailModel from 'models/detailModel';
@@ -25,6 +26,8 @@ class recorCon extends BaseCtrl {
   // }
   model = recordModel;
   modelView = ViewModel;
+  employeeModel = RegisterModel;
+  userModel = User; 
   
   auth = async (req, res, next) => {
     const token = req.header('Authorization').replace('Bearer ', '');
@@ -48,10 +51,14 @@ class recorCon extends BaseCtrl {
 
     try {
       const userID = req.user.id; // ใช้ userID จาก req.user
+      const now = new Date();
+      const localDate = now.toLocaleDateString('th-TH', { timeZone: 'Asia/Bangkok' }); // วันที่ตามเขตเวลาท้องถิ่น
+      const localTime = now.toLocaleTimeString('th-TH', { timeZone: 'Asia/Bangkok' }); // เวลาตามเขตเวลาท้องถิ่น
+
 
       const obj = await new this.model({
         record_id: req.body.id,
-        record_star_date: req.body.startDate, //start..
+        record_star_date: req.body.startDate, // start..
         record_end_date: req.body.endDate,
         record_detail: req.body.detail,
         record_location: req.body.location,
@@ -60,7 +67,9 @@ class recorCon extends BaseCtrl {
         record_provine: req.body.provine,
         record_place: req.body.place,
         record_filename: req.body.filename,
-        userId: userID // เก็บ userID ใน record
+        userId: userID, // เก็บ userID ใน record
+        createdDate: localDate, // เก็บวันที่ตามเขตเวลาท้องถิ่น
+        createdTime: localTime // เก็บเวลาตามเขตเวลาท้องถิ่น
       }).save();
 
       console.log("obj _Id: ", obj._id);
@@ -75,6 +84,7 @@ class recorCon extends BaseCtrl {
       return res.status(400).json({ error: err.message });
     }
   }
+
 
 updateRecordContent = async (req, res) => {
 console.log("Updating record content: ", req.body);
@@ -182,29 +192,80 @@ getData = async (req, res) => {
   }
 }
 
- getRecordWithUserAndEmployee = async (req, res) => {
+getAllRecordsRenamed = async (req, res) => {
   try {
-    const documentId = req.params.documentId;
+    // ดึงข้อมูลของ users ทั้งหมด
+    const users = await this.userModel.find({});
+    console.log(`Found users: ${users}`);
 
-    const record = await this.model.findById(documentId)
-      .populate({
-        path: 'userId',
-        populate: {
-          path: 'employeeId',
-          model: 'Employee'
-        }
-      });
-
-    if (!record) {
-      return res.status(404).json({ msg: 'Record not found' });
+    if (users.length === 0) {
+      console.log('No users found');
+      return res.status(404).send('No users found');
     }
 
-    res.status(200).json(record);
+    // ดึงข้อมูลของ employees ทั้งหมด
+    const employees = await this.employeeModel.find({});
+    console.log(`Found employees: ${employees}`);
+
+    if (employees.length === 0) {
+      console.log('No employees found');
+      return res.status(404).send('No employees found');
+    }
+
+    // ดึงข้อมูลของ documents ทั้งหมด
+    const documents = await this.model.find({});
+    console.log(`Found documents: ${documents}`);
+
+    if (documents.length === 0) {
+      console.log('No documents found');
+      return res.status(404).send('No documents found');
+    }
+
+    res.status(200).json({ users, employees, documents });
+  } catch (error) {
+    console.error('Error in getAllRecords function:', error.message);
+    res.status(500).send('Server error');
+  }
+}
+
+
+
+getRecordWithUserAndEmployee = async (req, res) => {
+  const userId = req.params.userId;
+  console.log(`Params: ${JSON.stringify(req.params)}`);
+  console.log(`Received userId: ${userId}`);
+
+  if (!userId) {
+    console.log('User ID is missing');
+    return res.status(400).send('User ID is required');
+  }
+
+  try {
+    const documents = await this.model.find({ userId: userId });
+    console.log(`Found documents: ${documents}`);
+    if (documents.length === 0) {
+      console.log('No documents found');
+      return res.status(404).send('No documents found');
+    }
+
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      console.log('User not found');
+      return res.status(404).send('User not found');
+    }
+
+    const employees = await Promise.all(
+      documents.map(async (document) => {
+        return this.employeeModel.findById(user.employeeId);
+      })
+    );
+
+    res.status(200).json({ user, documents, employees });
   } catch (error) {
     console.error('Error in getRecordWithUserAndEmployee function:', error.message);
     res.status(500).send('Server error');
   }
-};
+}
     
   }
 

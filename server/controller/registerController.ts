@@ -1,6 +1,7 @@
 import RegisterModel from '../models/registerModel'; // นำเข้า RegisterModel
 import User from '../models/userModel'; // นำเข้า User
 import authorize from 'middleware/auth/auth';
+import TimeStampModelCtrl from './timeStampController';
 import BaseCtrl from './base';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -8,17 +9,22 @@ import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs'; // นำเข้า fs module
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        // ตรวจสอบว่าโฟลเดอร์ uploads มีอยู่และมีสิทธิ์การเขียน
+        const uploadDir = 'uploads/';
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
     },
     filename: (req, file, cb) => {
         cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
     }
 });
 const upload = multer({ storage });
-
 
 class RegisterModelCtrl extends BaseCtrl {
     model = RegisterModel; // ใช้ RegisterModel สำหรับ Employee
@@ -53,7 +59,6 @@ class RegisterModelCtrl extends BaseCtrl {
                 const profileImage = req.file ? req.file.path : null;
     
                 const employee = new this.model({
-                  
                     firstname,
                     lastname,
                     email,
@@ -201,8 +206,12 @@ class RegisterModelCtrl extends BaseCtrl {
                     detail: employee.detail,
                     profileImg: employee.profileImage
                 }
-            };
+            }; 
     
+             // เพิ่มการบันทึก timestamp
+             const timeStampCtrl = new TimeStampModelCtrl();
+             await timeStampCtrl.addTimeStamp(user.id);
+
             const token = jwt.sign(
                 payload,
                 process.env.JWT_SECRET || 'your_jwt_secret_key',

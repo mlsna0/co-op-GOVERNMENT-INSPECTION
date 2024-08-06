@@ -5,6 +5,11 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { loginservice } from 'app/layouts/login.services.';
 import { Router } from '@angular/router';
 import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
+import { SharedService } from 'app/services/shared.service';
+import { FormBuilder, Validators } from '@angular/forms';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+
 
 @Component({
   selector: 'app-reportuserbuild',
@@ -13,7 +18,9 @@ import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 })
 export class ReportuserbuildComponent implements OnInit {
 
-  user: any[] = [];
+  record: any[] =[];
+  user: any[] =[];
+ 
   dtOptions: any ={}; //datatable.setting ={}
   dtTrigger: Subject<any> = new Subject();
   loading: boolean = true;
@@ -24,22 +31,17 @@ export class ReportuserbuildComponent implements OnInit {
     private http: HttpClient,
     private ls: loginservice,
     private router: Router,
-    private authService: AuthService
-  ) { }
-
-  get isAdmin(): boolean {
-    return this.authService.hasRole('admin');
+    private authService: AuthService,
+    private sv: SharedService,
+    private fb:FormBuilder,
+  ) { 
+    
+   
   }
 
-  get isSuperAdmin(): boolean {
-    return this.authService.hasRole('superadmin');
-  }
 
-  get isUser(): boolean {
-    return this.authService.hasRole('user');
-  }
 
-  ngOnInit(): void {
+ ngOnInit(): void {
     this.dtOptions = {
       order: [[0, 'desc']],
       pagingType: 'full_numbers',
@@ -56,22 +58,54 @@ export class ReportuserbuildComponent implements OnInit {
           previous: 'ย้อนกลับ'
         }
       }
-      
     };
-    this.ls.getUserReport().subscribe(
-      data => {
-        this.user = data;
-        this.loading = false;
-      },
-      err => {
-        this.error = 'Failed to load data';
-        this.loading = false;
-      }
-    );
-  }
-  getUserReportProfile(id:any) {
     
+    this.sv.getallRecordWithUserAndEmployee().subscribe(data => {
+      this.user = this.mergeUserData(data.employees, data.users, data.documents);
+      this.loading = false;
+    }, error => {
+      console.error('Error fetching user data:', error);
+      this.loading = false;
+    });
+
+  }
+
+  mergeUserData(registerData: any[], userData: any[], documentData: any): any[] {
+    return documentData.map(document => {
+      // หาผู้ใช้ที่ตรงกับ userId ใน document
+      const user = userData.find(u => u._id === document.userId);
+      
+      // หากพบผู้ใช้ใน userData, หาพนักงานที่ตรงกับ employeeId ใน user
+      const employee = user ? registerData.find(e => e._id === user.employeeId) : null;
+  
+      return {
+        documentId: document._id,
+        record_topic:document.record_topic ,
+        createdDate:document.createdDate ,
+        createdTime:document.createdTime ,
+        firstname: employee ? employee.firstname : 'N/A',
+        lastname: employee ? employee.lastname : 'N/A',
+        email: employee ? employee.email : 'N/A',
+        role: user ? user.role : 'N/A'
+        
+      };
+    });
+    
+  }
+
+  getUserReportProfile(id: any) {
     this.router.navigate(['/profilereport']);
+  }
+  exportToExcel(): void {
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.user);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'User Report');
+
+    // สร้างไฟล์ Excel
+    const wbout: ArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+
+    // ดาวน์โหลดไฟล์
+    saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'UserReport.xlsx');
   }
 }
 

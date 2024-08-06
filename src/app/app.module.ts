@@ -29,6 +29,7 @@ import { NgApexchartsModule } from "ng-apexcharts";
 
 
 
+
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -53,6 +54,7 @@ import { NgApexchartsModule } from "ng-apexcharts";
     AuthLayoutComponent,
     SignatureComponent,
     HistoryComponent,
+
 
   ],
   providers: [SharedService,

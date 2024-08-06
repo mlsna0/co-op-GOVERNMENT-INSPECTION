@@ -45,5 +45,22 @@ export class ProvinceService {
   gettambons(): Observable<any> {
     return this.http.get<any>(this.tambonsUrl);
   }
+  // ฟังก์ชันสำหรับรับชื่อจังหวัดจาก ID
+  getProvinceNameById(provinceId: number, provinces: any[]): string {
+    const province = provinces.find(p => p.id === provinceId);
+    return province ? province.name_th : ''; // คืนชื่อจังหวัด หรือค่าว่าง
+  }
+
+  // ฟังก์ชันสำหรับรับชื่ออำเภอจาก ID
+  getAmphureNameById(amphureId: number, amphures: any[]): string {
+    const amphure = amphures.find(a => a.id === amphureId);
+    return amphure ? amphure.name_th : ''; // คืนชื่ออำเภอ หรือค่าว่าง
+  }
+
+  // ฟังก์ชันสำหรับรับชื่อตำบลจาก ID
+  getTambonNameById(tambonId: number, tambons: any[]): string {
+    const tambon = tambons.find(t => t.id === tambonId);
+    return tambon ? tambon.name_th : ''; // คืนชื่อตำบล หรือค่าว่าง
+  }
 }
       

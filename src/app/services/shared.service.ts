@@ -59,6 +59,14 @@ export class SharedService {
   }
 
   //for data for dashboard
+  getUsers(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/registerModel`);
+  }
+
+  getEmployees(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/viewModel`);
+  }
+
   getRecordCount(): Observable<number> {
     return this.http.get<any[]>(`${this.baseUrl}/recordModel`).pipe(
       map(records => records.length), // นับจำนวนเอกสาร
@@ -91,8 +99,23 @@ export class SharedService {
   getViewByRecordId(record_id: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/viewModel/getViewByRecordId/${record_id}`);
   }
-  getRecordWithUserAndEmployee(record_id: number):Observable<any>{
-    return this.http.get(`${this.baseUrl}/recordModel/getRecordWithUserAndEmployee/${record_id}`)
+
+
+  getRecordWithUserAndEmployee(userId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/recordModel/getuser/${userId}`).pipe(
+      catchError(error => {
+        console.error('Error fetching data:', error);
+        throw 'ไม่สามารถดึงข้อมูลได้';
+      })
+    );
+  }
+  
+  getallRecordWithUserAndEmployee(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/getall`);
+  }
+
+  getLoginTime(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/timeStampLogin`);
   }
 
   getAggregatedData(): Observable<any> {
@@ -183,5 +206,10 @@ export class SharedService {
   profileImg(url:string){
     this.profileImageUrl.next(url);
   }
+
+  
+getUserReportBuild(userId): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/recordModel/getuser/${userId}`);
+}
 
 }

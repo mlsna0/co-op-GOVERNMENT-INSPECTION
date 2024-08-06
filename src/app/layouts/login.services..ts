@@ -69,6 +69,8 @@ export class loginservice {
     return this.http.get<any>(`${this.baseUrl}/allusers`);
 }
 
+
+
   getUserProfile(): Observable<any> {
     const token = localStorage.getItem(this.tokenKey);
    
@@ -108,6 +110,14 @@ export class loginservice {
           return throwError('Error updating role');
         })
       );
+  }
+
+  getUsers(): Observable<any[]> {
+    return this.http.get<any[]>(this.baseUrl);
+  }
+
+  getUserById(userId: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/${userId}`);
   }
 
 }

@@ -1,87 +1,103 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs';
-import { loginservice } from 'app/layouts/login.services.';
-import { Router } from '@angular/router';
+  import { Component, OnInit } from '@angular/core';
+  import { HttpClient } from '@angular/common/http';
+  import { Subject } from 'rxjs';
+  import { loginservice } from 'app/layouts/login.services.';
+  import { Router } from '@angular/router';
+  import { SharedService } from 'app/services/shared.service';
+  import * as XLSX from 'xlsx';
+  import { saveAs } from 'file-saver';
 
-@Component({
-  selector: 'app-reportuser',
-  templateUrl: './reportuser.component.html',
-  styleUrls: ['./reportuser.component.css']
-})
-export class ReportuserComponent implements OnInit {
-  user: any[] = [];
-  dtOptions: any = {}; // datatable.setting = {}
-  dtTrigger: Subject<any> = new Subject();
-  loading: boolean = true;
-  error: string = '';
+  @Component({
+    selector: 'app-reportuser',
+    templateUrl: './reportuser.component.html',
+    styleUrls: ['./reportuser.component.css']
+  })
+  export class ReportuserComponent implements OnInit {
+    user: any[] = [];
+    dtOptions: any = {}; // datatable.setting = {}
+    dtTrigger: Subject<any> = new Subject();
+    loading: boolean = true;
+    error: string = '';
 
-  constructor(
-    private http: HttpClient,
-    private ls: loginservice,
-    private router: Router,
-  ) { }
+    constructor(
+      private http: HttpClient,
+      private ls: loginservice,
+      private router: Router,
+      private sv:SharedService,
+    ) { }
 
-  ngOnInit(): void {
-    this.dtOptions = {
-      order: [[0, 'desc']],
-      pagingType: 'full_numbers',
-      language: {
-        lengthMenu: 'แสดง _MENU_ รายการ',
-        search: 'ค้นหา',
-        info: 'แสดงหน้า _PAGE_ จากทั้งหมด _PAGES_ หน้า',
-        infoEmpty: 'แสดง 0 ของ 0 รายการ',
-        zeroRecords: 'ไม่พบข้อมูล',
-        paginate: {
-          first: 'หน้าแรก',
-          last: 'หน้าสุดท้าย',
-          next: 'ต่อไป',
-          previous: 'ย้อนกลับ'
+    ngOnInit(): void {
+      this.dtOptions = {
+        order: [[0, 'desc']],
+        pagingType: 'full_numbers',
+        language: {
+          lengthMenu: 'แสดง _MENU_ รายการ',
+          search: 'ค้นหา',
+          info: 'แสดงหน้า _PAGE_ จากทั้งหมด _PAGES_ หน้า',
+          infoEmpty: 'แสดง 0 ของ 0 รายการ',
+          zeroRecords: 'ไม่พบข้อมูล',
+          paginate: {
+            first: 'หน้าแรก',
+            last: 'หน้าสุดท้าย',
+            next: 'ต่อไป',
+            previous: 'ย้อนกลับ'
+          }
         }
-      }
-    };
-    this.ls.getUserReport().subscribe(data => {
-      this.user = this.mergeUserData(data.employees, data.users);
-      this.loading = false;
-    }, error => {
-      console.error('Error fetching user data:', error);
-      this.loading = false;
-    });
-  }
-
-  mergeUserData(registerData: any[], userData: any[]): any[] {
-    return registerData.map(regUser => {
-      const user = userData.find(u => u.employeeId === regUser._id); // ตรวจสอบให้แน่ใจว่าใช้ key ที่ถูกต้อง
-      return {
-        id: user ? user._id : null, // ใช้ ID ของ `user` แทน `employee`
-        firstname: regUser.firstname,
-        lastname: regUser.lastname,
-        email: regUser.email,
-        role: user ? user.role : 'N/A' // หากไม่พบข้อมูล role
       };
-    });
-  }
+      // this.sv.getallRecordWithUserAndEmployee().subscribe((data: any[]) => {
+      //   const { employees, users, documents } = data;
+      //   this.user = this.mergeUserData(employees, users, documents);
+      //   this.loading = false;
+      // }, error => {
+      //   console.error('Error fetching user data:', error);
+      //   this.loading = false;
+      // });
 
-  getUserReportProfile(id: any) {
-    this.router.navigate(['/profilereport']);
-  }
+      this.sv.getLoginTime().subscribe(data => {
+        this.user = this.mergeUserData(data.employees, data.users, data.timestamp);
+        this.loading = false;
+      }, error => {
+        console.error('Error fetching user data:', error);
+        this.loading = false;
+      });
 
-  onRoleChange(user: any) {
-    console.log('User ID:', user.id); // เพิ่มบรรทัดนี้เพื่อตรวจสอบค่า user.id
-    if (user.id) { // ตรวจสอบว่ามี user.id ก่อนทำการอัปเดต
-      this.ls.updateUserRole(user.id, user.role).subscribe(
-        (response) => {
-          console.log('Role updated successfully:', response);
-          // Optionally show a success message to the user
-        },
-        (error) => {
-          console.error('Error updating role:', error);
-          // Optionally show an error message to the user
-        }
-      );
-    } else {
-      console.error('User ID is missing');
-      // Optionally show an error message to the user
     }
+
+    mergeUserData(registerData: any[], userData: any[], timestampData: any[]): any[] {
+      return timestampData.map(timestamp => {
+        // หาผู้ใช้ที่ตรงกับ userId ใน document
+        const user = userData.find(u => u._id === timestamp.userId);
+        
+        // หากพบผู้ใช้ใน userData, หาพนักงานที่ตรงกับ employeeId ใน user
+        const employee = user ? registerData.find(e => e._id === user.employeeId) : null;
+    
+        return {
+          timestampId: timestamp._id,   
+          date: timestamp.date,
+          time: timestamp.time,
+          firstname: employee ? employee.firstname : 'N/A',
+          lastname: employee ? employee.lastname : 'N/A',
+          email: employee ? employee.email : 'N/A',
+          role: user ? user.role : 'N/A'
+
+        };
+      });
+      
+    }
+
+    getUserReportProfile(id: any) {
+      this.router.navigate(['/profilereport']);
+    }
+    exportToExcel(): void {
+      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.user);
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'User Report');
+  
+      // สร้างไฟล์ Excel
+      const wbout: ArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  
+      // ดาวน์โหลดไฟล์
+      saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'UserReport.xlsx');
+    }
+   
   }
-}
