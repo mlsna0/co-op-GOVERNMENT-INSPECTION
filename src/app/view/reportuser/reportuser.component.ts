@@ -4,6 +4,8 @@
   import { loginservice } from 'app/layouts/login.services.';
   import { Router } from '@angular/router';
   import { SharedService } from 'app/services/shared.service';
+  import * as XLSX from 'xlsx';
+  import { saveAs } from 'file-saver';
 
   @Component({
     selector: 'app-reportuser',
@@ -86,6 +88,16 @@
     getUserReportProfile(id: any) {
       this.router.navigate(['/profilereport']);
     }
-
+    exportToExcel(): void {
+      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.user);
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'User Report');
+  
+      // สร้างไฟล์ Excel
+      const wbout: ArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  
+      // ดาวน์โหลดไฟล์
+      saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'UserReport.xlsx');
+    }
    
   }
