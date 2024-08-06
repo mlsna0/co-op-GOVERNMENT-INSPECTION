@@ -37,7 +37,8 @@
     itemsPerPage: number = 10;
     totalPages: number = 0;
     routerSubscription: Subscription;
-
+    //การส่งข้อมูลไปยัง component อื่น เช่น <app-thaicounty></app-thaicounty>
+    filterCriteria = null;
 
     @ViewChild('provinceSelect') provinceSelect: MatSelect;
     constructor(
@@ -106,7 +107,7 @@
     ngAfterViewInit(): void {
       Chart.register(...registerables);
       this.createChart();
-      // this.createDonutChart()
+     
     }
     ngOnDestroy(): void {
       if (this.chart) {
@@ -135,9 +136,9 @@
     }
 
 
-    DetailFilterShow(){
-      this.isFilterActive = !this.isFilterActive;
-    }
+    // DetailFilterShow(){
+    //   this.isFilterActive = !this.isFilterActive;
+    // }
     loadProvinces(): void {
       this.provinceService.getProvinces().subscribe(
         (data) => {
@@ -206,16 +207,19 @@
     }
     applyFilter() {
       const selectedProvincesArray = Array.from(this.selectedProvinces);
-      console.log('Selected Provinces:', selectedProvincesArray);
+      console.log('Selected Provinces: ', selectedProvincesArray);
+      this.filterCriteria = { selectedProvinces: selectedProvincesArray };
+      this.isFilterActive = true;
+      this.currentPage = 1; 
       this.updateDisplayedProvinces(); 
-      // Implement the logic to filter the data based on selected provinces
+      
     }
     clearFilter() {
       // Clear the selected provinces
       this.selectedProvinces.clear();
 
       // Uncheck all checkboxes
-      const checkboxes = document.querySelectorAll('.province-checklist input[type="checkbox"]');
+      const checkboxes = document.querySelectorAll(' .dropdown-scroller  input[type="checkbox"]'); //.province-checklist
       checkboxes.forEach(checkbox => {
         (checkbox as HTMLInputElement).checked = false;
       });
@@ -227,8 +231,11 @@
       // Reset filtered provinces
       this.filteredProvinces.forEach(province => {
         province.selected = false;
+        this.isFilterActive =false;
       });
+      // this.loadAllProvinces();
       this.loadProvinces();
+      
     }
 
     //date filter
@@ -241,19 +248,46 @@
 
 
     //chart
-    updateDisplayedProvinces(): void {
+    loadAllProvinces(): void {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
-      this.displayedProvinces = this.provinces.slice(start, end);
+      const dataToDisplay = this.isFilterActive ? this.filteredProvinces : this.provinces;
+      this.displayedProvinces = dataToDisplay.slice(start, end);
+      // console.log("next page Provinces length: ",this.displayedProvinces)
       if (this.chart) {
         this.chart.destroy();
-        this.createChart();
       }
+      this.createChart();
+    }
+    updateDisplayedProvinces(): void {
+      const filteredProvinces = this.isFilterActive 
+      ? this.filteredProvinces.filter(province => province.selected)
+      : this.provinces
+
+      const totalItems = filteredProvinces.length;
+      this.totalPages = Math.ceil(totalItems / this.itemsPerPage);
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = Math.min(start + this.itemsPerPage, totalItems);
+  
+      this.displayedProvinces = filteredProvinces.slice(start, end);
+
+
+   
+      if (this.chart) {
+        this.chart.destroy();
+        
+      }
+      this.createChart();
     }
     nextPage(): void {
-      if (this.currentPage < this.totalPages) {
+ 
+      if (this.currentPage < this.totalPages && this.displayedProvinces.length >= this.itemsPerPage) {
         this.currentPage++;
+        
         this.updateDisplayedProvinces();
+        console.log("this.itemsPerPage: ",this.itemsPerPage)
+        console.log("this.displayedProvinces.length: ",this.displayedProvinces.length)
+        console.log("this.displayedProvinces: ",this.displayedProvinces)
       }
     }
   
@@ -279,9 +313,25 @@
       if (this.chart) {
         this.chart.destroy();
       }
-      const provinceLabels = this.filteredProvinces
-    .filter(province => province.selected)
-    .map(province => province.name_th);
+      
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+    
+      // กรองข้อมูลตามการกรองที่ใช้งานอยู่
+      const filteredProvinces = this.isFilterActive
+        ? this.filteredProvinces.filter(province => province.selected)
+        : this.provinces;
+    
+      // แสดงข้อมูลตามหน้า
+      this.displayedProvinces = filteredProvinces.slice(start, end);
+   
+    const provinceLabels = this.isFilterActive
+    ? this.filteredProvinces.filter(province => province.selected).map(province => province.name_th).slice(start, end)
+    : this.displayedProvinces.map(province => province.name_th)
+
+      // console.log("this.itemsPerPage: ",this.itemsPerPage)
+      console.log("this.displayedProvinces.length createChart: ",this.displayedProvinces.length)
+      console.log("provinceLabels createChart: ",provinceLabels)
       this.chart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -289,14 +339,14 @@
           datasets: [
             {
               label: 'เอกสารที่ถูกสร้าง',
-              data: [65, 59, 80, 81, 56, 55, 40,80, 81, 56].slice(0, this.displayedProvinces.length),
+              data:[65, 59, 80, 81, 56, 55, 40, 80, 81, 56].slice(0, this.displayedProvinces.length) ,//
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
               borderColor: 'rgb(255, 99, 132)',
               borderWidth: 1
             },
             {
               label: 'ผู้ใข้งาน',
-              data: [65, 48, 40, 19, 86, 27, 90,48, 40, 19].slice(0, this.displayedProvinces.length),
+              data:[65, 48, 40, 19, 86, 27, 90,48, 40, 19].slice(0, this.displayedProvinces.length) , //
               backgroundColor: 'rgba(54, 162, 235, 0.2)',
               borderColor: 'rgb(54, 162, 235)',
               borderWidth: 1
@@ -318,95 +368,5 @@
       });
     }
     
-    // createDonutChart(): void {
-    //   const canvas = document.getElementById('signedDocumentsChart') as HTMLCanvasElement | null;
-  
-    //   if (!canvas) {
-    //     console.error('Canvas element with ID "signedDocumentsChart" not found');
-    //     return;
-    //   }
-  
-    //   const ctx = canvas.getContext('2d');
-    //   if (!ctx) {
-    //     console.error('Failed to get canvas context');
-    //     return;
-    //   }
-  
-    //   this.chart = new Chart(ctx, {
-    //     type: 'doughnut',
-    //     data: {
-    //       labels: ['Signed Documents', 'Unsigned Documents'],
-    //       datasets: [{
-    //         label: 'Documents',
-    //         data: [13025, 5025], // เปลี่ยนข้อมูลตามจริง
-    //         backgroundColor: [
-    //           'rgba(75, 192, 192, 0.2)',
-    //           'rgba(255, 99, 132, 0.2)'
-    //         ],
-    //         borderColor: [
-    //           'rgba(75, 192, 192, 1)',
-    //           'rgba(255, 99, 132, 1)'
-    //         ],
-    //         borderWidth: 1
-    //       }]
-    //     },
-    //     options: {
-    //       responsive: true,
-    //       maintainAspectRatio: false
-    //     }
-    //   });
-    // }
-    
-    // createChart(): void {
-    //   const canvas = document.getElementById('myLineChart') as HTMLCanvasElement | null;
-  
-    //   if (!canvas) {
-    //     console.error('Canvas element with ID "myLineChart" not found');
-    //     return;
-    //   }
-  
-    //   const ctx = canvas.getContext('2d');
-    //   if (!ctx) {
-    //     console.error('Failed to get canvas context');
-    //     return;
-    //   }
-  
-      
-    //   this.chart = new Chart(ctx, {
-    //     type: 'bar',
-    //     data: {
-    //       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    //       datasets: [{
-    //         label: 'My First Dataset',
-    //         data: [65, 59, 80, 81, 56, 55, 40],
-    //         backgroundColor: [
-    //           'rgba(255, 99, 132, 0.2)',
-    //           'rgba(255, 159, 64, 0.2)',
-    //           'rgba(255, 205, 86, 0.2)',
-    //           'rgba(75, 192, 192, 0.2)',
-    //           'rgba(54, 162, 235, 0.2)',
-    //           'rgba(153, 102, 255, 0.2)',
-    //           'rgba(201, 203, 207, 0.2)'
-    //         ],
-    //         borderColor: [
-    //           'rgb(255, 99, 132)',
-    //           'rgb(255, 159, 64)',
-    //           'rgb(255, 205, 86)',
-    //           'rgb(75, 192, 192)',
-    //           'rgb(54, 162, 235)',
-    //           'rgb(153, 102, 255)',
-    //           'rgb(201, 203, 207)'
-    //         ],
-    //         borderWidth: 1
-    //       }]
-    //     },
-    //     options: {
-    //       scales: {
-    //         y: {
-    //           beginAtZero: true
-    //         }
-    //       }
-    //     }
-    //   });
-    // }
+
   }

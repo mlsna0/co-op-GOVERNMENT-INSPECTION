@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Input, OnChanges, SimpleChanges  } from '@angular/core';
 import { ProvinceService } from '../../../app/view/thaicounty/thaicounty.service';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -7,6 +7,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import * as $ from 'jquery';
 
 interface Province {
+  id: number;  // เพิ่มฟิลด์ id
   name: string;
   count: number;
   percentage: number;
@@ -20,6 +21,7 @@ interface Province {
 })
 export class ThaicountyComponent implements OnInit {
 
+  @Input() filterCriteria: any;
   provinces: Province[] = [];
   dtOptions: DataTables.Settings = {};
   dtTrigger: BehaviorSubject<any> = new BehaviorSubject([]); 
@@ -53,6 +55,7 @@ export class ThaicountyComponent implements OnInit {
     this.provinceService.getProvinces().subscribe(data => {
       // console.log('Data from API:', data);
       this.provinces = data.map(province => ({
+        id: province.id,  // เพิ่ม id ที่ได้รับจาก API
         name: province.name_th,
         count: Math.floor(Math.random() * 1000),
         percentage: parseFloat((Math.random() * 100).toFixed(2))
@@ -63,7 +66,41 @@ export class ThaicountyComponent implements OnInit {
     });
   }
 
-
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['filterCriteria']) {
+      console.log('FilterCriteria changed: ', changes['filterCriteria'].currentValue);
+      if (this.filterCriteria) {
+        this.applyFilter();
+      }
+    }
+  }
+  applyFilter() {
+    if (this.filterCriteria) {
+      console.log('Applying filter with criteria: ', this.filterCriteria);
+      // โค้ดการกรองข้อมูลตาม this.filterCriteria
+      this.filterProvinces();
+    }
+  }
+  filterProvinces() {
+    if (this.filterCriteria && this.filterCriteria.selectedProvinces) {
+      const selectedIds = this.filterCriteria.selectedProvinces; // Get selected province IDs
+  
+      this.provinces = this.provinces.filter(province =>
+        selectedIds.includes(province.id) // Check if province ID is in selected IDs
+        
+      );
+      console.log('Filtered Provinces:', this.provinces);
+  
+      // Update DataTable with filtered data
+      this.dtTrigger.next(this.provinces);
+      // $(document).ready(() => {
+      //   const table = $('#yourDataTableId').DataTable(); // Update this with your table ID
+      //   table.clear(); // Clear existing data
+      //   table.rows.add(this.provinces); // Add new data
+      //   table.draw(); // Redraw the table
+      // });
+    }
+  }
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();
   }

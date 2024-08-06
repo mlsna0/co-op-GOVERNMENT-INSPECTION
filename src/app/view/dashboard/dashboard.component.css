@@ -134,11 +134,12 @@ label{
 
 .dropdown-item label {
   display: inline-block;
-  width: 100%; 
+  width: 100%;
+  
 }
 .dropdown-item:hover{
   border-radius: 5px;
-  cursor: none;
+
 }
 .dropdown-item:active{
   border-radius: 5px;
@@ -215,7 +216,7 @@ input[type="date"] {
   left: -22px;
 }
 .inputSearch{
-  margin: 0px 0 0 15px;
+
   padding: 0px 0 0 10px;
   margin-bottom: 10px;
   border: 1px solid #aaa;
@@ -254,7 +255,7 @@ input[type="date"] {
   position: relative;
   display: flex;
   justify-content: flex-end;
-  padding: 5px;
+
   width: 100%;
 }
 .apply-filter{

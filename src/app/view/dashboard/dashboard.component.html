@@ -193,16 +193,16 @@
                   <canvas id="myLineChart">
                   </canvas>
                   <div class="pagination-chart">
-                    <button (click)="prevPage()" [disabled]="currentPage === 1"><i
+                    <button (click)="prevPage()" [disabled]="currentPage === 1 || (displayedProvinces.length < itemsPerPage && totalPages === 1)"><i
                         class="fa fa-angles-left"></i></button>
-                    <button (click)="nextPage()" [disabled]="currentPage === totalPages"><i
+                    <button (click)="nextPage()" [disabled]="currentPage === totalPages|| (displayedProvinces.length < itemsPerPage && totalPages === 1)"><i
                         class="fa fa-angles-right"></i></button>
                   </div>
                 </div>
               </div>
 
               <div class="col-sm-12">
-                <app-thaicounty></app-thaicounty>
+                <app-thaicounty [filterCriteria]="filterCriteria"></app-thaicounty>
               </div>
 
             </div>
