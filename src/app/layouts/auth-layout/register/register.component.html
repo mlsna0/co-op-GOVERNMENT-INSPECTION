@@ -158,7 +158,8 @@
                 <div>อัปโหลดไฟล์ หรือ โยนไฟล์ลงที่นี้</div>
               </div>
 
-              <input type="file" accept="application/png,image/*" (change)="onFileUploadImgChange($event)" #fileInput>
+              <input type="file"  id="profileImage" formControlName="profileImage" 
+              accept="application/png,image/*" (change)="onFileUploadImgChange($event)" #fileInput>
 
             </div>
             <div class="profile-image-container" *ngIf="imageSrc">

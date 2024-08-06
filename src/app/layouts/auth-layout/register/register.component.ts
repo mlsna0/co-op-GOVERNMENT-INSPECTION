@@ -63,7 +63,7 @@ export class RegisterComponent implements OnInit {
       tambon: ['', Validators.required],
       postCode: ['', Validators.required],
       role: ['', Validators.required],
-      profileImage:[null]
+      profileImage:['', Validators.required],
     }, { validator: this.passwordMatchValidator });
   }  
 
@@ -120,6 +120,7 @@ export class RegisterComponent implements OnInit {
       tambon: this.regisForm.value.tambon,
       postCode : this.regisForm.value.postCode,
       role: this.regisForm.value.role,
+      profileImage: this.regisForm.value.profileImage,
     };
 
     this.lc.register(newUser).subscribe(
