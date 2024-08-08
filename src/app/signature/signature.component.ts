@@ -55,6 +55,7 @@ export class SignatureComponent implements OnInit {
   constructor(
     private elementRef: ElementRef,
     private renderer: Renderer2,
+    private router: Router,
     private activateRoute: ActivatedRoute,
     private _sinatureService: SignatureService) {
     this.requestId = this.activateRoute.snapshot.paramMap.get('requestId')
@@ -509,5 +510,8 @@ export class SignatureComponent implements OnInit {
     this.step++;
   }
 
+  BackRoot() {
+    this.router.navigate(['/table-detail']);
+  }
 
 }
