@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute,NavigationEnd } from '@angular/router';
 import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 
 declare const $: any;
@@ -34,16 +34,24 @@ export const ROUTES: RouteInfo[] = [
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
-  menuItems: any[];
+  // menuItems: any[];
   activeRoute: string;
 
+
+  public menuItems: RouteInfo[] = ROUTES;
+  activePath: string = '';
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService
   ) {
-    this.router.events.subscribe(() => {
-      this.activeRoute = this.router.url;
+    // this.router.events.subscribe(() => {
+    //   this.activeRoute = this.router.url;
+    // });
+    this.router.events.subscribe((event: any) => {
+      if (event instanceof NavigationEnd) {
+        this.activePath = event.url;
+      }
     });
   }
 

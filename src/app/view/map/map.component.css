@@ -1,15 +1,15 @@
   #map {
     position: relative;
     display: flex;
-    height: 700px;
+    height: 399px;
     width: auto;
    margin-top: 0;
     border-radius: 5px;
   }
   .mapBG{
     position: relative;
-    padding: 25px;
-    height: 900px;
+    padding: 30px;
+    height: 100%;
     background: white;
     border-radius: 10px;
     justify-content: center;

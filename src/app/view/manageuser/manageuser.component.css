@@ -1,7 +1,20 @@
 .card-header {
   position: relative;
-  background-color: rgb(255, 209, 0);
+  background-color: rgb(241, 245 ,255); /* rgb(255,209,0)*/
   font-family: 'Sarabun', sans-serif;
+
+  display: flex;
+  justify-content: space-between ;
+  align-items: center;
+  margin: 0 ;
+  border-radius: 10px;
+}
+
+.card{
+  padding: 30px;
+}
+h4{
+  font-weight: 900;
 }
 
 .card-body {
@@ -100,10 +113,11 @@ th, td {
 /* Dropdown styling */
 td select {
   width: 100%;
-  padding: 5px;
+  padding:0 10px;
   font-size: 14px;
+  text-align: center;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 32px;
   background-color: white;
   font-family: 'Sarabun', sans-serif;
   color: black; /* Adjust color as needed */

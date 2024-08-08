@@ -1,11 +1,13 @@
-  import { Component, OnInit,ViewChild,ViewChildren } from "@angular/core";
+  import { Component, OnInit,ViewChild,ViewChildren,HostListener,ElementRef } from "@angular/core";
   import { ProvinceService } from "../thaicounty/thaicounty.service";
   import { SharedService } from "app/services/shared.service";
   import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
   import { subscribeOn,Subscription } from "rxjs";
   import { Chart, registerables } from 'chart.js';
+  import ChartDataLabels from 'chartjs-plugin-datalabels';
   import { Router, NavigationEnd } from '@angular/router';
   import { MatSelect } from '@angular/material/select';
+
 
 
   @Component({
@@ -45,7 +47,8 @@
       private provinceService: ProvinceService,
       private sv:SharedService,
       private authService: AuthService,    
-      private router: Router
+      private router: Router,
+      private  eRef: ElementRef
     ) {}
     get isAdmin(): boolean {
       return this.authService.hasRole('admin');
@@ -89,7 +92,8 @@
         if (event instanceof NavigationEnd) {
           if (event.url === '/dashboard') {
             this.createChart();
-            // this.createDonutChart()
+         
+            this.createDonutChart();
           } else {
             if (this.chart) {
               this.chart.destroy();
@@ -107,6 +111,7 @@
     ngAfterViewInit(): void {
       Chart.register(...registerables);
       this.createChart();
+      this.createDonutChart();
      
     }
     ngOnDestroy(): void {
@@ -159,18 +164,27 @@
         }
       );
     }
+    @HostListener('document:click', ['$event'])
+    closeDropdowns(event: Event): void {
+      if (!this.eRef.nativeElement.contains(event.target)) {
+        this.isProvinceDropdownOpen = false;
+        // ปิด dropdown อื่นๆ ถ้ามี
+      }
+    }
 
-    toggleDropdown(type: string): void {
+    toggleDropdown(type: string,event : Event): void {
+
       if (type === 'province') {
         this.isProvinceDropdownOpen = !this.isProvinceDropdownOpen;
         this.isDateDropdownOpen = false; // ปิด dropdown วันที่ เมื่อเปิด dropdown จังหวัด
+        event.stopPropagation();
       } else if (type === 'date') {
         this.isDateDropdownOpen = !this.isDateDropdownOpen;
         this.isProvinceDropdownOpen = false; // ปิด dropdown จังหวัด เมื่อเปิด dropdown วันที่
       }
     }
     openDatePicker(): void {
-      this.toggleDropdown('date');
+      this.toggleDropdown('date',event);
     }
 
     onSearch(event: any) {
@@ -211,6 +225,7 @@
       this.filterCriteria = { selectedProvinces: selectedProvincesArray };
       this.isFilterActive = true;
       this.currentPage = 1; 
+      this.isProvinceDropdownOpen = false;
       this.updateDisplayedProvinces(); 
       
     }
@@ -297,6 +312,10 @@
         this.updateDisplayedProvinces();
       }
     }
+
+   
+  
+    
     createChart(): void {
       const canvas = document.getElementById('myLineChart') as HTMLCanvasElement | null;
     
@@ -367,6 +386,89 @@
         }
       });
     }
+
+    createDonutChart(): void {
+      const ctx = document.getElementById('myDonutChart') as HTMLCanvasElement | null;
+    
+      if (!ctx) {
+        console.error('Canvas element with ID "myDonutChart" not found');
+        return;
+      }
+    
+      const customPlugin = {
+        id: 'custom-plugin',
+        beforeDraw: (chart: Chart) => {
+          const width = chart.width;
+          const height = chart.height;
+          const ctx = chart.ctx;
+    
+          ctx.restore();
+          const fontSize = (height / 114).toFixed(2);
+          ctx.font = `${fontSize}em 'Sarabun', sans-serif`;
+          ctx.textBaseline = 'middle';
+          const text = (chart.data.datasets[0].data as number[]).reduce((a, b) => a + b, 0).toString();
+          const textX = Math.round((width - ctx.measureText(text).width) / 2);
+          const textY = height / 2;
+    
+          ctx.fillText(text, textX, textY);
+          ctx.save();
+        }
+      };
+    
+      Chart.register(customPlugin);
+    
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['เซ็นแล้ว', 'ยังไม่ได้เซ็น'],
+          datasets: [{
+            data: [300, 50],
+            backgroundColor: ['rgb(255, 209, 0,0.2)', 'rgb(195,195,198,0.2)'],
+            borderColor: ['rgb(255, 209, 0)','rgb(195,195,198)'],
+            borderWidth: 1,
+            // borderRadius:10,
+          }]
+        },
+        options: {
+          responsive: false,  
+          maintainAspectRatio: false,  
+          plugins: {
+            tooltip: {
+              enabled: true
+            },
+            datalabels: {
+              display: true,
+              color: 'white',
+              font: {
+                size: 18,
+                family: 'Sarabun, sans-serif'  // กำหนดฟอนต์
+              }
+            },
+            legend: {
+              display: true,
+              position: 'right',  // ตำแหน่งของ legend
+              align: 'center',  // จัดให้อยู่ด้านซ้าย
+              labels: {
+                boxWidth: 20,  // ความกว้างของสี่เหลี่ยม
+                padding: 20,  // ระยะห่างระหว่าง legend กับกราฟ
+                font: {
+                  family: 'Sarabun, sans-serif',  // กำหนดฟอนต์ของ legend
+                  size: 14
+                }
+              }
+            }
+          },
+          cutout: '70%',
+        }
+      });
+    
+      // Unregister the plugin after chart creation to avoid it being used by other charts
+      Chart.unregister(customPlugin);
+    }
+    
+    
+    
+    
     
 
   }

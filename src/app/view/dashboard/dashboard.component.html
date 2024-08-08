@@ -35,21 +35,21 @@
   <div class="global-sales">
     <div class="BoxTotal" style="padding: 0 ; ">
 
-      <div class="row">
-        <!-- <div class="filter-container"> -->
-          <div class="row col-sm-12 filter-container">
-
-            <div class="row col-md-12">
-              <div class="col-md-2">
+      <div class="row" style="padding: 0 ;">
+        <div class="col-md-8" style="padding: 0 15px 0 0 ;">
+          <div class="filter-container">
+            <div class="row">
+              <div class="col-md-3">
                 <h4>กรองข้อมูล</h4>
                 <div class="dropdown">
-                  <div class="filter-box" (click)="toggleDropdown('province')">
+                  <div class="filter-box" (click)="toggleDropdown('province',$event)">
                     เลือกจังหวัด
                     <span class="fa fa-chevron-down" [class.animate]="isProvinceDropdownOpen"
                       *ngIf="isProvinceDropdownOpen"></span>
                     <span class="fa fa-chevron-up" [class.animate]="!isProvinceDropdownOpen"
                       *ngIf="!isProvinceDropdownOpen"></span>
                   </div>
+      
                   <div class="dropdown-content" [class.show]="isProvinceDropdownOpen">
                     <div class="search">
                       <input class="form-control form-control-sm inputSearch" type="text" placeholder="ค้นหา..."
@@ -61,13 +61,13 @@
                         &nbsp;<label for="select-all">ทั้งหมด</label>
                       </div>
                       <div class="dropdown-item" *ngFor="let province of filteredProvinces">
-                        <input type="checkbox" [id]="province.id" [value]="province.id" (change)="onProvinceSelect($event)"
-                          [checked]="province.selected">
+                        <input type="checkbox" [id]="province.id" [value]="province.id"
+                          (change)="onProvinceSelect($event)" [checked]="province.selected">
                         &nbsp;<label [for]="province.id">{{ province.name_th }}</label>
                       </div>
                     </div>
-  
-             
+      
+      
                     <div class="button-inline">
                       <button class="apply-filter" (click)="applyFilter()">ยืนยัน</button>
                       <button class="clear-filter" (click)=" clearFilter()">ล้าง</button>
@@ -75,36 +75,43 @@
                   </div>
                 </div>
               </div>
-  
-              <div class="col-md-2">
+      
+              <div class="col-md-3">
                 <h4>เริ่มต้นวันที่</h4>
-                <div class="filter-box" (click)="toggleDropdown('date')">
-                  <input type="date" [(ngModel)]="startDate" (change)="onDateChange()" placeholder="เริ่มต้นวันที่"
-                   >
+                <div class="filter-box" (click)="toggleDropdown('date',$event)">
+                  <input type="date" [(ngModel)]="startDate" (change)="onDateChange()" placeholder="เริ่มต้นวันที่">
                 </div>
               </div>
-              <div class="col-md-2">
+              
+              <div class="col-md-3">
                 <h4>สิ้นสุด</h4>
                 <div class="filter-box">
                   <input type="date" [(ngModel)]="endDate">
                 </div>
               </div>
-              <div class="col-md-2 align-self-end">
+      
+              <div class="col-md-3 align-self-end">
                 <button type="submit" class="btn btn-add mt-4">
                   ดูข้อมูล
                 </button>
               </div>
             </div>
-            
-
-          </div>
-
-        <!-- </div> -->
-
+     
+           </div>
+        </div>
+        <div class="col-md-4" style="padding-right: 0;">
+            <div class="donutChartBG">
+                <h4>ผู้ใช้งาน</h4>
+                <div class="chart-container">
+                  <canvas id="myDonutChart" ></canvas>
+                </div>
+               
+            </div>
+        </div>
       </div>
 
 
-      <div class="BoxTotal" style="padding: 0 ; ">
+
         <div class="row">
           <!-- เอกสารทั้งหมด -->
           <div class="col-md-3" style="padding: 0 0 0;">
@@ -178,53 +185,45 @@
             </div>
           </div>
         </div>
-      </div>
+      
 
 
       <div class="content-dashboard">
         <div class="row">
           <div class="col-sm-8" style="padding-left: 0;">
-            <div class="row">
 
-              <div class="col-sm-12">
-
-                <div class="BGchart">
-                  <h4>เอกสาร & ผู้ใช้งาน</h4>
-                  <canvas id="myLineChart">
-                  </canvas>
-                  <div class="pagination-chart">
-                    <button (click)="prevPage()" [disabled]="currentPage === 1 || (displayedProvinces.length < itemsPerPage && totalPages === 1)"><i
-                        class="fa fa-angles-left"></i></button>
-                    <button (click)="nextPage()" [disabled]="currentPage === totalPages|| (displayedProvinces.length < itemsPerPage && totalPages === 1)"><i
-                        class="fa fa-angles-right"></i></button>
-                  </div>
-                </div>
+            <div class="BGchart">
+              <h4>เอกสาร & ผู้ใช้งาน</h4>
+              <canvas id="myLineChart">
+              </canvas>
+              <div class="pagination-chart">
+                <button (click)="prevPage()"
+                  [disabled]="currentPage === 1 || (displayedProvinces.length < itemsPerPage && totalPages === 1)"><i
+                    class="fa fa-angles-left"></i></button>
+                <button (click)="nextPage()"
+                  [disabled]="currentPage === totalPages|| (displayedProvinces.length < itemsPerPage && totalPages === 1)"><i
+                    class="fa fa-angles-right"></i></button>
               </div>
-
-              <div class="col-sm-12">
-                <app-thaicounty [filterCriteria]="filterCriteria"></app-thaicounty>
-              </div>
-
             </div>
+
+
           </div>
+
           <div class="col-sm-4" style="padding-right: 0;">
             <app-map></app-map>
           </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12"  style="padding: 0;">
+            <app-thaicounty [filterCriteria]="filterCriteria"></app-thaicounty>
+          </div>
 
         </div>
+
+
+
       </div>
-
-
-
-
-      <!-- <div id="chart">
-  <apx-chart
-    [series]="chartOptions.series"
-    [chart]="chartOptions.chart"
-    [labels]="chartOptions.labels"
-    [responsive]="chartOptions.responsive"
-  ></apx-chart>
-</div> -->
-
     </div>
+
   </div>
+</div>
