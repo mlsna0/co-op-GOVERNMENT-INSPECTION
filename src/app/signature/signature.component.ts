@@ -165,14 +165,38 @@ export class SignatureComponent implements OnInit {
   }
   addDrag(page, pos) {
     console.log("addDrag pos : ", pos);
+    const newId = "cdkDrag_" + (this.dragList.length == 0 ? 0 : +(this.dragList[this.dragList.length - 1].id.split("_")[1]) + 1);
     this.dragList.push({
-      id: "cdkDrag_" + (this.dragList.length == 0 ? 0 : +(this.dragList[this.dragList.length - 1].id.split("_")[1]) + 1),
+      id: newId,
       page: page,
       position: pos,
       name: "ตำแหน่งลายเซ็น",
     });
     console.log("this.dragList: ", this.dragList);
+  
+    // เพิ่มปุ่มลบในกรอบตำแหน่ง
+    setTimeout(() => {
+      let ck = this.cdkDrag_.find((x, i) => x.nativeElement.id == newId).nativeElement;
+      if (ck) {
+        const removeBtn = document.createElement('button');
+        removeBtn.innerHTML = '&times;';
+        removeBtn.style.position = 'absolute';
+        removeBtn.style.top = '0px';
+        removeBtn.style.right = '0px';
+        removeBtn.style.backgroundColor = 'transparent';
+        removeBtn.style.border = 'none';
+        removeBtn.style.color = 'red';
+        removeBtn.style.fontSize = '20px';
+        removeBtn.style.cursor = 'pointer';
+        removeBtn.style.zIndex = '10';
+        removeBtn.onclick = () => this.remove(newId, page);
+  
+        ck.appendChild(removeBtn);
+      }
+    }, 0);
   }
+  
+  
   selectEle(event) {
     if (this.stageMarkSign) {
       let pageHeight = event.target.clientHeight;
@@ -235,13 +259,15 @@ export class SignatureComponent implements OnInit {
     if (indexDragList != -1) {
       this.dragList.splice(indexDragList, 1)
     }
-    // this.cdkDrag_.find((x,i)=> x.nativeElement.id == id).nativeElement.remove();
-    // console.log(this.cdkDrag_.find((x,i)=> x.nativeElement.id == id).nativeElement);
-
+    
     // ลบ element
-    this.renderer.removeChild(this.elementRef.nativeElement, this.cdkDrag_.find((x, i) => x.nativeElement.id == id).nativeElement);
+    const ck = this.cdkDrag_.find((x, i) => x.nativeElement.id == id);
+    if (ck) {
+      this.renderer.removeChild(this.elementRef.nativeElement, ck.nativeElement);
+    }
+  
     console.log("this.dragList: ", this.dragList);
-
+  
     // re index
     let listinPage = this.dragList.filter((value, index, self) =>
       index === self.findIndex((t) => (
@@ -254,7 +280,7 @@ export class SignatureComponent implements OnInit {
     listPage.forEach(elePage => {
       let dragListByPageFilter = this.dragList.filter(x => x.page == elePage);
       dragListByPageFilter.forEach((element, index) => {
-        //re position Y
+        // re position Y
         let removeNumber = +(id.split("_")[1]);
         let curNumber = +(element.id.split("_")[1]);
         if (curNumber > removeNumber && element.page == page) {
@@ -262,11 +288,11 @@ export class SignatureComponent implements OnInit {
         }
         // re index
         element.index = index
-
       });
     })
     console.log("this.dragList reindex: ", this.dragList);
   }
+  
   drawComplete() {
     // will be notified of szimek/signature_pad's onEnd event
     console.log(this.signaturePad.toDataURL());
