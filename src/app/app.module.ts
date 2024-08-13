@@ -24,7 +24,7 @@ import { SignatureComponent } from './signature/signature.component';
 import { HistoryComponent } from './view/history/history.component';
 import { TokenInterceptor } from './layouts/auth-layout/token.interceptor';
 import { NgApexchartsModule } from "ng-apexcharts";
-
+import { ToastrModule } from 'ngx-toastr';
 
 
 
@@ -47,6 +47,10 @@ import { NgApexchartsModule } from "ng-apexcharts";
     PdfViewerModule,
     NgxLoadingModule.forRoot({}),
     NgApexchartsModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    }),
   ],
   declarations: [
     AppComponent,

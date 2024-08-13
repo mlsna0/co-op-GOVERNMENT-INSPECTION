@@ -54,7 +54,7 @@ export class NavbarComponent implements OnInit {
     });
 
     this.sv.currentProfileImageUrl.subscribe(url=> this.profileImgUrl =url)
-
+    
  
   }
 

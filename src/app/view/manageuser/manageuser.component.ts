@@ -72,8 +72,8 @@ export class ManageuserComponent implements OnInit {
   //   console.log('id',id)
   // }
 
-      getUserReportProfile(id: any) {
-    this.router.navigate(['/profileuser', id]);
+      getUserReportProfile(userId: any) {
+    this.router.navigate(['/profileuser', userId]);
     }
 
 

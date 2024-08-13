@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../auth-layout.Service';
 import { loginservice } from 'app/layouts/login.services.';
 import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr'; // นำเข้า ToastrService
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private as : AuthService,
     private lc : loginservice,
+    private toastr: ToastrService // เพิ่ม ToastrService ใน constructor
   ) { }
 
   ngOnInit(): void {
@@ -51,52 +53,38 @@ export class LoginComponent implements OnInit {
           console.log('Stored role in AuthService:', this.as.currentUserRole);
         }
 
-        Swal.fire({
-          title: 'เข้าสู่ระบบสำเร็จ!',
-          text: 'คุณได้เข้าสู่ระบบเรียบร้อยแล้ว',
-          icon: 'success',
-          confirmButtonText: 'ตกลง',
-          customClass: {
-            confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-          }
-        }).then((result) => {
-          if (result.isConfirmed) {
-            document.querySelector('.swal2-confirm').setAttribute('style', 'background-color: #24a0ed; color: white;');
-  
-            switch (response.user.role) {
-              case 'superadmin':
-                this.router.navigate(['/dashboard']);
-                break;
-              case 'admin':
-                this.router.navigate(['/table-main']);
-                break;
-              case 'user':
-                this.router.navigate(['/table-main']);
-                break;
-              default:
-                this.router.navigate(['/dashboard']);
-                break;
-            }
-          }
+        // แสดงแจ้งเตือนด้วย Toastr
+        this.toastr.success('เข้าสู่ระบบสำเร็จ', 'สำเร็จ', {
+          timeOut: 2500,  
+          positionClass: 'toast-top-right'
         });
+
+        // นำทางผู้ใช้ตามบทบาทที่ได้รับ
+        switch (response.user.role) {
+          case 'superadmin':
+            this.router.navigate(['/dashboard']);
+            break;
+          case 'admin':
+            this.router.navigate(['/table-main']);
+            break;
+          case 'user':
+            this.router.navigate(['/table-main']);
+            break;
+          default:
+            this.router.navigate(['/dashboard']);
+            break;
+        }
       },
       error => {
-        console.error('Error logging in', error);
-        Swal.fire({
-          title: 'เกิดข้อผิดพลาด!',
-          text: 'ข้อมูลการเข้าสู่ระบบไม่ถูกต้อง',
-          icon: 'error',
-          confirmButtonText: 'ตกลง',
-          customClass: {
-            confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-          }
+        // แสดงแจ้งเตือนเมื่อเข้าสู่ระบบไม่สำเร็จ
+        this.toastr.error('เข้าสู่ระบบไม่สำเร็จ', 'เกิดข้อผิดพลาด', {
+          timeOut: 2500,
+          positionClass: 'toast-top-right'
         });
+        console.error('Login failed', error);
       }
     );
-}
-
-
-  
+  }
 
   onSubmit() {
     this.router.navigate(['/table-main']);
@@ -105,8 +93,8 @@ export class LoginComponent implements OnInit {
   openFogetPassword() {
     this.router.navigate(['/forget-password']);
   }
-  
-  openRegister(){
+
+  openRegister() {
     this.router.navigate(['/register']);
   }
 }
