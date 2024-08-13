@@ -238,7 +238,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
       console.log("ddd",this.item)
       this.item= res;
       this.loadig =false;
-    })
+    });
 
     document.addEventListener('keydown', this.handleKeydown.bind(this));
 

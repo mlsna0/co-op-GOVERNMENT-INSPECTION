@@ -21,7 +21,7 @@ export const ROUTES: RouteInfo[] = [
     {
         path: ' ', title: 'รายงาน', icon: 'assignment', class: '',
         children: [
-            { path: '/reportuser', title: 'รายงานสมัครเข้าใช้งาน', icon: 'manage_accounts', class: '', roles: ['superadmin'] },
+            { path: '/reportuser', title: 'รายงานการเข้าใช้งาน', icon: 'manage_accounts', class: '', roles: ['superadmin'] },
             { path: '/reportbuild', title: 'รายงานการสร้างฟอร์ม', icon: 'badge', class: '', roles: ['superadmin'] }
         ],
         roles: ['superadmin']
@@ -51,6 +51,7 @@ export class SidebarComponent implements OnInit {
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
         this.activePath = event.url;
+  
       }
     });
   }
@@ -66,15 +67,18 @@ export class SidebarComponent implements OnInit {
   }
 
 
+
   isMobileMenu() {
     return $(window).width() <= 991;
   }
 
-  toggleMenu(menuItem) {
+  toggleMenu(menuItem):void{
     menuItem.open = !menuItem.open;
   }
 
   isActive(path: string): boolean {
     return this.activeRoute === path;
   }
+
+
 }

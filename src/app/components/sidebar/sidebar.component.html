@@ -33,12 +33,16 @@
       </a>
       <div class="submenu" *ngIf="menuItem.children && menuItem.open">
         <ng-container *ngFor="let child of menuItem.children">
-          <a class="dropdown-item" [routerLink]="[child.path]" [ngClass]="{ 'active': isActive(child.path) }">
+          <a class="dropdown-item" [routerLink]="[child.path]" 
+          routerLinkActive="submenu-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+           [ngClass]="{ 'active': isActive(child.path) }">
             <i class="material-icons">{{child.icon}}</i>
             <p>{{child.title}}</p>
           </a>
         </ng-container>
       </div>
+      
     </li>
   </ul>
 </div>

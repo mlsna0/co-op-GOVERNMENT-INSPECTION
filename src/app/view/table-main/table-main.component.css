@@ -6,6 +6,24 @@
     font-family: "Sarabun", sans-serif !important; 
   }
   
+  .card-header{
+    position: relative;
+    background-color:rgb(255,209,0,0.2);  /* rgb(241, 245 ,255)*/
+
+    display: flex;
+    justify-content: space-between ;
+    align-items: center;
+    margin: 0 ;
+    border-radius: 10px;
+  }
+
+  h4{
+    font-weight: 900;
+  }
+  .card{
+    padding: 30px;
+  }
+
   .modal-body {
     display: flex;
     justify-content: center;
@@ -44,7 +62,7 @@
     width: auto;
     padding: 4px 8px;
     color:#449d44; 
-    background-color: #dcffdc;
+    /* background-color: #dcffdc; */
     /* border: 1px solid #449d44; */
     border-radius: 32px;
     align-items: center;
@@ -57,7 +75,7 @@
     width: auto;
     padding: 4px 8px;
     color:#db1900; 
-     background-color: #fff0ee;;
+     /* background-color: #fff0ee;; */
     /* border: 1px solid #db1900 ; */
     border-radius: 32px;
     align-items: center;
@@ -94,10 +112,8 @@
     font-family: "Sarabun", sans-serif;
     
   }
-  .card-header{
-    position: relative;
-    background-color: rgb(255, 209, 0);
-  }
+
+
   .search-table{
     position: relative;
     align-items:center ;

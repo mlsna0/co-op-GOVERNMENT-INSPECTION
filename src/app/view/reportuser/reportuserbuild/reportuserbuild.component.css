@@ -2,7 +2,7 @@
   
   .card-header{
     position: relative;
-    background-color:rgb(241, 245 ,255) ; /*rgb(255, 209, 0)*/
+    background-color: rgb(255,209,0,0.2)  ; /*rgb(241, 245 ,255)*/
     font-family: 'Sarabun',sans-serif;
     
     display: flex;

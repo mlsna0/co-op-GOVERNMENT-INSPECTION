@@ -83,14 +83,20 @@
   color: #3C4858;
 }
 
-.nav li.active a {
-  background-color: rgb(255, 209, 0); /* Highlight color */
-  color: white;
+.nav li.active > a,
+.nav li > a.active {
+  background-color: rgb(255, 209, 0,0.5); /* Highlight color */
+  color: rgb(0, 0, 0);
   box-shadow: 0 12px 20px -10px rgba(255, 255, 255, 0.28), 0 4px 20px 0 rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(255, 235, 59, 0.2);
 }
 
-.nav li.active a i, .nav li.active a p {
+.nav .submenu .dropdown-item.submenu-active {
+  background-color: rgb(255, 209, 0,0.5); /* Highlight color */
   color: white;
+  box-shadow: 0 12px 20px -10px rgba(255, 255, 255, 0.28), 0 4px 20px 0 rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(255, 235, 59, 0.2);
+}
+.nav li.active a i, .nav li.active a p {
+  color: rgb(0, 0, 0);
 }
 
 .submenu {

@@ -304,7 +304,7 @@ input[type="date"] {
   height: 90px;
   align-items: center;
   justify-content: center;
-  background: rgb(255,209,0);
+  background: rgb(255,209,0,0.2);
   border-radius: 10px;
 }
 img{
@@ -324,6 +324,7 @@ height: 32px;
   border-radius: 10px ;
   padding: 20px;
   display: flex;
+  /* flex-direction: column; */
   align-items: center;
 }
 .chart-container {
@@ -334,8 +335,8 @@ height: 32px;
   align-items: center;
 }
 #myDonutChart{
-  height: 140px !important;
-  width: 140px;
+   height:150px; 
+  width: 100%; 
 }
 canvas {
   max-width: 100%;

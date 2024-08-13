@@ -42,8 +42,8 @@ export class ProfileuserComponent implements OnInit {
     this.UserInfoForm = this.fb.group({
       firstname:[''],
       lastname:[''],
-      bearing: [''], // Add this
-      company: [''], // Add this
+      bearing: [''], // Add this ตำแหน่งหน้าที่
+      company: [''], // Add this องค์กร
       address:[''],
       province: [''],
       tambon: [''],

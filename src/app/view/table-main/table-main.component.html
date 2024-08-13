@@ -8,7 +8,7 @@
 
 
   <div class="container-fluid">
-    <div class="row justify-content-end">
+    <!-- <div class="row justify-content-end">
       <div class="col-sm-2">
         <div class="insert-data">
           <button class="btn btn-add pull-center " (click)="onInsertModal()">
@@ -16,24 +16,20 @@
           </button>
         </div>
       </div>
-    </div>
+    </div> -->
 
 
     <div class="row">
       <div class="col-md-12">
         <div class="card">
           <!-- <div class="card-Edit"> -->
-          <div style="display: flex; justify-content: space-between" class="card-header card-header-danger">
+          <div  class="card-header "> <!--card-header-danger-->
             <h4 class="card-title" style="text-align: center">
               การลงตรวจอิเล็กทรอนิค
             </h4>
-            <p class="card-category"></p>
-            <!-- <div class="btnBar">
-                <form class="navbar-form">
-        
-                </form> -->
-            <!-- (click)="searchData(myInputSearch.value)" -->
-            <!-- </div> -->
+            <button class="btn btn-add pull-center " (click)="onInsertModal()">
+              <i class="fa fa-plus"></i> &nbsp;เพิ่มหัวข้อเอกสาร
+            </button>
           </div>
 
           <!-- </div> card-Edit -->
@@ -125,20 +121,16 @@
             aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
-                <div class="modal-header" class="card-header card-header-danger">
-
-                  <div class="row">
-                    <div class="col-sm">
+                <div class="modal-header" class="card-header">
+                 
                       <h5 class="modal-title" id="addItemModalLabel"
-                        style="color: white; font-family: 'Sarabun', sans-serif !important; font-size: 18px;">
+                        style="color: rgb(0, 0, 0); font-family: 'Sarabun', sans-serif !important; font-size: 18px; font-weight: 900;">
                         เพิ่มรายการ</h5>
-                    </div>
-                    <div class="col-sm">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: black;">
                         <span aria-hidden="true">&times;</span>
                       </button>
-                    </div>
-                  </div>
+                
 
                 </div>
                 <div class="modal-body">

@@ -5,7 +5,10 @@
   font-family: 'Sarabun',sans-serif;
 }
 
-
+h4{
+  font-weight: 900;
+  font-family: 'Sarabun',sans-serif;
+}
 
 
 /* 4. Add a border to .card and padding to .card-header */
@@ -49,8 +52,13 @@
 
 /* 9. Add bottom margin to .form-control */
 .form-control {
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
+  border: 1px solid rgb(167, 167, 167);
+  border-radius: 10px;
+  padding-left: 10px;
 }
+
+
 
 /* 10. Style the submit button (.btn-danger.btn-round) */
 .btn-danger.btn-round {
@@ -64,13 +72,24 @@ i{
 }
 /*userInfo*/
 .title{
+  display: flex;
   padding: 10px;
   border-bottom: 1px solid rgb(189, 186, 186);
+  justify-content: space-between;
+}
+.title button{
+  background-color: transparent;
+  border: transparent;
+
+}
+.title button:hover{
+  text-decoration: underline;
 }
 .userInfo{
   margin-bottom: 10px;
   border-radius: 5px;
   border: 1px solid #000000;
+
 }
 .Info-text{
   padding: 0.4375em 0;
@@ -83,7 +102,36 @@ i{
   padding: 10px;
   font-family: 'Sarabun',sans-serif;
 }
+.group-info:focus{
+  background:rgb(255, 209, 0,0.2);
+}
 
+
+
+.card-user{
+  height: 360px;
+  width: auto;
+
+  border-radius: 20px;
+  border: 2px solid white;
+}
+
+.card-avatar{
+display: flex;
+justify-content: center;
+
+}
+.card-user img{
+  height: 210px;
+  width: 210px;
+  border-radius: 50%;
+}
+.card-info{
+  display: flex;
+
+  justify-content: center;
+  flex-direction: column;
+}
 
 
 

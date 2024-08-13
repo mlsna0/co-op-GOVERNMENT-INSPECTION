@@ -33,7 +33,8 @@
     selectedProvince: string;
 
     //chart
-    chart: any;
+    chart: any; // ใช้สำหรับ Bar Chart
+    donutChart: any; // ตัวแปรใหม่ที่ใช้สำหรับ Donut Chart
     displayedProvinces: any[] = [];
     currentPage: number = 1;
     itemsPerPage: number = 10;
@@ -88,36 +89,79 @@
       });
 
       // Create the chart
+      this.setupRouterSubscription();
+    
+    }
+
+    private setupRouterSubscription() {
       this.routerSubscription = this.router.events.subscribe(event => {
         if (event instanceof NavigationEnd) {
           if (event.url === '/dashboard') {
-            this.createChart();
-         
-            this.createDonutChart();
+            setTimeout(() => {
+              if (!this.chart) {
+                this.createChart();
+              }
+              if (!this.donutChart) {
+                this.createDonutChart();
+              }
+            }, 0);
           } else {
             if (this.chart) {
               this.chart.destroy();
+              this.chart = null;
+            }
+            if (this.donutChart) {
+              this.donutChart.destroy();
+              this.donutChart = null;
             }
           }
         }
-      })
-    
-      // this.sv.buttonCount$.subscribe(count => {
-      //   this.buttonCount = count;
-      //   console.log('Received count:', count); // Debugging
-      // });
+      });
     }
-
+    // ngAfterViewInit(): void {
+    //   Chart.register(...registerables);
+    //   if (this.router.url === '/dashboard') {
+    //     if (!this.chart) {
+    //       this.createChart();
+    //     }
+    //     if (!this.donutChart) {
+    //       this.createDonutChart();
+    //     }
+    //   }
+     
+    // }
     ngAfterViewInit(): void {
       Chart.register(...registerables);
-      this.createChart();
-      this.createDonutChart();
-     
+      setTimeout(() => {
+        if (this.router.url === '/dashboard') {
+          if (!this.chart) {
+            this.createChart();
+          }
+          if (!this.donutChart) {
+            this.createDonutChart();
+          }
+        }
+      }, 100); // ปรับเวลาตามที่ต้องการ
     }
     ngOnDestroy(): void {
       if (this.chart) {
-        this.chart.destroy();
+        try {
+          this.chart.destroy();
+          this.chart = null; // กำหนดค่าเป็น null หลังจากทำลาย
+        } catch (error) {
+          console.error("Error destroying chart:", error);
+        }
       }
+      
+      if (this.donutChart) {
+        try {
+          this.donutChart.destroy();
+          this.donutChart = null; // กำหนดค่าเป็น null หลังจากทำลาย
+        } catch (error) {
+          console.error("Error destroying donut chart:", error);
+        }
+      }
+      
       if (this.routerSubscription) {
         this.routerSubscription.unsubscribe();
       }
@@ -395,6 +439,11 @@
         return;
       }
     
+      if (this.donutChart) {
+        this.donutChart.destroy(); // ทำลาย Donut Chart เมื่อเปลี่ยนหน้า
+        // this.donutChart = null;
+      }
+
       const customPlugin = {
         id: 'custom-plugin',
         beforeDraw: (chart: Chart) => {
@@ -417,7 +466,7 @@
     
       Chart.register(customPlugin);
     
-      new Chart(ctx, {
+      this.donutChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
           labels: ['เซ็นแล้ว', 'ยังไม่ได้เซ็น'],
@@ -430,8 +479,8 @@
           }]
         },
         options: {
-          responsive: false,  
-          maintainAspectRatio: false,  
+            responsive: true,  
+            maintainAspectRatio: false,  
           plugins: {
             tooltip: {
               enabled: true
@@ -464,6 +513,7 @@
     
       // Unregister the plugin after chart creation to avoid it being used by other charts
       Chart.unregister(customPlugin);
+      this.donutChart.update();
     }
     
     

@@ -84,7 +84,7 @@ export class LoginComponent implements OnInit {
         console.error('Error logging in', error);
         Swal.fire({
           title: 'เกิดข้อผิดพลาด!',
-          text: 'ข้อมูลการเข้าสู่ระบบไม่ถูกต้อง',
+          text: 'อีเมล์หรือรหัสผ่านไม่ถูกต้อง',
           icon: 'error',
           confirmButtonText: 'ตกลง',
           customClass: {
