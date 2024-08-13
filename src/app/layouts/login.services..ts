@@ -38,13 +38,8 @@ export class loginservice {
 
 
  
-  register(userData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/registerModel`, userData).pipe(
-      catchError(error => {
-        console.error('Error registering user:', error);
-        throw 'ไม่สามารถลงทะเบียนผู้ใช้ได้';
-      })
-    );
+  register(formData: FormData): Observable<any> {
+    return this.http.post(`${this.baseUrl}/registerModel`, formData);
   }
   
   updateProfile(userData: any): Observable<any> {
@@ -129,7 +124,7 @@ export class loginservice {
     return this.http.get<any>(`${this.baseUrl}/registerModel/${userId}`);
   }
 
-  
+
   uploadProfileImage(userId: string, file: File): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('profileImage', file, file.name);
@@ -137,7 +132,7 @@ export class loginservice {
     const token = localStorage.getItem(this.tokenKey);
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    return this.http.post(`${this.baseUrl}/registerModel/uploadProfileImage/${userId}`, formData, { headers })
+    return this.http.post(`${this.baseUrl}/registerModel/uploadProfile/${userId}`, formData, { headers })
       .pipe(
         catchError(error => {
           console.error('Error uploading profile image:', error);
