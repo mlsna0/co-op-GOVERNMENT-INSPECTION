@@ -1,4 +1,4 @@
-    <div class="main-content">
+<div class="main-content">
     <div class="container-fluid">
         <!-- <div class="card">
         <div class="card-header card-header-danger">
@@ -40,121 +40,87 @@
                         <div class="title"></div>
                         </div>
                     
-                        <div class="col-sm-12">
-                        <div class="Info-text">
-                            ตำแหน่ง/หน้าที่ :  {{ user?.bearing }}
-                        </div>
-                        </div>
-                        <div class="col-sm-12">
-                        <div class="Info-text">
-                            องค์กร/บริษัท :  {{ user?.company }}
-                        </div>
-                        </div>
-                        <div class="col-sm-12">
-                        <div class="Info-text">
-                            ที่อยู่ :  {{ user?.address }}
-                        </div>
-                        </div>
-                        <div class="col-md-6">
-                        <div class="Info-text">
-                            ตำบล : {{ user?.tambon }}
-                        </div>
-                        </div>
-                        <div class="col-md-6">
-                        <div class="Info-text">
-                            อำเภอ :  {{ user?.amphure }}
-                        </div>
-                        </div>
-                        <div class="col-md-6">
-                        <div class="Info-text">
-                            จังหวัด :  {{ user?.province }}
-                        </div>
-                        </div>
-                    
-                        <div class="col-md-6">
-                        <div class="Info-text">
-                            รหัสไปรษณีย์ : {{ user?.postCode }}
-                        </div>
-                        </div>
-                    </div>
-                
-                    <div class="title"></div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                        ข้อมูลติดต่อ
-                        </div>
-                    
-                        <div class="col-sm-6">
-                        <div class="Info-text">
-                            อีเมล : {{ user?.email }} 
-                        </div>
-                        </div>
-
-                        <div class="col-sm-12">
-                        <div class="Info-text">
-                            เบอร์โทร : {{ user?.phone }}
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-
-                    <div *ngIf="EditStatus" class="userEdit">
-                    <form [formGroup]="UserInfoForm" (ngSubmit)="SaveUserInfo()">        
+                    <div class="user-content">
+                      <div *ngIf="!EditStatus" class="user-data">
                         <div class="row">
-                        <div class="col-sm-6">
-                            <mat-form-field>
-                            <input matInput placeholder="ชื่อ" formControlName="firstname" type="text">
-                            </mat-form-field>
+  
+                          <div class="col-sm-6">
+                            <div class="Info-text">
+                              ชื่อ : {{ UserData?.employeeId.firstname }} 
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="Info-text">
+                              นามสกุล : {{ UserData?.employeeId.lastname }}
+                            </div>
+                          </div>
+  
+                          <div class="col-sm-12">
+                                <div class="title"></div>
+                          </div>
+                      
+                          <div class="col-sm-12">
+                            <div class="Info-text">
+                              ตำแหน่ง/หน้าที่ :  {{ UserData?.role }}
+                            </div>
+                          </div>
+                          <div class="col-sm-12">
+                            <div class="Info-text">
+                              องค์กร/บริษัท :  {{ UserData?.employeeId.organization }}
+                            </div>
+                          </div>
+                          <div class="col-sm-12">
+                            <div class="Info-text">
+                              ที่อยู่ :  {{ UserData?.employeeId.address }}
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="Info-text">
+                             
+                              ตำบล : {{ getTambonName(UserData?.employeeId.tambon) }}
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="Info-text">
+                             
+                              อำเภอ :  {{ getAmphureName(UserData?.employeeId.amphure) }}
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="Info-text">
+                             
+                              จังหวัด :  {{ getProvinceName(UserData?.employeeId.province) }}
+                            </div>
+                          </div>
+                      
+                          <div class="col-md-6">
+                            <div class="Info-text">
+                              รหัสไปรษณีย์ :{{ UserData?.employeeId.postCode }}
+                            </div>
+                          </div>
+  
                         </div>
-                        <div class="col-sm-6">
-                            <mat-form-field>
-                            <input matInput placeholder="นามสกุล" formControlName="lastname" type="text">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-12">
-                            <mat-form-field>
-                            <input matInput placeholder="ตำแหน่ง/หน้าที่" formControlName="bearing" type="text">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-12">
-                            <mat-form-field>
-                            <input matInput placeholder="บริษัท/องค์กร" formControlName="company" type="text">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-12">
-                            <mat-form-field>
-                            <input matInput placeholder="ที่อยู่" formControlName="address" type="text">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-6">
-                            <mat-form-field>
-                            <input matInput placeholder="ตำบล" formControlName="subDistrict" type="text">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-6">
-                            <mat-form-field>
-                            <input matInput placeholder="อำเภอ" formControlName="district" type="text">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-6">
-                            <mat-form-field>
-                            <input matInput placeholder="จังหวัด" formControlName="province" type="text">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-6">
-                            <mat-form-field>
-                            <input matInput placeholder="รหัสไปรษณีย์" formControlName="postalCode" type="text">
-                            </mat-form-field>
-                        </div>
-
-                        <div class="col-sm-12">
-                            <div class="title"> ข้อมูลติดต่อ</div>
-                        </div>
+                     
+                        <div class="title"> </div>
+                        <div class="row">
+                          <div class="col-sm-12">
+                              ข้อมูลติดต่อ
+                          </div>
                         
-                        <div class="col-md-12">
-                            <mat-form-field>
-                            <input matInput placeholder="อีเมล" type="email">
-                            </mat-form-field>
+                          <div class="col-sm-6">
+                            <div class="Info-text">
+                              อีเมล : {{ UserData?.employeeId.email }} 
+                            </div>
+                          </div>
+    
+                          <div class="col-sm-12">
+                            <div class="Info-text">
+                              เบอร์โทร : {{ UserData?.employeeId.phone }}
+                            </div>
+                          </div>
+                      
+                     
+        
                         </div>
                         <div class="col-md-12">
                             <mat-form-field>
@@ -167,7 +133,25 @@
                     </form>
                     </div> 
                 </div>
+                <div class="col-sm-4" style="border: 1px solid black; border-radius: 5px; padding-left: 0; padding-right: 0; ">
+                  <div class="card-profile">
+                    <div class="card-avatar">
+                      <a href="javascript:void(0)">
+                        <img class="img" [src]="profileImgUrl" />
+                      </a>
+                    </div>
+                    
+                      <div class="Info-text">
+                       {{ UserData?.employeeId.firstname }}   {{ UserData?.employeeId.lastname }}
+                      </div>
+                
+
+                  </div>
+  
                 </div>
+              </div>
+  
+  
             </div>
             <div class="col-sm-4" style="border: 1px solid black; border-radius: 5px; padding-left: 0; padding-right: 0;">
                 <div class="card-profile">
@@ -198,7 +182,7 @@
                                     ระดับผู้ใช้งาน :
                                    </div>
                                 <div class="row">
-                                    ชื่อ :{{ UserData?.firstname }}  นามสกุล :{{user?.lastname}}
+                                    ชื่อ :{{ UserData?.firstname }}  นามสกุล :{{UserData?.lastname}}
                                 </div>
                                 <div class="row">
                                     ตำแหน่ง : 
@@ -329,4 +313,8 @@
             </div>
         </div>
     </div>
-    </div>
+</div>
+
+  
+  
+  

@@ -63,7 +63,7 @@ export class RegisterComponent implements OnInit {
       tambon: ['', Validators.required],
       postCode: ['', Validators.required],
       role: ['', Validators.required],
-      profileImage:['', Validators.required],
+      profileImage: [null, Validators.required]
     }, { validator: this.passwordMatchValidator });
   }  
 
@@ -121,8 +121,10 @@ export class RegisterComponent implements OnInit {
       postCode : this.regisForm.value.postCode,
       role: this.regisForm.value.role,
       profileImage: this.regisForm.value.profileImage,
+      
     };
 
+  
     this.lc.register(newUser).subscribe(
 
       (response) => {
@@ -160,7 +162,22 @@ export class RegisterComponent implements OnInit {
         });
       }
     );
+    
+    if (this.regisForm.valid) {
+      const formDataToSubmit = new FormData();
+      for (const key in FormData) {
+        if (FormData.hasOwnProperty(key)) {
+          formDataToSubmit.append(key, FormData[key]);
+        }
+      }
+
+      // Call the service to register user or handle form submission
+      console.log('Form Submitted:', formDataToSubmit);
+    } else {
+      console.log('Form is invalid');
+    }
   }
+  
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password');
     const confirmPassword = form.get('confirmpassword');
@@ -223,19 +240,8 @@ export class RegisterComponent implements OnInit {
       this.isPostCodeDisabled = false;
     }
   }
-  onFileUploadImgChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.imageSrc = e.target.result;
-        this.regisForm.patchValue({
-          profileImage: file
-        });
-      };
-      reader.readAsDataURL(file); // Convert file to base64
-    }
-  }
+
+
   deletedFileUpload(fileInput:  ElementRef){
     this.imageSrc = null;
     fileInput.nativeElement.value = '';
@@ -244,5 +250,16 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  onFileUploadImgChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imageSrc = reader.result;
+      };
+      reader.readAsDataURL(file);
+      this.regisForm.patchValue({ profileImage: file });
+    }
+  }
  
 }

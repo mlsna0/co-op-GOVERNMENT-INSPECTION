@@ -46,7 +46,15 @@ export class loginservice {
       })
     );
   }
-
+  
+  updateProfile(userData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/registerModel/updateProfile`, userData).pipe(
+      catchError(error => {
+        console.error('Error updating profile:', error);
+        return throwError('ไม่สามารถอัปเดตโปรไฟล์ได้');
+      })
+    );
+  }
 
   login(email: string, password: string, role: string ): Observable<any> {
     console.log("email",email)
@@ -67,7 +75,7 @@ export class loginservice {
 
   getUserReport(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/allusers`);
-}
+  }
 
 
 
@@ -94,9 +102,10 @@ export class loginservice {
   //   return this.http.get<any>(`${this.baseUrl}/registerModel/profile/${id}`)
   // }
   
-  getUserReportProfile(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/registerModel/:id`);
+  getUserReportProfile(userId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/registerModel/${userId}`);
   }
+  
   handleLoginResponse(response: any): void {
     const token = response.token;
     this.sv.setToken(token); // เก็บ token ใน LocalStorage ผ่าน TokenService
@@ -117,7 +126,24 @@ export class loginservice {
   }
 
   getUserById(userId: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/${userId}`);
+    return this.http.get<any>(`${this.baseUrl}/registerModel/${userId}`);
+  }
+
+  
+  uploadProfileImage(userId: string, file: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('profileImage', file, file.name);
+
+    const token = localStorage.getItem(this.tokenKey);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.post(`${this.baseUrl}/registerModel/uploadProfileImage/${userId}`, formData, { headers })
+      .pipe(
+        catchError(error => {
+          console.error('Error uploading profile image:', error);
+          return throwError('Failed to upload profile image');
+        })
+      );
   }
 
 }

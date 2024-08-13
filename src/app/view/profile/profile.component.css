@@ -84,6 +84,17 @@ i{
 .Info-text{
   padding: 0.4375em 0;
 }
+
+.Info-Preview{
+  padding: 0.4375em 0;
+}
+
+.Info-Preview-name{
+  padding: 0.4375em 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
 .userContect{
   border-radius: 5px;
   border: 1px solid #000000;
