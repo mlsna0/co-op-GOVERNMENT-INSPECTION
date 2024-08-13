@@ -432,4 +432,5 @@ class RegisterModelCtrl extends BaseCtrl {
     // วิธีการอื่นๆ ของ CRUD...
 }
 
+
 export default RegisterModelCtrl;
