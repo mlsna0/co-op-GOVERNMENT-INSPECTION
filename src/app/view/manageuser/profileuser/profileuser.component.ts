@@ -46,6 +46,8 @@ export class ProfileuserComponent implements OnInit {
     this.UserInfoForm = this.fb.group({
       firstname:[''],
       lastname:[''],
+      bearing: [''], // Add this ตำแหน่งหน้าที่
+      company: [''], // Add this องค์กร
       address:[''],
       province: [''],
       country: [''],
@@ -59,6 +61,7 @@ export class ProfileuserComponent implements OnInit {
       res => {
       this.UserData = res;
       // console.log("onInit get UserData: ", this.UserData);
+      this.profileImgUrl = this.UserData.profileImageUrl || 'path_to_default_image'; // ใช้รูป default ถ้าไม่มีรูปโปรไฟล์
       this.UserInfoForm.patchValue(this.UserData);
     });
     this.sv.currentProfileImageUrl.subscribe(url=> this.profileImgUrl= url);

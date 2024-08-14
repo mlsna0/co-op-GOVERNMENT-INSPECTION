@@ -77,6 +77,7 @@ export class RegisterComponent implements OnInit {
 
 
   onSubmit(data) {
+    console.log(1111)
     this.Submitted = true; 
     if (this.regisForm.invalid) {
       if (this.regisForm.controls.password.errors?.minlength || this.regisForm.controls.confirmpassword.errors?.minlength) {
@@ -104,6 +105,8 @@ export class RegisterComponent implements OnInit {
     }
   
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    console.log(fileInput);
+    
     const file = fileInput?.files?.[0]; // Get the file from the input
   
     const formData = new FormData();
@@ -247,9 +250,16 @@ export class RegisterComponent implements OnInit {
 
 onFileUploadImgChange(event: any) {
   const file = event.target.files[0];
+  console.log("file",file);
+  
   if (file) {
-    this.imageSrc = URL.createObjectURL(file); // แสดงตัวอย่างภาพ
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.imageSrc = e.target.result;
+    };
+    reader.readAsDataURL(file);
   }
 }
+
 
 }

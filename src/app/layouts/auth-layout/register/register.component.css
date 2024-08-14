@@ -85,7 +85,7 @@
     background: repeating-linear-gradient(-45deg,  #ccc 4px, transparent,  transparent 10px ) ;
     opacity: 0.5;
     border-style:dashed ;
-    margin: 25px;
+    margin: 10px;
     justify-content: center;
     align-items: center;
     overflow: hidden;
@@ -107,7 +107,6 @@
     width: 150px; /* Adjust size as needed */
     height: 150px;
     object-fit: cover; /* Ensure the image covers the area */
-    border-radius: 50%; /* Makes the image circular */
     border: 2px solid #ddd; /* Optional border around the image */
   }
   .positionTrashCan{
@@ -158,4 +157,6 @@
   .login-link:hover {
     text-decoration: underline;
   }
+  
+
   

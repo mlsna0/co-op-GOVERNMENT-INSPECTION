@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute,NavigationEnd } from '@angular/router';
 import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 
 declare const $: any;
@@ -21,7 +21,7 @@ export const ROUTES: RouteInfo[] = [
     {
         path: ' ', title: 'รายงาน', icon: 'assignment', class: '',
         children: [
-            { path: '/reportuser', title: 'รายงานสมัครเข้าใช้งาน', icon: 'manage_accounts', class: '', roles: ['superadmin'] },
+            { path: '/reportuser', title: 'รายงานการเข้าใช้งาน', icon: 'manage_accounts', class: '', roles: ['superadmin'] },
             { path: '/reportbuild', title: 'รายงานการสร้างฟอร์ม', icon: 'badge', class: '', roles: ['superadmin'] }
         ],
         roles: ['superadmin']
@@ -34,16 +34,25 @@ export const ROUTES: RouteInfo[] = [
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
-  menuItems: any[];
+  // menuItems: any[];
   activeRoute: string;
 
+
+  public menuItems: RouteInfo[] = ROUTES;
+  activePath: string = '';
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService
   ) {
-    this.router.events.subscribe(() => {
-      this.activeRoute = this.router.url;
+    // this.router.events.subscribe(() => {
+    //   this.activeRoute = this.router.url;
+    // });
+    this.router.events.subscribe((event: any) => {
+      if (event instanceof NavigationEnd) {
+        this.activePath = event.url;
+  
+      }
     });
   }
 
@@ -58,15 +67,18 @@ export class SidebarComponent implements OnInit {
   }
 
 
+
   isMobileMenu() {
     return $(window).width() <= 991;
   }
 
-  toggleMenu(menuItem) {
+  toggleMenu(menuItem):void{
     menuItem.open = !menuItem.open;
   }
 
   isActive(path: string): boolean {
     return this.activeRoute === path;
   }
+
+
 }

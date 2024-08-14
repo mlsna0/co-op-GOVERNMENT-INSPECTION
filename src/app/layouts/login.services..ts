@@ -2,8 +2,9 @@ import { HttpClient, HttpClientModule,HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { response } from 'express';
 import { environment } from '../../environments/environment';
-import { Observable, catchError, forkJoin, throwError } from 'rxjs';
+import { Observable, catchError, forkJoin, tap, throwError } from 'rxjs';
 import { SharedService } from 'app/services/shared.service';
+import { log } from 'console';
 
 
 
@@ -39,6 +40,7 @@ export class loginservice {
 
  
   register(formData: FormData): Observable<any> {
+    console.log("data in formdata", formData)
     return this.http.post(`${this.baseUrl}/registerModel`, formData);
   }
   
@@ -76,7 +78,7 @@ export class loginservice {
 
   getUserProfile(): Observable<any> {
     const token = localStorage.getItem(this.tokenKey);
-   
+    
     if (!token) {
       console.error('No token found in localStorage');
       return throwError('No token found');
@@ -84,13 +86,13 @@ export class loginservice {
     
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`${this.baseUrl}/registerModel/profile`, { headers })
-    .pipe(
-      catchError(error => {
-        console.error('Error fetching user profile:', error);
-        return throwError(error);
-      })
-    );
-  
+      .pipe(
+        tap(data => console.log('Data from API:', data)), // เพิ่มการตรวจสอบข้อมูลที่ได้รับ
+        catchError(error => {
+          console.error('Error fetching user profile:', error);
+          return throwError(error);
+        })
+      );
   }
 
   // getUserProfileฺฺById(id:number): Observable<any>{

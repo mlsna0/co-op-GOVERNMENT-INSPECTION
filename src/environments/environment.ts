@@ -8,4 +8,5 @@ export const environment = {
   GET_DATA: "api/getdata",
   POST_DATA: "api/postdata",
   URL_UPLOAD_IMG:`${URL}/img/`,
+  URL_UPLOAD:`${URL}/uploads/`,
 };
