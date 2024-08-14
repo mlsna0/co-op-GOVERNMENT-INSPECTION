@@ -132,4 +132,8 @@ export class ProfileComponent implements OnInit {
     this.EditStatus= false;
   }
   
+  goToChangePassword() {
+    this.router.navigate(['/forget-password']); 
+  }
+
 }

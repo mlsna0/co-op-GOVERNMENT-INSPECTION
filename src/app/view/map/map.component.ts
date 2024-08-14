@@ -1,6 +1,9 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { loginservice } from "app/layouts/login.services.";
 import * as L from 'leaflet';
+import { HttpClient } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
@@ -88,25 +91,30 @@ export class MapComponent implements AfterViewInit {
     // คุณสามารถเพิ่มข้อมูลจังหวัดและพิกัดอื่น ๆ ได้ที่นี่ตามต้องการ
   }
 
-  constructor(private loginservice: loginservice) { }
+  constructor(private loginservice: loginservice,private http: HttpClient) { }
 
   ngAfterViewInit(): void {
     this.initMap();
 
-     this.loginservice.getUserProfile().subscribe(user => {
-      const province = user.province;
-      const coordinates = this.provinceCoordinates[province];
-      
-      if (coordinates) {
-        this.addMarker(coordinates.lat, coordinates.lng);
-      } else {
-        console.error('Province not found:', province);
-      }
+    this.loginservice.getUserProfile().subscribe(user => {
+        const provinceId = user.province;
+        console.log('User province ID:', provinceId);  // เพิ่มบรรทัดนี้
+
+        this.getProvinceNameFromApi(provinceId).subscribe(provinceName => {
+            console.log('User province name:', provinceName);  // เพิ่มบรรทัดนี้
+            const coordinates = this.provinceCoordinates[provinceName];
+
+            if (coordinates) {
+                this.addMarker(coordinates.lat, coordinates.lng);
+            } else {
+                console.error('Province not found:', provinceName);
+            }
+        });
     });
-  }
+}
 
   private initMap(): void {
-    this.map = L.map('map').setView([13.7563, 100.5018], 6); // ตั้งค่าศูนย์กลางแผนที่
+    this.map = L.map('map').setView([13.7563, 100.5018], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
       attribution: '© OpenStreetMap'
@@ -118,4 +126,20 @@ export class MapComponent implements AfterViewInit {
       .bindPopup('คุณอยู่ที่นี่!')
       .openPopup();
   }
+
+  private getProvinceNameFromApi(provinceId: number): Observable<string> {
+    const apiUrl = 'https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json';
+    return this.http.get<any[]>(apiUrl).pipe(
+        map(provinces => {
+            console.log('Fetched provinces:', provinces);  // เพิ่มบรรทัดนี้
+            const province = provinces.find(p => p.id === provinceId);
+            console.log('Matched province:', province);  // เพิ่มบรรทัดนี้
+            return province ? province.name_th : 'Unknown Province';
+        }),
+        catchError(error => {
+            console.error('Error fetching province name:', error);
+            return throwError('Error fetching province name');
+        })
+    );
+}
 }
