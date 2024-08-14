@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import $ from "jquery";
 import 'bootstrap';
 import { first } from 'rxjs';
-
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -26,12 +26,16 @@ export class ProfileComponent implements OnInit {
   PersonINT:any=0;
   EditStatus: boolean=false;
 
-  profileImgUrl:string;
+  
 
   provinces: any[] = [];  // ตัวแปรสำหรับเก็บข้อมูลจังหวัด
   amphures: any[] = [];   // ตัวแปรสำหรับเก็บข้อมูลอำเภอ
   tambons: any[] = [];    // ตัวแปรสำหรับเก็บข้อมูลตำบล
+  imgpro:string
 
+  profileImgUrl: string | ArrayBuffer | null = null;
+  imageSrc: string | ArrayBuffer | null = null;
+  profileImage: string| ArrayBuffer | null = null;
 
   constructor(
     private fb:FormBuilder,
@@ -50,19 +54,43 @@ export class ProfileComponent implements OnInit {
       province: [''],
       country: [''],
       postalCode: [''],
+      profileImage: [''],
   })
   }
 
 
   ngOnInit(): void {
+
+    this.imgpro = environment.URL_UPLOAD
+
     this.loginSV.getUserProfile().subscribe(
       res => {
-      this.UserData = res;
-      // console.log("onInit get UserData: ", this.UserData);
-      this.UserInfoForm.patchValue(this.UserData);
-    });
-    this.sv.currentProfileImageUrl.subscribe(url=> this.profileImgUrl= url);
-
+        console.log("UserData received:", res);
+        this.UserData = res;
+        console.log("ProfileImage from UserData:", this.UserData?.employeeId?.profileImage);
+  
+        // ตรวจสอบว่า profileImage มีค่าอยู่หรือไม่
+        if (this.UserData?.employeeId?.profileImage) {
+          // ใช้ URL ที่เซิร์ฟเวอร์ให้บริการ
+          this.profileImgUrl = `http://localhost:3000/uploads/${this.UserData.employeeId.profileImage.replace(/\\/g, '/')}`;
+          console.log('Generated profileImgUrl:', this.profileImgUrl);
+        } else {
+          this.profileImgUrl = './assets/img/Person-icon.jpg';
+        }
+  
+        console.log('profileImgUrl:', this.profileImgUrl);
+        this.UserInfoForm.patchValue(this.UserData);
+      },
+      error => {
+        console.error('Error fetching user profile:', error);
+      }
+    );
+    
+    // this.sv.currentProfileImageUrl.subscribe(url => {
+    //   this.profileImgUrl = url;
+    //   console.log('Updated profileImgUrl from SharedService:', this.profileImgUrl); // แสดง URL ของรูปภาพที่ได้รับจาก SharedService
+    // });
+    
     this.ts.getProvincesWithDetails().subscribe(data => {
       this.provinces = data;
       this.amphures = data.flatMap(province => province.amphures);
@@ -72,6 +100,7 @@ export class ProfileComponent implements OnInit {
       // console.log('Provinces:', this.provinces);
       // console.log('Amphures:', this.amphures);
       // console.log('Tambons:', this.tambons);
+  
 
     });
   }

@@ -12,6 +12,7 @@ import timeStampModelCtrl from './controller/timeStampController';
 
 
 import auth from './middleware/auth/auth'
+import upload from './service/uploadservice.service'
 
  
 // import PdfCtrl from './controller/pdfController';
@@ -89,7 +90,7 @@ function setRoutes(app): void {
   router.route('/registerModel/profile').get(auth.authorize, registerModelCtrl.getUserProfile);//petch add
   
   router.route('/registerModel/count').get(registerModelCtrl.count);
-  router.route('/registerModel').post(registerModelCtrl.create);
+  router.route('/registerModel').post(upload.single('profileImage'), registerModelCtrl.create);
   router.route('/registerModel/login').post(registerModelCtrl.login); // Ensure authorize middleware is used
   router.route('/registerModel/resetPassword').put(auth.authorize, registerModelCtrl.resetPassword);
   router.route('/registerModel/forgotPassword').post(registerModelCtrl.forgotPassword); 
@@ -102,6 +103,7 @@ function setRoutes(app): void {
 
   // router.route('/user/:id').put(registerModelCtrl.updateUserDetails);
   router.route('/userModel/getUserById/:id').get(userModelCtrl.getUserById);
+  router.route('/userModel/updateUserById/:id').put(userModelCtrl.updateUserById);
                                                     //,
   router.route('/registerModel/updateProfile').put( auth.authorize,registerModelCtrl.updateEmployeeProfile);
   router.route('/registerModel/updateRole/:id').put(registerModelCtrl.updateUserRole);

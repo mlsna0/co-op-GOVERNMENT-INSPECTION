@@ -14,7 +14,7 @@ import fs from 'fs'; // นำเข้า fs module
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         // ตรวจสอบว่าโฟลเดอร์ uploads มีอยู่และมีสิทธิ์การเขียน
-        const uploadDir = 'uploads/';
+        const uploadDir = 'dist/uploads/';
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
         }
@@ -31,11 +31,6 @@ class RegisterModelCtrl extends BaseCtrl {
     modelUser = User; // ใช้ User สำหรับ userModel
 
     create = async (req, res) => {
-        upload.single('profileImage')(req, res, async (err) => {
-            if (err) {
-                return res.status(400).json({ msg: 'Error uploading file' });
-            }
-    
             try {
                 const { firstname, lastname, email, password, confirmpassword, organization, bearing, phone, address, province, amphure, tambon, postCode, role } = req.body;
     
@@ -56,8 +51,9 @@ class RegisterModelCtrl extends BaseCtrl {
                 const hashedPassword = await bcrypt.hash(password, salt);
     
                 // เพิ่มการอัปโหลดรูปภาพ
-                const profileImage = req.file ? req.file.path : null;
-    
+                const profileImage = req.file ? req.file.filename : null;
+            
+                
                 const employee = new this.model({
                     firstname,
                     lastname,
@@ -92,7 +88,7 @@ class RegisterModelCtrl extends BaseCtrl {
                 }
                 res.status(500).send('Server error');
             }
-        });
+      
     };
     
     public uploadProfile = async (req, res) => {
@@ -384,7 +380,9 @@ class RegisterModelCtrl extends BaseCtrl {
             }
     
             try {
+               
                 const { id } = req.params; // ใช้ ID จากพารามิเตอร์ถ้ามี
+                console.log("update ID?",id)
                 const employeeId = id || req.user.id; // ถ้าไม่มี ID ในพารามิเตอร์ ให้ใช้ ID ของผู้ใช้ที่ล็อกอิน
     
                 const { firstname, lastname, phone, address, province, amphure, tambon, postCode, detail } = req.body;

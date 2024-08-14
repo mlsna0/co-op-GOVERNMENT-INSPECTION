@@ -1,172 +1,13 @@
 <div class="main-content">
     <div class="container-fluid">
-        <!-- <div class="card">
-        <div class="card-header card-header-danger">
-            <h4 class="card-title">การจัดการผู้ใช้งาน</h4>
-        </div>
 
-        <div class="card-body">
-            <div class="row">
-            <div class="col-sm-8" style="padding-left: 0;">
-                <div class="userInfo">
-                <div class="title"> 
-                    <div class="row">
-                    <div class="col-sm justify-content-start">
-                        ข้อมูลผู้ใช้
-                    </div>
-                     <div class="col-sm-1 justify-content-end">
-                        <div class="Edit" (click)="editProfile()">
-                        <i class="fa fa-pencil-square-o"></i>
-                        </div>
-                    </div> 
-                    </div>
-                </div>
-                
-                <div class="user-content">
-                    <div *ngIf="!EditStatus" class="user-data">
-                    <div class="row">
-                        <div class="col-sm-6">
-                        <div class="Info-text">
-                            ชื่อ : {{ user?.firstname }} 
-                        </div>
-                        </div>
-                        <div class="col-sm-6">
-                        <div class="Info-text">
-                            นามสกุล : {{ user?.lastname }}
-                        </div>
-                        </div>
-
-                        <div class="col-sm-12">
-                        <div class="title"></div>
-                        </div>
-                    
-                    <div class="user-content">
-                      <div *ngIf="!EditStatus" class="user-data">
-                        <div class="row">
-  
-                          <div class="col-sm-6">
-                            <div class="Info-text">
-                              ชื่อ : {{ UserData?.employeeId.firstname }} 
-                            </div>
-                          </div>
-                          <div class="col-sm-6">
-                            <div class="Info-text">
-                              นามสกุล : {{ UserData?.employeeId.lastname }}
-                            </div>
-                          </div>
-  
-                          <div class="col-sm-12">
-                                <div class="title"></div>
-                          </div>
-                      
-                          <div class="col-sm-12">
-                            <div class="Info-text">
-                              ตำแหน่ง/หน้าที่ :  {{ UserData?.role }}
-                            </div>
-                          </div>
-                          <div class="col-sm-12">
-                            <div class="Info-text">
-                              องค์กร/บริษัท :  {{ UserData?.employeeId.organization }}
-                            </div>
-                          </div>
-                          <div class="col-sm-12">
-                            <div class="Info-text">
-                              ที่อยู่ :  {{ UserData?.employeeId.address }}
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="Info-text">
-                             
-                              ตำบล : {{ getTambonName(UserData?.employeeId.tambon) }}
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="Info-text">
-                             
-                              อำเภอ :  {{ getAmphureName(UserData?.employeeId.amphure) }}
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="Info-text">
-                             
-                              จังหวัด :  {{ getProvinceName(UserData?.employeeId.province) }}
-                            </div>
-                          </div>
-                      
-                          <div class="col-md-6">
-                            <div class="Info-text">
-                              รหัสไปรษณีย์ :{{ UserData?.employeeId.postCode }}
-                            </div>
-                          </div>
-  
-                        </div>
-                     
-                        <div class="title"> </div>
-                        <div class="row">
-                          <div class="col-sm-12">
-                              ข้อมูลติดต่อ
-                          </div>
-                        
-                          <div class="col-sm-6">
-                            <div class="Info-text">
-                              อีเมล : {{ UserData?.employeeId.email }} 
-                            </div>
-                          </div>
-    
-                          <div class="col-sm-12">
-                            <div class="Info-text">
-                              เบอร์โทร : {{ UserData?.employeeId.phone }}
-                            </div>
-                          </div>
-                      
-                     
-        
-                        </div>
-                        <div class="col-md-12">
-                            <mat-form-field>
-                            <input matInput placeholder="เบอร์โทร" type="text">
-                            </mat-form-field>
-                        </div>
-                        </div>
-                        <button type="submit" class="btn btn-add">บันทึก</button>
-                        <button type="button" class="btn btn-danger" (click)="cancelEdit()">ยกเลิก</button>
-                    </form>
-                    </div> 
-                </div>
-                <div class="col-sm-4" style="border: 1px solid black; border-radius: 5px; padding-left: 0; padding-right: 0; ">
-                  <div class="card-profile">
-                    <div class="card-avatar">
-                      <a href="javascript:void(0)">
-                        <img class="img" [src]="profileImgUrl" />
-                      </a>
-                    </div>
-                    
-                      <div class="Info-text">
-                       {{ UserData?.employeeId.firstname }}   {{ UserData?.employeeId.lastname }}
-                      </div>
-                
-
-                  </div>
-  
-                </div>
-              </div>
-  
-  
-            </div>
-            <div class="col-sm-4" style="border: 1px solid black; border-radius: 5px; padding-left: 0; padding-right: 0;">
-                <div class="card-profile">
-                <div class="card-avatar">
-                    <a href="javascript:void(0)">
-                    <img class="img" [src]="profileImgUrl" />
-                    </a>
-                </div>
-                </div>
-            </div>
-            </div>
-        </div>
-        </div> -->
         <div class="card">
             <div class="card-body">
+                <div class="row">
+                    <div class="back" (click)="BackRoot()">
+                        <i class="fa fa-angles-left"></i>
+                    </div>
+                </div>
                 <div class="row">
 
                     <div class="col-md-3">
@@ -179,136 +20,151 @@
 
                             <div class="card-info">
                                 <div class="row">
-                                    ระดับผู้ใช้งาน :
+                                    ระดับผู้ใช้งาน : {{UserData?.role}}
                                    </div>
                                 <div class="row">
-                                    ชื่อ :{{ UserData?.firstname }}  นามสกุล :{{UserData?.lastname}}
+                                    ชื่อ : {{ UserData?.employeeId?.firstname }}  นามสกุล : {{UserData?.employeeId?.lastname}}
                                 </div>
                                 <div class="row">
                                     ตำแหน่ง : 
+                                </div>
+                                <div class="row">
+                                    อีเมล  (UserData?.email:  {{UserData?.email}})
+                                </div>
+                                <div class="row">
+                                    อีเมล ( UserData?.employeeId.email :{{UserData?.employeeId?.email}})
                                 </div>
                              </div>
                         </div>
                    
                     </div>
                     
-                    <div class="col-md-9">
-                        <div class="userInfo">
-                            <div class="title">
-                               <h4> ข้อมูลผู้ใช้</h4>
-                               <button>แก้ไขข้อมูลส่วนตัว</button>
-                            </div>
-                            <div class="user-content">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label for="">ชื่อ</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control">
-                                    </div>
-        
+                
+                        <div class="col-md-9">
+                            <form [formGroup]="UserInfoForm" (ngSubmit)="SaveUserInfo()">
+                            <div class="userInfo">
+                                <div class="title">
+                                   <h4> ข้อมูลผู้ใช้</h4>
+                                   <button>แก้ไขข้อมูลส่วนตัว</button>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label for="">นามสกุล</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="group-info">
-                                    <div class="title-info">
-                                        <h4>ข้อมูลบริษัท/องค์กร</h4>
+                                <div class="user-content">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="">ชื่อ</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" formControlName="firstname" class="form-control">
+                                        </div>
+            
                                     </div>
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <label for="">บริษัท/องค์กร</label>
+                                            <label for="">นามสกุล</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control">
+                                            <input type="text" formControlName="lastname" class="form-control">
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label for="">ที่อยู่</label>
+                                    <div class="group-info">
+                                        <div class="title-info">
+                                            <h4>ข้อมูลสถานที่ทำงาน</h4>
                                         </div>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label for="">บริษัท/องค์กร</label>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <input type="text" formControlName="organization" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label for="">ที่อยู่</label>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <input type="text" formControlName="address" class="form-control">
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label for=""></label>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input type="text"formControlName="tambon" class="form-control" placeholder="ตำบล">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text"formControlName="amphure" class="form-control" placeholder="อำเภอ">
+                                            </div>
+                                         
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label for=""></label>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input type="text" formControlName="province" class="form-control" placeholder="จังหวัด">
+                                            </div>
+                                      
+                                            <div class="col-md-4">
+                                                <input type="text"formControlName="postCode"  class="form-control"  placeholder="รหัสไปรษณีย์">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="title-info">
+                                                <h4>ข้อมูลติดต่อ</h4>
+                                            </div>
                                         </div>
                                         
                                     </div>
                                     <div class="row">
+    
                                         <div class="col-md-3">
-                                            <label for=""></label>
+                                            <label for="">เบอร์โทร</label>
                                         </div>
-                                        <div class="col-md-5">
-                                            <input type="text" class="form-control" placeholder="ตำบล">
+                                        <div class="col-md-9">
+                                            <input type="text" formControlName="phone" class="form-control">
                                         </div>
-                                        <div class="col-md-4">
-                                            <input type="text" class="form-control" placeholder="อำเภอ">
-                                        </div>
-                                     
                                     </div>
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <label for=""></label>
+                                            <label for="">อีเมล</label>
                                         </div>
-                                        <div class="col-md-5">
-                                            <input type="text" class="form-control" placeholder="จังหวัด">
-                                        </div>
-                                  
-                                        <div class="col-md-4">
-                                            <input type="text" class="form-control"  placeholder="รหัสไปรษณีย์">
+                                        <div class="col-md-9">
+                                            <input type="text" formControlName="email" class="form-control">
                                         </div>
                                     </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="title-info">
-                                            <h4>ข้อมูลติดต่อ</h4>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="">รหัสผ่าน</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text"  formControlName="password"    class="form-control">
                                         </div>
                                     </div>
-                                    
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="">ยืนยันรหัสผ่าน</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text"  formControlName=" confirmpassword"  class="form-control">
+                                        </div>
+                                    </div>
+                                 
+                                   
                                 </div>
-                                <div class="row">
-
-                                    <div class="col-md-3">
-                                        <label for="">เบอร์โทร</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control">
-                                    </div>
+                                <div class="footer-content">
+                                    <button type="submit" class="btn btn-success">ยืนยัน</button>
+                                    <button type="button" class="btn btn-danger" (click)="cancelEdit()">ยกเลิก</button>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label for="">อีเมล</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label for="">รหัสผ่าน</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label for="">ยืนยันรหัสผ่าน</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control">
-                                    </div>
-                                </div>
-                             
-                               
                             </div>
+                            </form>
                         </div>
-                    </div>
+                  
+                    
                 </div>
             </div>
         </div>

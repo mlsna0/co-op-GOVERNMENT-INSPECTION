@@ -41,7 +41,7 @@ export class RegisterComponent implements OnInit {
   isPostCodeDisabled = true;
 
   imageSrc: string | ArrayBuffer | null = null;
-
+  profileImage: string| ArrayBuffer | null = null;
   constructor(
     private fb: FormBuilder,
     private lc: loginservice,
@@ -63,7 +63,7 @@ export class RegisterComponent implements OnInit {
       tambon: ['', Validators.required],
       postCode: ['', Validators.required],
       role: ['', Validators.required],
-      profileImage: [null, Validators.required]
+      profileImage: ['']
     }, { validator: this.passwordMatchValidator });
   }  
 
@@ -77,6 +77,7 @@ export class RegisterComponent implements OnInit {
 
 
   onSubmit(data) {
+    console.log(1111)
     this.Submitted = true; 
     if (this.regisForm.invalid) {
       if (this.regisForm.controls.password.errors?.minlength || this.regisForm.controls.confirmpassword.errors?.minlength) {
@@ -89,44 +90,34 @@ export class RegisterComponent implements OnInit {
       }
       return;
     }
-
-    // ตรวจสอบการยืนยันรหัสผ่าน
-    if (
-      this.regisForm.value.password !== this.regisForm.value.confirmpassword
-    ) {
+  
+    if (this.regisForm.value.password !== this.regisForm.value.confirmpassword) {
       Swal.fire({
         title: "รหัสผ่านไม่ตรงกัน!",
         text: "กรุณากรอกรหัสผ่านให้ตรงกัน",
         icon: "error",
         confirmButtonText: "ตกลง",
         customClass: {
-          confirmButton: "custom-confirm-button", // กำหนด CSS class ที่สร้างขึ้น
+          confirmButton: "custom-confirm-button",
         },
       });
       return;
     }
-
-    const newUser = {
-      firstname: this.regisForm.value.firstname,
-      lastname: this.regisForm.value.lastname,
-      email: this.regisForm.value.email,
-      password: this.regisForm.value.password,
-      confirmpassword: this.regisForm.value.confirmpassword,
-      organization: this.regisForm.value.organization,
-      address:this.regisForm.value.address,
-      phone: this.regisForm.value.phone,
-      province: this.regisForm.value.province,
-      amphure: this.regisForm.value.amphure,
-      tambon: this.regisForm.value.tambon,
-      postCode : this.regisForm.value.postCode,
-      role: this.regisForm.value.role,
-      profileImage: this.regisForm.value.profileImage,
-      
-    };
-
   
-    this.lc.register(newUser).subscribe(
-
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    console.log(fileInput);
+    
+    const file = fileInput?.files?.[0]; // Get the file from the input
+  
+    const formData = new FormData();
+    Object.keys(this.regisForm.controls).forEach(key => {
+      formData.append(key, this.regisForm.get(key)?.value);
+    });
+    if (file) {
+      formData.append('profileImage', file);
+    }
+  
+    this.lc.register(formData).subscribe(
       (response) => {
         console.log("User registered successfully", response);
         Swal.fire({
@@ -135,16 +126,14 @@ export class RegisterComponent implements OnInit {
           icon: "success",
           confirmButtonText: "ตกลง",
           customClass: {
-            confirmButton: "custom-confirm-button", // กำหนด CSS class ที่สร้างขึ้น
+            confirmButton: "custom-confirm-button",
           },
         }).then((result) => {
           if (result.isConfirmed) {
-            document
-              .querySelector(".swal2-confirm")
-              .setAttribute(
-                "style",
-                "background-color: #24a0ed; color: white;"
-              );
+            document.querySelector(".swal2-confirm")?.setAttribute(
+              "style",
+              "background-color: #24a0ed; color: white;"
+            );
             this.router.navigate(["/login"]);
           }
         });
@@ -157,27 +146,13 @@ export class RegisterComponent implements OnInit {
           icon: "error",
           confirmButtonText: "ตกลง",
           customClass: {
-            confirmButton: "custom-confirm-button", // กำหนด CSS class ที่สร้างขึ้น
+            confirmButton: "custom-confirm-button",
           },
         });
       }
     );
-    
-    if (this.regisForm.valid) {
-      const formDataToSubmit = new FormData();
-      for (const key in FormData) {
-        if (FormData.hasOwnProperty(key)) {
-          formDataToSubmit.append(key, FormData[key]);
-        }
-      }
-
-      // Call the service to register user or handle form submission
-      console.log('Form Submitted:', formDataToSubmit);
-    } else {
-      console.log('Form is invalid');
-    }
   }
-  
+
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password');
     const confirmPassword = form.get('confirmpassword');
@@ -250,16 +225,41 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  onFileUploadImgChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imageSrc = reader.result;
-      };
-      reader.readAsDataURL(file);
-      this.regisForm.patchValue({ profileImage: file });
-    }
+//   onFileUploadImgChange(event: any) {
+//     const file = event.target.files[0];
+//     if (file) {
+//       const userData = this.regisForm.value; // ดึงข้อมูลผู้ใช้จากฟอร์ม
+  
+//       this.lc.register(userData, file).subscribe(
+//         (response) => {
+//           console.log('User registered and image uploaded successfully', response);
+//           this.imageSrc = URL.createObjectURL(file); // แสดงตัวอย่างภาพ
+//         },
+//         (error) => {
+//           console.error('Registration or file upload failed', error);
+//           Swal.fire({
+//             title: "Error",
+//             text: "การลงทะเบียนหรืออัปโหลดไฟล์ล้มเหลว",
+//             icon: "error",
+//             confirmButtonText: "ตกลง",
+//           });
+//         }
+//       );
+//     }
+// }
+
+onFileUploadImgChange(event: any) {
+  const file = event.target.files[0];
+  console.log("file",file);
+  
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.imageSrc = e.target.result;
+    };
+    reader.readAsDataURL(file);
   }
- 
+}
+
+
 }

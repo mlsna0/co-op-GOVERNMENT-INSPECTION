@@ -20,6 +20,8 @@ import { ProvinceService } from 'app/view/thaicounty/thaicounty.service';
 export class ProfileuserComponent implements OnInit {
 
   UserData:any ={};
+  UserID:any;
+  EmployeeID:any;
   UserInfoForm:FormGroup;
 
 
@@ -40,29 +42,66 @@ export class ProfileuserComponent implements OnInit {
     private authService: AuthService,
     private loginSV:loginservice,
     private router: Router,
+    private ACrouter :ActivatedRoute,
     private ts: ProvinceService,
   ) { 
 
     this.UserInfoForm = this.fb.group({
-      firstname:[''],
-      lastname:[''],
-      bearing: [''], // Add this ตำแหน่งหน้าที่
-      company: [''], // Add this องค์กร
-      address:[''],
-      province: [''],
-      country: [''],
-      postalCode: [''],
+      firstname: ["" ],
+      lastname: [""],
+      email: ["",  Validators.email],
+      // password: ["", Validators.minLength(8)],
+      // confirmpassword: ["", Validators.minLength(8)],
+      organization:['', ],
+      address:["", ],
+      // phone: ["", Validators.pattern('^[0-9]{10}$')],
+      province: ['' ],
+      amphure: ['' ],
+      tambon: ['' ],
+      postCode: [''],
+      // role: ['' ],
+      profileImage: [null]
   })
   }
 
 
   ngOnInit(): void {
-    this.loginSV.getUserProfile().subscribe(
-      res => {
-      this.UserData = res;
-      // console.log("onInit get UserData: ", this.UserData);
-      this.UserInfoForm.patchValue(this.UserData);
+    // this.loginSV.getUserProfile().subscribe(
+    //   res => {
+    //   this.UserData = res;
+    //   console.log("onInit get UserData: ", this.UserData);
+    //   this.UserInfoForm.patchValue(this.UserData);
+    // });
+
+    this.ACrouter.paramMap.subscribe(params => {
+      this.UserID = params.get('id');
+
+      // ทำงานอื่น ๆ ที่คุณต้องการใช้กับ itemId นี้
+      console.log("UserID it send? >",this.UserID); // ทดสอบการดึงค่า id
+  
     });
+
+    this.sv.getUserProfileById(this.UserID).subscribe(res =>{
+      this.UserData = res;
+      console.log("get UserDataById : ",this.UserData),
+      this.UserInfoForm.patchValue({
+        firstname: this.UserData?.employeeId.firstname,
+        lastname: this.UserData?.employeeId.lastname,
+        email: this.UserData?.employeeId.email,
+        // email: this.UserData?.email,
+        // password: ["", Validators.minLength(8)],
+        // confirmpassword: ["", Validators.minLength(8)],
+        organization: this.UserData?.employeeId.organization,
+        address:this.UserData?.employeeId.address,
+        // phone: ["", Validators.pattern('^[0-9]{10}$')],
+        province:this.UserData?.employeeId.province,
+        amphure: this.UserData?.employeeId.amphure,
+        tambon: this.UserData?.employeeId.tambon,
+        postCode: this.UserData?.employeeId.postCode,
+        // // role: ['' ],
+        // profileImage: [null]
+      })
+    })
     this.sv.currentProfileImageUrl.subscribe(url=> this.profileImgUrl= url);
 
     this.ts.getProvincesWithDetails().subscribe(data => {
@@ -110,7 +149,9 @@ export class ProfileuserComponent implements OnInit {
 
 
 
-
+  BackRoot(){
+    this.router.navigate(['/manageuser']);
+  }
   editProfile() {
     // Add your edit profile logic here
     this.EditStatus= true;
@@ -118,18 +159,30 @@ export class ProfileuserComponent implements OnInit {
     // console.log('Edit profile clicked',this.PersonINT);
   }
 
-  SaveUserInfo(){
+  SaveUserInfo() {
     if (this.UserInfoForm.valid) {
       const updatedData = this.UserInfoForm.value;
-      // ส่งข้อมูลที่แก้ไขแล้วไปยังเซิร์ฟเวอร์
-      this.sv.updateUserProfile(updatedData).subscribe(response => {
-        this.UserData = response;
-        console.log('UserData', this.UserData)
-        this.EditStatus = false;
+      const userId = this.UserID;
+      console.log("user id save into",userId)
+      this.sv.updateUserProfileById(updatedData, userId).subscribe(response => {
+        console.log('Response:', response);
+  
+        if (response && response.user) {
+          if (response?.user?.employeeId && response?.user?.employeeId?.firstname) {
+            this.UserData = response;
+            this.EditStatus = false;
+          } else {
+            console.error('Firstname not found in user data');
+          }
+        } else {
+          console.error('Unexpected response format', response);
+        }
       });
     }
-
   }
+  
+  
+  
   cancelEdit(){
     this.EditStatus= false;
   }
