@@ -98,10 +98,18 @@ class UserModelCtrl extends BaseCtrl {
             }
           )
           }
-          user.email = email ||   user.email;
-          if (password) {
-              user.password = password; // อย่าลืม hash รหัสผ่านถ้าจำเป็น
-          }
+          await this.model.findOneAndUpdate(
+            { _id: id }, 
+            {
+              email: email || user.email,
+              password: password || user.password, // Hash password ถ้าจำเป็น
+            }
+          );
+          // user.email = email ||   user.email;
+          // if (password) {
+          //     user.password = password; // อย่าลืม hash รหัสผ่านถ้าจำเป็น
+          // }
+          
     
           // ถ้ามีรูปภาพให้ upload
           if (req.file) {
