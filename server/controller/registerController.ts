@@ -319,34 +319,52 @@ class RegisterModelCtrl extends BaseCtrl {
     
     resetPassword = async (req, res) => {
         try {
-            const { resetToken, newPassword, confirmPassword } = req.body;
+            console.log('Request Body:', req.body);
+            const { oldPassword, newPassword, confirmPassword } = req.body;
+            
+            if (!oldPassword || !newPassword || !confirmPassword) {
+                return res.status(400).json({ msg: 'Please fill in all required fields' });
+            }
+    
             if (newPassword !== confirmPassword) {
                 return res.status(400).json({ msg: 'Passwords do not match' });
             }
     
-            let user = await this.modelUser.findOne({
-                resetPasswordToken: resetToken,
-                resetPasswordExpires: { $gt: Date.now() }
-            });
+            const userId = req.user ? req.user.id : null;
+            console.log('User ID:', userId);
+            
+            if (!userId) {
+                return res.status(401).json({ msg: 'Authorization required' });
+            }
     
+            let user = await this.modelUser.findById(userId);
+            console.log('User found:', user);
+            
             if (!user) {
-                return res.status(400).json({ msg: 'Password reset token is invalid or has expired' });
+                return res.status(400).json({ msg: 'User not found' });
+            }
+    
+            const isMatch = await bcrypt.compare(oldPassword, user.password);
+            console.log('Passwords match:', isMatch);
+    
+            if (!isMatch) {
+                return res.status(400).json({ msg: 'Old password is incorrect' });
             }
     
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(newPassword, salt);
+            console.log('New hashed password:', hashedPassword);
     
             user.password = hashedPassword;
-            user.resetPasswordToken = undefined;
-            user.resetPasswordExpires = undefined;
             await user.save();
     
             res.status(200).json({ msg: 'Password has been reset successfully' });
         } catch (error) {
-            console.error(error.message);
+            console.error('Error in resetPassword function:', error);
             res.status(500).send('Server error');
         }
     };
+    
     
     
 

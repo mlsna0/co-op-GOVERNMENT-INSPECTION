@@ -5,6 +5,7 @@
         <div class="card">
           <div class="card-header">
             <h4 class="card-title">การจัดการผู้ใช้งาน</h4>
+            <button class="btn btn-primary" (click)="goToChangePassword()">เปลี่ยนรหัสผ่าน</button>
           </div>
 
           <div class="card-body">
@@ -215,105 +216,3 @@
   </div>
 </div>
 
-
-<!-- <div class="row">
-  <div class="col-md-8">
-      <div class="card">
-          <div class="card-header card-header-danger">
-              <h4 class="card-title">การจัดการผู้ใช้งาน</h4>
-      
-          </div>
-          <div class="card-body">
-              <form>
-                  <div class="row">
-                      <div class="col-md-5">
-                        <mat-form-field class="example-full-width">
-                            <input matInput placeholder="องค์กร (disabled)" disabled>
-                          </mat-form-field>
-                      </div>
-                      <div class="col-md-3">
-                          <mat-form-field class="example-full-width">
-                            <input matInput placeholder="ชื่อผู้ใช้งาน">
-                          </mat-form-field>
-                      </div>
-                      <div class="col-md-4">
-                          <mat-form-field class="example-full-width">
-                            <input matInput placeholder="อีเมล" type="email">
-                          </mat-form-field>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-md-6">
-                        <mat-form-field class="example-full-width">
-                          <input matInput placeholder="ชื่อ" type="text">
-                        </mat-form-field>
-                      </div>
-                      <div class="col-md-6">
-                        <mat-form-field class="example-full-width">
-                          <input matInput placeholder="นามสกุล" type="text">
-                        </mat-form-field>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-md-12">
-                        <mat-form-field class="example-full-width">
-                          <input matInput placeholder="ที่อยู่" type="text">
-                        </mat-form-field>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                          <input matInput placeholder="จังหวัด" type="text">
-                        </mat-form-field>
-                      </div>
-                      <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                          <input matInput placeholder="ประเทศ" type="text">
-                        </mat-form-field>
-                      </div>
-                      <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                          <input matInput placeholder="รหัสไปรษณีย์" type="text">
-                        </mat-form-field>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-md-12">
-                        <label>เกี่ยวกับฉัน</label>
-                        <mat-form-field class="example-full-width" style="height: 100px;">
-                           <textarea  matInput placeholder="พิมพ์ที่นี้..."></textarea>
-                         </mat-form-field>
-                           <div class="form-group">
-
-                              <div class="form-group">
-                                  <label class="bmd-label-floating"> Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.</label>
-                                  <textarea class="form-control" rows="5"></textarea>
-                              </div>
-                          </div> 
-                      </div>
-                  </div>
-                  <button  type="submit" class="btn btn-add pull-right">อัปเดตข้อมูล</button>
-                  <div class="clearfix"></div>
-              </form>
-          </div>
-      </div>
-  </div>
-  <div class="col-md-4">
-      <div class="card card-profile">
-          <div class="card-avatar">
-              <a href="javascript:void(0)">
-                  <img class="img" src="./assets/img/faces/marc.jpg" />
-              </a>
-          </div>
-          <div class="card-body">
-              <h6 class="card-category text-gray" style="font-family: 'Sarabun',sans-serif;">ผู้จัดการ</h6>
-              <h4 class="card-title">แอดมิน จอน</h4>
-              <p class="card-description">
-                  รายละเอียด
-              </p>
-              <a href="javascript:void(0)" class="btn btn-danger btn-round">Follow</a> --
-          </div>
-      </div>
-  </div>
-</div> -->
