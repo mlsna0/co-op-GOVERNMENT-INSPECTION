@@ -9,6 +9,22 @@ const userSchema = new mongoose.Schema({
     resetPasswordExpires: { type: Date }
 });
 
+export interface User{
+    firstname: string;
+    lastname: string;
+    organization: string;
+    bearing: string;
+    email: string;
+    phone: string;
+    address: string;
+    province: string;
+    amphure: string;
+    tambon: string;
+    postCode: string;
+    detail: string;
+    profileImage: string;
+  }
+
 const User = mongoose.model('User', userSchema);
 
 export default User;

@@ -1,10 +1,14 @@
 import mongoose from 'mongoose';
+import { Types } from 'mongoose';
 import userModel from '../models/userModel';
+import  RegisterModel from '../models/registerModel';
 import BaseCtrl from './base';
 import User from '../models/userModel';
+import { registerModel } from 'models/registerModel';
 
 class UserModelCtrl extends BaseCtrl {
     model = userModel;
+    modelEmployee = RegisterModel
 
     // New method to get a user by ID
     getUserById = async (req, res) => {
@@ -24,7 +28,98 @@ class UserModelCtrl extends BaseCtrl {
             res.status(500).json({ error: error.message });
         }
     };
+    updateUserById = async (req, res) => {
+      try {
+          // ตรวจสอบว่า ID ถูกส่งมาหรือไม่
+          console.log("req.params : ",req.params)
+          console.log("req จาก body",req.body)
+
+
+      
+
+          const { 
+            firstname, lastname, email, password, confirmpassword, organization, 
+            address, phone, province, amphure, tambon, postCode 
+        } = req.body;
+          const { id } = req.params;
+          if (!id) {
+              return res.status(400).json({ msg: 'User ID is required' });
+          }
+          // หา user จากฐานข้อมูล
+          let user = await this.model.findById(id).populate('employeeId');
+            if (user && user.employeeId) {
+                  console.log('Populated employeeId:', user.employeeId,user);
+              } else {
+                 console.error('EmployeeId not populated');
+              }
+          
+          // รับข้อมูลจาก request body
+     
+          // ตรวจสอบว่ารหัสผ่านและการยืนยันรหัสผ่านตรงกันหรือไม่
+          if (password && password !== confirmpassword) {
+              return res.status(400).json({ msg: 'Passwords do not match' });
+          }
     
+  
+          if (user.employeeId instanceof Types.ObjectId) {
+            return res.status(400).json({ msg: 'Employee data not populated' });
+        }
+         const employee:any = user.employeeId as registerModel; 
+        //  console.log("user.employeeId: ",employee)
+        //   // อัปเดตข้อมูลผู้ใช้
+        //   employee.firstname = firstname || employee.firstname;
+        //   employee.lastname = lastname || employee.lastname;
+  
+        //   employee.organization = organization || employee.organization;
+        //   employee.address = address || employee.address;
+        //   employee.phone = phone || employee.phone;
+        //   employee.province = province || employee.province;
+        //   employee.amphure = amphure || employee.amphure;
+        //   employee.tambon = tambon || employee.tambon;
+        //   employee.postCode = postCode || employee.postCode;
+
+          let updateData :any 
+          if(employee) {
+            updateData = await this.modelEmployee.findOneAndUpdate(
+              {
+              _id: employee._id
+            },
+            {
+              firstname: firstname,
+              lastname: lastname,
+              email: email,
+              organization : organization ,
+              address : address,
+              phone : phone,
+              province : province,
+              amphure :  amphure,
+              tambon : tambon,
+              postCode : postCode,
+            }
+          )
+          }
+          user.email = email ||   user.email;
+          if (password) {
+              user.password = password; // อย่าลืม hash รหัสผ่านถ้าจำเป็น
+          }
+    
+          // ถ้ามีรูปภาพให้ upload
+          if (req.file) {
+            employee.profileImage = req.file.path; // บันทึกเส้นทางไฟล์รูปภาพที่อัปโหลด
+          }
+  
+          // บันทึกข้อมูลที่อัปเดตลงฐานข้อมูล
+          await user.save();
+  
+  
+          res.status(200).json({ msg: 'User profile updated successfully', updateData });
+  
+      } catch (error) {
+          console.error('Error updating user:', error.message);
+          res.status(500).json({ msg: 'Server error' });
+      }
+  };
+  
     async updateUserRole(req, res): Promise<void> {
         const { userId, role } = req.body;
     

@@ -102,6 +102,7 @@ function setRoutes(app): void {
 
   // router.route('/user/:id').put(registerModelCtrl.updateUserDetails);
   router.route('/userModel/getUserById/:id').get(userModelCtrl.getUserById);
+  router.route('/userModel/updateUserById/:id').put(userModelCtrl.updateUserById);
                                                     //,
   router.route('/registerModel/updateProfile').put( auth.authorize,registerModelCtrl.updateEmployeeProfile);
   router.route('/registerModel/updateRole/:id').put(registerModelCtrl.updateUserRole);

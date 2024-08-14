@@ -70,6 +70,13 @@ h4{
 i{
   cursor: pointer;
 }
+.back{
+  transition: 0.3s ease-in;
+}
+.back i:hover{
+  left: -20px;
+  font-weight: 900;
+}
 /*userInfo*/
 .title{
   display: flex;
@@ -89,6 +96,7 @@ i{
   margin-bottom: 10px;
   border-radius: 5px;
   border: 1px solid #000000;
+  overflow: hidden;
 
 }
 .Info-text{
@@ -97,10 +105,15 @@ i{
 .userContect{
   border-radius: 5px;
   border: 1px solid #000000;
+ 
 }
 .user-content{
   padding: 10px;
   font-family: 'Sarabun',sans-serif;
+}
+.footer-content{
+  display: flex;
+  justify-content: center;
 }
 .group-info:focus{
   background:rgb(255, 209, 0,0.2);

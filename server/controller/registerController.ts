@@ -358,7 +358,9 @@ class RegisterModelCtrl extends BaseCtrl {
             }
     
             try {
+               
                 const { id } = req.params; // ใช้ ID จากพารามิเตอร์ถ้ามี
+                console.log("update ID?",id)
                 const employeeId = id || req.user.id; // ถ้าไม่มี ID ในพารามิเตอร์ ให้ใช้ ID ของผู้ใช้ที่ล็อกอิน
     
                 const { firstname, lastname, phone, address, province, amphure, tambon, postCode, detail } = req.body;
