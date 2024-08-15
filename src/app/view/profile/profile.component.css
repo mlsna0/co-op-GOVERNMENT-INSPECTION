@@ -18,7 +18,7 @@
 
 
 .card-header {
-  padding: 20px;
+  /* padding: 20px; */
   background-color: rgb(255, 209, 0,0.2);
 
   display: flex;
@@ -129,4 +129,23 @@ i{
   background-color: #24a0ed; 
   border-color: #00087c9f;
   /* box-shadow: 0 14px 14px -12px #24a0ed51, 0 4px 14px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px #24a0ed51; */
+}
+:host ::ng-deep .btn.btn-primary {
+  /* background-color: #24a0ed;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  display: inline-block;
+  position: absolute; */
+
+  color: rgb(255, 255, 255);
+  background-color: rgb(36, 160, 237);
+  border-color: #24a0ed85;
+  font-family: 'Sarabun', sans-serif;
+ 
+}
+
+.Edit i {
+  font-size: 16px; /* ปรับขนาดไอคอนตามต้องการ */
 }
