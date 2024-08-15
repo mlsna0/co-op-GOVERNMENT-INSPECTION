@@ -514,4 +514,31 @@ export class SignatureComponent implements OnInit {
     this.router.navigate(['/table-detail']);
   }
 
+  prevPage() {
+    if (this.pageVariable > 1) {
+      this.pageVariable--;
+      this.onPageChange();
+    }
+  }
+  
+  nextPage() {
+    if (this.pageVariable < this.totalPage) {
+      this.pageVariable++;
+      this.onPageChange();
+    }
+  }
+  
+  onPageChange() {
+    // Ensure the page number stays within bounds
+    if (this.pageVariable < 1) {
+      this.pageVariable = 1;
+    } else if (this.pageVariable > this.totalPage) {
+      this.pageVariable = this.totalPage;
+    }
+  
+    // Add any other logic needed when the page changes
+    // For example, reloading the document to show the new page
+  }
+
+  
 }
