@@ -71,9 +71,9 @@ export class loginservice {
   }
 
   getUserReport(): Observable<any> {
+    console.log('getUserReport called'); // ตรวจสอบว่าฟังก์ชันถูกเรียกใช้งาน
     return this.http.get<any>(`${this.baseUrl}/allusers`);
-  }
-
+}
 
 
   getUserProfile(): Observable<any> {
@@ -142,19 +142,19 @@ export class loginservice {
         })
       );
   }
-  changePassword(oldPassword: string, newPassword: string, confirmPassword: string): Observable<any> {
-    const body = { oldPassword, newPassword, confirmPassword };
+  changePassword(oldPassword: string, newPassword: string, confirmPassword: string, userIdToReset?: string): Observable<any> {
+    const body = { oldPassword, newPassword, confirmPassword, userIdToReset };
     console.log('Request Body:', body);
-
+    
     const token = this.getToken();
     if (!token) {
         console.error('No token found');
         return throwError('No token found');
     }
-
+    
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     console.log('Headers:', headers);
-
+    
     return this.http.put(`${this.baseUrl}/registerModel/resetPassword`, body, { headers }).pipe(
         catchError(error => {
             console.error('Error changing password:', error); // ดูรายละเอียดเพิ่มเติมใน error response

@@ -151,13 +151,17 @@ class RegisterModelCtrl extends BaseCtrl {
                 this.model.find({}), // สมมติว่า this.model คือ model ของ employee
                 this.modelUser.find({}) // this.modelUser คือ model ของ user
             ]);
-
+    
+            if (!employees || !users) {
+                return res.status(404).json({ message: 'Employees or users not found' });
+            }
+    
             // รวมผลลัพธ์เข้าด้วยกัน
             const combinedResults = {
                 employees,
                 users
             };
-
+    
             // ส่งผลลัพธ์กลับไปให้ client
             res.status(200).json(combinedResults);
         } catch (error) {
@@ -316,9 +320,9 @@ class RegisterModelCtrl extends BaseCtrl {
     resetPassword = async (req, res) => {
         try {
             console.log('Request Body:', req.body);
-            const { oldPassword, newPassword, confirmPassword } = req.body;
+            const { oldPassword, newPassword, confirmPassword, userIdToReset } = req.body;
             
-            if (!oldPassword || !newPassword || !confirmPassword) {
+            if (!newPassword || !confirmPassword) {
                 return res.status(400).json({ msg: 'Please fill in all required fields' });
             }
     
@@ -327,26 +331,34 @@ class RegisterModelCtrl extends BaseCtrl {
             }
     
             const userId = req.user ? req.user.id : null;
+            const role = req.user ? req.user.role : null; // สมมติว่าคุณมี field "role" ใน user object
             console.log('User ID:', userId);
-            
+            console.log('Role:', role);
+    
             if (!userId) {
                 return res.status(401).json({ msg: 'Authorization required' });
             }
     
-            let user = await this.modelUser.findById(userId);
+            // ค้นหา user ที่ต้องการเปลี่ยนรหัสผ่าน
+            const targetUserId = role === 'superadmin' && userIdToReset ? userIdToReset : userId;
+            let user = await this.modelUser.findById(targetUserId);
             console.log('User found:', user);
             
             if (!user) {
                 return res.status(400).json({ msg: 'User not found' });
             }
     
-            const isMatch = await bcrypt.compare(oldPassword, user.password);
-            console.log('Passwords match:', isMatch);
+            // ตรวจสอบรหัสผ่านเก่าถ้าผู้ใช้ไม่ใช่ superadmin
+            if (role !== 'superadmin') {
+                const isMatch = await bcrypt.compare(oldPassword, user.password);
+                console.log('Passwords match:', isMatch);
     
-            if (!isMatch) {
-                return res.status(400).json({ msg: 'Old password is incorrect' });
+                if (!isMatch) {
+                    return res.status(400).json({ msg: 'Old password is incorrect' });
+                }
             }
     
+            // รีเซ็ตรหัสผ่าน
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(newPassword, salt);
             console.log('New hashed password:', hashedPassword);

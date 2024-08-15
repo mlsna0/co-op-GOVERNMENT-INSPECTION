@@ -26,6 +26,16 @@ export class NavbarComponent implements OnInit {
   ////////////////////////////////
   dropdownOpen = false;
   profileImgUrl:string;
+  notificationDropdownOpen = false;
+  profileDropdownOpen = false;
+  unreadNotifications = [
+    // ตัวอย่างข้อมูลแจ้งเตือน
+    { message: 'You have 5 new tasks' },
+    { message: 'Mike John responded to your email' },
+    { message: 'You’re now friend with Andrew' },
+    
+  ];
+
   user: any;
   UserData:any ={};
   constructor(
@@ -174,15 +184,38 @@ export class NavbarComponent implements OnInit {
 
   ////////////////////////////////////////////////////////////////
 
-  toggleDropdown(event: Event) {
-    this.dropdownOpen = !this.dropdownOpen;
+  // Toggle notifications dropdown
+  toggleNotificationDropdown(event: Event) {
+    event.preventDefault();  // ป้องกันการเปลี่ยนหน้า
+    this.notificationDropdownOpen = !this.notificationDropdownOpen;
+    this.profileDropdownOpen = false; // Close profile dropdown when opening notifications
     event.stopPropagation();
   }
 
+  // Toggle profile dropdown
+  toggleProfileDropdown(event: Event) {
+    this.profileDropdownOpen = !this.profileDropdownOpen;
+    this.notificationDropdownOpen = false; // Close notifications dropdown when opening profile
+    event.stopPropagation();
+  }
+
+
+  // toggleDropdown(event: Event): void {
+  //   this.dropdownOpen = !this.dropdownOpen;
+  // }
+
+  loadNotifications(): void {
+    // ตัวอย่างโค้ดสำหรับโหลดข้อมูลแจ้งเตือนจาก API
+    // this.notificationService.getUnreadNotifications().subscribe((notifications) => {
+    //   this.unreadNotifications = notifications;
+    // });
+  }
+  
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event) {
     if (!this.element.nativeElement.contains(event.target)) {
-      this.dropdownOpen = false;
+      this.notificationDropdownOpen = false;
+      this.profileDropdownOpen = false;
     }
   }
   openProfile() {

@@ -50,6 +50,7 @@ import { ToastrModule } from 'ngx-toastr';
     ToastrModule.forRoot({
       positionClass: 'toast-top-right',
       preventDuplicates: true,
+      timeOut: 2500, // ระยะเวลาที่แจ้งเตือนจะแสดง (3 วินาที)
     }),
   ],
   declarations: [
