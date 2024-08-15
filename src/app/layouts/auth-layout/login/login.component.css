@@ -68,9 +68,10 @@
   }
   
   .footer-links {
-    display: flex;
+    /* display: flex; */
     justify-content: space-between;
     margin-top: 15px;
+    text-align: center;
   }
   
   .forgot-password-link, .register-link {

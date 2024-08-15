@@ -4,13 +4,18 @@ import * as L from 'leaflet';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-
+import { ProvinceService } from '../thaicounty/thaicounty.service';
+import { log } from 'console';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements AfterViewInit {
+  user: any = {};
+  provinces: any[] = [];
+  selectedProvinceName: any ;  // To store the selected province name_th
+
 
   private map: L.Map;
 
@@ -96,35 +101,35 @@ export class MapComponent implements AfterViewInit {
     // คุณสามารถเพิ่มข้อมูลจังหวัดและพิกัดอื่น ๆ ได้ที่นี่ตามต้องการ
   }
 
-  constructor(private loginservice: loginservice,private http: HttpClient) { }
-
+  constructor(
+    private loginservice: loginservice,
+    private http: HttpClient,
+    private ts: ProvinceService,
+  ) { }
+  ////  
   ngAfterViewInit(): void {
-    this.initMap();
+    // this.initMap();
+    this.getProvinces();  // Fetch provinces when the component initiali
 
-    this.loginservice.getUserReport().subscribe(report => {
-      console.log('Report:', report); // ดูโครงสร้างของ report
-  
-      const provinceId = report.employee ? report.employee.province : undefined;
-      
-      if (provinceId !== undefined) {
-          console.log('User province ID:', provinceId);
-  
-          this.getProvinceNameFromApi(provinceId).subscribe(provinceName => {
-              console.log('User province name:', provinceName);
-              const coordinates = this.provinceCoordinates[provinceName];
-  
-              if (coordinates) {
-                  this.addMarker(coordinates.lat, coordinates.lng);
-              } else {
-                  console.error('Province not found:', provinceName);
-              }
-          });
-      } else {
-          console.error('Province ID is undefined');
-      }
-  });
-  
-}
+    // this.loginservice.getUserProfile().subscribe(user => {
+    //   const provinceId = user?.employeeId.province;
+
+    //   console.log('User province ID:', provinceId);  // เพิ่มบรรทัดนี้
+
+    //   this.getProvinceNameFromApi(provinceId).subscribe(name_th => { 
+    //     console.log('User province name:', name_th);  // เพิ่มบรรทัดนี้
+    //     const coordinates = this.provinceCoordinates[name_th];
+
+    //     if (coordinates) {
+    //       this.addMarker(coordinates.lat, coordinates.lng);
+    //     } else {
+    //       console.error('Province not found:', name_th);
+    //     }
+    //   });
+    // });
+    
+
+  }
 
   private initMap(): void {
     this.map = L.map('map').setView([13.7563, 100.5018], 6);
@@ -140,19 +145,53 @@ export class MapComponent implements AfterViewInit {
       .openPopup();
   }
 
-  private getProvinceNameFromApi(provinceId: number): Observable<string> {
-    const apiUrl = 'https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json';
-    return this.http.get<any[]>(apiUrl).pipe(
-        map(provinces => {
-            console.log('Fetched provinces:', provinces);  // เพิ่มบรรทัดนี้
-            const province = provinces.find(p => p.id === provinceId);
-            console.log('Matched province:', province);  // เพิ่มบรรทัดนี้
-            return province ? province.name_th : 'Unknown Province';
-        }),
-        catchError(error => {
-            console.error('Error fetching province name:', error);
-            return throwError('Error fetching province name');
-        })
-    );
+  /////
+ 
+
+  getProvinces(): void {
+    this.http.get('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json').subscribe((data: any[]) => {
+      this.provinces = data;
+      console.log('กกก :',this.provinces);
+      
+      this.matchProvinceIdWithApi();
+    });
   }
+  matchProvinceIdWithApi(): void {
+    this.loginservice.getUserProfile().subscribe(user => {
+      const provinceId = Number(user?.employeeId?.province);  // แปลงเป็น number
+      console.log('Province ID:', provinceId);
+  
+      // ตรวจสอบว่า provinces ถูกโหลดแล้วหรือไม่
+      if (!this.provinces || this.provinces.length === 0) {
+        console.log('Provinces not loaded yet.');
+        return;
+      }
+  
+      console.log('Provinces:', this.provinces); // Log the provinces array
+  
+      // ค้นหา province โดยใช้ provinceId
+      const matchedProvince = this.provinces.find(province => province.id === provinceId);
+      console.log('Matched Province:', matchedProvince);
+  
+      if (matchedProvince) {
+        this.selectedProvinceName = matchedProvince.name_th;
+        console.log('Selected Province Name:', this.selectedProvinceName);
+      } else {
+        console.log('No matching province found for ID:', provinceId);
+      }
+    });
+  }
+
+
+  getProvinceName(id: any): string {
+    // ตรวจสอบประเภทของ id และแปลงให้ตรงกันถ้าจำเป็น
+    const provinceId = Number(id);
+    // ตรวจสอบข้อมูลใน provinces
+    console.log('All Provinces:', this.provinces);
+    const province = this.provinces.find(p => p.id === provinceId);
+    console.log(`Searching for Province ID: ${provinceId}. Found:`, province);
+    return province ? province.name_th : 'Not Found';
+  }
+
+
 }

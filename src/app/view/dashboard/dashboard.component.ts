@@ -57,7 +57,7 @@
 
     get isSuperAdmin(): boolean {
       const isSuperAdmin = this.authService.hasRole('superadmin');
-      console.log('isSuperAdmin:', isSuperAdmin); // ตรวจสอบค่า
+      // console.log('isSuperAdmin:', isSuperAdmin); // ตรวจสอบค่า
       return isSuperAdmin;
     }
 
@@ -175,12 +175,12 @@
 
       // ตรวจสอบการเลือก "เลือกทั้งหมด"
       if (this.selectedProvince === "") {
-        console.log("เลือกทั้งหมด");
+        // console.log("เลือกทั้งหมด");
       } else {
         const selectedProvinceData = this.provinces.find(
           (province) => province.name === this.selectedProvince
         );
-        console.log("Selected Province:", selectedProvinceData);
+        // console.log("Selected Province:", selectedProvinceData);
       }
     }
 
@@ -198,7 +198,7 @@
             selected: false
           }));
           this.filteredProvinces = [...this.provinces];
-          console.log("Provinces:", this.provinces);
+          // console.log("Provinces:", this.provinces);
 
           this.totalPages = Math.ceil(this.provinces.length / this.itemsPerPage);
           this.updateDisplayedProvinces();
@@ -300,8 +300,8 @@
     //date filter
     onDateChange(): void {
       // ฟังก์ชันเปลี่ยนวันที่
-      console.log('Start Date:', this.startDate);
-      console.log('End Date:', this.endDate);
+      // console.log('Start Date:', this.startDate);
+      // console.log('End Date:', this.endDate);
     }
 
 
@@ -344,9 +344,9 @@
         this.currentPage++;
         
         this.updateDisplayedProvinces();
-        console.log("this.itemsPerPage: ",this.itemsPerPage)
-        console.log("this.displayedProvinces.length: ",this.displayedProvinces.length)
-        console.log("this.displayedProvinces: ",this.displayedProvinces)
+        // console.log("this.itemsPerPage: ",this.itemsPerPage)
+        // console.log("this.displayedProvinces.length: ",this.displayedProvinces.length)
+        // console.log("this.displayedProvinces: ",this.displayedProvinces)
       }
     }
   
@@ -393,8 +393,8 @@
     : this.displayedProvinces.map(province => province.name_th)
 
       // console.log("this.itemsPerPage: ",this.itemsPerPage)
-      console.log("this.displayedProvinces.length createChart: ",this.displayedProvinces.length)
-      console.log("provinceLabels createChart: ",provinceLabels)
+      // console.log("this.displayedProvinces.length createChart: ",this.displayedProvinces.length)
+      // console.log("provinceLabels createChart: ",provinceLabels)
       this.chart = new Chart(ctx, {
         type: 'bar',
         data: {
