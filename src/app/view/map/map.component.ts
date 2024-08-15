@@ -88,6 +88,11 @@ export class MapComponent implements AfterViewInit {
     'Maha Sarakham': { lat: 16.1861, lng: 103.2987 },
     'Samut Sakhon': { lat: 13.5476, lng: 100.2736 },
     'Bueng Kan': { lat: 18.3608, lng: 103.6496 },
+    'Kamphaeng Phet':{ lat: 16.4828, lng: 99.5217 },
+    'Uthai Thani':  { lat: 15.3644, lng: 100.0269 },
+    'Pathum Thani': { lat: 14.0208, lng: 100.525 },
+    'Loei': { lat: 17.486, lng: 101.7223 }
+ 
     // คุณสามารถเพิ่มข้อมูลจังหวัดและพิกัดอื่น ๆ ได้ที่นี่ตามต้องการ
   }
 
@@ -96,21 +101,29 @@ export class MapComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.initMap();
 
-    this.loginservice.getUserProfile().subscribe(user => {
-        const provinceId = user.province;
-        console.log('User province ID:', provinceId);  // เพิ่มบรรทัดนี้
-
-        this.getProvinceNameFromApi(provinceId).subscribe(provinceName => {
-            console.log('User province name:', provinceName);  // เพิ่มบรรทัดนี้
-            const coordinates = this.provinceCoordinates[provinceName];
-
-            if (coordinates) {
-                this.addMarker(coordinates.lat, coordinates.lng);
-            } else {
-                console.error('Province not found:', provinceName);
-            }
-        });
-    });
+    this.loginservice.getUserReport().subscribe(report => {
+      console.log('Report:', report); // ดูโครงสร้างของ report
+  
+      const provinceId = report.employee ? report.employee.province : undefined;
+      
+      if (provinceId !== undefined) {
+          console.log('User province ID:', provinceId);
+  
+          this.getProvinceNameFromApi(provinceId).subscribe(provinceName => {
+              console.log('User province name:', provinceName);
+              const coordinates = this.provinceCoordinates[provinceName];
+  
+              if (coordinates) {
+                  this.addMarker(coordinates.lat, coordinates.lng);
+              } else {
+                  console.error('Province not found:', provinceName);
+              }
+          });
+      } else {
+          console.error('Province ID is undefined');
+      }
+  });
+  
 }
 
   private initMap(): void {
@@ -141,5 +154,5 @@ export class MapComponent implements AfterViewInit {
             return throwError('Error fetching province name');
         })
     );
-}
+  }
 }

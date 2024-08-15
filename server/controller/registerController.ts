@@ -151,13 +151,17 @@ class RegisterModelCtrl extends BaseCtrl {
                 this.model.find({}), // สมมติว่า this.model คือ model ของ employee
                 this.modelUser.find({}) // this.modelUser คือ model ของ user
             ]);
-
+    
+            if (!employees || !users) {
+                return res.status(404).json({ message: 'Employees or users not found' });
+            }
+    
             // รวมผลลัพธ์เข้าด้วยกัน
             const combinedResults = {
                 employees,
                 users
             };
-
+    
             // ส่งผลลัพธ์กลับไปให้ client
             res.status(200).json(combinedResults);
         } catch (error) {

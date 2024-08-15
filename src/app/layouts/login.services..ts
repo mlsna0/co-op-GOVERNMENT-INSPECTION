@@ -71,9 +71,9 @@ export class loginservice {
   }
 
   getUserReport(): Observable<any> {
+    console.log('getUserReport called'); // ตรวจสอบว่าฟังก์ชันถูกเรียกใช้งาน
     return this.http.get<any>(`${this.baseUrl}/allusers`);
-  }
-
+}
 
 
   getUserProfile(): Observable<any> {
