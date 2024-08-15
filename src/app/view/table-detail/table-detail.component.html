@@ -2,14 +2,18 @@
 <div class="MainTableDetail">
        
 
-    <div class="Detail-content" [ngStyle]="{ width: '230mm' }">
+    <div class="Detail-content card" [ngStyle]="{ width: '230mm' }">
         <!--[ngStyle]="{ width: '230mm', height: '327mm' , height: '297mm' }"-->
 
-        <div class="modal-header card-header card-header-danger">
-            <h5 class="modal-title" id="myModalLabel"
-                style="color: white; font-family: 'Sarabun', sans-serif !important; font-size: 18px;">รายละเอียด</h5>
+        <div class="modal-header card-header">
+            <div class="card-title" id="myModalLabel">
+                <a href="">รายละเอียด</a>
+                <div class="sub-title">
+                    แสดงเนื้อหาเอกสาร
+                </div>
+            </div>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="BackRoot()">
-                <span aria-hidden="true">&times;</span>
+                <span aria-hidden="true" style="color: black;">&times;</span>
             </button>
 
         </div>
@@ -235,18 +239,3 @@
 </div>
 <!-- </div> -->
 
-<!-- <div class="other-page1" style="background: white;">
-        <div>
-            <label for="maxLengthInput">Set max length:</label>
-            <input id="maxLengthInput" type="number" [(ngModel)]="maxLength" (input)="onMaxLengthChange(maxLength)" />
-          </div>
-        <div class="main-detail">
-            <table>
-                <tbody>
-                    <tr>
-                        <td [innerHTML]="getSafeHtml(truncatedContent )"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div> -->

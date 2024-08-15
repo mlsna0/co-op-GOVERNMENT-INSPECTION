@@ -16,7 +16,7 @@
             <div class="dropdown">
              
                 <div class="Profile" (click)="toggleDropdown($event)">
-                    <img [src]="profileImgUrl" alt="img not fond" style="border-radius: 15px; border: 1 solid black; height: 32px; width: 32px;">
+                    <img [src]="profileImgUrl" alt="img not fond" style="border-radius: 15px; border: 1 solid black; height: 32px; width: 32px; object-fit: cover;">
                 </div>
                 <div class="dropdown-menu"  [class.show]="dropdownOpen">
                     <a class="nav-link"  (click)="openProfile()"><i class="fa fa-user"></i> &nbsp;จัดการผู้ใช้</a>

@@ -78,16 +78,19 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-12" style="padding-right: 0;">
-            <div class="form-group">
-              <label for="address" style="font-size: 16px;">ที่อยู่</label>
-              <input type="text" id="address" formControlName="address" required placeholder="กรอกที่อยู่">
-              <div
-                *ngIf="regisForm.get('address')?.invalid && (regisForm.get('address')?.touched || regisForm.get('address')?.dirty)">
-                <small class="error-text">กรุณากรอกข้อมูล****</small>
+  
+            <div class="col-sm-12" style="padding-right: 0;">
+              <div class="form-group">
+                <label for="address" style="font-size: 16px;">ที่อยู่</label>
+                <input type="text" id="address" formControlName="address" required placeholder="กรอกที่อยู่">
+                <div
+                  *ngIf="regisForm.get('address')?.invalid && (regisForm.get('address')?.touched || regisForm.get('address')?.dirty)">
+                  <small class="error-text">กรุณากรอกข้อมูล****</small>
+                </div>
               </div>
             </div>
-          </div>
+    
+       
           <div class="col-sm-12" style="padding-right: 0;">
             <div class="row">
               <div class="col-sm-3">
@@ -148,7 +151,7 @@
           </div>
           <div class="col-sm-6" style="padding-right: 0;" >
 
-            <div class="title">อัปโหลดรูปภาพโปรไฟล์</div>
+            <label>อัปโหลดรูปภาพโปรไฟล์</label>
             <div class="uploadPicture"[ngStyle]="{'display': imageSrc ? 'none' : 'flex'} ">
               <div class="text-upload">
                 <i class="fa fa-image"></i>
@@ -161,18 +164,6 @@
 
 
 
-              <!-- <div class="col-sm-6" style="padding-right: 0;">
-                <div class="title">อัปโหลดรูปภาพโปรไฟล์</div>
-                <div class="uploadPicture"
-                  [ngStyle]="{'background-image': profileImage ? 'url(' + profileImage + ')' : ''}">
-                  <input id="fileInput" type="file" (change)="uploadProfileImage($event)" />
-                  <label for="fileInput">
-                    <i class="fa fa-camera" aria-hidden="true"></i>
-                    <span class="photo">เพิ่มรูปโปรไฟล์</span>
-                  </label>
-                  <button *ngIf="profileImage" class="remove-button" (click)="removeImage()">ลบรูป</button>
-                </div>
-              </div> -->
 
 
 

@@ -17,6 +17,19 @@
   h4{
     font-weight: 900;
   }
+  .sub-title{
+    position: relative;
+    font-family: "Sarabun", sans-serif; 
+    font-size: 14px;
+    display: flex;
+    align-items: self-start;
+    color: #7B809A;
+  }
+  .card-title a{
+    font-family: "Sarabun", sans-serif; 
+    font-weight: 900;
+    font-size: 18px;
+  }
   
   .card-body {
     display: flex;

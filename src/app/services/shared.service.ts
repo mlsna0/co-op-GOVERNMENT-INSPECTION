@@ -202,7 +202,7 @@ export class SharedService {
   getUserProfileById(UserID: string){
     return this.http.get(`${this.baseUrl}/userModel/getUserById/${UserID}`)
 }
-  updateUserProfileById(updatedData: any,UserID:string): Observable<any> {
+  updateUserProfileById(updatedData: FormData,UserID:string): Observable<any> {
     return this.http.put(`${this.baseUrl}/userModel/updateUserById/${UserID}`, updatedData);
   }
 

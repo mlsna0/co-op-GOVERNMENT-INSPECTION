@@ -1,5 +1,5 @@
 .dashboard {
-  padding: 60px 30px;
+  padding:60px 15px;
   display: flex;
   flex-wrap: wrap;
 }
@@ -305,11 +305,11 @@ input[type="date"] {
   align-items: center;
   justify-content: center;
   background: rgb(255,209,0,0.2);
-  border-radius: 10px;
+  border-radius: 50%;
 }
 img{
-width: 32px;
-height: 32px;
+width: 50px;
+height: 50px;
 }
 /*chart zone*/
 .BGchart{
@@ -513,7 +513,7 @@ justify-content: flex-end;
   display: none;
 }
 
-@media (max-width: 770px){
+@media (max-width: 1200px){
   .filter-container{
     height: auto;
   }

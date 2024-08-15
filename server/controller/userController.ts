@@ -77,7 +77,7 @@ class UserModelCtrl extends BaseCtrl {
         //   employee.amphure = amphure || employee.amphure;
         //   employee.tambon = tambon || employee.tambon;
         //   employee.postCode = postCode || employee.postCode;
-
+        const profileImage = req.file ? req.file.filename : null;
           let updateData :any 
           if(employee) {
             updateData = await this.modelEmployee.findOneAndUpdate(
@@ -95,6 +95,7 @@ class UserModelCtrl extends BaseCtrl {
               amphure :  amphure,
               tambon : tambon,
               postCode : postCode,
+              profileImage:profileImage,
             }
           )
           }
@@ -117,7 +118,7 @@ class UserModelCtrl extends BaseCtrl {
           }
   
           // บันทึกข้อมูลที่อัปเดตลงฐานข้อมูล
-          await user.save();
+          // await user.save();
   
   
           res.status(200).json({ msg: 'User profile updated successfully', updateData });

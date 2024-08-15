@@ -24,9 +24,15 @@
         <div class="card">
           <!-- <div class="card-Edit"> -->
           <div  class="card-header "> <!--card-header-danger-->
-            <h4 class="card-title" style="text-align: center">
-              การลงตรวจอิเล็กทรอนิค
-            </h4>
+            <div class="card-title" style="text-align: center">
+              <a>
+                การลงตรวจอิเล็กทรอนิค
+              </a>
+            
+              <div class="sub-title">
+                แสดงรายการเอกสารลงพื้นที่
+              </div>
+            </div>
             <button class="btn btn-add pull-center " (click)="onInsertModal()">
               <i class="fa fa-plus"></i> &nbsp;เพิ่มหัวข้อเอกสาร
             </button>
@@ -400,12 +406,16 @@
           <div class="modal fade" id="writtenModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content" [ngStyle]="{width: '230mm',height: '180mm'  }">
-                <div class="modal-header card-header card-header-danger" style="background: rgb(255, 209, 0)">
-                  <h5 style="color: white; font-family: 'Sarabun', sans-serif !important; font-size: 18px;"
-                    class="modal-title" id="myModalLabel">จดบันทึก</h5>
+              <div class="modal-content card" [ngStyle]="{width: '230mm',padding:'10px'  }">
+                <div class="card-header ">
+                  <div  class="modal-title card-title" id="myModalLabel">
+                    <a href="">จดบันทึก</a>
+                    <div class="sub-title">
+                      เพิ่มเนื้อหาในเอกสาร 
+                    </div>
+                  </div>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true" style="color: black;">&times;</span>
                   </button>
                 </div>
                 <div class="container">
