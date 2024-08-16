@@ -514,20 +514,21 @@ export class SignatureComponent implements OnInit {
     this.router.navigate(['/table-detail']);
   }
 
-  prevPage() {
-    if (this.pageVariable > 1) {
-      this.pageVariable--;
-      this.onPageChange();
-    }
-  }
+  // prevPage() {
+  //   if (this.pageVariable > 1) {
+  //     this.pageVariable--;
+  //     this.onPageChange();
+  //   }
+  // }
   
-  nextPage() {
-    if (this.pageVariable < this.totalPage) {
-      this.pageVariable++;
-      this.onPageChange();
-    }
-  }
+  // nextPage() {
+  //   if (this.pageVariable < this.totalPage) {
+  //     this.pageVariable++;
+  //     this.onPageChange();
+  //   }
+  // }
   
+
   onPageChange() {
     // Ensure the page number stays within bounds
     if (this.pageVariable < 1) {
@@ -535,10 +536,28 @@ export class SignatureComponent implements OnInit {
     } else if (this.pageVariable > this.totalPage) {
       this.pageVariable = this.totalPage;
     }
-  
+    this.updatePageDisplay();
     // Add any other logic needed when the page changes
     // For example, reloading the document to show the new page
   }
 
-  
+  updatePageDisplay() {
+    const pageDisplayElement = document.getElementById('pageDisplay');
+    if (pageDisplayElement) {
+      pageDisplayElement.textContent = `จำนวนหน้า: ${this.pageVariable}/${this.totalPage}`;
+    }
+  }
+  prevPage() {
+    if (this.pageVariable > 1) {
+      this.pageVariable--;
+      this.updatePageDisplay();
+    }
+  }
+
+  nextPage() {
+    if (this.pageVariable < this.totalPage) {
+      this.pageVariable++;
+      this.updatePageDisplay();
+    }
+  }
 }

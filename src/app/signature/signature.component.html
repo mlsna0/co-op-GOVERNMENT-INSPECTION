@@ -1,44 +1,40 @@
 <div class="main-content">
+  <div class="uploadFilePDF">
+    <label for="fileInput" style="padding: 0 0 0 15px;">อัปโหลดไฟล์ของคุณ</label>
+    <input id="fileInput" type="file" class="fileUpload" accept="application/pdf,image/*"
+      (change)="onFileSelected($event)" style="font-size: 14px;">
+    <button type="button" (click)="clearFileInput()"
+      style="position: relative;left:-25px; border: none; background-color: transparent; z-index: 10;">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
   <div class="card" style="align-items: center;">
     <div>
+      
       <!-- <button type="button" class="close" data-dismiss="modal" aria-label="fa-arrow-left" (click)="BackRoot()">
         <span aria-hidden="true">&times;</span>
     </button> -->
     </div>
-    <div class="uploadFilePDF">
-      <label for="fileInput" style="padding: 0 0 0 15px;">อัปโหลดไฟล์ของคุณ</label>
-      <input id="fileInput" type="file" class="fileUpload" accept="application/pdf,image/*"
-        (change)="onFileSelected($event)" style="font-size: 14px;">
-      <button type="button" (click)="clearFileInput()"
-        style="position: relative;left:-25px; border: none; background-color: transparent; z-index: 10;">
-        <i class="fa fa-times"></i>
-      </button>
-    </div>
+   
     <div class="card-body">
       <div class="col-sm-12" *ngIf="loading">
-        <div>จำนวนหน้า: {{ totalPage }}</div>
-        <div class="d-flex align-items-center justify-content-center">
-          <button class="btn-custom" type="button" (click)="prevPage()">
-            <i class="fa fa-arrow-left"></i>
-          </button>
+        <div class="page-text1" id="pageDisplay" >จำนวนหน้า: {{currentPage}}/{{totalPages}}</div>
+        <div class="pagination-container">
+          <div class="d-flex align-items-center justify-content-center pagination-controls">c 
+            <button class="btn-custom" type="button" (click)="prevPage()">
+              <i class="fa fa-arrow-left"></i>
+            </button>
         
-          <input
-            class="form-control page-display"
-            type="number"
-            [(ngModel)]="pageVariable"
-            [min]="1"
-            [max]="totalPage"
-            (change)="onPageChange()"
-          />
+            <input class="form-control page-display" type="number" [(ngModel)]="pageVariable" [min]="1" [max]="totalPage"
+              (change)="onPageChange()" />
         
-          <button class="btn-custom" type="button" (click)="nextPage()">
-            <i class="fa fa-arrow-right"></i>
-          </button>
-        </div>
-
-
-        <button *ngIf="step == 0" (click)="choseTypeSignature('pin')" style="height: 40px;" type="button"
-          class="btn btn-add">ลงนามเอกสาร</button>
+            <button class="btn-custom" type="button" (click)="nextPage()">
+              <i class="fa fa-arrow-right"></i>
+            </button>
+          </div>
+        
+          <button *ngIf="step == 0" (click)="choseTypeSignature('pin')" style="height: 40px;" type="button"
+            class="btn btn-add">ลงนามเอกสาร</button>
         <button *ngIf="step == 0 && user_ca" (click)="choseTypeSignature('ca')" style="height: 40px;" type="button"
           class="btn btn-add ms-2">ลงนามอิเล็กทรอนิกส์</button>
 

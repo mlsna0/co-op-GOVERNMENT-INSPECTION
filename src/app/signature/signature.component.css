@@ -139,7 +139,7 @@
 }
 
 .page-display {
-  width: 50px;
+  width: 5px;
   text-align: center;
   margin: 0 10px;
   border: 1px solid #ccc;
@@ -187,41 +187,38 @@ input[type="number"] {
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.pagination-control {
+.pagination-container {
   display: flex;
   align-items: center;
-  justify-content: center; /* จัดให้อยู่ตรงกลาง */
-  margin-bottom: 20px;
+  justify-content: center;
+  flex-direction: column; /* Stack the pagination controls and button vertically */
 }
 
-.btn-custom {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  margin: 0 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align controls slightly to the left */
+  /* gap: 10px;  */
+  /* margin-right: 50px;  */
 }
 
 .page-display {
-  width: 60px;
-  text-align: center;
-  font-size: 18px;
-  margin: 0 10px;
-  border: 2px solid #007bff;
-  border-radius: 5px;
+  width: 50px; /* Keep width narrow */
+  text-align: center; /* Center the text inside the input */
+ 
 }
 
-.btn-sign {
-  background-color: #28a745;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+.btn-custom {
+  width: 40px; /* Ensure buttons have the same width */
+  height: 40px; /* Ensure buttons have the same height */
+}
+
+.btn.btn-add {
+  margin-top: 15px; /* Adjust spacing between pagination and button */
+} 
+
+.page-text1{
+  display: flex;
+  justify-content: center;
+  height: 30px;
 }
