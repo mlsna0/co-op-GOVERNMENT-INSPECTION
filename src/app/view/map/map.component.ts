@@ -105,6 +105,7 @@ export class MapComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.initMap();
     this.getProvinces();
+    this.loadUserReport();
   }
 
   private initMap(): void {
@@ -115,7 +116,7 @@ export class MapComponent implements AfterViewInit {
     }).addTo(this.map);
   }
 
-  private addMarker(lat: number, lng: number): void {
+  private addMarker(lat: number, lng: number, topic: string): void {
     const customIcon = new L.Icon({
       iconUrl: 'assets/img/icon.png', // เปลี่ยนเป็น path ของไฟล์ที่อยู่ในโปรเจ็กต์ของคุณ
       shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
@@ -126,9 +127,9 @@ export class MapComponent implements AfterViewInit {
     });
     
     L.marker([lat, lng], { icon: customIcon }).addTo(this.map)
-      .bindPopup('คุณอยู่ที่นี่!')
+      .bindPopup(`Topic: ${topic}`)
       .openPopup();
-}
+  }
 
   getProvinces(): void {
     this.http.get('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json').subscribe((data: any[]) => {
@@ -139,52 +140,76 @@ export class MapComponent implements AfterViewInit {
 
   matchProvinceIdWithApi(): void {
     this.loginservice.getUserProfile().subscribe(user => {
-      const provinceId = Number(user?.employeeId?.province);
-      if (!this.provinces || this.provinces.length === 0) {
-        console.log('Provinces not loaded yet.');
-        return;
-      }
-      const matchedProvince = this.provinces.find(province => province.id === provinceId);
-      if (matchedProvince) {
-        this.selectedProvinceName = matchedProvince.name_th;
-        console.log('Selected Province Name:', this.selectedProvinceName);
-        this.showProvinceMarker(this.selectedProvinceName);
-      } else {
-        console.log('No matching province found for ID:', provinceId);
-      }
-    });
-  }
+        const provinceId = Number(user?.employeeId?.province);
+        if (!this.provinces || this.provinces.length === 0) {
+            console.log('Provinces not loaded yet.');
+            return;
+        }
+        const matchedProvince = this.provinces.find(province => province.id === provinceId);
+        if (matchedProvince) {
+            this.selectedProvinceName = matchedProvince.name_th;
+            console.log('Selected Province Name:', this.selectedProvinceName);
 
-  showProvinceMarker(provinceName: string): void {
-    const coordinates = this.provinceCoordinates[provinceName];
-    if (coordinates) {
-      this.addMarker(coordinates.lat, coordinates.lng);
-    } else {
+            // สมมติว่าคุณมี `document.record_topic` ที่จะส่งไป
+            const document = { record_topic: 'Your Topic Here' }; // นี่คือสมมติว่าคุณมี `document.record_topic` 
+            this.showProvinceMarker(this.selectedProvinceName, document.record_topic);
+        } else {
+            console.log('No matching province found for ID:', provinceId);
+        }
+    });
+}
+showProvinceMarker(provinceName: string, topic: string): void {
+  const coordinates = this.provinceCoordinates[provinceName];
+  if (coordinates) {
+      this.addMarker(coordinates.lat, coordinates.lng, topic);
+  } else {
       console.error('Province not found:', provinceName);
-    }
   }
+}
 
   getProvinceName(id: any): string {
     const provinceId = Number(id);
     const province = this.provinces.find(p => p.id === provinceId);
     return province ? province.name_th : 'Not Found';
   }
+
   loadUserReport(): void {
+    console.log('Starting loadUserReport...');
+
     this.loginservice.getUserProfile().subscribe(user => {
-      const userId = user?.employeeId?.userId;
-      if (userId) {
-        this.sv.getUserReportBuild(userId).subscribe(
-          (reportData) => {
-            console.log('User Report Data:', reportData);
-            // คุณสามารถนำข้อมูลนี้ไปใช้ในส่วนอื่นๆ ตามที่คุณต้องการ
-          },
-          (error) => {
-            console.error('Error loading user report:', error);
-          }
-        );
-      } else {
-        console.error('User ID not found');
-      }
+        console.log('User Profile Data:', user);
+
+        if (user && user._id) { 
+            const userId = user._id;
+            console.log('Extracted User ID:', userId);
+
+            this.sv.getUserReportBuild(userId).subscribe(
+                (reportData) => {
+                    console.log('User Report Data:', reportData);
+
+                    if (reportData && reportData.documents && reportData.documents.length > 0) {
+                        reportData.documents.forEach((document: any) => {
+                            if (document.topic) {
+                                console.log('Document Topic:', document.topic);
+
+                                const provinceName = this.selectedProvinceName;
+                                this.showProvinceMarker(provinceName, document.record_topic);  // ส่ง document.topic ไป
+                            }
+                        });
+                    } else {
+                        console.error('No documents found.');
+                    }
+                },
+                (error) => {
+                    console.error('Error loading user report:', error);
+                }
+            );
+        } else {
+            console.error('User ID is undefined or null.');
+        }
+    }, 
+    (error) => {
+        console.error('Error fetching user profile:', error);
     });
-  }
+}
 }

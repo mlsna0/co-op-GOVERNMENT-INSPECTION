@@ -254,15 +254,10 @@ getRecordWithUserAndEmployee = async (req, res) => {
       return res.status(404).send('User not found');
     }
 
-    const employees = await Promise.all(
-      documents.map(async (document) => {
-        return this.employeeModel.findById(user.employeeId);
-      })
-    );
-
-    res.status(200).json({ user, documents, employees });
+    // ส่งคืนเฉพาะ user และ documents
+    res.status(200).json({ user, documents });
   } catch (error) {
-    console.error('Error in getRecordWithUserAndEmployee function:', error.message);
+    console.error('Error in getRecordWithUserAndDocument function:', error.message);
     res.status(500).send('Server error');
   }
 }
