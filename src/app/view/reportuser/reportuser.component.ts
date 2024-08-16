@@ -28,7 +28,7 @@
 
     ngOnInit(): void {
       this.dtOptions = {
-        order: [[0, 'desc']],
+        order: [[0, 'asc']],
         pagingType: 'full_numbers',
         language: {
           lengthMenu: 'แสดง _MENU_ รายการ',

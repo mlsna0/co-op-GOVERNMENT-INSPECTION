@@ -48,13 +48,19 @@ export class ProfileComponent implements OnInit {
   ) { 
 
     this.UserInfoForm = this.fb.group({
-      firstname:[''],
-      lastname:[''],
-      address:[''],
-      province: [''],
-      country: [''],
-      postalCode: [''],
-      profileImage: [''],
+      firstname: ["" ],
+      lastname: [""],
+      email: ["",  Validators.email],
+      // password: ["", Validators.minLength(8)],
+      // confirmpassword: ["", Validators.minLength(8)],
+      organization:['', ],
+      address:["", ],
+      phone: ["", Validators.pattern('^[0-9]{10}$')],
+      province: ['' ],
+      amphure: ['' ],
+      tambon: ['' ],
+      postCode: [''],
+      profileImage: [null]
   })
   }
 
@@ -80,10 +86,29 @@ export class ProfileComponent implements OnInit {
   
         console.log('profileImgUrl:', this.profileImgUrl);
         this.UserInfoForm.patchValue(this.UserData);
+        this.UserInfoForm.patchValue({
+          firstname: this.UserData?.employeeId.firstname,
+          lastname: this.UserData?.employeeId.lastname,
+          email: this.UserData?.employeeId.email,
+          // email: this.UserData?.email,
+          // password: ["", Validators.minLength(8)],
+          // confirmpassword: ["", Validators.minLength(8)],
+          organization: this.UserData?.employeeId.organization,
+          address:this.UserData?.employeeId.address,
+          phone:this.UserData?.employeeId.phone,
+          province:this.UserData?.employeeId.province,
+          amphure: this.UserData?.employeeId.amphure,
+          tambon: this.UserData?.employeeId.tambon,
+          postCode: this.UserData?.employeeId.postCode,
+          // // role: ['' ],
+          profileImage:this.UserData?.employeeId?.profileImage
+        })
       },
       error => {
         console.error('Error fetching user profile:', error);
-      }
+      },
+
+ 
     );
     
     // this.sv.currentProfileImageUrl.subscribe(url => {

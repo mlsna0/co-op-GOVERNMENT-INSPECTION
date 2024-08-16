@@ -2,10 +2,48 @@
   max-width: 100%;
 }
 
+.card-header{
+  position: relative;
+  background-color:rgb(255,209,0,0.2) ;/* rgb(241, 245 ,255)*/
+  font-family: 'Sarabun',sans-serif;
+
+  display: flex;
+  justify-content: space-between ;
+  align-items: center;
+  margin: 0 ;
+  border-radius: 10px;
+}
+/* .card-header{
+  position: relative;
+  background-color: rgb(255, 209, 0);
+  width: 836.3px;
+  border-radius: 3px;
+  top: -20px;
+  margin-top: -20px;
+  padding: 15px;
+  left: 50%;
+  transform: translate(-50%);
+  justify-content: center;
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 67, 54, 0.4);
+} */
+
 :host ::ng-deep .card-header .card-header-danger .modal-title{
   font-family: "Sarabun", sans-serif !important; 
 }
+.sub-title{
+  position: relative;
+  font-family: "Sarabun", sans-serif; 
+  font-size: 14px;
+  display: flex;
+  align-items: self-start;
+  color: #7B809A;
+}
 
+.card-title a{
+  font-family: "Sarabun", sans-serif; 
+  font-weight: 900;
+  font-size: 18px;
+}
 .modal-body {
   display: flex;
   justify-content: center;
@@ -14,6 +52,9 @@
 }
 .dataTables_wrapper .dataTables_filter input{
 width: 180px;
+}
+.card{
+  padding: 20px;
 }
 .card-body{
   font-weight: 300;
@@ -93,19 +134,9 @@ width: 180px;
   padding: 10px 0 0 0; /* เพิ่มระยะห่างบนและล่าง */
   font-family:  'Sarabun', sans-serif; /* ใช้ฟอนต์ราชการ */
 }
-.card-header{
-  position: relative;
-  background-color: rgb(255, 209, 0);
-  width: 836.3px;
-  border-radius: 3px;
-  top: -20px;
-  margin-top: -20px;
-  padding: 15px;
-  left: 50%;
-  transform: translate(-50%);
-  justify-content: center;
-  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 67, 54, 0.4);
-}
+
+
+
 
 
 

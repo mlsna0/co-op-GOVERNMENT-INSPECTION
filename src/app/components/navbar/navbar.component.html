@@ -29,6 +29,18 @@
             <a *ngFor="let notification of unreadNotifications" class="dropdown-item" href="#">
               {{ notification.message }}
             </a>
+            <div class="dropdown">
+             
+                <div class="Profile" (click)="toggleDropdown($event)">
+                    <img [src]="profileImgUrl" alt="img not fond" style="border-radius: 15px; border: 1 solid black; height: 32px; width: 32px; object-fit: cover;">
+                </div>
+                <div class="dropdown-menu"  [class.show]="dropdownOpen">
+                    <a class="nav-link"  (click)="openProfile()"><i class="fa fa-user"></i> &nbsp;จัดการผู้ใช้</a>
+                    <a class="nav-link"   aria-disabled="true"><i class="fa fa-gear"></i> &nbsp; ตั้งค่า</a>
+                    <a class="nav-link"  (click)="openLogin()"> <i class="fa fa-sign-out"></i> &nbsp;ออกจากระบบ</a>
+                </div>
+            </div>
+          
           </ng-container>
           <ng-template #noNotifications>
             <span class="dropdown-item text-muted">No new notifications</span>

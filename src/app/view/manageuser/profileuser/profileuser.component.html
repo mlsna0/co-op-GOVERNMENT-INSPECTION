@@ -2,12 +2,17 @@
     <div class="container-fluid">
 
         <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">การจัดการผู้ใช้งาน</h4>
+                <!-- <button class="btn btn-primary" (click)="goToChangePassword()">เปลี่ยนรหัสผ่าน</button> -->
+              </div>
             <div class="card-body">
                 <div class="row">
                     <div class="back" (click)="BackRoot()">
                         <i class="fa fa-angles-left"></i>
                     </div>
                 </div>
+
                 <div class="row">
 
                     <div class="col-md-3">
@@ -15,45 +20,48 @@
                             <div class="card-avatar">
                                 <a href="javascript:void(0)">
                                 <img class="img" [src]="profileImgUrl" />
+                                <div class="upload">
+                                    <i class="fa fa-camera"></i>
+                                </div>
                                 </a>
+
+                               
                             </div>
 
                             <div class="card-info">
-                                <div class="row">
+                                <a>
                                     ระดับผู้ใช้งาน : {{UserData?.role}}
-                                   </div>
-                                <div class="row">
+                                </a>
+                                <a>
                                     ชื่อ : {{ UserData?.employeeId?.firstname }}  นามสกุล : {{UserData?.employeeId?.lastname}}
-                                </div>
-                                <div class="row">
-                                    ตำแหน่ง : 
-                                </div>
-                                <div class="row">
-                                    อีเมล  (UserData?.email:  {{UserData?.email}})
-                                </div>
-                                <div class="row">
-                                    อีเมล ( UserData?.employeeId.email :{{UserData?.employeeId?.email}})
-                                </div>
+                                </a>
+                                <a>
+                                    ตำแหน่ง : {{UserData?.employeeId?.bearing}}
+                                </a>
+                    
                              </div>
                         </div>
                    
                     </div>
                     
-                
-                        <div class="col-md-9">
+        
+                    <div class="col-md-9">
                             <form [formGroup]="UserInfoForm" (ngSubmit)="SaveUserInfo()">
                             <div class="userInfo">
                                 <div class="title">
                                    <h4> ข้อมูลผู้ใช้</h4>
-                                   <button>แก้ไขข้อมูลส่วนตัว</button>
+                                   <button  type="button" (click)=" editProfile()">แก้ไขข้อมูลส่วนตัว</button>
                                 </div>
                                 <div class="user-content">
                                     <div class="row">
                                         <div class="col-md-3">
                                             <label for="">ชื่อ</label>
                                         </div>
-                                        <div class="col-md-9">
+                                        <div class="col-md-9"  *ngIf="EditStatus">
                                             <input type="text" formControlName="firstname" class="form-control">
+                                        </div>
+                                        <div class="col-md-9"  *ngIf="!EditStatus">
+                                            {{UserData?.employeeId?.firstname}}
                                         </div>
             
                                     </div>
@@ -61,8 +69,11 @@
                                         <div class="col-md-3">
                                             <label for="">นามสกุล</label>
                                         </div>
-                                        <div class="col-md-9">
+                                        <div class="col-md-9" *ngIf="EditStatus">
                                             <input type="text" formControlName="lastname" class="form-control">
+                                        </div>
+                                        <div class="col-md-9"  *ngIf="!EditStatus">
+                                            {{UserData?.employeeId?.lastname}}
                                         </div>
                                     </div>
                                     <div class="group-info">
@@ -73,16 +84,22 @@
                                             <div class="col-md-3">
                                                 <label for="">บริษัท/องค์กร</label>
                                             </div>
-                                            <div class="col-md-9">
+                                            <div class="col-md-9"  *ngIf="EditStatus">
                                                 <input type="text" formControlName="organization" class="form-control">
+                                            </div>
+                                            <div class="col-md-9"  *ngIf="!EditStatus">
+                                                {{UserData?.employeeId?.organization}}
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <label for="">ที่อยู่</label>
                                             </div>
-                                            <div class="col-md-9">
+                                            <div class="col-md-9"  *ngIf="EditStatus">
                                                 <input type="text" formControlName="address" class="form-control">
+                                            </div>
+                                            <div class="col-md-9"  *ngIf="!EditStatus">
+                                                {{UserData?.employeeId?.address}}
                                             </div>
                                             
                                         </div>
@@ -90,11 +107,40 @@
                                             <div class="col-md-3">
                                                 <label for=""></label>
                                             </div>
-                                            <div class="col-md-5">
-                                                <input type="text"formControlName="tambon" class="form-control" placeholder="ตำบล">
+                                            <div class="col-md-5 select-wrapper"  *ngIf="EditStatus">
+                                                ตำบล/แขวง :
+                                                <select class="form-select" formControlName="tambon"
+                                                 (focus)="istAmbonSelectOpen = true" 
+                                                 (blur)="istAmbonSelectOpen = false" 
+                                                 (change)="onTambonChange($event.target.value)"
+                                                 [attr.disabled]="isTambonDisabled ? true : null">
+                                                <option *ngFor="let tambon of tambons" [value]="tambon.id">{{ tambon.name_th }}</option>
+                                              </select>
+                                                <div class="iconSelect" [class.rotate]="istAmbonSelectOpen">
+                                                    <i class="fa fa-chevron-down"></i>
+                                                </div>
+                                                <!-- <input type="text"formControlName="tambon" class="form-control" placeholder="ตำบล"> -->
                                             </div>
-                                            <div class="col-md-4">
-                                                <input type="text"formControlName="amphure" class="form-control" placeholder="อำเภอ">
+                                            <div class="col-md-4 select-wrapper"  *ngIf="EditStatus">
+                                                อำเภอ/เขต :
+                                                <select class="form-select" formControlName="amphure" 
+                                                (focus)="isAmphureSelectOpen = true" 
+                                                 (blur)="isAmphureSelectOpen = false" 
+                                                (change)="onAmphuresChange($event.target.value)"
+                                                [attr.disabled]="isAmphureDisabled ? true : null">
+                                                <option *ngFor="let amphure of amphures" [value]="amphure.id">{{ amphure.name_th}}</option>
+                                              </select>
+
+                                              <div class="iconSelect" [class.rotate]="isAmphureSelectOpen">
+                                                <i class="fa fa-chevron-down"></i>
+                                                </div>
+                                                <!-- <input type="text"formControlName="amphure" class="form-control" placeholder="อำเภอ"> -->
+                                            </div>
+                                            <div class="col-md-5"  *ngIf="!EditStatus">
+                                               ตำบล/แขวง : {{getTambonName(UserData?.employeeId?.tambon)}}
+                                            </div>
+                                            <div class="col-md-4"  *ngIf="!EditStatus">
+                                               อำเภอ/เขต : {{getAmphureName(UserData?.employeeId?.amphure)}}
                                             </div>
                                          
                                         </div>
@@ -102,12 +148,32 @@
                                             <div class="col-md-3">
                                                 <label for=""></label>
                                             </div>
-                                            <div class="col-md-5">
-                                                <input type="text" formControlName="province" class="form-control" placeholder="จังหวัด">
+                                    
+                                            <div class="col-md-5 select-wrapper" *ngIf="EditStatus">
+                                                จังหวัด : 
+                                                <select class="form-select" formControlName="province"
+                                                (focus)="isProvinceSelectOpen = true" 
+                                                (blur)="isProvinceSelectOpen = false" 
+                                                (change)="onProvinceChange($event.target.value)">
+                                                <option *ngFor="let province of provinces" [value]="province.id">{{ province.name_th }}</option>
+                                              </select>
+                                              
+                                              <div class="iconSelect" [class.rotate]="isProvinceSelectOpen">
+                                                <i class="fa fa-chevron-down"></i>
+                                                </div>
+                                                <!-- <input type="text" formControlName="province" class="form-control" placeholder="จังหวัด"> -->
                                             </div>
                                       
-                                            <div class="col-md-4">
-                                                <input type="text"formControlName="postCode"  class="form-control"  placeholder="รหัสไปรษณีย์">
+                                            <div class="col-md-4 "  *ngIf="EditStatus">
+                                                รหัสไปรษณีย์ : 
+                                                <div class="form-control">{{ UserInfoForm.controls['postCode'].value }}</div>
+                                                <!-- <input type="text"formControlName="postCode"  class="form-control"  placeholder="รหัสไปรษณีย์"> -->
+                                            </div>
+                                            <div class="col-md-5"  *ngIf="!EditStatus">
+                                               จังหวัด :  {{getProvinceName(UserData?.employeeId?.province)}}
+                                            </div>
+                                            <div class="col-md-4"  *ngIf="!EditStatus">
+                                              รหัสไปรษณีย์ :  {{UserData?.employeeId?.postCode}}
                                             </div>
                                         </div>
                                     </div>
@@ -125,44 +191,89 @@
                                         <div class="col-md-3">
                                             <label for="">เบอร์โทร</label>
                                         </div>
-                                        <div class="col-md-9">
+                                        <div class="col-md-9"  *ngIf="EditStatus">
                                             <input type="text" formControlName="phone" class="form-control">
+                                        </div>
+                                        <div class="col-md-9"  *ngIf="!EditStatus">
+                                            {{UserData?.employeeId?.phone}}
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-3">
                                             <label for="">อีเมล</label>
                                         </div>
-                                        <div class="col-md-9">
+                                        <div class="col-md-9"  *ngIf="EditStatus">
                                             <input type="text" formControlName="email" class="form-control">
                                         </div>
+                                        <div class="col-md-9"  *ngIf="!EditStatus">
+                                            {{UserData?.email}}
+                                        </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-3">
+                                    <div class="row" *ngIf="EditStatus" >
+                                        <div class="col-md-12">
+                                            <div class="title-info">
+                                                <h4>เปลี่ยนรหัสผ่าน</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row"*ngIf="EditStatus">
+                                        <div class="col-md-3" >
                                             <label for="">รหัสผ่าน</label>
                                         </div>
-                                        <div class="col-md-9">
-                                            <input type="text"  formControlName="password"    class="form-control">
+                                        <div class="col-md-9 password-position">
+                                            <input [type]="passwordFieldType" formControlName="password" class="form-control">
+                                            <button type="button" class="eyePassword" 
+                                                    (click)="togglePasswordVisibility('password')">
+                                                <i [class]="passwordFieldType === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                                            </button>
                                         </div>
+                                   
                                     </div>
-                                    <div class="row">
+                                    <div class="row" *ngIf="EditStatus">
                                         <div class="col-md-3">
                                             <label for="">ยืนยันรหัสผ่าน</label>
                                         </div>
-                                        <div class="col-md-9">
-                                            <input type="text"  formControlName=" confirmpassword"  class="form-control">
+                                        <div class="col-md-9 password-position" >
+                                            <input [type]="confirmPasswordFieldType" formControlName="confirmpassword" class="form-control">
+                                            <button type="button" class="eyePassword" 
+                                                    (click)="togglePasswordVisibility('confirmPassword')">
+                                                <i [class]="confirmPasswordFieldType === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                                            </button>
                                         </div>
+                                
                                     </div>
                                  
+                                    <div class="row" *ngIf="EditStatus">
+                                        <div class="col-md-12">
+                                            <div class="title-info">
+                                                <h4>เปลี่ยนรูปภาพโปรไฟล์</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row"  *ngIf="EditStatus">
+                                        <div class="col-md-3">
+                                            <label for="">อัปโหลดรูปภาพโปรไฟล์</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="file" id="profileImage" formControlName="profileImage"  
+                                            accept="image/png, image/jpeg, image/jpg" 
+                                            (change)="onFileUploadImgChange($event)">
+
+                                            <div class="profile-image-container" *ngIf="imageSrc">
+                                                <img [src]="imageSrc" alt="Profile Img" class="profile-image">
+                                                <i class="fa-regular fa-trash-can positionTrashCan" (click)="deletedFileUpload(fileInput)"></i>
+                                              </div>
+                                        </div>
+                                    </div>
                                    
                                 </div>
-                                <div class="footer-content">
+                                <div class="footer-content" *ngIf="EditStatus">
                                     <button type="submit" class="btn btn-success">ยืนยัน</button>
-                                    <button type="button" class="btn btn-danger" (click)="cancelEdit()">ยกเลิก</button>
+                                    <button type="button"  class="btn btn-danger" (click)="cancelEdit()">ยกเลิก</button>
                                 </div>
                             </div>
                             </form>
-                        </div>
+                    </div>
                   
                     
                 </div>

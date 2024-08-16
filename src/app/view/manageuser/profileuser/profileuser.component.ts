@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray,AbstractControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -30,10 +30,28 @@ export class ProfileuserComponent implements OnInit {
 
   profileImgUrl:string;
 
+
+
+  filteredAmphures = [];
+  filteredTambons = [];
+
+
+  isAmphureDisabled = true;
+  isTambonDisabled = true;
+  isPostCodeDisabled = true;
+
+  nameTambons: string[] = [];
+  zipCode: any[] = [];
+
   provinces: any[] = [];  // ตัวแปรสำหรับเก็บข้อมูลจังหวัด
   amphures: any[] = [];   // ตัวแปรสำหรับเก็บข้อมูลอำเภอ
   tambons: any[] = [];    // ตัวแปรสำหรับเก็บข้อมูลตำบล
-
+//การอัปโหลดรูปภาพ
+  imageSrc: string | ArrayBuffer | null = null;
+  profileImage: string| ArrayBuffer | null = null;
+//เปิด/ปิด การแสดงรหัสผ่าน 
+  passwordFieldType: string = 'password';
+  confirmPasswordFieldType: string = 'password';
 
   constructor(
     private fb:FormBuilder,
@@ -49,18 +67,18 @@ export class ProfileuserComponent implements OnInit {
     this.UserInfoForm = this.fb.group({
       firstname: ["" ],
       lastname: [""],
-      email: ["",  Validators.email],
+      email: ["", [ Validators.email]],
       // password: ["", Validators.minLength(8)],
       // confirmpassword: ["", Validators.minLength(8)],
       organization:['', ],
       address:["", ],
-      // phone: ["", Validators.pattern('^[0-9]{10}$')],
-      province: ['' ],
+      phone: ["",[ Validators.pattern('^[0-9]{10}$')]],
+      province: [''],
       amphure: ['' ],
       tambon: ['' ],
       postCode: [''],
       // role: ['' ],
-      profileImage: [null]
+      profileImage: ['']
   })
   }
 
@@ -83,7 +101,16 @@ export class ProfileuserComponent implements OnInit {
 
     this.sv.getUserProfileById(this.UserID).subscribe(res =>{
       this.UserData = res;
-      console.log("get UserDataById : ",this.UserData),
+      console.log("get UserDataById : ",this.UserData)
+
+      if (this.UserData?.employeeId?.profileImage) {
+        // ใช้ URL ที่เซิร์ฟเวอร์ให้บริการ
+        this.profileImgUrl = `http://localhost:3000/uploads/${this.UserData.employeeId.profileImage.replace(/\\/g, '/')}`;
+        console.log('Generated profileImgUrl:', this.profileImgUrl);
+      } else {
+        this.profileImgUrl = './assets/img/Person-icon.jpg';
+      }
+
       this.UserInfoForm.patchValue({
         firstname: this.UserData?.employeeId.firstname,
         lastname: this.UserData?.employeeId.lastname,
@@ -93,16 +120,17 @@ export class ProfileuserComponent implements OnInit {
         // confirmpassword: ["", Validators.minLength(8)],
         organization: this.UserData?.employeeId.organization,
         address:this.UserData?.employeeId.address,
-        // phone: ["", Validators.pattern('^[0-9]{10}$')],
+        phone:this.UserData?.employeeId.phone,
         province:this.UserData?.employeeId.province,
         amphure: this.UserData?.employeeId.amphure,
         tambon: this.UserData?.employeeId.tambon,
         postCode: this.UserData?.employeeId.postCode,
         // // role: ['' ],
-        // profileImage: [null]
+        profileImage:this.UserData?.employeeId?.profileImage
       })
     })
-    this.sv.currentProfileImageUrl.subscribe(url=> this.profileImgUrl= url);
+  
+    // this.sv.currentProfileImageUrl.subscribe(url=> this.profileImgUrl= url);
 
     this.ts.getProvincesWithDetails().subscribe(data => {
       this.provinces = data;
@@ -148,29 +176,165 @@ export class ProfileuserComponent implements OnInit {
   } 
 
 
+  onProvinceChange(provinceId: number) {
+    if (!provinceId) {
+      return;
+    }
+  
+    // ล้างค่าเฉพาะในกรณีที่มีการเลือกจังหวัดที่แตกต่างกัน
+    if (this.UserInfoForm.controls['province'].value !== provinceId) {
+      this.UserInfoForm.patchValue({
+        amphure: '',
+        tambon: ''
+      });
+      this.filteredTambons = [];
+      this.isAmphureDisabled = false;
+      this.isTambonDisabled = true;
+      this.isPostCodeDisabled = true;
+    }
+  
+    this.loadAmphures(provinceId); 
+  }
 
+  loadAmphures(provinceId: any) {
+    this.ts.getamphures().subscribe(data => {
+        this.amphures = data.filter(amphure => amphure.province_id === parseInt(provinceId));
+        this.filteredAmphures = this.amphures;
+
+        if (this.amphures.length > 0) {
+            this.isAmphureDisabled = false; // เปิดฟิลด์อำเภอถ้ามีอำเภอในจังหวัดนี้
+        }
+
+        const currentAmphureId = this.UserInfoForm.controls['amphure'].value;
+        if (this.amphures.some(amphure => amphure.id === currentAmphureId)) {
+            this.isTambonDisabled = false; // ปลดล็อคฟิลด์ตำบลถ้ามีอำเภอปัจจุบันที่ตรงกับ amphureId
+            this.loadTambons(currentAmphureId); // โหลดตำบลตามอำเภอปัจจุบัน
+        } else {
+            this.isTambonDisabled = true; // ล็อคฟิลด์ตำบลถ้าไม่มีอำเภอที่ตรงกับ amphureId
+        }
+    });
+}
+
+
+onAmphuresChange(amphureId: any) {
+  if (!amphureId) {
+      return;
+  }
+
+  // ล้างค่าตำบลถ้ามีการเลือกอำเภอที่แตกต่างกัน
+  if (this.UserInfoForm.controls['amphure'].value !== amphureId) {
+      this.UserInfoForm.patchValue({
+          tambon: '',
+          postCode: '' // ล้างรหัสไปรษณีย์ด้วยเมื่ออำเภอเปลี่ยน
+      });
+      this.filteredTambons = []; // ล้างข้อมูลตำบลที่กรองไว้ก่อนหน้า
+      this.isTambonDisabled = true; // ล็อคฟิลด์ตำบลก่อนที่จะโหลดตำบลใหม่
+      this.isPostCodeDisabled = true;
+  }
+
+  // โหลดตำบลใหม่ตามอำเภอที่เลือก
+  this.loadTambons(amphureId);
+}
+
+
+loadTambons(amphureId: any) {
+  this.ts.gettambons().subscribe(data => {
+      this.tambons = data.filter(tambon => tambon.amphure_id === parseInt(amphureId));
+      this.filteredTambons = this.tambons;
+
+      if (this.filteredTambons.length > 0) {
+          this.isTambonDisabled = false; // ปลดล็อคฟิลด์ตำบลถ้ามีข้อมูลตำบล
+      } else {
+          this.isTambonDisabled = true; // ล็อคฟิลด์ตำบลถ้าไม่มีข้อมูลตำบล
+      }
+  });
+}
+
+  onTambonChange(tambonId: any) {
+    const selectedTambon = this.filteredTambons.find(tambon => tambon.id === parseInt(tambonId));
+    if (selectedTambon) {
+        this.zipCode = selectedTambon.zip_code;
+        this.UserInfoForm.patchValue({
+            postCode: this.zipCode // อัปเดตค่ารหัสไปรษณีย์ในฟอร์ม
+        });
+        this.isPostCodeDisabled = false; // ปลดล็อคฟิลด์รหัสไปรษณีย์
+    } else {
+        this.isPostCodeDisabled = true; // ล็อคฟิลด์รหัสไปรษณีย์หากไม่พบตำบล
+    }
+  }
+
+  togglePasswordVisibility(field: string): void {
+    if (field === 'password') {
+        this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+    } else if (field === 'confirmPassword') {
+        this.confirmPasswordFieldType = this.confirmPasswordFieldType === 'password' ? 'text' : 'password';
+    }
+}
+
+onFileUploadImgChange(event: any) {
+  const file = event.target.files[0];
+  console.log("file",file);
+  
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.imageSrc = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+deletedFileUpload(){
+
+  const fileInput = document.getElementById('profileImage') as HTMLInputElement;
+  const btnAddBox = document.getElementById('btn-add-box'); // เพิ่มส่วนนี้
+
+  if (fileInput) {
+    fileInput.value = '';
+  }
+
+  if (btnAddBox) { // เพิ่มส่วนนี้
+    btnAddBox.style.display = 'none';
+  }
+  this.imageSrc = null;
+  this.UserInfoForm.patchValue({
+    profileImage: null
+  });
+}
   BackRoot(){
     this.router.navigate(['/manageuser']);
   }
   editProfile() {
     // Add your edit profile logic here
     this.EditStatus= true;
-    this.PersonINT++;
+    // this.PersonINT++;
     // console.log('Edit profile clicked',this.PersonINT);
   }
 
   SaveUserInfo() {
     if (this.UserInfoForm.valid) {
-      const updatedData = this.UserInfoForm.value;
+      // const updatedData = this.UserInfoForm.value;
       const userId = this.UserID;
-      console.log("user id save into",userId)
+      // console.log("user id save into",userId)
+
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      console.log("fileInput > ",fileInput);
+      const file = fileInput?.files?.[0]; // Get the file from the input
+
+      const updatedData = new FormData();
+      Object.keys(this.UserInfoForm.controls).forEach(key => {
+        updatedData.append(key, this.UserInfoForm.get(key)?.value);
+      });
+     if (file) {
+      updatedData.append('profileImage', file);
+      }
       this.sv.updateUserProfileById(updatedData, userId).subscribe(response => {
         console.log('Response:', response);
   
         if (response && response.user) {
           if (response?.user?.employeeId && response?.user?.employeeId?.firstname) {
             this.UserData = response;
-            this.EditStatus = false;
+           
           } else {
             console.error('Firstname not found in user data');
           }
@@ -179,6 +343,7 @@ export class ProfileuserComponent implements OnInit {
         }
       });
     }
+    this.EditStatus= false;
   }
   
   
