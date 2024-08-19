@@ -11,9 +11,15 @@ import timeStampModelCtrl from './controller/timeStampController';
 
 
 
-import auth from './middleware/auth/auth'
-import upload from './service/uploadservice.service'
+const { PDFDocument } = require('pdf-lib')
+const fs = require('fs')
+const multer = require('multer')
+const upload = multer()
 
+const { plainAddPlaceholder } = require('node-signpdf/dist/helpers')
+// import SignPdf from 'node-signpdf';
+import auth from 'middleware/auth/auth';
+const forge = require('node-forge');
  
 // import PdfCtrl from './controller/pdfController';
 // import DetailModelCtrl from 'controller/detailController';
@@ -113,7 +119,122 @@ function setRoutes(app): void {
   //agg $lookup Record and View model routes //petch edit add this
   // router.route('/aggRecordNview/:id').get(AggRecordNViewCon.get);
 
-  app.use('/api', router);
+
+    // Signature
+    router.route('/stampSignature').post(upload.fields([{ name: "pdfFile" }]), async (req: any, res, next) => {
+        try {
+            const pdfload = await PDFDocument.load(req.files['pdfFile'][0].buffer)
+            const pdfDoc = await PDFDocument.create();
+            let signBase64Trim = req.body.base64.replace('data:image/png;base64,', '')
+            const buffer = Buffer.from(signBase64Trim, "base64");
+            const signImage = await pdfDoc.embedPng(buffer);
+            let signData = JSON.parse(req.body.signData);
+            for (let index = 0; index < pdfload.getPageCount(); index++) {
+                let signPosition = signData.filter(
+                    (res) => {
+                        return res.page == index + 1;
+                    }
+                );
+
+                if (signPosition) {
+                    const [signCopyPage] = await pdfDoc.copyPages(pdfload, [
+                        index,
+                    ]);
+                    const page = pdfDoc.addPage(signCopyPage);
+                    signPosition.forEach((element) => {
+                        const { width, height } = page.getSize();
+                        let signSize = element.signSize;
+                        console.log('signSize: ', signSize);
+                        let imgWidth =
+                            (+signSize.x1 * width) / 100 - (+signSize.x2 * width) / 100;
+                        let imgHeight =
+                            (+signSize.y1 * height) / 100 - (+signSize.y2 * height) / 100;
+                        let offsetX = imgWidth / 2;
+                        let offsetY = imgHeight / 2;
+                        console.log('offsetX: ', offsetX);
+                        console.log('offsetY: ', offsetY);
+
+                        // let x = element.position_percentage.x - offsetX; //- center.x;
+                        // let y = element.position_percentage.y - offsetY; //- center.y
+                        let x = ((width * element.position_percentage.x) / 100) - offsetX//- center.x;
+                        let y = ((height * element.position_percentage.y) / 100) - offsetY//- center.y
+                        console.log('x: ', x);
+                        console.log('y: ', y);
+
+                        page.drawImage(signImage, {
+                            x: x,
+                            y: y,
+                            width: imgWidth,
+                            height: imgHeight,
+                            opacity: 1,
+                        });
+                    });
+                } else {
+                    const [firstDonorPage] = await pdfDoc.copyPages(pdfload, [
+                        index,
+                    ]);
+                    pdfDoc.insertPage(index, firstDonorPage);
+                }
+            }
+            const pdfBytes = await pdfDoc.save({ useObjectStreams: false });
+
+            if (req.body.type == 'ca') {
+                let CA = fs.readFileSync('D:/data/OrganizationWebupload/ca_files/' + req.body.user_ca + '.p12');
+
+                const p12Data = CA.toString('base64')
+                const p12Der = forge.util.decode64(p12Data);
+                const p12Asn1 = forge.asn1.fromDer(p12Der, { parseAllBytes: false });
+                const p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, false, req.body.caPass);
+                const certificate = p12.getBags({ bagType: forge.pki.oids.certBag });
+
+                const now = new Date();
+
+                if (now > certificate[forge.pki.oids.certBag][0].cert.validity.notAfter) {
+                    return res.json({ status: false, message: ' CA หมดอายุ' });
+                }
+                let pdfBuffer = await plainAddPlaceholder({
+                    pdfBuffer: Buffer.from(pdfBytes),
+                    reason: '',
+                    contactInfo: '',
+                    signatureLength: 16384,
+                    name: '',
+                    location: '',
+                });
+
+                // pdfBuffer = await SignPdf.sign(pdfBuffer, CA, {
+                //     passphrase: req.body.caPass,
+                // });
+
+                fs.writeFileSync('D:/data/OrganizationWebupload/signatured_documents/' + req.body.oca + req.body.requestId + req.body.userId + '.pdf',
+                    pdfBuffer,
+                    'binary'
+                );
+                return res.json('https://doc.oca.go.th/signatured_documents/' + req.body.oca + req.body.requestId + req.body.userId + '.pdf')
+            }
+
+            fs.writeFileSync('D:/data/OrganizationWebupload/signatured_documents/' + req.body.oca + req.body.requestId + req.body.userId + '.pdf',
+                pdfBytes,
+                'binary'
+            );
+
+            return res.json('https://doc.oca.go.th/signatured_documents/' + req.body.oca + req.body.requestId + req.body.userId + '.pdf')
+        } catch (err) {
+            if (err.message == 'PKCS#12 MAC could not be verified. Invalid password?') {
+                console.log("Wrong Password =>");
+                return res.status(200).json({ status: false, message: ' รหัสผ่าน CA ไม่ถูกต้อง' });
+            } else {
+                console.log("error =>", err.message);
+                return res.status(500).json({ error: err.message });
+            }
+        }
+    })
+
+    router.route('/test').get(async (req, res: any) => {
+        let CAFile = fs.readFileSync('C:/Users/Administrator/Desktop/oca/dist/oca/test.p12')
+        console.log(CAFile)
+        return res.status(200).send('test')
+    })
+    app.use('/api', router);
 }
 
 export default setRoutes;

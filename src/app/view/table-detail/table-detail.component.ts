@@ -467,9 +467,10 @@ onDragEnd(event: DragEvent, index: number): void {
   BackRoot() {
     this.router.navigate(['/table-main']);
   }
-  onSignPage(){
-    this.router.navigate(['/signature']);
-  }
+  onSignPage() {
+    const documentId = this.detailItems?._id;  // ใช้ _id จาก MongoDB
+    this.router.navigate(['/signature'], { queryParams: { id: documentId } });  // ส่ง id ไปยังหน้าการลงลายเซ็น
+}
   //add page??
   addDetail() {
     console.log("addDetail work")
