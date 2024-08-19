@@ -116,21 +116,30 @@ export class MapComponent implements AfterViewInit {
     }).addTo(this.map);
   }
 
-  private addMarker(lat: number, lng: number, topic: string): void {
+  private addMarker(lat: number, lng: number, topics: string[], places: string[], locations: string[]): void {
     const customIcon = new L.Icon({
-      iconUrl: 'assets/img/icon.png', // เปลี่ยนเป็น path ของไฟล์ที่อยู่ในโปรเจ็กต์ของคุณ
+      iconUrl: 'assets/img/icon.png',
       shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
       iconSize: [25, 31],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
       shadowSize: [41, 41]
     });
-    
+
+    let popupContent = `<div>`;
+    topics.forEach((topic, index) => {
+      popupContent += `
+        <strong>Topic ${index + 1}:</strong> ${topic || 'No topic available'}<br>
+        <strong>Place ${index + 1}:</strong> ${places[index] || 'No places available'}<br>  <!-- เปลี่ยน Detail เป็น Place -->
+        <strong>Location ${index + 1}:</strong> ${locations[index] || 'No location available'}<br><br>
+      `;
+    });
+    popupContent += `</div>`;
+
     L.marker([lat, lng], { icon: customIcon }).addTo(this.map)
-      .bindPopup(`Topic: ${topic}`)
+      .bindPopup(popupContent)
       .openPopup();
   }
-
   getProvinces(): void {
     this.http.get('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json').subscribe((data: any[]) => {
       this.provinces = data;
@@ -140,32 +149,25 @@ export class MapComponent implements AfterViewInit {
 
   matchProvinceIdWithApi(): void {
     this.loginservice.getUserProfile().subscribe(user => {
-        const provinceId = Number(user?.employeeId?.province);
-        if (!this.provinces || this.provinces.length === 0) {
-            console.log('Provinces not loaded yet.');
-            return;
-        }
-        const matchedProvince = this.provinces.find(province => province.id === provinceId);
-        if (matchedProvince) {
-            this.selectedProvinceName = matchedProvince.name_th;
-            console.log('Selected Province Name:', this.selectedProvinceName);
+      const provinceId = Number(user?.employeeId?.province);
 
-            // สมมติว่าคุณมี `document.record_topic` ที่จะส่งไป
-            const document = { record_topic: 'Your Topic Here' }; // นี่คือสมมติว่าคุณมี `document.record_topic` 
-            this.showProvinceMarker(this.selectedProvinceName, document.record_topic);
-        } else {
-            console.log('No matching province found for ID:', provinceId);
-        }
+      if (!this.provinces || this.provinces.length === 0) {
+        console.log('Provinces not loaded yet.');
+        return;
+      }
+
+      const matchedProvince = this.provinces.find(province => province.id === provinceId);
+
+      if (matchedProvince) {
+        this.selectedProvinceName = matchedProvince.name_th;
+        console.log('Selected Province Name:', this.selectedProvinceName);
+        this.loadUserReport();  // เรียกฟังก์ชันเพื่อดึงข้อมูลรายงานของผู้ใช้
+      } else {
+        console.log('No matching province found for ID:', provinceId);
+      }
     });
-}
-showProvinceMarker(provinceName: string, topic: string): void {
-  const coordinates = this.provinceCoordinates[provinceName];
-  if (coordinates) {
-      this.addMarker(coordinates.lat, coordinates.lng, topic);
-  } else {
-      console.error('Province not found:', provinceName);
   }
-}
+
 
   getProvinceName(id: any): string {
     const provinceId = Number(id);
@@ -179,7 +181,7 @@ showProvinceMarker(provinceName: string, topic: string): void {
     this.loginservice.getUserProfile().subscribe(user => {
         console.log('User Profile Data:', user);
 
-        if (user && user._id) { 
+        if (user && user._id) {
             const userId = user._id;
             console.log('Extracted User ID:', userId);
 
@@ -188,14 +190,24 @@ showProvinceMarker(provinceName: string, topic: string): void {
                     console.log('User Report Data:', reportData);
 
                     if (reportData && reportData.documents && reportData.documents.length > 0) {
-                        reportData.documents.forEach((document: any) => {
-                            if (document.topic) {
-                                console.log('Document Topic:', document.topic);
+                        const topics: string[] = [];
+                        const places: string[] = [];
+                        const locations: string[] = [];
 
-                                const provinceName = this.selectedProvinceName;
-                                this.showProvinceMarker(provinceName, document.record_topic);  // ส่ง document.topic ไป
+                        reportData.documents.forEach((document: any) => {
+                            if (document.record_topic && this.selectedProvinceName) {
+                                topics.push(document.record_topic);
+                                places.push(document.record_place || 'No places available');
+                                locations.push(document.record_location || 'No location available');
                             }
                         });
+
+                        const coordinates = this.provinceCoordinates[this.selectedProvinceName];
+                        if (coordinates) {
+                            this.addMarker(coordinates.lat, coordinates.lng, topics, places, locations);
+                        } else {
+                            console.error('Province not found:', this.selectedProvinceName);
+                        }
                     } else {
                         console.error('No documents found.');
                     }
@@ -207,9 +219,19 @@ showProvinceMarker(provinceName: string, topic: string): void {
         } else {
             console.error('User ID is undefined or null.');
         }
-    }, 
+    },
     (error) => {
         console.error('Error fetching user profile:', error);
     });
 }
+
+showProvinceMarker(provinceName: string, topic: string): void {
+  const coordinates = this.provinceCoordinates[provinceName];
+  if (coordinates) {
+    this.addMarker(coordinates.lat, coordinates.lng, [topic], [], []); // ส่งค่าว่างสำหรับ places และ location
+  } else {
+    console.error('Province not found:', provinceName);
+  }
+}
+
 }

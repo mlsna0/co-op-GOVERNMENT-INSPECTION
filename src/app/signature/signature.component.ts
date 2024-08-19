@@ -16,6 +16,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 export class SignatureComponent implements OnInit {
   @ViewChildren('cdkDrag_', { read: ElementRef }) cdkDrag_: QueryList<ElementRef>
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
+  documentId: string;
   stageMarkSign = false;
   dragList: any = [];
   pageVariable = 1
@@ -57,14 +58,19 @@ export class SignatureComponent implements OnInit {
     private renderer: Renderer2,
     private router: Router,
     private activateRoute: ActivatedRoute,
-    private _sinatureService: SignatureService) {
+    private _sinatureService: SignatureService) 
+    {
     this.requestId = this.activateRoute.snapshot.paramMap.get('requestId')
     this.userId = this.activateRoute.snapshot.paramMap.get('userId')
     this.oca = this.activateRoute.snapshot.paramMap.get('oca')
+    this.activateRoute.queryParams.subscribe(params => {
+    this.documentId = params['id'];
+    });
   }
 
   ngOnInit(): void {
     this.getData()
+    console.log('Document ID:', this.documentId);
   }
 
   async getData() {
