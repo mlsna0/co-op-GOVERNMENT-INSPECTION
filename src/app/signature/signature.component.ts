@@ -16,6 +16,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 export class SignatureComponent implements OnInit {
   @ViewChildren('cdkDrag_', { read: ElementRef }) cdkDrag_: QueryList<ElementRef>
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
+  @ViewChild('canvasWrapper', { static: false }) canvasWrapper: ElementRef;
   documentId: string;
   stageMarkSign = false;
   dragList: any = [];
@@ -52,7 +53,7 @@ export class SignatureComponent implements OnInit {
   selectedFileB64: string;
   isFileImage: boolean;
   isFileDocument: boolean;
-  
+
   constructor(
     private elementRef: ElementRef,
     private renderer: Renderer2,
@@ -76,11 +77,11 @@ export class SignatureComponent implements OnInit {
   async getData() {
     const reader = new FileReader();
     // await axios.get(`https://training.oca.go.th/api/Api_Appove.aspx?requestid=${this.requestId}&userid=${this.userId}`).then(async res => {
-      // this.signatureProfile = 'https://' + res.data[0].user_signature
-      // this.pdfFile = 'https://' + res.data[0].Upload_path
-      // this.user_ca = res.data[0].user_ca
-      this.pdfView = reader.result;
-      await this.loadingFuction();
+    // this.signatureProfile = 'https://' + res.data[0].user_signature
+    // this.pdfFile = 'https://' + res.data[0].Upload_path
+    // this.user_ca = res.data[0].user_ca
+    this.pdfView = reader.result;
+    await this.loadingFuction();
 
     // })
   }
@@ -160,15 +161,15 @@ export class SignatureComponent implements OnInit {
     this.stageMarkSign = true;
   }
   pageInitialized(e) {
-   
-    if(this.selectedFile === null || this.selectedFile ===''){
-      this.totalPage =0;
-    } else{
+
+    if (this.selectedFile === null || this.selectedFile === '') {
+      this.totalPage = 0;
+    } else {
       this.totalPage = e.source._pages.length
       this.dragList = [];
       this.addDrag(0, { x: 0, y: 0 })
     };
-   
+
   }
   addDrag(page, pos) {
     console.log("addDrag pos : ", pos);
@@ -180,7 +181,7 @@ export class SignatureComponent implements OnInit {
       name: "ตำแหน่งลายเซ็น",
     });
     console.log("this.dragList: ", this.dragList);
-  
+
     // เพิ่มปุ่มลบในกรอบตำแหน่ง
     setTimeout(() => {
       let ck = this.cdkDrag_.find((x, i) => x.nativeElement.id == newId).nativeElement;
@@ -197,13 +198,13 @@ export class SignatureComponent implements OnInit {
         removeBtn.style.cursor = 'pointer';
         removeBtn.style.zIndex = '10';
         removeBtn.onclick = () => this.remove(newId, page);
-  
+
         ck.appendChild(removeBtn);
       }
     }, 0);
   }
-  
-  
+
+
   selectEle(event) {
     if (this.stageMarkSign) {
       let pageHeight = event.target.clientHeight;
@@ -261,20 +262,31 @@ export class SignatureComponent implements OnInit {
     console.log("this.dragList :", this.dragList);
 
   }
+
+  // dragEnd(event: CdkDragEnd) {
+  //   const { x, y } = event.source.getFreeDragPosition();
+  //   // ปรับตำแหน่งให้สัมพันธ์กับคอนเทนเนอร์
+  //   const adjustedX = x - this.canvasWrapper.nativeElement.offsetLeft;
+  //   const adjustedY = y - this.canvasWrapper.nativeElement.offsetTop;
+
+  //   // ตั้งค่าตำแหน่งใน array dragList หรือ array ที่เกี่ยวข้อง
+  //   this.dragList[i].position = { x: adjustedX, y: adjustedY };
+  // }
+
   remove(id, page) {
     let indexDragList = this.dragList.findIndex(x => x.id == id);
     if (indexDragList != -1) {
       this.dragList.splice(indexDragList, 1)
     }
-    
+
     // ลบ element
     const ck = this.cdkDrag_.find((x, i) => x.nativeElement.id == id);
     if (ck) {
       this.renderer.removeChild(this.elementRef.nativeElement, ck.nativeElement);
     }
-  
+
     console.log("this.dragList: ", this.dragList);
-  
+
     // re index
     let listinPage = this.dragList.filter((value, index, self) =>
       index === self.findIndex((t) => (
@@ -299,7 +311,7 @@ export class SignatureComponent implements OnInit {
     })
     console.log("this.dragList reindex: ", this.dragList);
   }
-  
+
   drawComplete() {
     // will be notified of szimek/signature_pad's onEnd event
     console.log(this.signaturePad.toDataURL());
@@ -456,26 +468,26 @@ export class SignatureComponent implements OnInit {
       })
     }
 
-    function compressImage(src, newX, newY) {
-      console.log("1111");
-      
-      return new Promise((res, rej) => {
-        const img = new Image();
-        img.src = src;
-        img.onload = () => {
-          const elem = document.createElement('canvas');
-          elem.width = newX;
-          elem.height = newY;
-          const ctx = elem.getContext('2d');
-          ctx.drawImage(img, 0, 0, newX, newY);
-          const data = ctx.canvas.toDataURL();
-          res(data);
-        }
-        img.onerror = error => rej(error);
-      })
-    }
-    await this.loadingFuction()
-  }   
+      function compressImage(src, newX, newY) {
+        console.log("1111");
+        
+        return new Promise((res, rej) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = () => {
+            const elem = document.createElement('canvas');
+            elem.width = newX;
+            elem.height = newY;
+            const ctx = elem.getContext('2d');
+            ctx.drawImage(img, 0, 0, newX, newY);
+            const data = ctx.canvas.toDataURL();
+            res(data);
+          }
+          img.onerror = error => rej(error);
+        })
+      }
+    await this.loadingFuction() 
+  }
   loadingFuction() {
     this.loading = true
   }
@@ -520,20 +532,21 @@ export class SignatureComponent implements OnInit {
     this.router.navigate(['/table-detail']);
   }
 
-  prevPage() {
-    if (this.pageVariable > 1) {
-      this.pageVariable--;
-      this.onPageChange();
-    }
-  }
-  
-  nextPage() {
-    if (this.pageVariable < this.totalPage) {
-      this.pageVariable++;
-      this.onPageChange();
-    }
-  }
-  
+  // prevPage() {
+  //   if (this.pageVariable > 1) {
+  //     this.pageVariable--;
+  //     this.onPageChange();
+  //   }
+  // }
+
+  // nextPage() {
+  //   if (this.pageVariable < this.totalPage) {
+  //     this.pageVariable++;
+  //     this.onPageChange();
+  //   }
+  // }
+
+
   onPageChange() {
     // Ensure the page number stays within bounds
     if (this.pageVariable < 1) {
@@ -541,10 +554,28 @@ export class SignatureComponent implements OnInit {
     } else if (this.pageVariable > this.totalPage) {
       this.pageVariable = this.totalPage;
     }
-  
+    this.updatePageDisplay();
     // Add any other logic needed when the page changes
     // For example, reloading the document to show the new page
   }
 
-  
+  updatePageDisplay() {
+    const pageDisplayElement = document.getElementById('pageDisplay');
+    if (pageDisplayElement) {
+      pageDisplayElement.textContent = `จำนวนหน้า: ${this.pageVariable}/${this.totalPage}`;
+    }
+  }
+  prevPage() {
+    if (this.pageVariable > 1) {
+      this.pageVariable--;
+      this.updatePageDisplay();
+    }
+  }
+
+  nextPage() {
+    if (this.pageVariable < this.totalPage) {
+      this.pageVariable++;
+      this.updatePageDisplay();
+    }
+  }
 }
