@@ -259,6 +259,13 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     //     console.error('User ID is missing');
     //   }
     // });
+    console.log("ngOnInit called");
+    const recordId = this.ContentRecordID;
+    if (recordId) {
+      console.log("Calling countRecordFilenames with recordId:", recordId);
+      this.countRecordFilenames(recordId);
+    }
+  
   }
   ngOnDestroy() {
     document.removeEventListener('keydown', this.handleKeydown.bind(this));
@@ -494,6 +501,9 @@ onRecord(recordId: any) {
     console.log("getDataById :", res);
     this.detailItems = res;
     
+    // const recordFilenameCount = this.detailItems.record_filename ? this.detailItems.record_filename.length : 0;
+    // console.log("Number of record_filename:", recordFilenameCount);
+
     // ตั้งค่า typroText ให้เป็น record_content จาก detailItems
     this.typroText = this.detailItems.record_content;
     
@@ -506,8 +516,18 @@ onRecord(recordId: any) {
   });
 }
 
-
-
+countRecordFilenames(recordId: any) {
+  this.sv.getDataById(recordId).subscribe(
+    res => {
+      console.log("Data received:", res);
+      const recordFilenameCount = res.record_filename ? res.record_filename.length : 0;
+      console.log("Number of record_filename:", recordFilenameCount);
+    },
+    error => {
+      console.error("Error fetching data:", error);
+    }
+  );
+}
 recordCommit() {
   console.log("this.ContentRecordID :", this.ContentRecordID);
 
