@@ -44,23 +44,27 @@
           </button>
         </div>
 
+        <div class="btn-create-sign">
+            <button *ngIf="step == 0" (click)="choseTypeSignature('pin')" style="height: 40px;" type="button"
+                class="btn btn-add">ลงนามเอกสาร</button>
+            <button *ngIf="step == 0 && user_ca" (click)="choseTypeSignature('ca')" style="height: 40px;" type="button"
+                 class="btn btn-add ms-2">ลงนามอิเล็กทรอนิกส์</button>
 
-        <button *ngIf="step == 0" (click)="choseTypeSignature('pin')" style="height: 40px;" type="button"
-          class="btn btn-add">ลงนามเอกสาร</button>
-        <button *ngIf="step == 0 && user_ca" (click)="choseTypeSignature('ca')" style="height: 40px;" type="button"
-          class="btn btn-add ms-2">ลงนามอิเล็กทรอนิกส์</button>
-
-        <button *ngIf="step == 1" (click)="startMarkSign()" [disabled]="stageMarkSign" style="height: 40px;"
-          type="button" class="btn btn-secondary">วางตำแหน่งลายเซ็น</button>
-
-        <div *ngIf="dragList.length > 1 && typeSignature == 'pin'" class="signature-container mt-2">
-          <signature-pad *ngIf="!useProfileSign" [options]="signaturePadOptions" (onBeginEvent)="drawStart()"
-            (onEndEvent)="drawComplete()">
-          </signature-pad>
-
-          <img *ngIf="useProfileSign" [src]="signatureProfile" style="width: 400px; height: 198px;"
-            class="img-thumbnail" />
+            <button *ngIf="step == 1" (click)="startMarkSign()" [disabled]="stageMarkSign" style="height: 40px;"
+                 type="button" class="btn btn-secondary">วางตำแหน่งลายเซ็น</button>
         </div>
+     
+        <div style="display: flex; justify-content: center;">
+          <div *ngIf="dragList.length > 1 && typeSignature == 'pin'" class="signature-container">
+            <signature-pad *ngIf="!useProfileSign" [options]="signaturePadOptions" (onBeginEvent)="drawStart()"
+              (onEndEvent)="drawComplete()">
+            </signature-pad>
+  
+            <img *ngIf="useProfileSign" [src]="signatureProfile" style="width: 400px; height: 198px;"
+              class="img-thumbnail" />
+          </div>
+        </div>
+      
 
         <div *ngIf="dragList.length > 1 && typeSignature == 'pin' && signatureProfile" class="mb-1">
           <input [(ngModel)]="useProfileSign" [ngModelOptions]="{standalone: true}" type="checkbox"
