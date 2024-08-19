@@ -15,6 +15,8 @@ import auth from './middleware/auth/auth'
 import upload from './service/uploadservice.service'
 
  
+
+
 // import PdfCtrl from './controller/pdfController';
 // import DetailModelCtrl from 'controller/detailController';
 // import AggRecordNViewCon from 'controller/aggRecordNviewController'; //petch edit add this

@@ -17,7 +17,7 @@ import { ReportuserComponent } from '../../view/reportuser/reportuser.component'
 import { ReportuserbuildComponent } from '../../view/reportuser/reportuserbuild/reportuserbuild.component';
 import { ManageuserComponent } from '../../view/manageuser/manageuser.component';
 import { ProfileuserComponent } from 'app/view/manageuser/profileuser/profileuser.component';
-
+import { AuthGuard } from '../../auth.guard'; // นำเข้า AuthGuard ของคุณ
 import { MapComponent } from '../../view/map/map.component';
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -63,26 +63,24 @@ export const AdminLayoutRoutes: Routes = [
     //         component: UpgradeComponent
     //     }]
     // }
-    { path: 'dashboard',      component: DashboardComponent },
-    { path: 'profile',   component: ProfileComponent },
-    { path: 'table-list',     component: TableListComponent },
-    { path: 'table-main',     component: TableMainComponent },
-    { path:'login',             component:LoginComponent },
-   
-    { path: 'reportbuild', component: ReportuserbuildComponent},
-    { path: 'manageuser', component: ManageuserComponent},
-    { path: 'profileuser', component: ProfileuserComponent},
-    { path: 'profileuser/:id', component: ProfileuserComponent },
+    { path: 'dashboard',      component: DashboardComponent, canActivate: [AuthGuard] },
+    { path: 'profile',        component: ProfileComponent, canActivate: [AuthGuard] },
+    { path: 'table-list',     component: TableListComponent, canActivate: [AuthGuard] },
+    { path: 'table-main',     component: TableMainComponent, canActivate: [AuthGuard] },
+    { path: 'reportbuild',    component: ReportuserbuildComponent, canActivate: [AuthGuard] },
+    { path: 'manageuser',     component: ManageuserComponent, canActivate: [AuthGuard] },
+    { path: 'profileuser',    component: ProfileuserComponent, canActivate: [AuthGuard] },
+    { path: 'profileuser/:id', component: ProfileuserComponent, canActivate: [AuthGuard] },
+    { path: 'table-detail/:id', component: TableDetailComponent, canActivate: [AuthGuard] },
+    { path: 'typography',     component: TypographyComponent, canActivate: [AuthGuard] },
+    { path: 'icons',          component: IconsComponent, canActivate: [AuthGuard] },
+    { path: 'signature',      component: SignatureComponent, canActivate: [AuthGuard] },
+    { path: 'employee',       component: EmployeeComponent, canActivate: [AuthGuard] },
+    { path: 'upgrade',        component: UpgradeComponent, canActivate: [AuthGuard] },
+    { path: 'reportuser',     component: ReportuserComponent, canActivate: [AuthGuard] },
+    { path: 'map',            component: MapComponent, canActivate: [AuthGuard] },
     
-    // { path:'login',             component:LoginComponent },
-    { path: 'table-detail/:id', component: TableDetailComponent },
-    { path: 'typography',       component: TypographyComponent },
-    { path: 'icons',            component: IconsComponent },
-    { path: 'signature',             component: SignatureComponent },
-    { path: 'employee',    component: EmployeeComponent },
-    { path: 'upgrade',          component: UpgradeComponent },
-    { path: 'reportuser',         component:ReportuserComponent},
-    { path: 'map',             component:MapComponent},
-
+    { path: 'login',          component: LoginComponent }, // เส้นทางล็อกอินไม่ต้องใช้ AuthGuard
+    { path: '**',             redirectTo: 'login' } 
 
 ];

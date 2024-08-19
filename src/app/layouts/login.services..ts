@@ -14,6 +14,7 @@ import { log } from 'console';
 })
 export class loginservice {
 
+
   
 
   // private baseUrl = 'mongodb://127.0.0.1:27017/Angular-Project'; // ปรับ URL ให้ตรงกับ API ของคุณ
@@ -21,7 +22,13 @@ export class loginservice {
   private tokenKey = 'token';
  
   constructor(private http: HttpClient,private sv:SharedService) { }
-
+  
+  isLoggedIn(): boolean {
+    const token = this.getToken();
+    // เพิ่มการตรวจสอบว่า token ยังไม่หมดอายุ หรือยังเป็น valid อยู่
+    return !!token;
+  }
+  
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }

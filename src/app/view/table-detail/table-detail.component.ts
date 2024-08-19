@@ -39,8 +39,7 @@ export class TableDetailComponent implements OnInit {
   textContentLength: number = 0;
   remainingContentLength: number = 0;
   contentParts: SafeHtml[] = [];
-
-
+  saveCount = 0; 
   recordId: any;
   viewData:any[] = [];
   remainingContent: string = '';//content ที่ตัดออกจะเก็บที่นี้?
@@ -467,9 +466,10 @@ onDragEnd(event: DragEvent, index: number): void {
   BackRoot() {
     this.router.navigate(['/table-main']);
   }
-  onSignPage(){
-    this.router.navigate(['/signature']);
-  }
+  onSignPage() {
+    const documentId = this.detailItems?._id;  // ใช้ _id จาก MongoDB
+    this.router.navigate(['/signature'], { queryParams: { id: documentId } });  // ส่ง id ไปยังหน้าการลงลายเซ็น
+}
   //add page??
   addDetail() {
     console.log("addDetail work")
@@ -684,7 +684,8 @@ onDragEnd(event: DragEvent, index: number): void {
         // Send the PDF to the backend
         this.sv.savePDF(formData).subscribe(
           response => {
-            console.log('PDF saved successfully:', response);
+            this.saveCount++; // เพิ่มค่าตัวแปรเมื่อบันทึกสำเร็จ
+            console.log("PDF saved successfully " + this.saveCount + " times:", response); // แสดงจำนวนการบันทึกสำเร็จ
             this.router.navigate(['/table-main']);
           },
           error => {
