@@ -1,7 +1,6 @@
 /* 1. Add height: 100% to .main-content and .container-fluid */
 .main-content,
 .container-fluid {
-  height: 100%;
   font-family: 'Sarabun',sans-serif;
 }
 .card{
@@ -174,6 +173,116 @@ i{
   justify-content: center;
 }
 
+.card-user{
+  width: auto;
+  display: flex;
+
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 20px;
+  border: 2px solid white;
+}
+
+.card-info{
+  display: flex;
+
+  justify-content: center;
+  flex-direction: column;
+}
+
+
+.card-avatar{
+  position: relative;
+display: flex;
+justify-content: center;
+
+}
+.card-avatar  .upload{
+  position: absolute;
+  display: flex;
+  height: 40px;
+  width: 40px;
+  bottom: 10px; /* ติดกับขอบล่างของภาพ */
+  right: 10px;
+  align-items: center;
+  justify-content: center;
+
+  background: rgb(0, 0, 0);
+  border-radius: 50%;
+  border: 1px solid rgb(242, 237, 237);
+}
+.upload i{
+  color: #ffffff;
+}
+
+.foot-upload{
+  display: flex;
+  justify-content: center;
+}
+.card-user img{
+ 
+  width: 210px; /* กำหนดขนาดสูงสุดให้เป็น 210px */
+  height: 210px;
+  border-radius: 5%;
+  object-fit: cover;
+  border: 1px solid black;
+}
+.profile-image-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  border: 1px solid  #525252;
+  border-radius: 5px;
+  border-style:dashed ;
+  margin: 20px;
+}
+.profile-image {
+  width: 210px; /* กำหนดขนาดสูงสุดให้เป็น 210px */
+  height: 210px;
+  object-fit: cover; /* Ensure the image covers the area */
+  border: 2px solid #ddd; /* Optional border around the image */
+}
+.positionTrashCan{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: red;
+}
+.closeBtn{
+ 
+  background-color: transparent;
+  border: transparent;
+}
+.closeBtn i{
+  color: black;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1095;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  height: 450px;
+  position: relative;
+}
+
+
+
+
+
 
 
 
@@ -187,6 +296,33 @@ i{
 }
 :host ::ng-deep .form-control{
   background-image: linear-gradient(to top, #000000 2px, rgba(156, 39, 176, 0) 2px), linear-gradient(to top, #d2d2d2 1px, rgba(210, 210, 210, 0) 1px);
+}
+:host ::ng-deep .uploadFilePDF{
+  position: relative;
+  margin: 10px 0 30px 0;
+  border-radius: 5px;
+  width: 360px;
+
+}
+:host ::ng-deep.flieUpload{
+  position: relative;
+  
+  justify-content: flex-end;
+  width: 360px;
+
+  border-radius: 5px;
+}
+input{
+  margin: 10px 0 0  ;
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 5px;
+}
+::-webkit-file-upload-button{
+
+  border: none;
+  background-color: #24a0ed;
+  color: white;
+  border-radius: 5px 0 0 5px ;
 }
 :host ::ng-deep .btn-add{
   color: #fff;

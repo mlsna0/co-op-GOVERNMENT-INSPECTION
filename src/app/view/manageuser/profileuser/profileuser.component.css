@@ -137,11 +137,7 @@ i{
   padding: 10px;
   border-bottom: 1px solid rgb(189, 186, 186);
   justify-content: space-between;
-}
-.title button{
-  background-color: transparent;
-  border: transparent;
-
+  align-items: center;
 }
 .title button:hover{
   text-decoration: underline;
@@ -185,6 +181,13 @@ i{
   border-radius: 20px;
   border: 2px solid white;
 }
+
+.card-info{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
 
 .card-avatar{
   position: relative;
@@ -238,12 +241,6 @@ justify-content: center;
   right: 10px;
   cursor: pointer;
   color: red;
-}
-.card-info{
-  display: flex;
-
-  justify-content: center;
-  flex-direction: column;
 }
 
 

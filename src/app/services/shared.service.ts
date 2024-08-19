@@ -205,9 +205,13 @@ export class SharedService {
   updateUserProfileById(updatedData: FormData,UserID:string): Observable<any> {
     return this.http.put(`${this.baseUrl}/userModel/updateUserById/${UserID}`, updatedData);
   }
+  resetPassword(userId: string, newPassword: string): Observable<any> {
+    const body = { userId, newPassword };
+    return this.http.post(`${this.baseUrl}/userModel/resetPassword`, body);
+  }
 
   updateUserProfile(updatedData: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/registerModel`, updatedData);
+    return this.http.put(`${this.baseUrl}/registerModel`, updatedData); 
   }
   profileImg(url:string){
     this.profileImageUrl.next(url);

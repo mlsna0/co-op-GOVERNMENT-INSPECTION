@@ -21,6 +21,8 @@ export class ProfileuserComponent implements OnInit {
 
   UserData:any ={};
   UserID:any;
+  UserRole:any;
+  isSuperAdmin: boolean = false;
   EmployeeID:any;
   UserInfoForm:FormGroup;
 
@@ -99,7 +101,8 @@ export class ProfileuserComponent implements OnInit {
   
     });
 
-    this.sv.getUserProfileById(this.UserID).subscribe(res =>{
+    this.sv.getUserProfileById(this.UserID).subscribe(
+      res =>{
       this.UserData = res;
       console.log("get UserDataById : ",this.UserData)
 
@@ -110,7 +113,8 @@ export class ProfileuserComponent implements OnInit {
       } else {
         this.profileImgUrl = './assets/img/Person-icon.jpg';
       }
-
+      this.UserRole =this.UserData?.role
+      this.isSuperAdmin = this.UserRole === 'superadmin';
       this.UserInfoForm.patchValue({
         firstname: this.UserData?.employeeId.firstname,
         lastname: this.UserData?.employeeId.lastname,
@@ -263,13 +267,13 @@ loadTambons(amphureId: any) {
     }
   }
 
-  togglePasswordVisibility(field: string): void {
-    if (field === 'password') {
-        this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
-    } else if (field === 'confirmPassword') {
-        this.confirmPasswordFieldType = this.confirmPasswordFieldType === 'password' ? 'text' : 'password';
-    }
-}
+//   togglePasswordVisibility(field: string): void {
+//     if (field === 'password') {
+//         this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+//     } else if (field === 'confirmPassword') {
+//         this.confirmPasswordFieldType = this.confirmPasswordFieldType === 'password' ? 'text' : 'password';
+//     }
+// }
 
 onFileUploadImgChange(event: any) {
   const file = event.target.files[0];
@@ -301,6 +305,21 @@ deletedFileUpload(){
     profileImage: null
   });
 }
+resetPassword(UserID: string, newPassword: string){
+  if (this.isSuperAdmin) {
+    this.sv.resetPassword(UserID, newPassword).subscribe(
+      response => {
+        console.log('Password reset successful:', response);
+      },
+      error => {
+        console.error('Password reset failed:', error);
+      }
+    );
+  } else {
+    console.log('You do not have permission to reset the password.');
+  }
+
+}
   BackRoot(){
     this.router.navigate(['/manageuser']);
   }
@@ -315,7 +334,6 @@ deletedFileUpload(){
     if (this.UserInfoForm.valid) {
       // const updatedData = this.UserInfoForm.value;
       const userId = this.UserID;
-      // console.log("user id save into",userId)
 
       const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       console.log("fileInput > ",fileInput);

@@ -65,13 +65,34 @@
   .card{
     font-family: 'Sarabun',sans-serif;
   }
+  .signTool-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .pageNext{
+    display: flex;
+    justify-content: center;
+  }
 
+  .signature-container .submit-content{
+    display: flex;
+    justify-content: center;
+  }
   :host ::ng-deep .uploadFilePDF{
     position: relative;
-    margin: 10px 0 30px 0;
+    margin: 0 0 0 40px ;
     border-radius: 5px;
     width: 360px;
+    display: flex;
   
+  }
+  .btn-clearInput{
+    position: relative;
+    left:-25px; 
+    border: none; 
+    background-color  : transparent; 
+    z-index: 10;
   }
   :host ::ng-deep.flieUpload{
     position: relative;
@@ -82,9 +103,9 @@
     border-radius: 5px;
   }
   input{
-    margin: 10px 0 0 40px ;
     border: 1px solid rgb(0, 0, 0);
     border-radius: 5px;
+    width: 340px;
   }
   ::-webkit-file-upload-button{
   

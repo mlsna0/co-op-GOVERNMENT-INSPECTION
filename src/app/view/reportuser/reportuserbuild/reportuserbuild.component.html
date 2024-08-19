@@ -4,11 +4,11 @@
       <div class="card-header "> <!--card-header-danger-->
         <div class="card-title"> 
           <a href=""> รายงานการสร้างเอกสาร</a>
-          <div class="sub-title">
+          <!-- <div class="sub-title">
             แสดงรายชื่อผู้สร้างเอกสาร
-          </div>
+          </div> -->
         </div>
-        <button (click)="exportToExcel()" class="btn btn-add" style="float: right;">Export to excel</button>
+        <button (click)="exportToExcel()" class="btn btn-add position-btn" style="float: right;">Export to excel</button>
       </div>
       <div class="card-body">
         <table width="100%" datatable [dtOptions]="dtOptions" class="table table-striped table-bordered" *ngIf="!loading">

@@ -2,6 +2,7 @@
     cursor: pointer;
     
     margin: 0 20px;
+    object-fit: cover;
 }
 .Profile img:hover{
     border: 2px solid rgb(0, 198, 0);

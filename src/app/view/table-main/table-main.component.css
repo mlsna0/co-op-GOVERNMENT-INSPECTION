@@ -8,13 +8,14 @@
   
   .card-header{
     position: relative;
-    background-color:rgb(255,209,0,0.2);  /* rgb(241, 245 ,255)*/
+    /* background-color:rgb(255,209,0,0.2);  rgb(241, 245 ,255) */
 
     display: flex;
     justify-content: space-between ;
     align-items: center;
     margin: 0 ;
     border-radius: 10px;
+    padding: 0.75rem 1.25rem 0;
   }
   .sub-title{
     position: relative;
@@ -32,6 +33,12 @@
  
   .card{
     padding: 30px;
+  }
+
+  .position-btn{
+    position: absolute;
+    right: 230px;
+    top: 45px;
   }
 
   .modal-body {

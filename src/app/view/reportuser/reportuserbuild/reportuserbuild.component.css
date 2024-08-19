@@ -2,7 +2,7 @@
   
   .card-header{
     position: relative;
-    background-color: rgb(255,209,0,0.2)  ; /*rgb(241, 245 ,255)*/
+    /* background-color: rgb(255,209,0,0.2)  ; rgb(241, 245 ,255) */
     font-family: 'Sarabun',sans-serif;
     
     display: flex;
@@ -10,6 +10,7 @@
     align-items: center;
     margin: 0 ;
     border-radius: 10px;
+    padding: 0.75rem 1.25rem 0;
   }
   .card{
     padding: 30px;
@@ -29,6 +30,12 @@
     font-family: "Sarabun", sans-serif; 
     font-weight: 900;
     font-size: 18px;
+  }
+
+  .position-btn{
+    position: absolute;
+    right: 230px;
+    top: 45px;
   }
   
   .card-body {

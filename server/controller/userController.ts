@@ -31,7 +31,7 @@ class UserModelCtrl extends BaseCtrl {
     updateUserById = async (req, res) => {
       try {
           // ตรวจสอบว่า ID ถูกส่งมาหรือไม่
-          console.log("req.params : ",req.params)
+          // console.log("req.params : ",req.params)
           console.log("req จาก body",req.body)
 
 
@@ -39,8 +39,9 @@ class UserModelCtrl extends BaseCtrl {
 
           const { 
             firstname, lastname, email, password, confirmpassword, organization, 
-            address, phone, province, amphure, tambon, postCode 
+            address, phone, province, amphure, tambon, postCode,
         } = req.body;
+        
           const { id } = req.params;
           if (!id) {
               return res.status(400).json({ msg: 'User ID is required' });
@@ -77,8 +78,15 @@ class UserModelCtrl extends BaseCtrl {
         //   employee.amphure = amphure || employee.amphure;
         //   employee.tambon = tambon || employee.tambon;
         //   employee.postCode = postCode || employee.postCode;
-        const profileImage = req.file ? req.file.filename : null;
-          let updateData :any 
+
+        if (req.file) {
+          employee.profileImage = req.file.path; // บันทึกเส้นทางไฟล์รูปภาพที่อัปโหลด
+        }
+
+        let profileImage:any = req.file ? req.file.filename : null
+
+        let updateData :any 
+        if (profileImage != null) {
           if(employee) {
             updateData = await this.modelEmployee.findOneAndUpdate(
               {
@@ -106,23 +114,45 @@ class UserModelCtrl extends BaseCtrl {
               password: password || user.password, // Hash password ถ้าจำเป็น
             }
           );
+          res.status(200).json({ msg: 'User profile updated successfully', updateData });
+        }
+        else {
+          if(employee) {
+            updateData = await this.modelEmployee.findOneAndUpdate(
+              {
+              _id: employee._id
+            },
+            {
+              firstname: firstname,
+              lastname: lastname,
+              email: email,
+              organization : organization ,
+              address : address,
+              phone : phone,
+              province : province,
+              amphure :  amphure,
+              tambon : tambon,
+              postCode : postCode,
+            }
+          )
+          }
+          await this.model.findOneAndUpdate(
+            { _id: id }, 
+            {
+              email: email || user.email,
+              password: password || user.password, // Hash password ถ้าจำเป็น
+            }
+          );
+          res.status(200).json({ msg: 'User profile updated successfully', updateData });
+        }
+       
           // user.email = email ||   user.email;
           // if (password) {
           //     user.password = password; // อย่าลืม hash รหัสผ่านถ้าจำเป็น
           // }
-          
-    
           // ถ้ามีรูปภาพให้ upload
-          if (req.file) {
-            employee.profileImage = req.file.path; // บันทึกเส้นทางไฟล์รูปภาพที่อัปโหลด
-          }
-  
           // บันทึกข้อมูลที่อัปเดตลงฐานข้อมูล
           // await user.save();
-  
-  
-          res.status(200).json({ msg: 'User profile updated successfully', updateData });
-  
       } catch (error) {
           console.error('Error updating user:', error.message);
           res.status(500).json({ msg: 'Server error' });

@@ -1,23 +1,31 @@
 <div class="main-content">
-  <div class="card" style="align-items: center;">
-    <div>
-      <!-- <button type="button" class="close" data-dismiss="modal" aria-label="fa-arrow-left" (click)="BackRoot()">
+  <div class="card">
+    <!-- <div>
+      <button type="button" class="close" data-dismiss="modal" aria-label="fa-arrow-left" (click)="BackRoot()">
         <span aria-hidden="true">&times;</span>
-    </button> -->
-    </div>
-    <div class="uploadFilePDF">
+    </button>
+    </div> -->
+
+    <div class="card-header">
       <label for="fileInput" style="padding: 0 0 0 15px;">อัปโหลดไฟล์ของคุณ</label>
-      <input id="fileInput" type="file" class="fileUpload" accept="application/pdf,image/*"
-        (change)="onFileSelected($event)" style="font-size: 14px;">
-      <button type="button" (click)="clearFileInput()"
-        style="position: relative;left:-25px; border: none; background-color: transparent; z-index: 10;">
-        <i class="fa fa-times"></i>
-      </button>
+      <div class="uploadFilePDF">
+        <input id="fileInput" type="file" class="fileUpload" accept="application/pdf,image/*"
+          (change)="onFileSelected($event)" style="font-size: 14px;">
+        <button type="button" class="btn-clearInput" (click)="clearFileInput()">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
     </div>
+
+
+
     <div class="card-body">
-      <div class="col-sm-12" *ngIf="loading">
-        <div>จำนวนหน้า: {{ totalPage }}</div>
-        <div class="d-flex align-items-center justify-content-center">
+      <div class="signTool-content" *ngIf="loading">
+        <div class="pageNumber">
+          จำนวนหน้า: {{ totalPage }}
+        </div>
+
+        <div class="pageNext">
           <button class="btn-custom" type="button" (click)="prevPage()">
             <i class="fa fa-arrow-left"></i>
           </button>
@@ -60,12 +68,16 @@
           <label class="form-check-label ms-2" for="exampleCheck1">ใช้ลายเซ็นที่บันทึกไว้</label>
         </div>
 
-        <button (click)="submitSign()" *ngIf="dragList.length > 1 && typeSignature == 'pin'"
-          [disabled]="dragList.length == 1" style="height: 40px;" class="btn btn-success">ลงนามเอกสาร</button>
-        <button *ngIf="dragList.length > 1 && typeSignature == 'pin'" [disabled]="dragList.length == 1"
-          (click)="clearSignature()" class="btn btn-danger ms-2" style="height: 40px;">
-          เคลียร์
-        </button>
+        <div class="submit-content">
+          <button (click)="submitSign()" *ngIf="dragList.length > 1 && typeSignature == 'pin'"
+            [disabled]="dragList.length == 1" style="height: 40px;" class="btn btn-success">ยืนยันการลงนาม
+          </button>
+          <button *ngIf="dragList.length > 1 && typeSignature == 'pin'" [disabled]="dragList.length == 1"
+            (click)="clearSignature()" class="btn btn-danger ms-2" style="height: 40px;">
+            เคลียร์
+          </button>
+        </div>
+     
 
         <div *ngIf="dragList.length > 1 && typeSignature == 'ca'" class="mt-1">
           รหัส CA : <input class="form-control col-4 col-sm-2 col-md-2 col-lg-1" type="text" [(ngModel)]="caPass" />
@@ -85,28 +97,29 @@
           class="btn btn-danger ms-2">ลงนามเอกสารอีกครั้ง</button>
       </div>
 
-    </div>
-    <div class="card-body" *ngIf="selectedFile">
-      <div class="col-12 mt-2" *ngIf="loading">
-        <pdf-viewer *ngIf="step == 1 || step == 0" [src]="pdfFile" [render-text]="false" [original-size]="true"
-          [show-all]="false" [(page)]="pageVariable" (pages-initialized)="pageInitialized($event)"
-          (click)="selectEle($event)" [ngClass]="{'cursor-copy': stageMarkSign}" style="display: block;"></pdf-viewer>
-
-        <pdf-viewer *ngIf="step == 2" [src]="signaturedFile" [render-text]="false" [original-size]="true"
-          [show-all]="false" [(page)]="pageVariable" (pages-initialized)="pageInitialized($event)"
-          (click)="selectEle($event)" [ngClass]="{'cursor-copy': stageMarkSign}" style="display: block;"></pdf-viewer>
-
-        <div class="example-box" #cdkDrag_ cdkDragBoundary=".canvasWrapper" cdkDrag
-          *ngFor="let item of dragList; let i=index" [cdkDragFreeDragPosition]="item.position"
-          (cdkDragEnded)="dragEnd($event)" [id]="item.id" style="display: none; position: relative;">
-          <span>{{item.name}}</span>
-          <div class="position-absolute" style="top: -8px; right: -8px;">
-            <i class="pr-0 icon-close icons deleteBtn" (click)="remove(item.id, item.page)"></i>
+      <div class="pageFile"  *ngIf="selectedFile">
+        <div class="mt-2" *ngIf="loading">
+          <pdf-viewer *ngIf="step == 1 || step == 0" [src]="pdfFile" [render-text]="false" [original-size]="true"
+            [show-all]="false" [(page)]="pageVariable" (pages-initialized)="pageInitialized($event)"
+            (click)="selectEle($event)" [ngClass]="{'cursor-copy': stageMarkSign}" style="display: block;"></pdf-viewer>
+  
+          <pdf-viewer *ngIf="step == 2" [src]="signaturedFile" [render-text]="false" [original-size]="true"
+            [show-all]="false" [(page)]="pageVariable" (pages-initialized)="pageInitialized($event)"
+            (click)="selectEle($event)" [ngClass]="{'cursor-copy': stageMarkSign}" style="display: block;"></pdf-viewer>
+  
+          <div class="example-box" #cdkDrag_ cdkDragBoundary=".canvasWrapper" cdkDrag
+            *ngFor="let item of dragList; let i=index" [cdkDragFreeDragPosition]="item.position"
+            (cdkDragEnded)="dragEnd($event)" [id]="item.id" style="display: none; position: relative;">
+            <span>{{item.name}}</span>
+            <div class="position-absolute" style="top: -8px; right: -8px;">
+              <i class="pr-0 icon-close icons deleteBtn" (click)="remove(item.id, item.page)"></i>
+            </div>
           </div>
         </div>
       </div>
-
     </div>
+
+
   </div>
 
 </div>
