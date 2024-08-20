@@ -8,7 +8,8 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 })
 export class SignatureService {
   // Node/Express API
-  REST_API: string = 'https://doc.oca.go.th/api'
+  // REST_API: string = 'https://doc.oca.go.th/api'
+  REST_API: string = 'http://localhost:3000/api'
 
   
   // Http header
@@ -17,6 +18,8 @@ export class SignatureService {
   constructor(private httpClient: HttpClient) { }
 
   signature(formData) {
+    console.log("Service");
+    
     let API_URL = `${this.REST_API}/stampSignature`
     return this.httpClient.post(`${API_URL}`, formData)
   }
