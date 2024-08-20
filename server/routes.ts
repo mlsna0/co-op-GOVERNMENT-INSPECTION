@@ -8,7 +8,8 @@ import RegisterModelCtrl from './controller/registerController';
 import uploadService from './service/uploadservice.service';
 import uploadservice from './service/uploadservice.service';
 import timeStampModelCtrl from './controller/timeStampController';
-
+import auth from './middleware/auth/auth'
+import path from 'path';
 
 
 const { PDFDocument } = require('pdf-lib')
@@ -18,7 +19,6 @@ const upload = multer()
 
 const { plainAddPlaceholder } = require('node-signpdf/dist/helpers')
 // import SignPdf from 'node-signpdf';
-import auth from 'middleware/auth/auth';
 const forge = require('node-forge');
  
 
