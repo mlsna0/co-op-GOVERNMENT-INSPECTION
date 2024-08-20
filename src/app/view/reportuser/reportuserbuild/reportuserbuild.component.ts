@@ -25,7 +25,7 @@ export class ReportuserbuildComponent implements OnInit {
   dtTrigger: Subject<any> = new Subject();
   loading: boolean = true;
   error: string = '';
-
+  exportCounter: number = 1;  // ตัวนับเริ่มที่ 1
   constructor(
     private provinceService: ProvinceService,
     private http: HttpClient,
@@ -61,7 +61,7 @@ export class ReportuserbuildComponent implements OnInit {
     };
     
     this.sv.getallRecordWithUserAndEmployee().subscribe(data => {
-      this.user = this.mergeUserData(data.employees, data.users, data.documents);
+      this.user = this.mergeUserData(data.employees, data.users, data.documents).reverse();
       this.loading = false;
     }, error => {
       console.error('Error fetching user data:', error);
@@ -97,15 +97,27 @@ export class ReportuserbuildComponent implements OnInit {
     this.router.navigate(['/profilereport']);
   }
   exportToExcel(): void {
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.user);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'User Report');
+    const exportData = this.user.map((users, index) => ({
+      'ลำดับ': index + 1,
+      'หัวข้อ': users.record_topic,
+      'ชื่อ': users.firstname,
+      'นามสกุล': users.lastname,
+      'วันที่สร้าง': users.createdDate,
+      'เวลาที่สร้าง': users.createdTime
+    }));
 
-    // สร้างไฟล์ Excel
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'ReportUserBuild');
+
     const wbout: ArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
 
-    // ดาวน์โหลดไฟล์
-    saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'UserReport.xlsx');
+    // เพิ่มตัวเลขต่อท้ายชื่อไฟล์
+    const fileName = `UserReport${this.exportCounter}.xlsx`;
+    saveAs(new Blob([wbout], { type: 'application/octet-stream' }), fileName);
+
+    // เพิ่มตัวนับ
+    this.exportCounter++;
   }
 }
 

@@ -27,6 +27,8 @@ import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 import { jwtDecode } from 'jwt-decode'; // นำเข้า jwt-decode
 import { ActivatedRoute } from '@angular/router';
 import { error } from 'console';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { loginservice } from 'app/layouts/login.services.';
 
 @Component({
@@ -39,6 +41,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
   @ViewChild('textArea') textArea: ElementRef;
 
   startDate: string;
+  exportCounter: number = 1;  // ตัวนับเริ่มที่ 1
   people:any[] =[];
   typroHolder:string="พิมที่นี้...";
   //ListUser: users[] =[];
@@ -1175,6 +1178,26 @@ loadContent() {
 
   updatePlaceholder() {
     this.placeholder = this.typroText ? '' : 'พิมพ์ข้อความที่นี่...';
+  }
+
+  exportToExcel(): void {
+    const exportData = this.items.records.map((item, index) => ({
+      'ครั้งที่': index + 1,                                  // ลำดับครั้งที่
+      'หัวข้อการตรวจสอบ': item.record_topic,                 // หัวข้อการตรวจสอบ
+      'วันที่เริ่มตรวจสอบ': item.record_star_date,            // วันที่เริ่มตรวจสอบ
+      'สถานที่': item.record_location,                        // สถานที่
+      'สถานะ': item.record_filename ? 'เซ็นสำเร็จ' : 'ยังไม่ได้เซ็น' // สถานะเซ็น
+    }));
+  
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Audit Report');
+  
+    const wbout: ArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  
+    saveAs(new Blob([wbout], { type: 'application/octet-stream' }), `AuditReport${this.exportCounter}.xlsx`);
+  
+    this.exportCounter++;
   }
 }
 
