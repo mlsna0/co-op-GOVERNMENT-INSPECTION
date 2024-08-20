@@ -22,7 +22,7 @@
     <div class="card-body">
       <div class="signTool-content" *ngIf="loading">
         <div class="pageNumber">
-          จำนวนหน้า:{{currentPage}}/{{totalPages}}
+          จำนวนหน้า: {{ totalPage }}
         </div>
 
         <div class="pageNext">
@@ -30,16 +30,23 @@
             <i class="fa fa-arrow-left"></i>
           </button>
         
-            <input class="form-control page-display" type="number" [(ngModel)]="pageVariable" [min]="1" [max]="totalPage"
-              (change)="onPageChange()" />
+          <input
+            class="form-control page-display"
+            type="number"
+            [(ngModel)]="pageVariable"
+            [min]="1"
+            [max]="totalPage"
+            (change)="onPageChange()"
+          />
         
-            <button class="btn-custom" type="button" (click)="nextPage()">
-              <i class="fa fa-arrow-right"></i>
-            </button>
-          </div>
-        
-          <button *ngIf="step == 0" (click)="choseTypeSignature('pin')" style="height: 40px;" type="button"
-            class="btn btn-add">ลงนามเอกสาร</button>
+          <button class="btn-custom" type="button" (click)="nextPage()">
+            <i class="fa fa-arrow-right"></i>
+          </button>
+        </div>
+
+
+        <button *ngIf="step == 0" (click)="choseTypeSignature('pin')" style="height: 40px;" type="button"
+          class="btn btn-add">ลงนามเอกสาร</button>
         <button *ngIf="step == 0 && user_ca" (click)="choseTypeSignature('ca')" style="height: 40px;" type="button"
           class="btn btn-add ms-2">ลงนามอิเล็กทรอนิกส์</button>
 
@@ -131,7 +138,3 @@
 
 
 
-
-<!-- <div *ngIf="loading">
-  <ngx-loading [show]="loading" [config]="{ animationType: 'wanderingCubes' }"></ngx-loading>
-</div> -->

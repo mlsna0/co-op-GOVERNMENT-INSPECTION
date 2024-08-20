@@ -87,6 +87,7 @@ export class SignatureComponent implements OnInit {
   }
   async onFileSelected(event: any) {
     this.selectedFile = event.target.files[0] ?? null;
+    
     const btnAddBox = document.getElementById('btn-add-box');
 
     if (this.selectedFile) {
@@ -323,6 +324,7 @@ export class SignatureComponent implements OnInit {
   }
 
   async submitSign() {
+    console.log('dragList:', this.dragList);
     this.loading = false
     let signData
     if (this.dragList.length > 1) {
@@ -442,7 +444,7 @@ export class SignatureComponent implements OnInit {
               formData.append('userId', this.userId);
               formData.append('pdfFile', new File([data], 'signaturedFile.pdf', { type: 'application/pdf' }));
               formData.append('oca', this.oca);
-
+              
               this._sinatureService.signature(formData).subscribe((res: any) => {
                 this.step = 2
                 this.signaturedFile = res
