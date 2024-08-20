@@ -161,7 +161,14 @@ export class SharedService {
       })
     );
   }
-
+  getAllPDFs(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/pdfs`).pipe(
+      catchError(error => {
+        console.error('Error fetching PDFs:', error);
+        return throwError('ไม่สามารถดึง PDF ได้');
+      })
+    );
+  }
   postData(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/postData`, data);
   }

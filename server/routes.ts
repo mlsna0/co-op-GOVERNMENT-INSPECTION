@@ -46,6 +46,7 @@ function setRoutes(app): void {
  
 
   // RecordModel routes
+  router.route('/pdfs').get(recordModelCtrl.getAllPDFs);
   router.route('/recordModel').get(recordModelCtrl.getAll);
   router.route('/recordModel/count').get(recordModelCtrl.count);
   router.route('/recordModel').post(recordModelCtrl.insert);
@@ -61,6 +62,7 @@ function setRoutes(app): void {
   router.route('/recordModel/getuser/:userId').get(recordModelCtrl.getRecordWithUserAndEmployee);
 
   // UserModel routes
+  router.route('/userModel/resetPassword').put(auth.authorize, userModelCtrl.resetPassword);
   router.route('/timeStampModel').get(userModelCtrl.getAll);
   router.route('/timeStampModel/count').get(userModelCtrl.count);
   router.route('/timeStampModel').post(userModelCtrl.insert);
