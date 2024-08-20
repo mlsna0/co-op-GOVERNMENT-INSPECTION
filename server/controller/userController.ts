@@ -185,6 +185,33 @@ class UserModelCtrl extends BaseCtrl {
         }
       }
 
+      async updateUserStatus(req, res): Promise<void> {
+        const  { isActive } = req.body;
+        const userId = req.params.userId;
+        console.log("userid params: ",userId)
+        if (!userId || !isActive === undefined) {
+          res.status(400).send('Employee ID and Staus are required.');
+          return;
+        }
+    
+        try {
+          const user = await User.findOneAndUpdate(
+            { _id: userId },
+            { isActive },
+            { new: true }
+          );
+    
+          if (!user) {
+            res.status(404).send('User not found.');
+            return;
+          }
+    
+          res.send(user);
+        } catch (error) {
+          res.status(500).send('Server error.');
+        }
+      }
+
 }
 
 export default UserModelCtrl;

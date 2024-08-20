@@ -53,34 +53,24 @@
                                    <!-- <button  type="button" (click)=" editProfile()">แก้ไขข้อมูลส่วนตัว</button> -->
                                     <div>
                                         <button type="button" class="btn btn-add"  (click)="resetPassword(UserID, 'newPasswordHere')" >Reset Password</button>
-                                      <button type="button" class="btn btn-danger">disabled user</button>
                                     </div>
                                     
                                 </div>
                                 <div class="user-content">
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <label for="">ชื่อ</label>
+                                            <label for="">ชื่อ-นามสกุล</label>
                                         </div>
-                                        <div class="col-md-9"  *ngIf="EditStatus">
-                                            <input type="text" formControlName="firstname" class="form-control">
-                                        </div>
+
                                         <div class="col-md-9"  *ngIf="!EditStatus">
-                                            {{UserData?.employeeId?.firstname}}
-                                        </div>
-            
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label for="">นามสกุล</label>
-                                        </div>
-                                        <div class="col-md-9" *ngIf="EditStatus">
-                                            <input type="text" formControlName="lastname" class="form-control">
-                                        </div>
-                                        <div class="col-md-9"  *ngIf="!EditStatus">
+                                            {{UserData?.employeeId?.firstname}} &nbsp;
                                             {{UserData?.employeeId?.lastname}}
                                         </div>
+
+                                    
+            
                                     </div>
+                         
                                     <div class="group-info">
                                         <div class="title-info">
                                             <h4>ข้อมูลสถานที่ทำงาน</h4>
@@ -192,6 +182,17 @@
                                         
                                     </div>
                                     <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="">อีเมล</label>
+                                        </div>
+                                        <div class="col-md-9"  *ngIf="EditStatus">
+                                            <input type="text" formControlName="email" class="form-control">
+                                        </div>
+                                        <div class="col-md-9"  *ngIf="!EditStatus">
+                                            {{UserData?.email}}
+                                        </div>
+                                    </div>
+                                    <div class="row">
     
                                         <div class="col-md-3">
                                             <label for="">เบอร์โทร</label>
@@ -203,24 +204,8 @@
                                             {{UserData?.employeeId?.phone}}
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label for="">อีเมล</label>
-                                        </div>
-                                        <div class="col-md-9"  *ngIf="EditStatus">
-                                            <input type="text" formControlName="email" class="form-control">
-                                        </div>
-                                        <div class="col-md-9"  *ngIf="!EditStatus">
-                                            {{UserData?.email}}
-                                        </div>
-                                    </div>
-                                    <div class="row" *ngIf="EditStatus" >
-                                        <div class="col-md-12">
-                                            <div class="title-info">
-                                                <h4>เปลี่ยนรหัสผ่าน</h4>
-                                            </div>
-                                        </div>
-                                    </div>
+                               
+        
                                     <div class="row"*ngIf="EditStatus">
                                         <div class="col-md-3" >
                                             <label for="">รหัสผ่าน</label>
@@ -247,29 +232,8 @@
                                         </div>
                                 
                                     </div>
-                                 
-                                    <div class="row" *ngIf="EditStatus">
-                                        <div class="col-md-12">
-                                            <div class="title-info">
-                                                <h4>เปลี่ยนรูปภาพโปรไฟล์</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row"  *ngIf="EditStatus">
-                                        <div class="col-md-3">
-                                            <label for="">อัปโหลดรูปภาพโปรไฟล์</label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input type="file" id="profileImage" formControlName="profileImage"  
-                                            accept="image/png, image/jpeg, image/jpg" 
-                                            (change)="onFileUploadImgChange($event)">
-
-                                            <div class="profile-image-container" *ngIf="imageSrc">
-                                                <img [src]="imageSrc" alt="Profile Img" class="profile-image">
-                                                <i class="fa-regular fa-trash-can positionTrashCan" (click)="deletedFileUpload(fileInput)"></i>
-                                              </div>
-                                        </div>
-                                    </div>
+                              
+                             
                                    
                                 </div>
                                 <div class="footer-content" *ngIf="EditStatus">
