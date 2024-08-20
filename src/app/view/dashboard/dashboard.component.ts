@@ -454,7 +454,7 @@
       this.donutChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-          labels: ['ไฟล์ PDF', 'ไฟล์อื่น ๆ'],
+          labels: ['เอกสารลงนาม', 'เอกสารยังไม่ลงนาม'],
           datasets: [{
             data: [pdfDocumentsCount, totalDocumentsCount - pdfDocumentsCount],
             backgroundColor: ['rgba(255, 209, 0, 0.7)', 'rgba(195, 195, 198, 0.7)'],
