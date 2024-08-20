@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { loginservice } from 'app/layouts/login.services.';
 import { Router } from '@angular/router';
+import { SharedService } from 'app/services/shared.service';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class ManageuserComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private ls: loginservice,
+    private sv: SharedService,
     private router: Router,
   ) { }
 
@@ -45,6 +47,7 @@ export class ManageuserComponent implements OnInit {
     };
     this.ls.getUserReport().subscribe(data => {
       this.user = this.mergeUserData(data.employees, data.users);
+      console.log("status: ",this.user)
       this.loading = false;
     }, error => {
       console.error('Error fetching user data:', error);
@@ -60,7 +63,8 @@ export class ManageuserComponent implements OnInit {
         firstname: regUser.firstname,
         lastname: regUser.lastname,
         email: regUser.email,
-        role: user ? user.role : 'N/A' // หากไม่พบข้อมูล role
+        role: user ? user.role : 'N/A', // หากไม่พบข้อมูล role
+        isActive: user ? user.isActive : false
       };
     });
   }
@@ -96,5 +100,16 @@ export class ManageuserComponent implements OnInit {
       // Optionally show an error message to the user
     }
   }
+
+    updateUserStatus(user: any) {
+    
+      console.log('User ID status:', user.id); 
+      console.log('user.isActive status:',user.isActive)
+      if(user.id){
+        this.sv.updateUserStatus(user.id,user.isActive).subscribe(response =>{
+          console.log('Status updated successfully:', response);
+        })
+      }
+    }
 }
 

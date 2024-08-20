@@ -7,7 +7,7 @@
   import ChartDataLabels from 'chartjs-plugin-datalabels';
   import { Router, NavigationEnd } from '@angular/router';
   import { MatSelect } from '@angular/material/select';
-
+  import { loginservice } from 'app/layouts/login.services.';
 
 
   @Component({
@@ -22,6 +22,7 @@
     userCount:number;
 
     //filter
+    allDocuments: any[] = [];
     isFilterActive: boolean = false;
     filteredProvinces: any[] = [];
     searchTerm: string = '';
@@ -49,7 +50,8 @@
       private sv:SharedService,
       private authService: AuthService,    
       private router: Router,
-      private  eRef: ElementRef
+      private  eRef: ElementRef,
+      private loginservice: loginservice, 
     ) {}
     get isAdmin(): boolean {
       return this.authService.hasRole('admin');
@@ -90,7 +92,7 @@
 
       // Create the chart
       this.setupRouterSubscription();
-    
+      this.loadUserReport();
     }
 
     private setupRouterSubscription() {
@@ -433,54 +435,36 @@
 
     createDonutChart(): void {
       const ctx = document.getElementById('myDonutChart') as HTMLCanvasElement | null;
-    
+      
       if (!ctx) {
-        console.error('Canvas element with ID "myDonutChart" not found');
+        console.error('ไม่พบองค์ประกอบ Canvas ที่มี ID "myDonutChart"');
         return;
       }
     
+      const pdfDocumentsCount = this.allDocuments.filter(doc => doc.fileType === 'pdf').length;
+      const totalDocumentsCount = this.allDocuments.length;
+    
+      console.log('จำนวนไฟล์ PDF:', pdfDocumentsCount);
+      console.log('จำนวนเอกสารทั้งหมด:', totalDocumentsCount);
+    
       if (this.donutChart) {
-        this.donutChart.destroy(); // ทำลาย Donut Chart เมื่อเปลี่ยนหน้า
-        // this.donutChart = null;
+        this.donutChart.destroy();
       }
-
-      const customPlugin = {
-        id: 'custom-plugin',
-        beforeDraw: (chart: Chart) => {
-          const width = chart.width;
-          const height = chart.height;
-          const ctx = chart.ctx;
-    
-          ctx.restore();
-          const fontSize = (height / 114).toFixed(2);
-          ctx.font = `${fontSize}em 'Sarabun', sans-serif`;
-          ctx.textBaseline = 'middle';
-          const text = (chart.data.datasets[0].data as number[]).reduce((a, b) => a + b, 0).toString();
-          const textX = Math.round((width - ctx.measureText(text).width) / 2);
-          const textY = height / 2;
-    
-          ctx.fillText(text, textX, textY);
-          ctx.save();
-        }
-      };
-    
-      Chart.register(customPlugin);
     
       this.donutChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-          labels: ['เซ็นแล้ว', 'ยังไม่ได้เซ็น'],
+          labels: ['เอกสารลงนาม', 'เอกสารยังไม่ลงนาม'],
           datasets: [{
-            data: [300, 50],
-            backgroundColor: ['rgb(255, 209, 0,0.2)', 'rgb(195,195,198,0.2)'],
-            borderColor: ['rgb(255, 209, 0)','rgb(195,195,198)'],
+            data: [pdfDocumentsCount, totalDocumentsCount - pdfDocumentsCount],
+            backgroundColor: ['rgba(255, 209, 0, 0.7)', 'rgba(195, 195, 198, 0.7)'],
+            borderColor: ['rgb(255, 209, 0)', 'rgb(195, 195, 198)'],
             borderWidth: 1,
-            // borderRadius:10,
           }]
         },
         options: {
-            responsive: true,  
-            maintainAspectRatio: false,  
+          responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             tooltip: {
               enabled: true
@@ -490,18 +474,17 @@
               color: 'white',
               font: {
                 size: 18,
-                family: 'Sarabun, sans-serif'  // กำหนดฟอนต์
+                family: 'Sarabun, sans-serif'
               }
             },
             legend: {
               display: true,
-              position: 'right',  // ตำแหน่งของ legend
-              align: 'center',  // จัดให้อยู่ด้านซ้าย
+              position: 'right',
               labels: {
-                boxWidth: 20,  // ความกว้างของสี่เหลี่ยม
-                padding: 20,  // ระยะห่างระหว่าง legend กับกราฟ
+                boxWidth: 20,
+                padding: 20,
                 font: {
-                  family: 'Sarabun, sans-serif',  // กำหนดฟอนต์ของ legend
+                  family: 'Sarabun, sans-serif',
                   size: 14
                 }
               }
@@ -510,12 +493,71 @@
           cutout: '70%',
         }
       });
-    
-      // Unregister the plugin after chart creation to avoid it being used by other charts
-      Chart.unregister(customPlugin);
-      this.donutChart.update();
     }
     
+    loadUserReport(): void {
+      this.loginservice.getUserProfile().subscribe(
+        user => {
+          if (user && user._id) {
+            const userId = user._id;
+    
+            const loadDocuments = (documents: any[]) => {
+              this.allDocuments = documents;
+              const pdfDocumentsCount = this.allDocuments.filter(doc => doc.fileType === 'pdf').length;
+              const totalDocumentsCount = this.allDocuments.length;
+    
+              console.log('จำนวนไฟล์ PDF:', pdfDocumentsCount);
+              console.log('จำนวนเอกสารทั้งหมด:', totalDocumentsCount);
+    
+              this.updateCharts();
+            };
+    
+            if (this.isSuperAdmin) {
+              this.sv.getRecord().subscribe(
+                recordData => {
+                  if (recordData && recordData.length > 0) {
+                    loadDocuments(recordData);
+                  } else {
+                    console.error('ไม่พบเอกสาร');
+                  }
+                },
+                error => {
+                  console.error('Error loading records for superadmin:', error);
+                }
+              );
+            } else if (this.isAdmin) {
+              this.sv.getUserReportBuild(userId).subscribe(
+                reportData => {
+                  if (reportData && reportData.documents && reportData.documents.length > 0) {
+                    loadDocuments(reportData.documents);
+                  } else {
+                    console.error('ไม่พบเอกสาร');
+                  }
+                },
+                error => {
+                  console.error('Error loading user report for admin:', error);
+                }
+              );
+            } else {
+              console.error('User role is neither admin nor superadmin.');
+            }
+          } else {
+            console.error('User ID is undefined or null.');
+          }
+        },
+        error => {
+          console.error('Error fetching user profile:', error);
+        }
+      );
+    }
+    
+    updateCharts(): void {
+      // ฟังก์ชันนี้จะเรียกใช้งานฟังก์ชัน createDonutChart() เพื่ออัปเดตแผนภูมิ
+      this.createDonutChart();
+      
+      // ถ้าคุณมีกราฟหรือแผนภูมิอื่น ๆ ที่ต้องการอัปเดต ก็สามารถเรียกใช้งานได้ที่นี่
+      // เช่น this.createBarChart(); หรือ this.createLineChart();
+    }
     
     
     

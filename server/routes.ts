@@ -52,6 +52,7 @@ function setRoutes(app): void {
  
 
   // RecordModel routes
+  router.route('/pdfs').get(recordModelCtrl.getAllPDFs);
   router.route('/recordModel').get(recordModelCtrl.getAll);
   router.route('/recordModel/count').get(recordModelCtrl.count);
   router.route('/recordModel').post(recordModelCtrl.insert);
@@ -67,6 +68,7 @@ function setRoutes(app): void {
   router.route('/recordModel/getuser/:userId').get(recordModelCtrl.getRecordWithUserAndEmployee);
 
   // UserModel routes
+  router.route('/userModel/resetPassword').put(auth.authorize, userModelCtrl.resetPassword);
   router.route('/timeStampModel').get(userModelCtrl.getAll);
   router.route('/timeStampModel/count').get(userModelCtrl.count);
   router.route('/timeStampModel').post(userModelCtrl.insert);
@@ -114,6 +116,7 @@ function setRoutes(app): void {
   router.route('/userModel/getUserById/:id').get(userModelCtrl.getUserById);
   router.route('/userModel/updateUserById/:id').put(upload.single('profileImage'),userModelCtrl.updateUserById);
   router.route('/userModel/resetPassword').put(userModelCtrl.updateUserById);
+  router.route('/userModel/updateUserStatus/:userId').put(userModelCtrl.updateUserStatus);
                                                     //,
   router.route('/registerModel/updateProfile').put( auth.authorize,registerModelCtrl.updateEmployeeProfile);
   router.route('/registerModel/updateRole/:id').put(registerModelCtrl.updateUserRole);

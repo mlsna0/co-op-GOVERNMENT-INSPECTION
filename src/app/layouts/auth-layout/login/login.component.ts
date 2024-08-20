@@ -53,6 +53,20 @@ export class LoginComponent implements OnInit {
           console.log('Stored role in AuthService:', this.as.currentUserRole);
         }
 
+        if (response.user.isActive  === false) {
+          console.log("response.user.isActive : ",response.user.isActive)
+          // แสดงแจ้งเตือนเมื่อผู้ใช้ไม่มีสิทธิ์ในการเข้าสู่ระบบ
+          this.toastr.error('คุณไม่มีสิทธิ์ในการเข้าสู่ระบบ', 'ข้อผิดพลาด', {
+            timeOut: 2500,
+            positionClass: 'toast-top-right'
+          });
+          // ลบ token และข้อมูลผู้ใช้จาก localStorage
+          localStorage.removeItem('token');
+          localStorage.removeItem('currentUser');
+          console.error('User is inactive');
+          return;
+        }
+
         // แสดงแจ้งเตือนด้วย Toastr
         this.toastr.success('เข้าสู่ระบบสำเร็จ', 'สำเร็จ', {
           timeOut: 2500,  

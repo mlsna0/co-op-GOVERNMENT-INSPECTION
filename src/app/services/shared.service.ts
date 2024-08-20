@@ -161,7 +161,14 @@ export class SharedService {
       })
     );
   }
-
+  getAllPDFs(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/pdfs`).pipe(
+      catchError(error => {
+        console.error('Error fetching PDFs:', error);
+        return throwError('ไม่สามารถดึง PDF ได้');
+      })
+    );
+  }
   postData(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/postData`, data);
   }
@@ -208,6 +215,16 @@ export class SharedService {
   resetPassword(userId: string, newPassword: string): Observable<any> {
     const body = { userId, newPassword };
     return this.http.post(`${this.baseUrl}/userModel/resetPassword`, body);
+  }
+  updateUserStatus(userId: string, isActive: boolean): Observable<any> {
+    console.log("user Id service: ",userId)
+    return this.http.put<any>(`${this.baseUrl}/userModel/updateUserStatus/${userId}`, { isActive })
+      .pipe(
+        catchError(error => {
+          console.error('Error updating UserStatus:', error);
+          return throwError('Error updating UserStatus');
+        })
+      );
   }
 
   updateUserProfile(updatedData: any): Observable<any> {

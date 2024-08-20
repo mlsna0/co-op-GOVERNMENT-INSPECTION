@@ -5,6 +5,7 @@ import  RegisterModel from '../models/registerModel';
 import BaseCtrl from './base';
 import User from '../models/userModel';
 import { registerModel } from 'models/registerModel';
+import bcrypt from 'bcryptjs';
 
 class UserModelCtrl extends BaseCtrl {
     model = userModel;
@@ -184,6 +185,85 @@ class UserModelCtrl extends BaseCtrl {
           res.status(500).send('Server error.');
         }
       }
+
+      async updateUserStatus(req, res): Promise<void> {
+        const  { isActive } = req.body;
+        const userId = req.params.userId;
+        console.log("userid params: ",userId)
+        if (!userId || !isActive === undefined) {
+          res.status(400).send('Employee ID and Staus are required.');
+          return;
+        }
+    
+        try {
+          const user = await User.findOneAndUpdate(
+            { _id: userId },
+            { isActive },
+            { new: true }
+          );
+    
+          if (!user) {
+            res.status(404).send('User not found.');
+            return;
+          }
+    
+          res.send(user);
+        } catch (error) {
+          res.status(500).send('Server error.');
+        }
+      }
+      resetPassword = async (req, res) => {
+        try {
+            console.log('Request Body:', req.body);
+            const { userIdToReset } = req.body;
+    
+            // กำหนดรหัสผ่านเริ่มต้นเป็น 12345678
+            const defaultPassword = "12345678";
+    
+            // รับ userId และ role จาก req.user
+            const userId = req.user ? req.user.id : null;
+            const role = req.user ? req.user.role : null;
+    
+            console.log('User ID:', userId);
+            console.log('Role:', role);
+    
+            if (!userId) {
+                return res.status(401).json({ msg: 'Authorization required' });
+            }
+    
+            // ตรวจสอบว่า role เป็น superadmin หรือไม่
+            if (role !== 'superadmin') {
+                return res.status(403).json({ msg: 'Access denied. Only superadmin can reset passwords.' });
+            }
+    
+            // ตรวจสอบว่าได้ระบุ userIdToReset หรือไม่
+            if (!userIdToReset) {
+                return res.status(400).json({ msg: 'User ID to reset is required' });
+            }
+    
+            // ค้นหา user ที่ต้องการรีเซ็ตรหัสผ่าน
+            let user = await this.model.findById(userIdToReset);
+            console.log('User found:', user);
+    
+            if (!user) {
+                return res.status(400).json({ msg: 'User not found' });
+            }
+    
+            // รีเซ็ตรหัสผ่านเป็น defaultPassword
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(defaultPassword, salt);
+            console.log('New hashed default password:', hashedPassword);
+    
+            user.password = hashedPassword;
+            await user.save();
+    
+            res.status(200).json({ msg: `Password has been reset to default for user ID ${userIdToReset}` });
+        } catch (error) {
+            console.error('Error in resetPassword function:', error);
+            res.status(500).send('Server error');
+        }
+    };
+    
 
 }
 

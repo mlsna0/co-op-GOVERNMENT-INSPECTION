@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, required: true, enum: ['user', 'admin', 'superadmin'], default: 'user' },
+    isActive: { type: Boolean, default: true },
     employeeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date }

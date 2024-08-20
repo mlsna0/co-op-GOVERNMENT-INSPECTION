@@ -54,6 +54,18 @@
           <img *ngIf="useProfileSign" [src]="signatureProfile" style="width: 400px; height: 198px;"
             class="img-thumbnail" />
         </div>
+     
+        <div style="display: flex; justify-content: center;">
+          <div *ngIf="dragList.length > 1 && typeSignature == 'pin'" class="signature-container">
+            <signature-pad *ngIf="!useProfileSign" [options]="signaturePadOptions" (onBeginEvent)="drawStart()"
+              (onEndEvent)="drawComplete()">
+            </signature-pad>
+  
+            <img *ngIf="useProfileSign" [src]="signatureProfile" style="width: 400px; height: 198px;"
+              class="img-thumbnail" />
+          </div>
+        </div>
+      
 
         <div *ngIf="dragList.length > 1 && typeSignature == 'pin' && signatureProfile" class="mb-1">
           <input [(ngModel)]="useProfileSign" [ngModelOptions]="{standalone: true}" type="checkbox"

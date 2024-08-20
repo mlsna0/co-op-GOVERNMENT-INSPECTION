@@ -25,17 +25,23 @@
           <!-- <div class="card-Edit"> -->
           <div  class="card-header "> <!--card-header-danger-->
             <div class="card-title" style="text-align: center">
-              <a>
+              <p style="margin: 0;">
                 การลงตรวจอิเล็กทรอนิค
-              </a>
+              </p>
             
               <!-- <div class="sub-title">
                 แสดงรายการเอกสารลงพื้นที่
               </div> -->
             </div>
-            <button class="btn btn-add pull-center position-btn" (click)="onInsertModal()">
-              <i class="fa fa-plus"></i> &nbsp;เพิ่มหัวข้อเอกสาร
-            </button>
+            <div class="group-btn">
+              <button (click)="exportToExcel()" class="btn btn-success" style="float: right;">Export to excel</button>
+              <button class="btn btn-add pull-center " (click)="onInsertModal()">
+                <i class="fa fa-plus"></i> &nbsp;เพิ่มหัวข้อเอกสาร
+              </button>
+
+            </div>
+       
+            
           </div>
 
           <!-- </div> card-Edit -->
@@ -50,6 +56,7 @@
                       ครั้งที่</th>
                     <th style="color: black;  font-size: 16px;">หัวข้อการตรวจสอบ</th>
                     <th style="width: 9%; color: black; font-size: 16px;">วันที่เริ่มตรวจสอบ</th>
+                    <th style="width: 9%; color: black; font-size: 16px;">วันที่เสร็จสิ้น</th>
                     <!-- <th style="width: 5%; color: black;  font-size: 16px;">ผู้สร้างเอกสาร</th> -->
                     
                     <th style="width: 5%; color: black;  font-size: 16px;">สถานที่</th>        
@@ -74,13 +81,17 @@
 
                       {{item?.record_star_date | thaidate: "medium"}}
                     </td>
+                    <td style="vertical-align: middle; white-space: nowrap; text-align: center;">
+
+                      {{item?.record_end_date | thaidate: "medium"}}
+                    </td>
                     <!-- <td style=" white-space: nowrap; ">
 
                       {{item?.firstname}}
                     </td> -->
 
                     <td class="text-center" style=" white-space: nowrap;">
-                      <!-- {{item.record_location}} -->
+                    
                       <button class="searchLocation" (click)="searchLocation(item?.record_location)">ดูพิกัด</button>
 
                     </td>

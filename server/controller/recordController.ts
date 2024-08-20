@@ -261,6 +261,33 @@ getRecordWithUserAndEmployee = async (req, res) => {
     res.status(500).send('Server error');
   }
 }
+getAllPDFs = async (req, res) => {
+  try {
+    // กำหนด path ของไดเรกทอรีที่เก็บไฟล์ PDF
+    const directoryPath = path.join(__dirname, '../img');
+
+    // อ่านไฟล์ทั้งหมดในไดเรกทอรี
+    fs.readdir(directoryPath, (err, files) => {
+      if (err) {
+        console.error('Error reading directory:', err);
+        return res.status(500).send('Failed to read directory');
+      }
+
+      // กรองเฉพาะไฟล์ที่มีนามสกุล .pdf
+      const pdfFiles = files.filter(file => path.extname(file) === '.pdf');
+
+      if (pdfFiles.length === 0) {
+        return res.status(404).send('No PDF files found');
+      }
+
+      // ส่งกลับรายการไฟล์ PDF ทั้งหมด
+      res.status(200).json(pdfFiles);
+    });
+  } catch (err) {
+    console.error('Error fetching PDF files:', err);
+    res.status(500).send('Failed to fetch PDF files');
+  }
+}
     
   }
 

@@ -19,6 +19,7 @@
     loading: boolean = true;
     error: string = '';
 
+    exportCounter: number = 1;  // ตัวนับเริ่มที่ 1
     constructor(
       private http: HttpClient,
       private ls: loginservice,
@@ -54,13 +55,12 @@
       // });
 
       this.sv.getLoginTime().subscribe(data => {
-        this.user = this.mergeUserData(data.employees, data.users, data.timestamp);
+        this.user = this.mergeUserData(data.employees, data.users, data.timestamp).reverse(); // กลับลำดับข้อมูล
         this.loading = false;
       }, error => {
         console.error('Error fetching user data:', error);
         this.loading = false;
       });
-
     }
 
     mergeUserData(registerData: any[], userData: any[], timestampData: any[]): any[] {
@@ -89,15 +89,31 @@
       this.router.navigate(['/profilereport']);
     }
     exportToExcel(): void {
-      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.user);
+      // กำหนดข้อมูลตามลำดับคอลัมน์ที่ต้องการ
+      const exportData = this.user.map((users, index) => ({
+        'ลำดับ': index + 1,
+        'ชื่อ': users.firstname,
+        'อีเมล': users.email,
+        'ระดับผู้ใช้งาน': users.role,
+        'วันที่เข้าใช้งาน': users.date,
+        'เวลาที่เข้าใช้งาน': users.time,
+      }));
+    
+      // สร้างแผ่นงาน (worksheet) จากข้อมูลที่จัดเรียงแล้ว
+      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+    
+      // สร้างหนังสือ (workbook) ใหม่
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'User Report');
-  
+      XLSX.utils.book_append_sheet(wb, ws, 'ReportUser');
+    
       // สร้างไฟล์ Excel
       const wbout: ArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    
+      const fileName = `UserReport${this.exportCounter}.xlsx`;
+      saveAs(new Blob([wbout], { type: 'application/octet-stream' }), fileName);
   
-      // ดาวน์โหลดไฟล์
-      saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'UserReport.xlsx');
+      // เพิ่มตัวนับ
+      this.exportCounter++;
     }
    
   }
