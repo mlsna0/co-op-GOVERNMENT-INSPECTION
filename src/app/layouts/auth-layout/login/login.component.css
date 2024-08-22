@@ -51,6 +51,14 @@
     border: 1px solid #ccc;
     border-radius: 5px;
   }
+  .eyePassword{
+    position: absolute;
+    right: 1rem;
+    top: 60%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: transparent;
+  }
   
   .btn-login {
     width: 100%;

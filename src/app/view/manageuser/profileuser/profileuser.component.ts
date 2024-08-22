@@ -20,6 +20,7 @@ import { ProvinceService } from 'app/view/thaicounty/thaicounty.service';
 export class ProfileuserComponent implements OnInit {
 
   UserData:any ={};
+  currenUser:any ={};
   UserID:any;
   UserRole:any;
   isSuperAdmin: boolean = false;
@@ -132,6 +133,10 @@ export class ProfileuserComponent implements OnInit {
         // // role: ['' ],
         profileImage:this.UserData?.employeeId?.profileImage
       })
+    })
+
+    this.loginSV.getUserProfile().subscribe(res=>{
+      this.currenUser = res
     })
   
     // this.sv.currentProfileImageUrl.subscribe(url=> this.profileImgUrl= url);
@@ -267,13 +272,13 @@ loadTambons(amphureId: any) {
     }
   }
 
-//   togglePasswordVisibility(field: string): void {
-//     if (field === 'password') {
-//         this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
-//     } else if (field === 'confirmPassword') {
-//         this.confirmPasswordFieldType = this.confirmPasswordFieldType === 'password' ? 'text' : 'password';
-//     }
-// }
+  togglePasswordVisibility(field: string): void {
+    if (field === 'password') {
+        this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+    } else if (field === 'confirmPassword') {
+        this.confirmPasswordFieldType = this.confirmPasswordFieldType === 'password' ? 'text' : 'password';
+    }
+}
 
 onFileUploadImgChange(event: any) {
   const file = event.target.files[0];
@@ -305,9 +310,15 @@ deletedFileUpload(){
     profileImage: null
   });
 }
-resetPassword(UserID: string, newPassword: string){
-  if (this.isSuperAdmin) {
-    this.sv.resetPassword(UserID, newPassword).subscribe(
+resetPassword(UserID: string,){
+  console.log('UserID to reset: ',UserID)
+  console.log('UserID to reset: ',this.UserData.role)
+
+
+  console.log('currenUser to reset: ',this.currenUser._id)
+
+
+    this.sv.resetPassword(UserID   ).subscribe(
       response => {
         console.log('Password reset successful:', response);
       },
@@ -315,9 +326,6 @@ resetPassword(UserID: string, newPassword: string){
         console.error('Password reset failed:', error);
       }
     );
-  } else {
-    console.log('You do not have permission to reset the password.');
-  }
 
 }
   BackRoot(){

@@ -4,23 +4,26 @@
 
     <div class="Detail-content card" [ngStyle]="{ width: '230mm' }">
         <!--[ngStyle]="{ width: '230mm', height: '327mm' , height: '297mm' }"-->
-
+           
         <div class="modal-header card-header">
+            <button class="btn btn-add" (click)="BackRoot()">
+                <i class="fa fa-angle-left"> กลับ</i>
+            </button>
             <div class="card-title" id="myModalLabel">
-                <p style="margin: 0;" >รายละเอียด</p>
+                <p style="margin: 0;" >เนื้อหาเอกสาร</p>
             
             </div>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="BackRoot()">
-                <span aria-hidden="true" style="color: black;">กลับ</span>
-            </button>
+            <button class="btn btn-add" (click)="onSignPage()">
+                ไปที่หน้าการอัปโหลด &nbsp; &nbsp;<i class="fa fa-arrow-up-right-from-square"></i>
+             </button>
+            <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="BackRoot()">
+                <span aria-hidden="true" style="color: black;">$times</span>
+            </button> -->
 
         </div>
         
         <div class="uploadFilePDF">
-            <label for="fileInput" style="padding: 0 0 0 15px;">อัปโหลดไฟล์ของคุณ</label>
-             <button class="nextPage" (click)="onSignPage()">
-                ไปที่หน้าการอัปโหลด<i class="fa fa-arrow-up-right-from-square"></i>
-             </button>
+          
             <!-- <input id="fileInput" type="file" class="fileUpload" accept="application/pdf,image/*"
                 (change)="onFileSelected($event)" style="font-size: 14px;">
             <button type="button" (click)="clearFileInput()"
@@ -90,12 +93,12 @@
                                             {{detailItems?.record_id}}/{{detailItems?.record_star_date | thaidate
                                             :'year'}}
                                         </td>
-                                        <td [innerHTML]="getSafeHtml(detailItems?.record_content)"></td><!---->
+                                        <td [innerHTML]="getSafeHtml(detailItems?.record_content)"></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <!-- <button class="btn btn-success" (click)="openSignModalx(1)">test click page1</button> -->
+      
                         <div *ngIf="!remainingContent" class="sign-content"
                             [ngStyle]="{'display':contentParts ? 'flex' : 'none'}">
                             <!-- [ngStyle]="{'display':!remainingContent ? 'flex' : 'none'}"-->

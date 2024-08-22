@@ -16,16 +16,18 @@ declare interface RouteInfo {
 
 export const ROUTES: RouteInfo[] = [
     { path: '/dashboard', title: 'หน้าหลัก', icon: 'dashboard', class: '', roles: ['superadmin'] },
+    { path: '/profile', title: 'ผู้ใช้งาน', icon: 'person', class: '', roles: ['superadmin','admin', 'user'] },
     { path: '/table-main', title: 'การลงตรวจอิเล็กทรอนิค', icon: 'content_paste', class: '', roles: ['superadmin','admin', 'user'] },
-    { path: '/manageuser', title: 'จัดการผู้ใช้งาน', icon: 'person', class: '', roles: ['superadmin'] },
+    { path: '/manageuser', title: 'จัดการผู้ใช้งาน', icon: 'manage_accounts', class: '', roles: ['superadmin'] },
     {
         path: ' ', title: 'รายงาน', icon: 'assignment', class: '',
         children: [
-            { path: '/reportuser', title: 'รายงานการเข้าใช้งาน', icon: 'manage_accounts', class: '', roles: ['superadmin'] },
+            { path: '/reportuser', title: 'รายงานการเข้าใช้งาน', icon: 'camera_front', class: '', roles: ['superadmin'] },
             { path: '/reportbuild', title: 'รายงานการสร้างเอกสาร', icon: 'badge', class: '', roles: ['superadmin'] }
         ],
         roles: ['superadmin']
-    }
+    },
+    { path: '/login', title: 'ออกจากระบบ', icon: 'logout', class: 'active-pro nav-item', roles: ['superadmin','admin', 'user'] },
 ];
 
 @Component({
@@ -78,6 +80,13 @@ export class SidebarComponent implements OnInit {
 
   isActive(path: string): boolean {
     return this.activeRoute === path;
+  }
+
+  handleMenuClick(menuItem: RouteInfo) {
+    if (menuItem.path === '/login') {
+      this.authService.logout(); // เรียกใช้ฟังก์ชัน logout
+    }
+
   }
 
 

@@ -222,7 +222,6 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
 
-
     });
 
     this.sv.getData().subscribe(res => {
@@ -237,11 +236,11 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
       this.loading = false;
     });
     
-    this.sv.getRecordWithUserAndEmployee(this.record_id).subscribe(res=>{
-      console.log("ddd",this.item)
-      this.item= res;
-      this.loadig =false;
-    });
+    // this.sv.getRecordWithUserAndEmployee(this.record_id).subscribe(res=>{
+    //   console.log("ddd",this.item)
+    //   this.item= res;
+    //   this.loadig =false;
+    // });
 
     document.addEventListener('keydown', this.handleKeydown.bind(this));
 
@@ -428,38 +427,13 @@ saveSignature() {
 }
 
 
-
+  openDataDetail(recordId:any){
+    console.log("opendtail: ",recordId)
+    this.router.navigate(['/data-detail', recordId]);
+  }
   //หน้าจอรายละเอียดข้อมูล
   openDetailModal(recordId: any) {
-    this.router.navigate(['/table-detail', recordId]);
-
-    // $('#myModal').modal({
-    //   backdrop: 'static', // Prevent closing when clicking outside
-    //   keyboard: false     // Prevent closing with keyboard (Esc key)
-    // });
-    // this.selectedRecordId = recordId;
-    
-   
-    // this.sv.getDataById(recordId).subscribe(res=>{
-    //   console.log("getDataById :",res);
-      
-    //   this.detailItems =res;
-    
-    //   console.log("it on working.. ")
-
-    // })
-    // this.sv.getViewByRecordId(recordId).subscribe((res :any)=>{
-    //   console.log("getDataById :",res);
-      
-    //   this.viewData = res;
-    
-    //   console.log("it on working.. ")
-     
-      
-    // });
-    
-  
-  
+    this.router.navigate(['/table-detail', recordId]);  
   }
   
 

@@ -17,25 +17,36 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-6" style="padding-right: 0;">
-            <div class="form-group">
+          <div class="col-sm-6" style="padding-right: 0; height: 105.51px;">
+            <div class="form-group" style=" height: 110px;">
               <label for="password" style="font-size: 16px;">รหัสผ่าน</label>
-              <input type="password" id="password" formControlName="password" required placeholder="กรอกรหัสผ่านของคุณ">
-              <div
+              <input  [type]="passwordFieldType"  type="password" id="password" formControlName="password" required placeholder="กรอกรหัสผ่านของคุณ">
+              <button type="button" class="eyePassword" 
+              (click)="togglePasswordVisibility('password')">
+                    <i [class]="passwordFieldType === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+              </button>
+              <div style="position: relative;"
                 *ngIf="regisForm.get('password')?.invalid && (regisForm.get('password')?.touched || regisForm.get('password')?.dirty)">
                 <small class="error-text">รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร</small>
               </div>
             </div>
+       
           </div>
           <div class="col-sm-6" style="padding-right: 0;">
-            <div class="form-group">
+            <div class="form-group" style="position: relative;  height: 110px;">
               <label for="confirmpassword" style="font-size: 16px;">ยืนยัน รหัสผ่าน</label>
-              <input type="password" id="confirmpassword" formControlName="confirmpassword" required
+              <input [type]="confirmPasswordFieldType" type="password" id="confirmpassword" formControlName="confirmpassword" required
                 placeholder="กรอกรหัสผ่านของคุณ">
-              <div
+                <button type="button" class="eyePassword" 
+                (click)="togglePasswordVisibility('confirmPassword')">
+                     <i [class]="confirmPasswordFieldType === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+               </button>
+           
+              <div style="position: relative;"
                 *ngIf="regisForm.get('confirmpassword')?.invalid && (regisForm.get('confirmpassword')?.touched || regisForm.get('confirmpassword')?.dirty)">
                 <small class="error-text">รหัสผ่านไม่ตรงกัน</small>
               </div>
+           
             </div>
           </div>
         </div>

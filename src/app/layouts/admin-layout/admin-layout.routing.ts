@@ -10,6 +10,7 @@ import { EmployeeComponent } from '../../employee/employee.component';
 import { UpgradeComponent } from '../../upgrade/upgrade.component';
 import { TableDetailComponent } from '../../view/table-detail/table-detail.component';
 import {TableMainComponent } from '../../view/table-main/table-main.component';
+import {DataDetailComponent } from '../../view/table-main/data-detail/data-detail.component';
 import { LoginComponent } from '../auth-layout/login/login.component';
 import { DashboardComponent } from 'app/view/dashboard/dashboard.component';
 import { ProfileComponent} from '../../view/profile/profile.component';
@@ -67,6 +68,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'profile',        component: ProfileComponent, canActivate: [AuthGuard] },
     { path: 'table-list',     component: TableListComponent, canActivate: [AuthGuard] },
     { path: 'table-main',     component: TableMainComponent, canActivate: [AuthGuard] },
+    { path: 'data-detail/:id',component: DataDetailComponent, canActivate: [AuthGuard] },
     { path: 'reportbuild',    component: ReportuserbuildComponent, canActivate: [AuthGuard] },
     { path: 'manageuser',     component: ManageuserComponent, canActivate: [AuthGuard] },
     { path: 'profileuser',    component: ProfileuserComponent, canActivate: [AuthGuard] },

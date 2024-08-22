@@ -12,10 +12,11 @@ const storage = multer.diskStorage({
         
       console.log("file2 => ", file);
         var date = Date.now()
+        
 
         var dir = `uploads/${date}/`;
         var updir = path.join(__dirname, '../uploads');
-
+        console.log("Resolved upload directory: ", updir);
 
         if (!fs.existsSync(updir)) {
             fs.mkdirSync(updir);

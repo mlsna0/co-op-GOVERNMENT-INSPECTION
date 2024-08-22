@@ -4,7 +4,7 @@
 
 .card-header{
   position: relative;
-  background-color:rgb(255,209,0,0.2) ;/* rgb(241, 245 ,255)*/
+  /* background-color:rgb(255,209,0,0.2) ;rgb(241, 245 ,255) */
   font-family: 'Sarabun',sans-serif;
 
   display: flex;
@@ -39,7 +39,7 @@
   color: #7B809A;
 }
 
-.card-title a{
+.card-title p{
   font-family: "Sarabun", sans-serif; 
   font-weight: 900;
   font-size: 18px;

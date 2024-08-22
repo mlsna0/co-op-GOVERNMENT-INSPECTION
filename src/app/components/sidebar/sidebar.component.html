@@ -5,6 +5,7 @@
     </div>
   </a>
 </div>
+
 <div class="sidebar-wrapper">
   <div *ngIf="isMobileMenu()">
     <form class="navbar-form">
@@ -21,14 +22,14 @@
   </div>
 
   <ul class="nav">
-    <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class="nav-item">
-      <a class="nav-link" [routerLink]="[menuItem.path]" *ngIf="!menuItem.children">
+    <li routerLinkActive="active" *ngFor="let menuItem of menuItems" [ngClass]="menuItem.class" class="nav-item">
+      <a class="nav-link" [routerLink]="[menuItem.path]" *ngIf="!menuItem.children" (click)="handleMenuClick(menuItem)">
         <i class="material-icons">{{menuItem.icon}}</i>
-        <p style="font-weight: 200;">{{menuItem.title}}</p>
+        <p >{{menuItem.title}}</p>
       </a>
       <a href="javascript:void(0)" class="nav-link" *ngIf="menuItem.children" (click)="toggleMenu(menuItem)">
         <i class="material-icons">{{menuItem.icon}}</i>
-        <p style="font-weight: 200;">{{menuItem.title}}</p>
+        <p >{{menuItem.title}}</p>
         <i class="material-icons toggle-icon">{{ menuItem.open ? 'expand_less' : 'expand_more' }}</i>
       </a>
       <div class="submenu" *ngIf="menuItem.children && menuItem.open">
@@ -44,5 +45,12 @@
       </div>
       
     </li>
+    <!-- <li routerLinkActive="active" class="active-pro nav-item">
+      <a class="nav-link" >
+        <i class="fa fa-logout"></i>
+        <p >ออกจากระบบ</p>
+      </a>
+
+    </li> -->
   </ul>
 </div>

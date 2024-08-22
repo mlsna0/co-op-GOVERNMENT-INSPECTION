@@ -465,6 +465,12 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          layout: {
+            padding: {
+                left: 90,  // ระยะห่างจากขอบซ้าย
+          
+            }
+        },
           plugins: {
             tooltip: {
               enabled: true

@@ -14,7 +14,10 @@ import { ToastrService } from 'ngx-toastr'; // นำเข้า ToastrService
 export class LoginComponent implements OnInit {
   email: string = '';
   password: string = '';
+  isActive:boolean;
   role: any
+
+  passwordFieldType: string = 'password';
 
   constructor(
     private sv : SharedService,
@@ -99,6 +102,12 @@ export class LoginComponent implements OnInit {
       }
     );
   }
+
+  togglePasswordVisibility(field: string): void {
+    if (field === 'password') {
+        this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+    } 
+}
 
   onSubmit() {
     this.router.navigate(['/table-main']);

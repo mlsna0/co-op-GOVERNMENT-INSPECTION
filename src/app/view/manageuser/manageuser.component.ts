@@ -111,5 +111,9 @@ export class ManageuserComponent implements OnInit {
         })
       }
     }
+
+    openRegister(){
+      this.router.navigate(['/register']);
+    }
 }
 

@@ -60,6 +60,14 @@
     background-color: #ccc; /* Light gray color for disabled state */
     cursor: not-allowed; /* Show a 'not-allowed' cursor when hovering over the disabled select */
   }
+ .eyePassword{
+    position: absolute;
+    right: 1.7rem;
+    top: 45%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: transparent;
+  }
 
   /*resume ประวิติ*/
 
@@ -118,6 +126,7 @@
   }
   /*invalidate style*/
   .error-text{
+    margin-top: 0.5;
     font-size: 14px;
     font-family: 'Sarabun', sans-serif;
     color: red;
