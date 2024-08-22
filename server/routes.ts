@@ -5,7 +5,6 @@ import RecordModelCtrl from './controller/recordController';
 import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
 import RegisterModelCtrl from './controller/registerController';
-import uploadService from './service/uploadservice.service';
 import uploadservice from './service/uploadservice.service';
 import timeStampModelCtrl from './controller/timeStampController';
 import auth from './middleware/auth/auth'
@@ -48,8 +47,8 @@ function setRoutes(app): void {
   router.route('/postItemData').post(recordModelCtrl.auth, recordModelCtrl.postItemToView);
   router.route('/postTyproText').post(recordModelCtrl.postItemToView);
   // router.route('/postAddDetail').post(itemModelCtrl.addDetail);
-  router.route('/postDataTest').post(recordModelCtrl.auth,uploadService.none(),recordModelCtrl.postItemToView)
-  // router.route('/postDataTest').post(uploadService.none(), auth.authorize, recordModelCtrl.postItemToView);
+  router.route('/postDataTest').post(recordModelCtrl.auth,uploadservice.none(),recordModelCtrl.postItemToView)
+  // router.route('/postDataTest').post(uploadservice.none(), auth.authorize, recordModelCtrl.postItemToView);
  
 
   // RecordModel routes
@@ -99,7 +98,7 @@ function setRoutes(app): void {
   router.route('/registerModel/profile').get(auth.authorize, registerModelCtrl.getUserProfile);//petch add
   
   router.route('/registerModel/count').get(registerModelCtrl.count);
-  router.route('/registerModel').post(upload.single('profileImage'), registerModelCtrl.create);
+  router.route('/registerModel').post(uploadservice.single('profileImage'), registerModelCtrl.create);
   
   router.route('/registerModel/login').post(registerModelCtrl.login); // Ensure authorize middleware is used
   router.route('/registerModel/resetPassword').put(auth.authorize, registerModelCtrl.resetPassword);
@@ -113,7 +112,7 @@ function setRoutes(app): void {
 
   // router.route('/user/:id').put(registerModelCtrl.updateUserDetails);
   router.route('/userModel/getUserById/:id').get(userModelCtrl.getUserById);
-  router.route('/userModel/updateUserById/:id').put(upload.single('profileImage'),userModelCtrl.updateUserById);
+  router.route('/userModel/updateUserById/:id').put(uploadservice.single('profileImage'),userModelCtrl.updateUserById);
   router.route('/userModel/resetPassword').put(userModelCtrl.updateUserById);
                                                     //,
   router.route('/registerModel/updateProfile').put( auth.authorize,registerModelCtrl.updateEmployeeProfile);
@@ -125,7 +124,7 @@ function setRoutes(app): void {
 
 
     // Signature
-    router.route('/stampSignature').post(upload.fields([{ name: "pdfFile" }]), async (req: any, res, next) => {
+    router.route('/stampSignature').post(uploadservice.fields([{ name: "pdfFile" }]), async (req: any, res, next) => {
         try {
             console.log("00000000 =>");
             const pdfload = await PDFDocument.load(req.files['pdfFile'][0].buffer)
@@ -232,7 +231,6 @@ function setRoutes(app): void {
             );
             console.log("222222222 =>");
             console.log('oca:', req.body.oca);
-
             console.log('userId:', req.body.userId);
 
             //ถ้าใช้เเบบนี้ จะมีการดึงข้อมูลเเบบรูปโปรไฟล์

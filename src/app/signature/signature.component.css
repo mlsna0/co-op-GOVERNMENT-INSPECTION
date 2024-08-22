@@ -38,11 +38,15 @@
     border-style: dashed;
     border-width: 1px;
     border-color: black;
-    margin-bottom: 20px;
     background-color: #fff;
     width: 400px;
     height: 200px;
-  }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 38px;
+  } 
   .main-content{
     position: relative;
     /* max-height: 1235.9px; */
@@ -78,6 +82,9 @@
   .signature-container .submit-content{
     display: flex;
     justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    margin-top: 38px;
   }
   :host ::ng-deep .uploadFilePDF{
     position: relative;
@@ -93,6 +100,7 @@
     border: none; 
     background-color  : transparent; 
     z-index: 10;
+    margin-top: 8px;
   }
   :host ::ng-deep.flieUpload{
     position: relative;
@@ -106,6 +114,7 @@
     border: 1px solid rgb(0, 0, 0);
     border-radius: 5px;
     width: 340px;
+    margin-top: 10px;
   }
   ::-webkit-file-upload-button{
   
@@ -145,26 +154,27 @@
 }
 
 .btn-custom {
-  background-color: #007bff;
+  background-color: #24a0ed;
   color: white;
   border: none;
-  padding: 8px 12px;
-  margin: 0 10px;
+  margin: 10px;
+  padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  width: 60px; /* Match the width of the number input */
+ 
 }
 
 .btn-custom:hover {
-  background-color: #0056b3;
+  background-color: #24a0ed;
 }
 
 .page-display {
-  width: 5px;
-  text-align: center;
-  margin: 0 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  width: 50px; /* Keep width narrow */
+  text-align: center; /* Center the text inside the input */
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -223,23 +233,59 @@ input[type="number"] {
   /* margin-right: 50px;  */
 }
 
-.page-display {
-  width: 50px; /* Keep width narrow */
-  text-align: center; /* Center the text inside the input */
- 
-}
+/* .page-display {
+  width: 50px; 
+  text-align: center; 
+} */
 
-.btn-custom {
-  width: 40px; /* Ensure buttons have the same width */
-  height: 40px; /* Ensure buttons have the same height */
-}
+/* .btn-add {
+  width: 60px; 
+  height: 40px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin: 0 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+} */
 
 .btn.btn-add {
-  margin-top: 15px; /* Adjust spacing between pagination and button */
-} 
+
+  width: 175px;
+  /* height: 40px; */
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.btn.btn-secondary{
+  width: 175px;
+  /* height: 40px; */
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  margin-top: 10px;
+  background-color: #24a0ed;
+  color:white;
+}
 
 .page-text1{
   display: flex;
   justify-content: center;
   height: 30px;
+}
+
+.pageNumber{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.submit-content{
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
 }
