@@ -10,6 +10,7 @@ import uploadservice from './service/uploadservice.service';
 import timeStampModelCtrl from './controller/timeStampController';
 import auth from './middleware/auth/auth'
 import path from 'path';
+import uploadservicee from './service/uploadservice.service';
 
 
 const { PDFDocument } = require('pdf-lib')
@@ -64,7 +65,7 @@ function setRoutes(app): void {
   router.route('/viewModel/getViewByRecordId/:id').get(viewModelCtrl.getViewByRecordId);
   /////report crate
 
-  router.route('/getall').get(recordModelCtrl.getAllRecordsRenamed);
+  router.route('/getall').get(recordModelCtrl.getAllRecordsLinkedByEmployeeId);
   router.route('/timeStampLogin').get(timestampModelCtrl.getTimeLogin);
   router.route('/recordModel/getuser/:userId').get(recordModelCtrl.getRecordWithUserAndEmployee);
 
@@ -101,7 +102,7 @@ function setRoutes(app): void {
   router.route('/registerModel/profile').get(auth.authorize, registerModelCtrl.getUserProfile);//petch add
   
   router.route('/registerModel/count').get(registerModelCtrl.count);
-  router.route('/registerModel').post(upload.single('profileImage'), registerModelCtrl.create);
+  router.route('/registerModel').post(uploadservice.single('profileImage'), registerModelCtrl.create);
   
   router.route('/registerModel/login').post(registerModelCtrl.login); // Ensure authorize middleware is used
   router.route('/registerModel/resetPassword').put(auth.authorize, registerModelCtrl.resetPassword);
@@ -115,7 +116,7 @@ function setRoutes(app): void {
 
   // router.route('/user/:id').put(registerModelCtrl.updateUserDetails);
   router.route('/userModel/getUserById/:id').get(userModelCtrl.getUserById);
-  router.route('/userModel/updateUserById/:id').put(upload.single('profileImage'),userModelCtrl.updateUserById);
+  router.route('/userModel/updateUserById/:id').put(uploadservice.single('profileImage'),userModelCtrl.updateUserById);
   router.route('/userModel/resetPassword').put(userModelCtrl.updateUserById);
   router.route('/userModel/updateUserStatus/:userId').put(userModelCtrl.updateUserStatus);
                                                     //,

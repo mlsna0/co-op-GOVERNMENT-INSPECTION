@@ -5,7 +5,8 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { loginservice } from 'app/layouts/login.services.';
 import { Router } from '@angular/router';
 import { SharedService } from 'app/services/shared.service';
-
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-manageuser',
@@ -19,6 +20,7 @@ export class ManageuserComponent implements OnInit {
   dtTrigger: Subject<any> = new Subject();
   loading: boolean = true;
   error: string = '';
+  exportCounter: any;
 
   constructor(
     private http: HttpClient,
@@ -110,6 +112,33 @@ export class ManageuserComponent implements OnInit {
           console.log('Status updated successfully:', response);
         })
       }
+    }
+    exportToExcel(): void {
+      // กำหนดข้อมูลตามลำดับคอลัมน์ที่ต้องการ
+      const exportData = this.user.map((users, index) => ({
+        'ลำดับ': index + 1,
+        'ชื่อ': users.firstname,
+        'นามสกุล': users.lastname,
+        'อีเมล': users.email,
+        'ระดับผู้ใช้งาน': users.role,
+        'สถานะผู้ใช้งาน': users.isActive ? 'Active' : 'Inactive',
+      }));
+    
+      // สร้างแผ่นงาน (worksheet) จากข้อมูลที่จัดเรียงแล้ว
+      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+    
+      // สร้างหนังสือ (workbook) ใหม่
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'ReportUser');
+    
+      // สร้างไฟล์ Excel
+      const wbout: ArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    
+      const fileName = `UserReport${this.exportCounter}.xlsx`;
+      saveAs(new Blob([wbout], { type: 'application/octet-stream' }), fileName);
+    
+      // เพิ่มตัวนับ
+      this.exportCounter++;
     }
 }
 

@@ -170,5 +170,24 @@ export class loginservice {
         })
     );
 }
+resetUserPassword(userIdToReset: string): Observable<any> {
+  const url = `${this.baseUrl}/userModel/resetPassword`;
+  const body = { userIdToReset: userIdToReset };
+  const token = localStorage.getItem(this.tokenKey);
 
+  if (!token) {
+    console.error('No token found');
+    return throwError('No token found');
+  }
+
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+  return this.http.put(url, body, { headers }).pipe(
+    catchError(error => {
+      console.error('Error resetting user password:', error);
+      return throwError('Failed to reset user password');
+    })
+  );
 }
+}
+

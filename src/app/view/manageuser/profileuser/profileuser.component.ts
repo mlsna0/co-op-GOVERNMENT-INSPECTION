@@ -305,20 +305,15 @@ deletedFileUpload(){
     profileImage: null
   });
 }
-resetPassword(UserID: string, newPassword: string){
-  if (this.isSuperAdmin) {
-    this.sv.resetPassword(UserID, newPassword).subscribe(
-      response => {
-        console.log('Password reset successful:', response);
-      },
-      error => {
-        console.error('Password reset failed:', error);
-      }
-    );
-  } else {
-    console.log('You do not have permission to reset the password.');
-  }
-
+resetPassword(UserID: string, newPassword: string) {
+  this.loginSV.resetUserPassword(UserID).subscribe(
+    response => {
+      console.log('Password reset successful:', response);
+    },
+    error => {
+      console.error('Password reset failed:', error);
+    }
+  );
 }
   BackRoot(){
     this.router.navigate(['/manageuser']);

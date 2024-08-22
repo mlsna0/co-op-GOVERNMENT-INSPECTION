@@ -102,139 +102,130 @@ export class MapComponent implements AfterViewInit {
     private provinceService: ProvinceService,
     private sv:SharedService) { }
 
-  ngAfterViewInit(): void {
-    this.initMap();
-    // this.getProvinces();
-    this.loadUserReport();
-  }
-
-  private initMap(): void {
-    this.map = L.map('map').setView([13.7563, 100.5018], 6);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '© OpenStreetMap'
-    }).addTo(this.map);
-  }
-
-  private addMarker(lat: number, lng: number, topics: string[], places: string[], locations: string[]): void {
-    const customIcon = new L.Icon({
-      iconUrl: 'assets/img/icon.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-      iconSize: [25, 31],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      shadowSize: [41, 41]
-    });
-
-    let popupContent = `<div>`;
-    topics.forEach((topic, index) => {
-      popupContent += `
-        <strong>Topic ${index + 1}:</strong> ${topic || 'No topic available'}<br>
-        <strong>Place ${index + 1}:</strong> ${places[index] || 'No places available'}<br>
-        <strong>Location ${index + 1}:</strong> ${locations[index] || 'No location available'}<br><br>
-      `;
-    });
-    popupContent += `</div>`;
-
-    L.marker([lat, lng], { icon: customIcon }).addTo(this.map)
-      .bindPopup(popupContent)
-      .openPopup();
-  }
-
-  loadUserReport(): void {
-    console.log('Starting loadUserReport...');
+    ngAfterViewInit(): void {
+      this.initMap();
+      this.loadUserReport();
+    }
   
-    this.loginservice.getUserProfile().subscribe(user => {
-      if (user && user._id) {
-        const userId = user._id;
-        const userRole = user.role;
+    private initMap(): void {
+      this.map = L.map('map').setView([13.7563, 100.5018], 6);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '© OpenStreetMap'
+      }).addTo(this.map);
+    }
   
-        if (userRole === 'superadmin') {
-          this.sv.getRecord().subscribe(
-            (data) => {
-              this.processSuperAdminData(data);
-            },
-            (error) => {
-              console.error('Error loading data for superadmin:', error);
-            }
-          );
-        } else if (userRole === 'admin') {
-          this.sv.getUserReportBuild(userId).subscribe(
-            (reportData) => {
-              if (reportData && reportData.documents && reportData.documents.length > 0) {
-                reportData.documents.forEach((document: any) => {
-                  if (document.record_topic) {
-                    const topic = document.record_topic;
-                    const place = document.record_place || 'No places available';
-                    const location = document.record_location || 'No location available';
+    private addMarker(lat: number, lng: number, topics: string[], places: string[], locations: string[]): void {
+      const customIcon = new L.Icon({
+        iconUrl: 'assets/img/icon.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        iconSize: [25, 31],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+      });
   
-                    // ดึง lat/lng จาก record_location
-                    if (document.record_location) {
-                      const latLngString = document.record_location.replace("Lat:", "").replace("Lng:", "").split(',');
-                      const lat = parseFloat(latLngString[0].trim());
-                      const lng = parseFloat(latLngString[1].trim());
+      let popupContent = `<div>`;
+      topics.forEach((topic, index) => {
+        popupContent += `
+          <strong>Topic ${index + 1}:</strong> ${topic || 'No topic available'}<br>
+          <strong>Place ${index + 1}:</strong> ${places[index] || 'No places available'}<br>
+          <strong>Location ${index + 1}:</strong> ${locations[index] || 'No location available'}<br><br>
+        `;
+      });
+      popupContent += `</div>`;
   
-                      console.log('Lat:', lat, 'Lng:', lng);
+      L.marker([lat, lng], { icon: customIcon }).addTo(this.map)
+        .bindPopup(popupContent)
+        .openPopup();
+    }
   
-                      if (!isNaN(lat) && !isNaN(lng)) {
-                        console.log('Adding marker at:', lat, lng);
-                        this.addMarker(lat, lng, [topic], [place], [location]);
-                      } else {
-                        console.error('Invalid lat/lng values:', latLngString);
-                      }
-                    }
-                  }
-                });
-              } else {
-                console.error('No documents found.');
+    loadUserReport(): void {
+      this.loginservice.getUserProfile().subscribe(user => {
+        if (user && user._id) {
+          const userId = user._id;
+          const userRole = user.role;
+  
+          if (userRole === 'superadmin' || userRole === 'admin') {
+            const reportRequest = userRole === 'superadmin' ? this.sv.getRecord() : this.sv.getUserReportBuild(userId);
+  
+            reportRequest.subscribe(
+              (data) => {
+                const documents = userRole === 'superadmin' ? data : data.documents;
+                this.processSuperAdminData(documents);
+              },
+              (error) => {
+                console.error(`Error loading data for ${userRole}:`, error);
               }
-            },
-            (error) => {
-              console.error('Error loading user report:', error);
-            }
-          );
-        } else {
-          console.error('Unauthorized access: Only admin and superadmin can load this report.');
-        }
-      } else {
-        console.error('User ID is undefined or null.');
-      }
-    },
-    (error) => {
-      console.error('Error fetching user profile:', error);
-    });
-  }
-
-  processSuperAdminData(data: any): void {
-    console.log('Processing data for superadmin:', data);
-    
-    data.forEach((record: any) => {
-      console.log('Record data:', record); // ตรวจสอบข้อมูลทั้งหมดของ record แต่ละรายการ
-      const topic = record.topic || 'No topic available';
-      const place = record.place || 'No places available';
-      const location = record.location || 'No location available';
-  
-      if (location !== 'No location available') {
-        // ตรวจสอบรูปแบบของ location ด้วย regular expression
-        const locationPattern = /^Lat:\s*-?\d+(\.\d+)?,\s*Lng:\s*-?\d+(\.\d+)?$/;
-  
-        if (locationPattern.test(location)) {
-          const latLngString = location.replace("Lat:", "").replace("Lng:", "").split(',');
-          const lat = parseFloat(latLngString[0].trim());
-          const lng = parseFloat(latLngString[1].trim());
-  
-          if (!isNaN(lat) && !isNaN(lng)) {
-            console.log('Adding marker at:', lat, lng);
-            this.addMarker(lat, lng, [topic], [place], [location]);
+            );
           } else {
-            console.error('Invalid lat/lng values:', latLngString);
+            console.error('Unauthorized access: Only admin and superadmin can load this report.');
           }
         } else {
-          console.error('Location does not match the expected pattern:', location);
+          console.error('User ID is undefined or null.');
         }
-      } else {
-        console.error('No location data available for this record.');
+      },
+      (error) => {
+        console.error('Error fetching user profile:', error);
+      });
+    }
+  
+    processSuperAdminData(data: any): void {
+      const locationMap: any = {};
+  
+      data.forEach((record: any) => {
+        const topic = record.record_topic || 'No topic available';
+        const place = record.record_place || 'No places available';
+        let location = record.record_location || 'No location available';
+  
+        if (location && location !== 'No location available') {
+          location = location.trim();
+  
+          const locationPattern = /^Lat:\s*(-?\d+(\.\d+)?),\s*Lng:\s*(-?\d+(\.\d+)?)$/;
+          if (locationPattern.test(location)) {
+            const latLngString = location.replace("Lat:", "").replace("Lng:", "").split(',');
+            const lat = parseFloat(latLngString[0].trim());
+            const lng = parseFloat(latLngString[1].trim());
+            const key = `${lat},${lng}`;
+  
+            if (!isNaN(lat) && !isNaN(lng)) {
+              if (!locationMap[key]) {
+                locationMap[key] = { lat, lng, topics: [], places: [], locations: [] };
+              }
+              locationMap[key].topics.push(topic);
+              locationMap[key].places.push(place);
+              locationMap[key].locations.push(location);
+            } else {
+              console.error('Invalid lat/lng values:', latLngString);
+            }
+          } else {
+            console.error('Location does not match the expected pattern:', location);
+          }
+        } else {
+          console.warn('No location data available for this record.');
+        }
+      });
+  
+      for (const key in locationMap) {
+        if (locationMap.hasOwnProperty(key)) {
+          const loc = locationMap[key];
+          this.addMarker(loc.lat, loc.lng, loc.topics, loc.places, loc.locations);
+        }
       }
-    });
-  }
+    }
+  
+    private extractLatLng(location: string): { lat: number, lng: number } | null {
+      const locationPattern = /^Lat:\s*(-?\d+(\.\d+)?),\s*Lng:\s*(-?\d+(\.\d+)?)$/;
+  
+      const match = location.match(locationPattern);
+      if (match) {
+        const lat = parseFloat(match[1]);
+        const lng = parseFloat(match[3]);
+        return { lat, lng };
+      } else {
+        console.error('Location does not match the expected pattern:', location);
+        return null;
+      }
+    }
+  
 }

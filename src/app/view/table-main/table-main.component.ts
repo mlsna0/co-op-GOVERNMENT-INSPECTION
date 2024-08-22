@@ -1185,6 +1185,7 @@ loadContent() {
       'ครั้งที่': index + 1,                                  // ลำดับครั้งที่
       'หัวข้อการตรวจสอบ': item.record_topic,                 // หัวข้อการตรวจสอบ
       'วันที่เริ่มตรวจสอบ': item.record_star_date,            // วันที่เริ่มตรวจสอบ
+      'วันที่เสร็จสิ้น':item.record_end_date,
       'สถานที่': item.record_location,                        // สถานที่
       'สถานะ': item.record_filename ? 'เซ็นสำเร็จ' : 'ยังไม่ได้เซ็น' // สถานะเซ็น
     }));

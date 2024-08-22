@@ -10,27 +10,26 @@
       <div class="card-title">
         <p style="margin: 0;">  รายงานการใช้เอกสาร</p>
     </div>
-      <button class="btn btn-success ">Export to excel</button>
+    <button class="btn btn-success" (click)="exportToExcel()">Export to excel</button>
     </div>
 
 
     <div class="card-body">
-      <table width="100%"  datatable [dtOptions]="dtOptions" class="table table-striped table-bordered" *ngIf="!loading">
+      <table width="100%" datatable [dtOptions]="dtOptions" class="table table-striped table-bordered" *ngIf="!loading">
         <thead>
           <tr>
             <th>จังหวัด</th>
             <th>จำนวนเอกสาร</th>
             <th>จำนวนเอกสารที่ถูกเซ็น</th>
-              
             <th>เปอร์เซ็นต์</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let province of provinces">
-            <td>{{ province.name }}</td>
+            <td>{{ province.name_th }}</td>
             <td>{{ province.count }}</td>
-            <td>{{ province.percentage }}%</td>
-            <td>{{ province.percentage }}%</td>
+            <td>{{ province.signedDocuments }}</td>
+            <td>{{ province.percentage | number:'1.0-2' }}%</td>
           </tr>
         </tbody>
       </table>
