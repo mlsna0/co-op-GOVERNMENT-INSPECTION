@@ -68,7 +68,6 @@ width: 180px;
 .MainTableDetail{
   height: auto;
   margin: 0 0 90px;
-
 }
 
 .modal-body-detail{ 
@@ -114,7 +113,7 @@ width: 180px;
 .Detail-content{
   position: relative;
   /* max-height: 1235.9px; */
-  top: 50px;
+
   bottom: 50px;
   height: auto;
   margin: 50px 0 50px 0;

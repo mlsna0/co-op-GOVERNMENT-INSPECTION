@@ -4,7 +4,14 @@
   3.style ของ tooltip ใช้ได้แค่ในตัวของ modal ถึงใช้ได้แต่ไม่สามารถมีการทำงานในแบบที่ต้องการได้ ตำแหน่งเริ่มต้นของ
 -->
 <!-- <div *ngIf="isNotSuper"> -->
+
 <div class="main-content">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
+      <li class="breadcrumb-item active"><a aria-current="page">การลงตรวจอิเล็กทรอนิค</a></li>
+    </ol>
+  </nav>
 
 
   <div class="container-fluid">

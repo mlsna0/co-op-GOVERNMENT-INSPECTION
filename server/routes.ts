@@ -6,7 +6,7 @@ import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
 import RegisterModelCtrl from './controller/registerController';
 import uploadService from './service/uploadservice.service';
-import uploadservice from './service/uploadservice.service';
+
 import timeStampModelCtrl from './controller/timeStampController';
 import auth from './middleware/auth/auth'
 import path from 'path';
@@ -115,14 +115,14 @@ function setRoutes(app): void {
 
   // router.route('/user/:id').put(registerModelCtrl.updateUserDetails);
   router.route('/userModel/getUserById/:id').get(userModelCtrl.getUserById);
-  router.route('/userModel/updateUserById/:id').put(upload.single('profileImage'),userModelCtrl.updateUserById);
+  router.route('/userModel/updateUserById/:id').put(uploadService.single('profileImage'),userModelCtrl.updateUserById);
   router.route('/userModel/resetPassword/:id').put(userModelCtrl.resetPassword);
   router.route('/userModel/updateUserStatus/:userId').put(userModelCtrl.updateUserStatus);
                                                     //,
   router.route('/registerModel/updateProfile').put( auth.authorize,registerModelCtrl.updateEmployeeProfile);
   router.route('/registerModel/updateRole/:id').put(registerModelCtrl.updateUserRole);
   router.route('/registerModel/uploadProfile')
-    .put(auth.authorize, uploadservice.single('profile'), registerModelCtrl.uploadProfile);
+    .put(auth.authorize, uploadService.single('profile'), registerModelCtrl.uploadProfile);
   //agg $lookup Record and View model routes //petch edit add this
   // router.route('/aggRecordNview/:id').get(AggRecordNViewCon.get);
 
