@@ -8,7 +8,7 @@ import RegisterModelCtrl from './controller/registerController';
 import uploadService from './service/uploadservice.service';
 import uploadservice from './service/uploadservice.service';
 import timeStampModelCtrl from './controller/timeStampController';
-import AgencyModelCtrl from 'controller/agencyController';
+import AgencyModelCtrl from './controller/agencyController';
 import auth from './middleware/auth/auth'
 import path from 'path';
 
