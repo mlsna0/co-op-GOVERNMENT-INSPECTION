@@ -1,0 +1,172 @@
+.card-header {
+    position: relative;
+    /* background-color:  rgb(255,209,0,0.2) ; rgb(241, 245 ,255) */
+    font-family: 'Sarabun', sans-serif;
+  
+    display: flex;
+    justify-content: space-between ;
+    align-items: center;
+    margin: 0 ;
+    border-radius: 10px;
+    padding: 0.75rem 1.25rem 0;
+  }
+  
+  .card{
+    padding: 30px;
+  }
+  h4{
+    font-weight: 900;
+  }
+  
+  .sub-title{
+    position: relative;
+    font-family: "Sarabun", sans-serif; 
+    font-size: 14px;
+    display: flex;
+    align-items: self-start;
+    color: #7B809A;
+  }
+  .card-title a{
+    font-family: "Sarabun", sans-serif; 
+    font-weight: 900;
+    font-size: 18px;
+  }
+  
+  .position-btn{
+    position: absolute;
+    right: 230px;
+    top: 45px;
+  }
+  
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    font-family: 'Sarabun', sans-serif;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Sarabun', sans-serif;
+  }
+  
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .small-cell {
+    width: 50px; /* Adjust the width as needed */
+  }
+  
+  .small-name {
+    width: 120px;
+  }
+  
+  .small-cell-text {
+    width: 50px; /* Adjust the width as needed */
+    text-align: center;
+  }
+  
+  :host ::ng-deep .btn-add{
+    color: rgb(255, 255, 255);
+    background-color: rgb(36, 160, 237);/*#000dc2ef  */
+    border-color: #24a0ed85;;
+    /* box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd; */
+    font-family: 'Sarabun', sans-serif;
+  
+  }
+  :host ::ng-deep .btn-add:hover{
+    background-color: #24a0ed; 
+    border-color: #00087c9f;
+    /* box-shadow: 0 14px 14px -12px #24a0ed51, 0 4px 14px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px #24a0ed51; */
+  }
+  :host ::ng-deep .table.dataTable>thead .sorting:before, table.dataTable>thead .sorting_asc:before, table.dataTable>thead .sorting_desc:before, table.dataTable>thead .sorting_asc_disabled:before, table.dataTable>thead .sorting_desc_disabled:before {
+    display: none;
+  }
+  
+  :host ::ng-deep .table.dataTable>thead .sorting:after, table.dataTable>thead .sorting_asc:after, table.dataTable>thead .sorting_desc:after, table.dataTable>thead .sorting_asc_disabled:after, table.dataTable>thead .sorting_desc_disabled:after {
+    display: none;
+  }
+  
+  :host ::ng-deep .dataTables_wrapper .dataTables_paginate .paginate_button {
+    box-sizing: border-box;
+    display: inline-block;
+    min-width: 1.5em;
+    padding: 2px !important;
+    margin-left: 2px;
+    text-align: center;
+    text-decoration: none !important;
+    cursor: pointer;
+    color: inherit !important;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    background: transparent;
+  }
+  
+  :host ::ng-deep .page-link {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0.75rem;
+    margin-left: 0;
+    line-height: 1.25;
+    color: #000000;
+    background-color: white; /*rgb(255, 219, 61)*/
+    border: 0 solid #dee2e6;
+    font-family: 'Sarabun', sans-serif;
+    opacity: 0.9;
+  }
+  
+  :host ::ng-deep .page-link:hover {
+    position: relative;
+    display: flex;
+    padding: 0.5rem 0.75rem;
+    margin-left: 0;
+    line-height: 1.25;
+    color: black;
+    background-color: rgb(255, 219, 61);
+    border: 0 solid #dee2e6;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 244, 54, 0.4);
+    font-family: 'Sarabun', sans-serif;
+    opacity: 1;
+  }
+  
+  :host ::ng-deep .page-item.active .page-link {
+    z-index: 3;
+    color: black;
+    background-color: rgb(255, 209, 0);
+    border-color: rgb(232, 189, 0);
+    border-radius: 3px;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 244, 54, 0.4);
+    opacity: 1;
+  }
+  
+  /* Dropdown styling */
+  /* Dropdown styling */
+  td select {
+    width: 100%;
+    padding:0 10px;
+    font-size: 14px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 32px;
+    background-color: white;
+    font-family: 'Sarabun', sans-serif;
+    color: black; /* Adjust color as needed */
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  
+  td select:focus {
+    outline: none;
+   
+  }
+  
+  td select option {
+    font-family: 'Sarabun', sans-serif;
+    font-size: 14px;
+    color: black;
+  }
+  

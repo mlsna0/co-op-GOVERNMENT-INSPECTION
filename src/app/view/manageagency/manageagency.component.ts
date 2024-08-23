@@ -4,28 +4,23 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { loginservice } from 'app/layouts/login.services.';
 import { Router } from '@angular/router';
-import { SharedService } from 'app/services/shared.service';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
+
 
 @Component({
-  selector: 'app-manageuser',
-  templateUrl: './manageuser.component.html',
-  styleUrls: ['./manageuser.component.css']
+  selector: 'app-manageagency',
+  templateUrl: './manageagency.component.html',
+  styleUrls: ['./manageagency.component.css']
 })
-export class ManageuserComponent implements OnInit {
-
+export class ManageagencyComponent implements OnInit {
   user: any[] = [];
   dtOptions: any = {}; // datatable.setting = {}
   dtTrigger: Subject<any> = new Subject();
   loading: boolean = true;
   error: string = '';
-  exportCounter: any;
 
   constructor(
     private http: HttpClient,
     private ls: loginservice,
-    private sv: SharedService,
     private router: Router,
   ) { }
 
@@ -49,7 +44,6 @@ export class ManageuserComponent implements OnInit {
     };
     this.ls.getUserReport().subscribe(data => {
       this.user = this.mergeUserData(data.employees, data.users);
-      console.log("status: ",this.user)
       this.loading = false;
     }, error => {
       console.error('Error fetching user data:', error);
@@ -65,8 +59,7 @@ export class ManageuserComponent implements OnInit {
         firstname: regUser.firstname,
         lastname: regUser.lastname,
         email: regUser.email,
-        role: user ? user.role : 'N/A', // หากไม่พบข้อมูล role
-        isActive: user ? user.isActive : false
+        role: user ? user.role : 'N/A' // หากไม่พบข้อมูล role
       };
     });
   }
@@ -102,47 +95,7 @@ export class ManageuserComponent implements OnInit {
       // Optionally show an error message to the user
     }
   }
-
-    updateUserStatus(user: any) {
-    
-      console.log('User ID status:', user.id); 
-      console.log('user.isActive status:',user.isActive)
-      if(user.id){
-        this.sv.updateUserStatus(user.id,user.isActive).subscribe(response =>{
-          console.log('Status updated successfully:', response);
-        })
-      }
-    }
-
-    exportToExcel(): void {
-      // กำหนดข้อมูลตามลำดับคอลัมน์ที่ต้องการ
-      const exportData = this.user.map((users, index) => ({
-        'ลำดับ': index + 1,
-        'ชื่อ': users.firstname,
-        'นามสกุล': users.lastname,
-        'อีเมล': users.email,
-        'ระดับผู้ใช้งาน': users.role,
-        'สถานะผู้ใช้งาน': users.isActive ? 'Active' : 'Inactive',
-      }));
-    
-      // สร้างแผ่นงาน (worksheet) จากข้อมูลที่จัดเรียงแล้ว
-      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
-    
-      // สร้างหนังสือ (workbook) ใหม่
-      const wb: XLSX.WorkBook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'ReportUser');
-    
-      // สร้างไฟล์ Excel
-      const wbout: ArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    
-      const fileName = `UserReport${this.exportCounter}.xlsx`;
-      saveAs(new Blob([wbout], { type: 'application/octet-stream' }), fileName);
-    
-      // เพิ่มตัวนับ
-      this.exportCounter++;
-    }
   openaddperson() {
     this.router.navigate(['/addperson']);
   }
 }
-

@@ -61,7 +61,6 @@ import { ToastrModule } from 'ngx-toastr';
     SignatureComponent,
     HistoryComponent,
 
-
   ],
   providers: [SharedService,
     // { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },

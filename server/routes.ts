@@ -252,10 +252,10 @@ function setRoutes(app): void {
             console.log('userId:', req.body.userId);
 
             //ถ้าใช้เเบบนี้ จะมีการดึงข้อมูลเเบบรูปโปรไฟล์
-            return res.json(true)
+            // return res.json(true)
 
             //หรือ จะดึงมาใช้เเบบนี้ก็ได้
-            // return res.json('http://localhost:4200/singature/' + req.body.oca + req.body.requestId + req.body.userId + '.pdf')
+            return res.json('http://localhost:3000/api/stampSignature/ ' + req.body.oca + req.body.requestId + req.body.userId + '.pdf')
         } catch (err) {
             if (err.message == 'PKCS#12 MAC could not be verified. Invalid password?') {
                 console.log("Wrong Password =>");
