@@ -1,0 +1,131 @@
+<div class="main-content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
+          <li class="breadcrumb-item"><a [routerLink]="['/table-main']">การลงตรวจอิเล็กทรอนิค</a></li>
+          <li class="breadcrumb-item active"><a aria-current="page">รายละเอียดเนื้อหาที่สร้าง</a></li>
+        </ol>
+      </nav>
+    <div class="container-fluid">
+        <div class="card">
+            <div class="navigate-bar">
+                <button type="button" class="btn btn-add" (click)="BackRoot()" >
+                    <i class="fa fa-angle-left" >&nbsp; กลับ</i>
+                </button>
+            </div>
+         
+            <div class="card-header">
+                <div class="card-title">
+                    <p> รายละเอียดเนื้อหาที่สร้าง</p>
+                </div>
+              
+            </div>
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-5">
+                                ฉบับเอกสารที่:
+                            </div>
+                            <div class="col-md-7">
+                                {{DataDetail?.record_id}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                หัวข้อเอกสาร :
+                            </div>
+                            <div class="col-md-7">
+                                {{DataDetail?.record_topic}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                รายละเอียด:
+                            </div>
+                            <div class="col-md-7">
+                                {{DataDetail?.record_detail}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                รายละเอียด สถานที่:
+                            </div>
+                            <div class="col-md-7">
+                                {{DataDetail?.record_place}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                พิกัดสถานที่:
+                            </div>
+                            <div class="col-md-7">
+                                {{DataDetail?.record_location}}
+                            </div>
+                        </div>
+                      
+                        <div class="row">
+                            <div class="col-md-5">
+                               วันที่เริ่มตรวจสอบ:
+                            </div>
+                            <div class="col-md-7">
+                                {{DataDetail?.record_star_date | thaidate: 'medium'}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                วันที่เสร็จสิ้นการตรวจสอบ:
+                            </div>
+                            <div class="col-md-7">
+                                {{DataDetail?.record_end_date  | thaidate: 'medium'}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                รายชื่อผู้ลงนาม:
+                            </div>
+                            <div class="col-md-7" >
+                                <div class="viewPersonalData" *ngFor="let person of viewPersonalData; let i = index">
+                                    {{ person.view_rank }} &nbsp; 
+                                    {{ person.view_first_name }} &nbsp;
+                                    {{person.view_last_name }} 
+                                </div>
+                            
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                ผู้สร้างหัวข้อเอกสาร:
+                            </div>
+                            <div class="col-md-6">
+                                {{createDocData[0]?.firstname}} &nbsp; {{createDocData[0]?.lastname}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                วันที่สร้างเอกสาร:
+                            </div>
+                            <div class="col-md-6">
+                                {{createDocData[0]?.createdDate }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                เวลาที่สร้างเอกสาร:
+                            </div>
+                            <div class="col-md-6">
+                                {{createDocData[0]?.createdTime}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

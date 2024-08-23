@@ -1,17 +1,26 @@
 <div class="main-content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
+          <li class="breadcrumb-item"><a [routerLink]="['/manageuser']">จัดการผู้ใช้งาน</a></li>
+          <li class="breadcrumb-item active"><a aria-current="page" >รายละเอียดผู้ใช้งาน</a></li>
+        </ol>
+      </nav>
     <div class="container-fluid">
+      
 
         <div class="card">
+            <div class="navigate-bar">
+                <button class="btn btn-add" (click)="BackRoot()">
+                    <i class="fa fa-angle-left"></i> กลับ
+                </button>
+            </div>
             <div class="card-header">
+            
                 <h4 class="card-title">การจัดการผู้ใช้งาน</h4>
                 <!-- <button class="btn btn-primary" (click)="goToChangePassword()">เปลี่ยนรหัสผ่าน</button> -->
               </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="back" (click)="BackRoot()">
-                        <i class="fa fa-angles-left"></i>
-                    </div>
-                </div>
 
                 <div class="row">
 
@@ -52,7 +61,7 @@
                                    <h4> ข้อมูลผู้ใช้</h4>
                                    <!-- <button  type="button" (click)=" editProfile()">แก้ไขข้อมูลส่วนตัว</button> -->
                                     <div>
-                                        <button type="button" class="btn btn-add"  (click)="resetPassword(UserID, 'newPasswordHere')" >Reset Password</button>
+                                        <button type="button" class="btn btn-add"  (click)="resetPassword(UserID,'newPassword')" >Reset Password</button>
                                     </div>
                                     
                                 </div>
@@ -195,46 +204,14 @@
                                     <div class="row">
     
                                         <div class="col-md-3">
-                                            <label for="">เบอร์โทร</label>
+                                            <label for="">เบอร์โทรศัพท์</label>
                                         </div>
-                                        <div class="col-md-9"  *ngIf="EditStatus">
-                                            <input type="text" formControlName="phone" class="form-control">
-                                        </div>
+                    
                                         <div class="col-md-9"  *ngIf="!EditStatus">
                                             {{UserData?.employeeId?.phone}}
                                         </div>
                                     </div>
-                               
-        
-                                    <div class="row"*ngIf="EditStatus">
-                                        <div class="col-md-3" >
-                                            <label for="">รหัสผ่าน</label>
-                                        </div>
-                                        <div class="col-md-9 password-position">
-                                            <input [type]="passwordFieldType" formControlName="password" class="form-control">
-                                            <button type="button" class="eyePassword" 
-                                                    (click)="togglePasswordVisibility('password')">
-                                                <i [class]="passwordFieldType === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
-                                            </button>
-                                        </div>
-                                   
-                                    </div>
-                                    <div class="row" *ngIf="EditStatus">
-                                        <div class="col-md-3">
-                                            <label for="">ยืนยันรหัสผ่าน</label>
-                                        </div>
-                                        <div class="col-md-9 password-position" >
-                                            <input [type]="confirmPasswordFieldType" formControlName="confirmpassword" class="form-control">
-                                            <button type="button" class="eyePassword" 
-                                                    (click)="togglePasswordVisibility('confirmPassword')">
-                                                <i [class]="confirmPasswordFieldType === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
-                                            </button>
-                                        </div>
-                                
-                                    </div>
-                              
-                             
-                                   
+                                     
                                 </div>
                                 <div class="footer-content" *ngIf="EditStatus">
                                     <button type="submit" class="btn btn-success">ยืนยัน</button>

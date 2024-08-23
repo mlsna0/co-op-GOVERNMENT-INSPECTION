@@ -9,8 +9,12 @@
 
       <div class="form-group">
         <label for="password"  style="font-size: 16px;">รหัสผ่าน</label>
-        <input type="password" id="password" [(ngModel)]="password" name="password" required placeholder="กรอกรหัสผ่านของคุณ"
+        <input [type]="passwordFieldType" type="password" id="password" [(ngModel)]="password" name="password" required placeholder="กรอกรหัสผ่านของคุณ"
         style="font-size: 14px; font-family: 'Sarabun', sans-serif;">
+        <button type="button" class="eyePassword" 
+        (click)="togglePasswordVisibility('password')">
+            <i [class]="passwordFieldType === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+        </button>
       </div>
       <button type="submit" class="btn-login">เข้าสู่ระบบ</button>
     </form>

@@ -113,6 +113,10 @@ export class ManageuserComponent implements OnInit {
         })
       }
     }
+
+    openRegister(){
+      this.router.navigate(['/register']);
+    }
     exportToExcel(): void {
       // กำหนดข้อมูลตามลำดับคอลัมน์ที่ต้องการ
       const exportData = this.user.map((users, index) => ({

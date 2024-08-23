@@ -12,7 +12,9 @@ import { HttpClient } from '@angular/common/http';
 export class ForgetPasswordComponent implements OnInit {
   changePasswordForm: FormGroup;
 
-
+  oldPasswordFieldType: string = 'password';
+  newPasswordFieldType: string = 'password';
+  confirmNewPasswordFieldType: string = 'password'
   constructor(
     private ls : loginservice,
     private router: Router,
@@ -32,6 +34,16 @@ export class ForgetPasswordComponent implements OnInit {
   passwordMatchValidator(form: FormGroup) {
     return form.controls['newPassword'].value === form.controls['confirmNewPassword'].value ? null : { 'mismatch': true };
   }
+
+  togglePasswordVisibility(field: string): void {
+    if (field === 'oldPassword') {
+        this.oldPasswordFieldType = this.oldPasswordFieldType === 'password' ? 'text' : 'password';
+    } else if (field === 'newPassword') {
+      this.newPasswordFieldType = this.newPasswordFieldType === 'password' ? 'text' : 'password';
+    } else if (field === 'confirmNewPassword') {
+        this.confirmNewPasswordFieldType = this.confirmNewPasswordFieldType === 'password' ? 'text' : 'password';
+    }
+}
 
   onSubmit() {
     if (this.changePasswordForm.invalid) {

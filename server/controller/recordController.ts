@@ -216,6 +216,44 @@ getAllRecordsLinkedByEmployeeId = async (req, res) => {
 };
 
 
+getRecordByDocumentId =async (req,res)=>{
+  try {
+    const documentId = req.params.id;
+
+    // ดึงข้อมูล document จากฐานข้อมูลตาม documentId
+    const document = await this.model.findById(documentId).exec();
+
+    if (!document) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+
+    // ดึงข้อมูลผู้ใช้และพนักงานตามที่ต้องการ
+    const user = await this.userModel.findById(document.userId).exec();
+    const employee = user ? await this.employeeModel.findById(user.employeeId).exec() : null;
+
+    // ส่งข้อมูลที่ต้องการกลับไปยัง client
+    res.status(200).json({
+      document: {
+        documentId: document._id,
+        record_topic: document.record_topic,
+        createdDate: document.createdDate,
+        createdTime: document.createdTime,
+      },
+      user: {
+        role: user ? user.role : 'N/A'
+      },
+      employee: {
+        firstname: employee ? employee.firstname : 'N/A',
+        lastname: employee ? employee.lastname : 'N/A',
+        email: employee ? employee.email : 'N/A'
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching document:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+
+};
 
 
 getRecordWithUserAndEmployee = async (req, res) => {

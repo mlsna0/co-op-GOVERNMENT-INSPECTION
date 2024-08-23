@@ -114,6 +114,10 @@ export class SharedService {
     return this.http.get(`${this.baseUrl}/getall`);
   }
 
+  getRecordByDocumentId(documentId: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/documents/${documentId}`);
+  }
+
   getLoginTime(): Observable<any> {
     return this.http.get(`${this.baseUrl}/timeStampLogin`);
   }
@@ -222,6 +226,11 @@ export class SharedService {
   updateUserProfileById(updatedData: FormData,UserID:string): Observable<any> {
     return this.http.put(`${this.baseUrl}/userModel/updateUserById/${UserID}`, updatedData);
   }
+  // resetPassword(UserID: string): Observable<any> {
+  //   const body = { UserID };
+  //   return this.http.post(`${this.baseUrl}/userModel/resetPassword/${UserID}`, body);
+  // }
+
   resetPassword(userId: string, newPassword: string): Observable<any> {
     const body = { userId, newPassword };
     return this.http.put(`${this.baseUrl}/userModel/resetPassword`, body);

@@ -42,6 +42,10 @@ export class RegisterComponent implements OnInit {
 
   imageSrc: string | ArrayBuffer | null = null;
   profileImage: string| ArrayBuffer | null = null;
+
+  //เปิด/ปิด การแสดงรหัสผ่าน 
+  passwordFieldType: string = 'password';
+  confirmPasswordFieldType: string = 'password';
   constructor(
     private fb: FormBuilder,
     private lc: loginservice,
@@ -163,6 +167,14 @@ export class RegisterComponent implements OnInit {
       confirmPassword?.setErrors(null);
     }
   }
+
+  togglePasswordVisibility(field: string): void {
+    if (field === 'password') {
+        this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+    } else if (field === 'confirmPassword') {
+        this.confirmPasswordFieldType = this.confirmPasswordFieldType === 'password' ? 'text' : 'password';
+    }
+}
 
   loadProvinces() {
     this.ts.getProvincesWithDetails().subscribe(data => {

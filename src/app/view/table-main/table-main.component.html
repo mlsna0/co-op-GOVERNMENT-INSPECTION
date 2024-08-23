@@ -4,7 +4,14 @@
   3.style ของ tooltip ใช้ได้แค่ในตัวของ modal ถึงใช้ได้แต่ไม่สามารถมีการทำงานในแบบที่ต้องการได้ ตำแหน่งเริ่มต้นของ
 -->
 <!-- <div *ngIf="isNotSuper"> -->
+
 <div class="main-content">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
+      <li class="breadcrumb-item active"><a aria-current="page">การลงตรวจอิเล็กทรอนิค</a></li>
+    </ol>
+  </nav>
 
 
   <div class="container-fluid">
@@ -103,6 +110,10 @@
                     </td>
 
                     <td class="text-center" style=" width:1% ;white-space: nowrap;">
+                      <button (click)="openDataDetail(item?._id)" style="border: none; background: none; color: black;">
+                        <i  data-toggle="tooltip" title="ดูรายละเอียดเอกสาร" data-placement="top"
+                         class="fa fa-pencil"></i>
+                      </button>
 
                       <button *ngIf="!item.record_filename" (click)="onRecord(item?._id)" style="border: none; background: none; color: black;">
                         <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top"
@@ -111,7 +122,7 @@
 
 
                       <button *ngIf="!item.record_filename" (click)="openDetailModal(item?._id)" style="border: none; background: none; color: black;">
-                        <i data-toggle="tooltip" title="ดูรายละเอียด" data-placement="top"
+                        <i data-toggle="tooltip" title="เพิ่มเนื้อหา" data-placement="top"
                           class="fa fa-file-text-o ModalIcon "></i>
                       </button>
 
@@ -120,7 +131,7 @@
 
                       <button *ngIf="item.record_filename" style="border: none; background: none; color: black; ">
 
-                        <i class="fa fa-file-pdf-o PDF" (click)="showPDF(item.record_filename)"></i>
+                        <i class="fa  fa-file-pdf-o" (click)="showPDF(item.record_filename)"></i>
 
                       </button>
                     </td>

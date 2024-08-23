@@ -39,7 +39,7 @@ class UserModelCtrl extends BaseCtrl {
       
 
           const { 
-            firstname, lastname, email, password, confirmpassword, organization, 
+            firstname, lastname, email,  password, confirmpassword,  organization, 
             address, phone, province, amphure, tambon, postCode,
         } = req.body;
         

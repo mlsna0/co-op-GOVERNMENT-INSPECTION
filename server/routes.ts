@@ -6,7 +6,7 @@ import UserModelCtrl from './controller/userController';
 import ViewModelCtrl from './controller/viewController';
 import RegisterModelCtrl from './controller/registerController';
 import uploadService from './service/uploadservice.service';
-import uploadservice from './service/uploadservice.service';
+
 import timeStampModelCtrl from './controller/timeStampController';
 import AgencyModelCtrl from './controller/agencyController';
 import auth from './middleware/auth/auth'
@@ -52,7 +52,7 @@ function setRoutes(app): void {
   router.route('/postTyproText').post(recordModelCtrl.postItemToView);
   // router.route('/postAddDetail').post(itemModelCtrl.addDetail);
   router.route('/postDataTest').post(recordModelCtrl.auth,uploadService.none(),recordModelCtrl.postItemToView)
-  // router.route('/postDataTest').post(uploadService.none(), auth.authorize, recordModelCtrl.postItemToView);
+  // router.route('/postDataTest').post(uploadservice.none(), auth.authorize, recordModelCtrl.postItemToView);
  
 
   // RecordModel routes
@@ -67,6 +67,8 @@ function setRoutes(app): void {
   router.route('/viewModel/getViewByRecordId/:id').get(viewModelCtrl.getViewByRecordId);
   /////report crate
 
+
+  router.route('/documents/:id').get(recordModelCtrl.getRecordByDocumentId);
   router.route('/getall').get(recordModelCtrl.getAllRecordsLinkedByEmployeeId);
   router.route('/timeStampLogin').get(timestampModelCtrl.getTimeLogin);
   router.route('/recordModel/getuser/:userId').get(recordModelCtrl.getRecordWithUserAndEmployee);
@@ -111,7 +113,7 @@ function setRoutes(app): void {
   router.route('/registerModel/profile').get(auth.authorize, registerModelCtrl.getUserProfile);//petch add
   
   router.route('/registerModel/count').get(registerModelCtrl.count);
-  router.route('/registerModel').post(uploadservice.single('profileImage'), registerModelCtrl.create);
+  router.route('/registerModel').post(uploadService.single('profileImage'), registerModelCtrl.create);
   
   router.route('/registerModel/login').post(registerModelCtrl.login); // Ensure authorize middleware is used
   router.route('/registerModel/resetPassword').put(auth.authorize, registerModelCtrl.resetPassword);
@@ -125,7 +127,8 @@ function setRoutes(app): void {
 
   // router.route('/user/:id').put(registerModelCtrl.updateUserDetails);
   router.route('/userModel/getUserById/:id').get(userModelCtrl.getUserById);
-  router.route('/userModel/updateUserById/:id').put(uploadservice.single('profileImage'),userModelCtrl.updateUserById);
+  router.route('/userModel/updateUserById/:id').put(uploadService.single('profileImage'),userModelCtrl.updateUserById);
+  router.route('/userModel/resetPassword/:id').put(userModelCtrl.resetPassword);//รอแก้ไข
   
   router.route('/userModel/resetPassword').put(userModelCtrl.updateUserById);
   router.route('/userModel/updateUserStatus/:userId').put(userModelCtrl.updateUserStatus);
@@ -133,7 +136,7 @@ function setRoutes(app): void {
   router.route('/registerModel/updateProfile').put( auth.authorize,registerModelCtrl.updateEmployeeProfile);
   router.route('/registerModel/updateRole/:id').put(registerModelCtrl.updateUserRole);
   router.route('/registerModel/uploadProfile')
-    .put(auth.authorize, uploadservice.single('profile'), registerModelCtrl.uploadProfile);
+    .put(auth.authorize, uploadService.single('profile'), registerModelCtrl.uploadProfile);
   //agg $lookup Record and View model routes //petch edit add this
   // router.route('/aggRecordNview/:id').get(AggRecordNViewCon.get);
 
@@ -240,13 +243,12 @@ function setRoutes(app): void {
 
             //เป็นการเลือกที่ ที่จะเก็บ ไฟล์ลงไป ว่าจะเก็บไว้ที่ไหน
             
-            fs.writeFileSync('L:/projectNT/angualr-project-training/dist/server/singature/'+ req.body.oca + req.body.userId + '.pdf',
+            fs.writeFileSync('D:/ProjFD/angualr-project-training/dist/server/singature/'+ req.body.oca + req.body.userId + '.pdf',
                 pdfBytes,
                 'binary'
             );
             console.log("222222222 =>");
             console.log('oca:', req.body.oca);
-
             console.log('userId:', req.body.userId);
 
             //ถ้าใช้เเบบนี้ จะมีการดึงข้อมูลเเบบรูปโปรไฟล์

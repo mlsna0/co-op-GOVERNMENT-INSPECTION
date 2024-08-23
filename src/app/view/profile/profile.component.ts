@@ -316,24 +316,27 @@ loadTambons(amphureId: any) {
 
 
   openModal(): void {
+    document.body.classList.add('no-scroll');
     this.showModal = true;
     console.log("as",this.showModal)
   }
 
   closeModal(): void {
+    document.body.classList.remove('no-scroll');
     this.showModal = false;
+    this.EditStatus= false;
   }
-
-//////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////
   editProfile() {
-    // Add your edit profile logic here
+    document.body.classList.add('no-scroll');
     this.EditStatus= true;
-    this.PersonINT++;
-    // console.log('Edit profile clicked',this.PersonINT);
   }
+
+
+//////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////
+
 
   SaveUserInfo(){
     if (this.UserInfoForm.valid) {

@@ -19,7 +19,7 @@ h4{
 
 .card-header {
   padding: 20px;
-  background-color: rgb(255, 209, 0,0.2);
+  /* background-color: rgb(255, 209, 0,0.2); */
 
   display: flex;
   justify-content: space-between ;
@@ -139,9 +139,9 @@ i{
   justify-content: space-between;
   align-items: center;
 }
-.title button:hover{
+/* .title button:hover{
   text-decoration: underline;
-}
+} */
 .userInfo{
   margin-bottom: 10px;
   border-radius: 5px;

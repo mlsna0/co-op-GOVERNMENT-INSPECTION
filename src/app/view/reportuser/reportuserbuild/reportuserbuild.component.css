@@ -32,11 +32,10 @@
     font-size: 18px;
   }
 
-  .position-btn{
-    position: absolute;
-    right: 230px;
-    top: 45px;
-  }
+  .navigate-bar{
+    display: flex;
+    justify-content: flex-start;
+}
   
   .card-body {
     display: flex;
