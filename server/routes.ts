@@ -8,8 +8,10 @@ import RegisterModelCtrl from './controller/registerController';
 import uploadService from './service/uploadservice.service';
 
 import timeStampModelCtrl from './controller/timeStampController';
+import AgencyModelCtrl from './controller/agencyController';
 import auth from './middleware/auth/auth'
 import path from 'path';
+
 
 
 const { PDFDocument } = require('pdf-lib')
@@ -36,6 +38,7 @@ function setRoutes(app): void {
   const viewModelCtrl = new ViewModelCtrl();
   const registerModelCtrl = new RegisterModelCtrl();
   const timestampModelCtrl = new timeStampModelCtrl();
+  const agencyModelCtrl = new AgencyModelCtrl();
 
   router.route('/record/savepdf').put(recordModelCtrl.savePDF);
   router.route('/pdf/:id').get(recordModelCtrl.getPDF);
@@ -64,8 +67,9 @@ function setRoutes(app): void {
   router.route('/viewModel/getViewByRecordId/:id').get(viewModelCtrl.getViewByRecordId);
   /////report crate
 
-  router.route('/getall').get(recordModelCtrl.getAllRecordsRenamed);
+
   router.route('/documents/:id').get(recordModelCtrl.getRecordByDocumentId);
+  router.route('/getall').get(recordModelCtrl.getAllRecordsLinkedByEmployeeId);
   router.route('/timeStampLogin').get(timestampModelCtrl.getTimeLogin);
   router.route('/recordModel/getuser/:userId').get(recordModelCtrl.getRecordWithUserAndEmployee);
 
@@ -88,7 +92,14 @@ function setRoutes(app): void {
   router.route('/userModel/:id').put(timestampModelCtrl.update);
   router.route('/userModel/:id').delete(timestampModelCtrl.delete);
 
-  
+
+  router.route('/agencyModel').get(agencyModelCtrl.getAll);
+  router.route('/createagency').post(agencyModelCtrl.createAgency);
+  router.route('getAgencies').get(agencyModelCtrl.getAgencies);
+//   router.route('/agencyModel').post(agencyModelCtrl.insert);
+  router.route('/getAgencyById').get(agencyModelCtrl.getAgencyById);
+  router.route('/agencyModel/:id').put(agencyModelCtrl.update);
+  router.route('/agencyModel/:id').delete(agencyModelCtrl.delete);
 
   // ViewModel routes
   router.route('/viewModel').get(viewModelCtrl.getAll);
@@ -117,7 +128,9 @@ function setRoutes(app): void {
   // router.route('/user/:id').put(registerModelCtrl.updateUserDetails);
   router.route('/userModel/getUserById/:id').get(userModelCtrl.getUserById);
   router.route('/userModel/updateUserById/:id').put(uploadService.single('profileImage'),userModelCtrl.updateUserById);
-  router.route('/userModel/resetPassword/:id').put(userModelCtrl.resetPassword);
+  router.route('/userModel/resetPassword/:id').put(userModelCtrl.resetPassword);//รอแก้ไข
+  
+  router.route('/userModel/resetPassword').put(userModelCtrl.updateUserById);
   router.route('/userModel/updateUserStatus/:userId').put(userModelCtrl.updateUserStatus);
                                                     //,
   router.route('/registerModel/updateProfile').put( auth.authorize,registerModelCtrl.updateEmployeeProfile);

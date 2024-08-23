@@ -1,4 +1,3 @@
-<!-- <div *ngIf="isSuperAdmin"></div> -->
 <div class="main-content">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -33,13 +32,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let users of user ; let i = index">
+            <tr *ngFor="let userDocument of  userDocuments ; let i = index">
               <td class="small-cell" style="text-align: center; width: 5%;">{{ i + 1 }}</td>
-              <td class="small-name"> {{ users.record_topic }} </td>
-              <td class="small-name"> {{ users.firstname }} </td>
-              <td class="small-name"> {{ users.lastname }} </td>
-              <td class="small-name"> {{ users.createdDate }} </td>
-              <td class="small-name"> {{ users.createdTime }} </td>
+              <td class="small-name"> {{ userDocument.record_topic }} </td>
+              <td class="small-name"> {{ userDocument.firstname }} </td>
+              <td class="small-name"> {{ userDocument.lastname }} </td>
+              <td class="small-name"> {{ userDocument.createdDate }} </td>
+              <td class="small-name"> {{ userDocument.createdTime }} </td>
               <!-- <td class="small-cell"> {{ users.role }} </td> -->
               <!-- <td class="small-cell-text">
               <button (click)="getUserReportProfile(users.id)" style="border: none; background: none; color: black; text-align: center;" >
@@ -52,4 +51,30 @@
         </table>
       </div>
     </div>
-  </div>
+
+</div>
+    <!-- <div class="card-body">
+      <table width="100%" datatable [dtOptions]="dtOptions" class="table table-striped table-bordered" *ngIf="!loading">
+        <thead>
+          <tr>
+            <th class="small-cell" style="text-align: center; width: 5%;">ลำดับ</th>
+            <th class="small-name">หัวข้อการสร้าง</th>
+            <th class="small-name" style="width: 10%;">ชื่อ</th>
+            <th class="small-name" style="width: 10%;">นามสกุล</th>
+            <th class="small-name">วันที่สร้าง</th>
+            <th class="small-name">เวลาที่สร้าง</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let userDocument of userDocuments; let i = index">
+            <td class="small-cell" style="text-align: center; width: 5%;">{{ i + 1 }}</td>
+            <td class="small-name">{{ userDocument.record_topic }}</td>
+            <td class="small-name">{{ userDocument.firstname }}</td>
+            <td class="small-name">{{ userDocument.lastname }}</td>
+            <td class="small-name">{{ userDocument.createdDate }}</td>
+            <td class="small-name">{{ userDocument.createdTime }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div> -->
+=

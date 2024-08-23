@@ -173,6 +173,16 @@ export class SharedService {
       })
     );
   }
+
+  getAllRecordsLinkedByEmployeeId(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/getall`).pipe(
+      catchError(error => {
+        console.error('Error fetching linked records:', error);
+        return throwError('Failed to fetch linked records');
+      })
+    );
+  }
+  
   postData(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/postData`, data);
   }
@@ -216,9 +226,14 @@ export class SharedService {
   updateUserProfileById(updatedData: FormData,UserID:string): Observable<any> {
     return this.http.put(`${this.baseUrl}/userModel/updateUserById/${UserID}`, updatedData);
   }
-  resetPassword(UserID: string): Observable<any> {
-    const body = { UserID };
-    return this.http.post(`${this.baseUrl}/userModel/resetPassword/${UserID}`, body);
+  // resetPassword(UserID: string): Observable<any> {
+  //   const body = { UserID };
+  //   return this.http.post(`${this.baseUrl}/userModel/resetPassword/${UserID}`, body);
+  // }
+
+  resetPassword(userId: string, newPassword: string): Observable<any> {
+    const body = { userId, newPassword };
+    return this.http.put(`${this.baseUrl}/userModel/resetPassword`, body);
   }
   updateUserStatus(userId: string, isActive: boolean): Observable<any> {
     console.log("user Id service: ",userId)

@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ProvinceService } from '../../../../app/view/thaicounty/thaicounty.service';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { loginservice } from 'app/layouts/login.services.';
 import { Router } from '@angular/router';
 import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 import { SharedService } from 'app/services/shared.service';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-
 
 @Component({
   selector: 'app-reportuserbuild',
@@ -18,14 +17,13 @@ import { saveAs } from 'file-saver';
 })
 export class ReportuserbuildComponent implements OnInit {
 
-  record: any[] =[];
-  user: any[] =[];
- 
-  dtOptions: any ={}; //datatable.setting ={}
+  userDocuments: any[] = [];
+  dtOptions: any = {}; // datatable settings
   dtTrigger: Subject<any> = new Subject();
   loading: boolean = true;
   error: string = '';
   exportCounter: number = 1;  // ตัวนับเริ่มที่ 1
+
   constructor(
     private provinceService: ProvinceService,
     private http: HttpClient,
@@ -33,15 +31,10 @@ export class ReportuserbuildComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private sv: SharedService,
-    private fb:FormBuilder,
-  ) { 
-    
-   
-  }
+    private fb: FormBuilder,
+  ) {}
 
-
-
- ngOnInit(): void {
+  ngOnInit(): void {
     this.dtOptions = {
       order: [[0, 'asc']],
       pagingType: 'full_numbers',
@@ -61,49 +54,42 @@ export class ReportuserbuildComponent implements OnInit {
     };
     
     this.sv.getallRecordWithUserAndEmployee().subscribe(data => {
-      this.user = this.mergeUserData(data.employees, data.users, data.documents).reverse();
+      this.userDocuments = this.transformData(data).reverse();
       this.loading = false;
     }, error => {
       console.error('Error fetching user data:', error);
       this.loading = false;
     });
-
   }
 
-  mergeUserData(registerData: any[], userData: any[], documentData: any): any[] {
-    return documentData.map(document => {
-      // หาผู้ใช้ที่ตรงกับ userId ใน document
-      const user = userData.find(u => u._id === document.userId);
-      
-      // หากพบผู้ใช้ใน userData, หาพนักงานที่ตรงกับ employeeId ใน user
-      const employee = user ? registerData.find(e => e._id === user.employeeId) : null;
-  
-      return {
-        documentId: document._id,
-        record_topic:document.record_topic ,
-        createdDate:document.createdDate ,
-        createdTime:document.createdTime ,
-        firstname: employee ? employee.firstname : 'N/A',
-        lastname: employee ? employee.lastname : 'N/A',
-        email: employee ? employee.email : 'N/A',
-        role: user ? user.role : 'N/A'
-        
-      };
+  transformData(data: any[]): any[] {
+    return data.flatMap(item => {
+      const employee = item.employee || { firstname: 'N/A', lastname: 'N/A', email: 'N/A' };
+      return item.documents.map(doc => ({
+        documentId: doc._id,
+        record_topic: doc.record_topic,
+        createdDate: doc.createdDate,
+        createdTime: doc.createdTime,
+        firstname: employee.firstname,
+        lastname: employee.lastname,
+        email: employee.email,
+        role: item.user.role || 'N/A'
+      }));
     });
-    
   }
 
   getUserReportProfile(id: any) {
     this.router.navigate(['/profilereport']);
   }
+
   exportToExcel(): void {
-    const exportData = this.user.map((users, index) => ({
+    const exportData = this.userDocuments.map((doc, index) => ({
       'ลำดับ': index + 1,
-      'หัวข้อ': users.record_topic,
-      'ชื่อ': users.firstname,
-      'นามสกุล': users.lastname,
-      'วันที่สร้าง': users.createdDate,
-      'เวลาที่สร้าง': users.createdTime
+      'หัวข้อ': doc.record_topic,
+      'ชื่อ': doc.firstname,
+      'นามสกุล': doc.lastname,
+      'วันที่สร้าง': doc.createdDate,
+      'เวลาที่สร้าง': doc.createdTime
     }));
 
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
@@ -112,12 +98,9 @@ export class ReportuserbuildComponent implements OnInit {
 
     const wbout: ArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
 
-    // เพิ่มตัวเลขต่อท้ายชื่อไฟล์
     const fileName = `UserReport${this.exportCounter}.xlsx`;
     saveAs(new Blob([wbout], { type: 'application/octet-stream' }), fileName);
 
-    // เพิ่มตัวนับ
     this.exportCounter++;
   }
 }
-

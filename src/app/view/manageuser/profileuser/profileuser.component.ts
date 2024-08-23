@@ -310,23 +310,32 @@ deletedFileUpload(){
     profileImage: null
   });
 }
-resetPassword(UserID: string,){
-  console.log('UserID to reset: ',UserID)
-  console.log('UserID to reset: ',this.UserData.role)
+// resetPassword(UserID: string,){
+//   console.log('UserID to reset: ',UserID)
+//   console.log('UserID to reset: ',this.UserData.role)
 
 
-  console.log('currenUser to reset: ',this.currenUser._id)
+//   console.log('currenUser to reset: ',this.currenUser._id)
 
 
-    this.sv.resetPassword(UserID   ).subscribe(
-      response => {
-        console.log('Password reset successful:', response);
-      },
-      error => {
-        console.error('Password reset failed:', error);
-      }
-    );
-
+//     this.sv.resetPassword(UserID   ).subscribe(
+//       response => {
+//         console.log('Password reset successful:', response);
+//       },
+//       error => {
+//         console.error('Password reset failed:', error);
+//       }
+//     );
+//   }
+resetPassword(UserID: string, newPassword: string) {
+  this.loginSV.resetUserPassword(UserID).subscribe(
+    response => {
+      console.log('Password reset successful:', response);
+    },
+    error => {
+      console.error('Password reset failed:', error);
+    }
+  );
 }
   BackRoot(){
     this.router.navigate(['/manageuser']);

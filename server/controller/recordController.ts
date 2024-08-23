@@ -192,41 +192,29 @@ getData = async (req, res) => {
   }
 }
 
-getAllRecordsRenamed = async (req, res) => {
+getAllRecordsLinkedByEmployeeId = async (req, res) => {
   try {
-    // ดึงข้อมูลของ users ทั้งหมด
     const users = await this.userModel.find({});
-    console.log(`Found users: ${users}`);
-
-    if (users.length === 0) {
-      console.log('No users found');
-      return res.status(404).send('No users found');
-    }
-
-    // ดึงข้อมูลของ employees ทั้งหมด
     const employees = await this.employeeModel.find({});
-    console.log(`Found employees: ${employees}`);
-
-    if (employees.length === 0) {
-      console.log('No employees found');
-      return res.status(404).send('No employees found');
-    }
-
-    // ดึงข้อมูลของ documents ทั้งหมด
     const documents = await this.model.find({});
-    console.log(`Found documents: ${documents}`);
 
-    if (documents.length === 0) {
-      console.log('No documents found');
-      return res.status(404).send('No documents found');
-    }
+    const linkedData = users.map(user => {
+      const employee = employees.find(emp => emp._id.toString() === user.employeeId.toString());
+      const userDocuments = documents.filter(doc => doc.userId.toString() === user._id.toString());
 
-    res.status(200).json({ users, employees, documents });
+      return {
+        user,
+        employee: employee || null,
+        documents: userDocuments
+      };
+    });
+
+    res.status(200).json(linkedData);
   } catch (error) {
-    console.error('Error in getAllRecords function:', error.message);
     res.status(500).send('Server error');
   }
-}
+};
+
 
 getRecordByDocumentId =async (req,res)=>{
   try {
