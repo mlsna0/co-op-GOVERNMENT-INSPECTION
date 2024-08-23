@@ -1,4 +1,4 @@
-import Agency from "models/agencyModel";
+import Agency from "../models/agencyModel";
 import BaseCtrl from "./base";
 
 class AgencyModelCtrl extends BaseCtrl {
