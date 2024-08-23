@@ -636,125 +636,124 @@
           // console.error('Error loading PDFs:', error);
         }
       );
+
+    
     }
-    loadUser(): void {
-      this.loginservice.getUserProfile().subscribe(
-          user => {
-              if (user && user._id) {
-                  const userId = user._id;
-  
-                  const loadDocuments = (documents: any[]) => {
-                      this.allDocuments = documents;
-  
-                      this.provinceData = {};  // รีเซ็ตข้อมูลของจังหวัด
-                      this.monthlyData = {};    // เริ่มต้นข้อมูลสำหรับแยกตามเดือน
-  
-                      this.totalDocuments = 0;
-                      this.totalSignedDocuments = 0;
-  
-                      this.allDocuments.forEach(user => {
-                          user.documentCount = user.documents.length;
-  
-                          const provinceId = parseInt(user.employee.province, 10);
-                          const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
-  
-                          if (!provinceName || provinceName === 'ไม่ทราบจังหวัด') {
+
+    
+loadUser(): void {
+    this.loginservice.getUserProfile().subscribe(
+        user => {
+            if (user && user._id) {
+                const userId = user._id;
+
+                const loadDocuments = (documents: any[]) => {
+                    this.allDocuments = documents;
+
+                    this.provinceData = {};  // รีเซ็ตข้อมูลของจังหวัด
+                    this.monthlyData = {};    // เริ่มต้นข้อมูลสำหรับแยกตามเดือน
+
+                    this.totalDocuments = 0;
+                    this.totalSignedDocuments = 0;
+
+                    this.allDocuments.forEach(document => {
+                        document.documentCount = document.documents.length;
+
+                        const provinceId = parseInt(document.employee.province, 10);
+                        const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
+
+                        if (!provinceName || provinceName === 'ไม่ทราบจังหวัด') {
+                            return;
+                        }
+
+                        // ตรวจสอบว่ามี province ทั้งใน employee และ document หรือไม่
+                        if (this.isAdmin) {
+                          console.log(`Employee Province: ${document.employee.province}, Document Province: ${document.province}`);
+                          if (document.employee.province && document.province && document.employee.province !== document.province) {
+                              const userId = document?._id || 'undefined';
+                              const employeeProvince = document?.employee?.province || 'undefined';
+                              const documentProvince = document?.province || 'undefined';
+                      
+                              console.log(`User ${userId} is admin but province mismatch: employee province = ${employeeProvince}, document province = ${documentProvince}`);
                               return;
                           }
-  
-                          if (!this.provinceData[provinceName]) {
-                              this.provinceData[provinceName] = { users: [], documentCount: 0, signedDocuments: 0 };
-                          }
-                          this.provinceData[provinceName].users.push(user);
-                          this.provinceData[provinceName].documentCount += user.documentCount;
-  
-                          user.documents.forEach(document => {
-                              if (this.pdfs.some(pdf => pdf.name === document.documentId)) {
-                                  this.provinceData[provinceName].signedDocuments += 1;
-                              }
-  
-                              // จัดกลุ่มข้อมูลตามเดือน
-                              const month = new Date(document.creationDate).toLocaleString('default', { month: 'long' });
-                              if (!this.monthlyData[month]) {
-                                  this.monthlyData[month] = { documentCount: 0, signedDocuments: 0 };
-                              }
-                              this.monthlyData[month].documentCount += 1;
-  
-                              if (this.pdfs.some(pdf => pdf.name === document.documentId)) {
-                                  this.monthlyData[month].signedDocuments += 1;
-                              }
-                          });
-  
-                          this.totalDocuments += this.provinceData[provinceName].documentCount;
-                          this.totalSignedDocuments += this.provinceData[provinceName].signedDocuments;
-                      });
-  
-                      this.provinces.forEach(province => {
-                          province.count = 0;
-                          province.signedDocuments = 0;
-                          province.percentage = 0;
-                      });
-  
-                      this.provinces.forEach(province => {
-                          const provinceName = province.name_th;
-                          if (this.provinceData[provinceName]) {
-                              province.count = this.provinceData[provinceName].documentCount;
-                              province.signedDocuments = this.provinceData[provinceName].signedDocuments;
-  
-                              if (province.count > 0) {
-                                  province.percentage = (province.signedDocuments / province.count) * 100;
-                              } else {
-                                  province.percentage = 0;
-                              }
-                          }
-                      });
-  
-                      this.createChart();
-                      this.createDonutChart();
-                      this.createMonthlyChart();  // เรียกใช้งานฟังก์ชันเพื่อสร้างกราฟตามเดือน
-                      this.dtTrigger.next(this.provinces);
-                  };
-  
-                  if (this.isSuperAdmin) {
-                      this.sv.getAllRecordsLinkedByEmployeeId().subscribe(
-                          recordData => {
-                              if (recordData && recordData.length > 0) {
-                                  loadDocuments(recordData);
-                              } else {
-                                  console.error('ไม่พบเอกสาร');
-                              }
-                          },
-                          error => {
-                              console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล (superadmin):', error);
-                          }
-                      );
-                  } else if (this.isAdmin) {
-                      this.sv.getUserReportBuild(userId).subscribe(
-                          reportData => {
-                              if (reportData && reportData.documents && reportData.documents.length > 0) {
-                                  loadDocuments(reportData.documents);
-                              } else {
-                                  console.error('ไม่พบเอกสาร');
-                              }
-                          },
-                          error => {
-                              console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล (admin):', error);
-                          }
-                      );
-                  } else {
-                      console.error('User role is neither admin nor superadmin.');
-                  }
-              } else {
-                  console.error('User ID is undefined or null.');
-              }
-          },
-          error => {
-              console.error('Error fetching user profile:', error);
-          }
-      );
-  }
-  
-    
-    
+                      }
+
+                        if (!this.provinceData[provinceName]) {
+                            this.provinceData[provinceName] = { users: [], documentCount: 0, signedDocuments: 0 };
+                        }
+                        this.provinceData[provinceName].users.push(document);
+                        this.provinceData[provinceName].documentCount += document.documentCount;
+
+                        document.documents.forEach(doc => {
+                            if (this.pdfs.some(pdf => pdf.name === doc.documentId)) {
+                                this.provinceData[provinceName].signedDocuments += 1;
+                            }
+
+                            // จัดกลุ่มข้อมูลตามเดือน
+                            const month = new Date(doc.creationDate).toLocaleString('default', { month: 'long' });
+                            if (!this.monthlyData[month]) {
+                                this.monthlyData[month] = { documentCount: 0, signedDocuments: 0 };
+                            }
+                            this.monthlyData[month].documentCount += 1;
+
+                            if (this.pdfs.some(pdf => pdf.name === doc.documentId)) {
+                                this.monthlyData[month].signedDocuments += 1;
+                            }
+                        });
+
+                        this.totalDocuments += this.provinceData[provinceName].documentCount;
+                        this.totalSignedDocuments += this.provinceData[provinceName].signedDocuments;
+                    });
+
+                    this.provinces.forEach(province => {
+                        province.count = 0;
+                        province.signedDocuments = 0;
+                        province.percentage = 0;
+                    });
+
+                    this.provinces.forEach(province => {
+                        const provinceName = province.name_th;
+                        if (this.provinceData[provinceName]) {
+                            province.count = this.provinceData[provinceName].documentCount;
+                            province.signedDocuments = this.provinceData[provinceName].signedDocuments;
+
+                            if (province.count > 0) {
+                                province.percentage = (province.signedDocuments / province.count) * 100;
+                            } else {
+                                province.percentage = 0;
+                            }
+                        }
+                    });
+
+                    this.createChart();
+                    this.createDonutChart();
+                    this.createMonthlyChart();  // เรียกใช้งานฟังก์ชันเพื่อสร้างกราฟตามเดือน
+                    this.dtTrigger.next(this.provinces);
+                };
+
+                // ใช้ service เดียวกัน แต่แยกตาม role
+                this.sv.getAllRecordsLinkedByEmployeeId().subscribe(
+                    recordData => {
+                        if (recordData && recordData.length > 0) {
+                            loadDocuments(recordData);
+                            console.log(recordData)
+                        } else {
+                            console.error('ไม่พบเอกสาร');
+                        }
+                    },
+                    error => {
+                        console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล:', error);
+                    }
+                );
+            } else {
+                console.error('User ID is undefined or null.');
+            }
+        },
+        error => {
+            console.error('Error fetching user profile:', error);
+        }
+    );
+}
 
   }

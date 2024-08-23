@@ -15,7 +15,7 @@ declare interface RouteInfo {
 }
 
 export const ROUTES: RouteInfo[] = [
-    { path: '/dashboard', title: 'หน้าหลัก', icon: 'dashboard', class: '', roles: ['superadmin'] },
+    { path: '/dashboard', title: 'หน้าหลัก', icon: 'dashboard', class: '', roles: ['superadmin','admin'] },
     { path: '/profile', title: 'ผู้ใช้งาน', icon: 'person', class: '', roles: ['superadmin','admin', 'user'] },
     { path: '/table-main', title: 'การลงตรวจอิเล็กทรอนิค', icon: 'content_paste', class: '', roles: ['superadmin','admin', 'user'] },
     { path: '/manageuser', title: 'จัดการผู้ใช้งาน', icon: 'manage_accounts', class: '', roles: ['superadmin'] },
