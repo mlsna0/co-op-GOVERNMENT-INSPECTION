@@ -97,26 +97,21 @@
                     </div>
 
                     <div class="col-md-9">
-                        <form [formGroup]="UserInfoForm" (ngSubmit)="SaveUserInfo()">
+                       
                             <div class="userInfo">
                                 <div class="title">
                                     <h4> ข้อมูลผู้ใช้</h4>
                                     <button type="button" class="btn btn-edit" (click)=" editProfile()">
-                                        <i class="fa fa-pencil-square-o"></i> &nbsp; แก้ไขข้อมูล</button>
+                                        <i class="fa fa-pencil-square-o"></i> &nbsp; แก้ไขข้อมูล
+                                    </button>
                                 </div>
                                 <div class="user-content">
                                     <div class="row">
                                         <div class="col-md-3">
                                             <label for="">ชื่อ-นามสกุล</label>
                                         </div>
-                                        <div class="col-md-5" *ngIf="EditStatus">
-                                            <input type="text" formControlName="firstname" class="form-control" placeholder="ชื่อ">
-                               
-                                        </div>
-                                        <div class="col-md-4"*ngIf="EditStatus">
-                                            <input type="text" formControlName="lastname" class="form-control" placeholder="นามสกุล">
-                                        </div>
-                                        <div class="col-md-9" *ngIf="!EditStatus">
+                                 
+                                        <div class="col-md-9">
                                             {{UserData?.employeeId?.firstname}}  &nbsp;   {{UserData?.employeeId?.lastname}}
                                         </div>
 
@@ -140,10 +135,8 @@
                                             <div class="col-md-3">
                                                 <label for="">บริษัท/องค์กร</label>
                                             </div>
-                                            <div class="col-md-9" *ngIf="EditStatus">
-                                                <input type="text" formControlName="organization" class="form-control" placeholder="บริษัท/องค์กร">
-                                            </div>
-                                            <div class="col-md-9" *ngIf="!EditStatus">
+            
+                                            <div class="col-md-9">
                                                 {{UserData?.employeeId?.organization}}
                                             </div>
                                         </div>
@@ -151,10 +144,7 @@
                                             <div class="col-md-3">
                                                 <label for="">ที่อยู่</label>
                                             </div>
-                                            <div class="col-md-9" *ngIf="EditStatus">
-                                                <input type="text" formControlName="address" class="form-control" placeholder="ที่อยู่">
-                                            </div>
-                                            <div class="col-md-9" *ngIf="!EditStatus">
+                                            <div class="col-md-9" >
                                                 {{UserData?.employeeId?.address}}
                                             </div>
 
@@ -163,42 +153,13 @@
                                             <div class="col-md-3">
                                                 <label for=""></label>
                                             </div>
-                                            <div class="col-md-5 select-wrapper" *ngIf="EditStatus">
-                                                จังหวัด :
-                                                <select class="form-select" formControlName="province"
-                                                    (focus)="isProvinceSelectOpen = true"
-                                                    (blur)="isProvinceSelectOpen = false"
-                                                    (change)="onProvinceChange($event.target.value)">
-                                                    <option *ngFor="let province of provinces" [value]="province.id">{{
-                                                        province.name_th }}</option>
-                                                </select>
-
-                                                <div class="iconSelect" [class.rotate]="isProvinceSelectOpen">
-                                                    <i class="fa fa-chevron-down"></i>
-                                                </div>
-                                                <!-- <input type="text" formControlName="province" class="form-control" placeholder="จังหวัด"> -->
-                                            </div>
+                                    
                                         
-                                            <div class="col-md-4 select-wrapper" *ngIf="EditStatus">
-                                                อำเภอ/เขต :
-                                                <select class="form-select" formControlName="amphure"
-                                                    (focus)="isAmphureSelectOpen = true"
-                                                    (blur)="isAmphureSelectOpen = false"
-                                                    (change)="onAmphuresChange($event.target.value)"
-                                                    [attr.disabled]="isAmphureDisabled ? true : null">
-                                                    <option *ngFor="let amphure of amphures" [value]="amphure.id">{{
-                                                        amphure.name_th}}</option>
-                                                </select>
-
-                                                <div class="iconSelect" [class.rotate]="isAmphureSelectOpen">
-                                                    <i class="fa fa-chevron-down"></i>
-                                                </div>
-                                                <!-- <input type="text"formControlName="amphure" class="form-control" placeholder="อำเภอ"> -->
-                                            </div>
-                                            <div class="col-md-5" *ngIf="!EditStatus">
+                                        
+                                            <div class="col-md-5">
                                                 ตำบล/แขวง : {{getTambonName(UserData?.employeeId?.tambon)}}
                                             </div>
-                                            <div class="col-md-4" *ngIf="!EditStatus">
+                                            <div class="col-md-4" >
                                                 อำเภอ/เขต : {{getAmphureName(UserData?.employeeId?.amphure)}}
                                             </div>
 
@@ -208,33 +169,19 @@
                                                 <label for=""></label>
                                             </div>
 
-                                            <div class="col-md-5 select-wrapper" *ngIf="EditStatus">
-                                                ตำบล/แขวง :
-                                                <select class="form-select" formControlName="tambon"
-                                                    (focus)="istAmbonSelectOpen = true"
-                                                    (blur)="istAmbonSelectOpen = false"
-                                                    (change)="onTambonChange($event.target.value)"
-                                                    [attr.disabled]="isTambonDisabled ? true : null">
-                                                    <option *ngFor="let tambon of tambons" [value]="tambon.id">{{
-                                                        tambon.name_th }}</option>
-                                                </select>
-                                                <div class="iconSelect" [class.rotate]="istAmbonSelectOpen">
-                                                    <i class="fa fa-chevron-down"></i>
-                                                </div>
-                                                <!-- <input type="text"formControlName="tambon" class="form-control" placeholder="ตำบล"> -->
-                                            </div>
+                    
                                          
 
-                                            <div class="col-md-4" *ngIf="EditStatus">
+                                            <!-- <div class="col-md-4" >
                                                 รหัสไปรษณีย์ :
                                                 <div class="form-control">{{ UserInfoForm.controls['postCode'].value }}
                                                 </div>
-                                                <!-- <input type="text"formControlName="postCode"  class="form-control"  placeholder="รหัสไปรษณีย์"> -->
-                                            </div>
-                                            <div class="col-md-5" *ngIf="!EditStatus">
+                                                <input type="text"formControlName="postCode"  class="form-control"  placeholder="รหัสไปรษณีย์"> 
+                                            </div> -->
+                                            <div class="col-md-5" >
                                                 จังหวัด : {{getProvinceName(UserData?.employeeId?.province)}}
                                             </div>
-                                            <div class="col-md-4" *ngIf="!EditStatus">
+                                            <div class="col-md-4" >
                                                 รหัสไปรษณีย์ : {{UserData?.employeeId?.postCode}}
                                             </div>
                                         </div>
@@ -252,10 +199,8 @@
                                         <div class="col-md-3">
                                             <label for="">อีเมล</label>
                                         </div>
-                                        <div class="col-md-9" *ngIf="EditStatus">
-                                            <input type="text" formControlName="email" class="form-control" placeholder="อีเมล">
-                                        </div>
-                                        <div class="col-md-9" *ngIf="!EditStatus">
+                                
+                                        <div class="col-md-9">
                                             {{UserData?.email}}
                                         </div>
                                     </div>
@@ -265,10 +210,8 @@
                                         <div class="col-md-3">
                                             <label for="">เบอร์โทรศัพท์</label>
                                         </div>
-                                        <div class="col-md-9" *ngIf="EditStatus">
-                                            <input type="text" formControlName="phone" class="form-control" placeholder="เบอร์โทรศัพท์">
-                                        </div>
-                                        <div class="col-md-9" *ngIf="!EditStatus">
+                        
+                                        <div class="col-md-9" >
                                             {{UserData?.employeeId?.phone}}
                                         </div>
                                     </div>
@@ -299,16 +242,172 @@
 
 
                                 </div>
-                                <div class="footer-content" *ngIf="EditStatus">
-                                    <button type="submit" class="btn btn-success">ยืนยัน</button>
-                                    <button type="button" class="btn btn-danger" (click)="cancelEdit()">ยกเลิก</button>
-                                </div>
+                         
                             </div>
-                        </form>
+                    
 
                     </div>
-                </div>
 
+                   
+                </div>
+                <div class="EditModal-modal-overlay" *ngIf="EditStatus">
+
+                    <div class="EditModal-content">
+                        <form [formGroup]="UserInfoForm" (ngSubmit)="SaveUserInfo()">
+                        <div class="user-content">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="">ชื่อ-นามสกุล</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" formControlName="firstname" class="form-control" placeholder="ชื่อ">
+                       
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" formControlName="lastname" class="form-control" placeholder="นามสกุล">
+                                </div>
+                            </div>
+                
+                            <div class="group-info">
+                                <div class="title-info">
+                                    <h4>ข้อมูลสถานที่ทำงาน</h4>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="">บริษัท/องค์กร</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" formControlName="organization" class="form-control" placeholder="บริษัท/องค์กร">
+                                    </div>
+                               
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="">ที่อยู่</label>
+                                    </div>
+                                    <div class="col-md-9" >
+                                        <input type="text" formControlName="address" class="form-control" placeholder="ที่อยู่">
+                                    </div>
+                              
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for=""></label>
+                                    </div>
+                                    <div class="col-md-5 select-wrapper" >
+                                        จังหวัด :
+                                        <select class="form-select" formControlName="province"
+                                            (focus)="isProvinceSelectOpen = true"
+                                            (blur)="isProvinceSelectOpen = false"
+                                            (change)="onProvinceChange($event.target.value)">
+                                            <option *ngFor="let province of provinces" [value]="province.id">{{
+                                                province.name_th }}</option>
+                                        </select>
+
+                                        <div class="iconSelect" [class.rotate]="isProvinceSelectOpen">
+                                            <i class="fa fa-chevron-down"></i>
+                                        </div>
+                                        <!-- <input type="text" formControlName="province" class="form-control" placeholder="จังหวัด"> -->
+                                    </div>
+                                
+                                    <div class="col-md-4 select-wrapper" >
+                                        อำเภอ/เขต :
+                                        <select class="form-select" formControlName="amphure"
+                                            (focus)="isAmphureSelectOpen = true"
+                                            (blur)="isAmphureSelectOpen = false"
+                                            (change)="onAmphuresChange($event.target.value)"
+                                            [attr.disabled]="isAmphureDisabled ? true : null">
+                                            <option *ngFor="let amphure of amphures" [value]="amphure.id">{{
+                                                amphure.name_th}}</option>
+                                        </select>
+
+                                        <div class="iconSelect" [class.rotate]="isAmphureSelectOpen">
+                                            <i class="fa fa-chevron-down"></i>
+                                        </div>
+                                        <!-- <input type="text"formControlName="amphure" class="form-control" placeholder="อำเภอ"> -->
+                                    </div>
+                            
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for=""></label>
+                                    </div>
+
+                                    <div class="col-md-5 select-wrapper" >
+                                        ตำบล/แขวง :
+                                        <select class="form-select" formControlName="tambon"
+                                            (focus)="istAmbonSelectOpen = true"
+                                            (blur)="istAmbonSelectOpen = false"
+                                            (change)="onTambonChange($event.target.value)"
+                                            [attr.disabled]="isTambonDisabled ? true : null">
+                                            <option *ngFor="let tambon of tambons" [value]="tambon.id">{{
+                                                tambon.name_th }}</option>
+                                        </select>
+                                        <div class="iconSelect" [class.rotate]="istAmbonSelectOpen">
+                                            <i class="fa fa-chevron-down"></i>
+                                        </div>
+                                        <!-- <input type="text"formControlName="tambon" class="form-control" placeholder="ตำบล"> -->
+                                    </div>
+                                 
+
+                                    <div class="col-md-4">
+                                        รหัสไปรษณีย์ :
+                                        <div class="form-control">{{ UserInfoForm.controls['postCode'].value }}
+                                        </div>
+                                        <!-- <input type="text"formControlName="postCode"  class="form-control"  placeholder="รหัสไปรษณีย์"> -->
+                                    </div>
+                        
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="title-info">
+                                        <h4>ข้อมูลติดต่อ</h4>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="">อีเมล</label>
+                                </div>
+                                <div class="col-md-9" >
+                                    <input type="text" formControlName="email" class="form-control" placeholder="อีเมล">
+                                </div>
+                                <div class="col-md-9" *ngIf="!EditStatus">
+                                    {{UserData?.email}}
+                                </div>
+                            </div>
+                            <div class="row">
+
+
+                                <div class="col-md-3">
+                                    <label for="">เบอร์โทรศัพท์</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input type="text" formControlName="phone" class="form-control" placeholder="เบอร์โทรศัพท์">
+                                </div>
+                                <div class="col-md-9" *ngIf="!EditStatus">
+                                    {{UserData?.employeeId?.phone}}
+                                </div>
+                            </div>
+                         
+      
+    
+
+                        </div>
+                        <div class="footer-content">
+                            <button type="submit" class="btn btn-success">ยืนยัน</button>
+                            <button type="button" class="btn btn-danger" (click)="cancelEdit()">ยกเลิก</button>
+                        </div>
+                    </form>
+
+                    </div>
+
+                </div>
 
             </div>
         </div>

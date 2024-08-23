@@ -6,16 +6,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { dataflow } from 'googleapis/build/src/apis/dataflow';
 import { SharedService } from "../../services/shared.service";
 import { GeocodingServiceService } from '../../services/geocodingService/geocoding-service.service'; //พยายามแก้ไข location
-import { DataTableDirective } from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
-import { DataTablesModule } from "angular-datatables"; //petch เพิ่มขค้นมาเพราะจะทำ datatable
+import { DataTableDirective ,DataTablesModule} from 'angular-datatables'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
 import { Subject } from 'rxjs'; //petch เพิ่มขค้นมาเพราะจะทำ datatable
-import { RecordModel } from '../../../../server/models/recordModel';
 import Swal from 'sweetalert2';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import jsPDF from 'jspdf';
 import  html2canvas from 'html2canvas';
 import { ElementContainer } from 'html2canvas/dist/types/dom/element-container';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { content } from 'html2canvas/dist/types/css/property-descriptors/content';
 import { environment } from 'environments/environment';
 import { ElementRef,ViewChild,ViewChildren,OnDestroy } from '@angular/core';
@@ -25,11 +23,11 @@ import Tesseract from 'tesseract.js'; // Default import Tesseract.js
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 import { jwtDecode } from 'jwt-decode'; // นำเข้า jwt-decode
-import { ActivatedRoute } from '@angular/router';
 import { error } from 'console';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { loginservice } from 'app/layouts/login.services.';
+import { ToastrService } from 'ngx-toastr'; // นำเข้า ToastrService
 
 @Component({
   selector: 'app-table-main',
@@ -125,7 +123,8 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     private geocodingService: GeocodingServiceService,
     private sanitizer: DomSanitizer,
     private authService: AuthService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastr: ToastrService 
     
 
   ) { 
@@ -756,14 +755,20 @@ get personal(): FormArray {
               }
           });
         });
+        // this.toastr.error('กรุณากรอกข้อมูลให้ครบทุกช่อง', 'เกิดข้อผิดพลาด!', {
+        //   timeOut: 1500,
+        //   positionClass: 'toast-top-right'
+        // });
       Swal.fire({
         title: 'เกิดข้อผิดพลาด!',
         text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง',
         icon: 'error',
-        confirmButtonText: 'ตกลง',
-        customClass: {
-          confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-        }
+        timer: 1500,
+        // confirmButtonText: 'ตกลง',
+        showConfirmButton: false, 
+        // customClass: {
+        //   confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+        // }
 
       });
       return;
@@ -780,17 +785,27 @@ get personal(): FormArray {
     
     this.sv.postDataTest(this.addItemForm.value, token).subscribe(res => {
       console.log("res submitted successfully", res);
+      // this.toastr.success('เพิ่มข้อมูลสำเร็จ', 'สำเร็จ', {
+      //   timeOut: 2500,  
+      //   positionClass: 'toast-top-right'
+      // })
+      // setTimeout(() => {
+      //   this.refreshPage(); // เรียกใช้ฟังก์ชันรีเฟรชหน้า
+      // }, 2500);
+      
       Swal.fire({
               title: 'เพิ่มรายการสำเร็จ!!',
               text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
               icon: 'success',
-              confirmButtonText: 'ตกลง',
-              customClass: {
-                confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-              }
+              timer: 1500,
+              showConfirmButton: false, 
+              // confirmButtonText: 'ตกลง',
+              // customClass: {
+              //   confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+              // }
 
       }).then((result)=>{
-        if (result.isConfirmed){
+        if (result.dismiss === Swal.DismissReason.timer){
           this.refreshPage();
         }
       });
@@ -802,14 +817,23 @@ get personal(): FormArray {
     },
     error =>{
       console.error('Error submitting data:', error);
+      // this.toastr.error('การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ', 'เกิดข้อผิดพลาด!', {
+      //   timeOut: 1500,
+      //   positionClass: 'toast-top-right'
+      // });
       Swal.fire({
             title: 'เกิดข้อผิดพลาด!',
             text: 'การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ',
             icon: 'error',
-            confirmButtonText: 'ตกลง',
-            confirmButtonColor: "#24a0ed",
-            customClass: {
-              confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+            timer: 1500,
+            showConfirmButton: false, 
+            // confirmButtonText: 'ตกลง',
+            // confirmButtonColor: "#24a0ed",
+            // customClass: {
+            //   confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+            // }
+          }).then((result)=>{
+            if (result.dismiss === Swal.DismissReason.timer){
             }
           });
 
@@ -850,7 +874,7 @@ get personal(): FormArray {
         });
         this.isReadonly = false; // ทำให้ input field สามารถพิมพ์ได้
       }, (error) => {
-        console.error(error);
+        console.error(error)  ;
       });
     } else {
       console.error('Geolocation is not supported by this browser.');
