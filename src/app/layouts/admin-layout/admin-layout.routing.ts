@@ -19,6 +19,8 @@ import { ManageuserComponent } from '../../view/manageuser/manageuser.component'
 import { ProfileuserComponent } from 'app/view/manageuser/profileuser/profileuser.component';
 import { AuthGuard } from '../../auth.guard'; // นำเข้า AuthGuard ของคุณ
 import { MapComponent } from '../../view/map/map.component';
+import { ManageagencyComponent } from '../../view/manageagency/manageagency.component';
+
 export const AdminLayoutRoutes: Routes = [
     // {
     //   path: '',
@@ -69,6 +71,8 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'table-main',     component: TableMainComponent, canActivate: [AuthGuard] },
     { path: 'reportbuild',    component: ReportuserbuildComponent, canActivate: [AuthGuard] },
     { path: 'manageuser',     component: ManageuserComponent, canActivate: [AuthGuard] },
+    { path: 'manageagency',     component: ManageagencyComponent, canActivate: [AuthGuard] },
+
     { path: 'profileuser',    component: ProfileuserComponent, canActivate: [AuthGuard] },
     { path: 'profileuser/:id', component: ProfileuserComponent, canActivate: [AuthGuard] },
     { path: 'table-detail/:id', component: TableDetailComponent, canActivate: [AuthGuard] },
@@ -79,7 +83,6 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'upgrade',        component: UpgradeComponent, canActivate: [AuthGuard] },
     { path: 'reportuser',     component: ReportuserComponent, canActivate: [AuthGuard] },
     { path: 'map',            component: MapComponent, canActivate: [AuthGuard] },
-    
     { path: 'login',          component: LoginComponent }, // เส้นทางล็อกอินไม่ต้องใช้ AuthGuard
     { path: '**',             redirectTo: 'login' } 
 

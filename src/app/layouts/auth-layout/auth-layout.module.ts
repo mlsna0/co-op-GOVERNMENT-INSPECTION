@@ -7,6 +7,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ForgetPasswordComponent } from './forget-password/forget-password.component';
 import { ToastrModule } from 'ngx-toastr';
+import { AddpersonComponent } from '../../view/addperson/addperson.component';
 
 
 @NgModule({
@@ -24,7 +25,7 @@ import { ToastrModule } from 'ngx-toastr';
     LoginComponent,
     RegisterComponent,
     ForgetPasswordComponent,
-  
+    AddpersonComponent
   ]
 })
 

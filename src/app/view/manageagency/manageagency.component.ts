@@ -7,12 +7,11 @@ import { Router } from '@angular/router';
 
 
 @Component({
-  selector: 'app-manageuser',
-  templateUrl: './manageuser.component.html',
-  styleUrls: ['./manageuser.component.css']
+  selector: 'app-manageagency',
+  templateUrl: './manageagency.component.html',
+  styleUrls: ['./manageagency.component.css']
 })
-export class ManageuserComponent implements OnInit {
-
+export class ManageagencyComponent implements OnInit {
   user: any[] = [];
   dtOptions: any = {}; // datatable.setting = {}
   dtTrigger: Subject<any> = new Subject();
@@ -100,4 +99,3 @@ export class ManageuserComponent implements OnInit {
     this.router.navigate(['/addperson']);
   }
 }
-

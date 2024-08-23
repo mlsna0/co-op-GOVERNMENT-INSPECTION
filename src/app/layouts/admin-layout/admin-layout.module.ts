@@ -37,6 +37,7 @@ import { NgApexchartsModule } from "ng-apexcharts";
 import { AppComponent } from 'app/app.component';
 import { ManageuserComponent } from '../../view/manageuser/manageuser.component';
 import { ProfileuserComponent } from 'app/view/manageuser/profileuser/profileuser.component';
+import { ManageagencyComponent } from '../../view/manageagency/manageagency.component';
 
 @NgModule({
   imports: [
@@ -78,6 +79,7 @@ import { ProfileuserComponent } from 'app/view/manageuser/profileuser/profileuse
    
     ReportuserbuildComponent,
     ManageuserComponent,
+    ManageagencyComponent,
     ProfileuserComponent,
   ],
   providers: [],

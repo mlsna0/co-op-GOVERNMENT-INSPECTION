@@ -8,7 +8,7 @@
           แสดงรายชื่อผู้ใช้งาน
         </div> -->
       </div>
-      <button class="btn btn-add position-btn">สร้างผู้ใช้</button>
+      <button (click)="openaddperson()" class="btn btn-add position-btn">เพิ่มผู้ใช้งาน</button>
     </div>
     <div class="card-body">
       <table width="100%" datatable [dtOptions]="dtOptions" class="table table-striped table-bordered" *ngIf="!loading">
