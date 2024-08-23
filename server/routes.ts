@@ -20,7 +20,8 @@ const upload = multer()
 const { plainAddPlaceholder } = require('node-signpdf/dist/helpers')
 // import SignPdf from 'node-signpdf';
 const forge = require('node-forge');
- 
+
+
 
 
 // import PdfCtrl from './controller/pdfController';
@@ -48,7 +49,7 @@ function setRoutes(app): void {
   router.route('/postTyproText').post(recordModelCtrl.postItemToView);
   // router.route('/postAddDetail').post(itemModelCtrl.addDetail);
   router.route('/postDataTest').post(recordModelCtrl.auth,uploadService.none(),recordModelCtrl.postItemToView)
-  // router.route('/postDataTest').post(uploadService.none(), auth.authorize, recordModelCtrl.postItemToView);
+  // router.route('/postDataTest').post(uploadservice.none(), auth.authorize, recordModelCtrl.postItemToView);
  
 
   // RecordModel routes
@@ -101,7 +102,7 @@ function setRoutes(app): void {
   router.route('/registerModel/profile').get(auth.authorize, registerModelCtrl.getUserProfile);//petch add
   
   router.route('/registerModel/count').get(registerModelCtrl.count);
-  router.route('/registerModel').post(upload.single('profileImage'), registerModelCtrl.create);
+  router.route('/registerModel').post(uploadService.single('profileImage'), registerModelCtrl.create);
   
   router.route('/registerModel/login').post(registerModelCtrl.login); // Ensure authorize middleware is used
   router.route('/registerModel/resetPassword').put(auth.authorize, registerModelCtrl.resetPassword);
@@ -130,6 +131,7 @@ function setRoutes(app): void {
     // Signature
     router.route('/stampSignature').post(upload.fields([{ name: "pdfFile" }]), async (req: any, res, next) => {
         try {
+            console.log("00000000 =>");
             const pdfload = await PDFDocument.load(req.files['pdfFile'][0].buffer)
             const pdfDoc = await PDFDocument.create();
             let signBase64Trim = req.body.base64.replace('data:image/png;base64,', '')
@@ -190,7 +192,7 @@ function setRoutes(app): void {
 
                 const p12Data = CA.toString('base64')
                 const p12Der = forge.util.decode64(p12Data);
-                const p12Asn1 = forge.asn1.fromDer(p12Der, { parseAllBytes: false });
+                const p12Asn1 = forge.asn1.fromDer(p12Der, { parseAllBytes: false });   
                 const p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, false, req.body.caPass);
                 const certificate = p12.getBags({ bagType: forge.pki.oids.certBag });
 
@@ -218,13 +220,29 @@ function setRoutes(app): void {
                 );
                 return res.json('https://doc.oca.go.th/signatured_documents/' + req.body.oca + req.body.requestId + req.body.userId + '.pdf')
             }
+            console.log("1111111 =>",req.body.type);
+            
+            // fs.writeFileSync('D:/data/OrganizationWebupload/signatured_documents/' + req.body.oca + req.body.requestId + req.body.userId + '.pdf',
+            //     pdfBytes,
+            //     'binary'
+            // );
 
-            fs.writeFileSync('D:/data/OrganizationWebupload/signatured_documents/' + req.body.oca + req.body.requestId + req.body.userId + '.pdf',
+
+            //เป็นการเลือกที่ ที่จะเก็บ ไฟล์ลงไป ว่าจะเก็บไว้ที่ไหน
+            
+            fs.writeFileSync('D:/ProjFD/angualr-project-training/dist/server/singature/'+ req.body.oca + req.body.userId + '.pdf',
                 pdfBytes,
                 'binary'
             );
+            console.log("222222222 =>");
+            console.log('oca:', req.body.oca);
+            console.log('userId:', req.body.userId);
 
-            return res.json('https://doc.oca.go.th/signatured_documents/' + req.body.oca + req.body.requestId + req.body.userId + '.pdf')
+            //ถ้าใช้เเบบนี้ จะมีการดึงข้อมูลเเบบรูปโปรไฟล์
+            return res.json(true)
+
+            //หรือ จะดึงมาใช้เเบบนี้ก็ได้
+            // return res.json('http://localhost:4200/singature/' + req.body.oca + req.body.requestId + req.body.userId + '.pdf')
         } catch (err) {
             if (err.message == 'PKCS#12 MAC could not be verified. Invalid password?') {
                 console.log("Wrong Password =>");

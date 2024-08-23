@@ -6,6 +6,8 @@ import { SignatureService } from '../services/signature.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import axios from 'axios';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { FormGroup } from '@angular/forms';
+
 
 @Component({
   selector: 'app-signature',
@@ -32,7 +34,7 @@ export class SignatureComponent implements OnInit {
   };
   signatureImg: string;
   step = 0
-  useProfileSign = false
+  useProfileSign 
   signatureProfile
   typeSignature
   caPass
@@ -44,8 +46,10 @@ export class SignatureComponent implements OnInit {
   errorMessage = null
   user_ca = null
   oca
+  
   toastr: any;
-  pdfView: string | ArrayBuffer;
+  // pdfView: string | ArrayBuffer;
+  pdfView: any
   labelImport: any;
   selectedFile: any;
   testFile: string | ArrayBuffer;
@@ -53,13 +57,18 @@ export class SignatureComponent implements OnInit {
   selectedFileB64: string;
   isFileImage: boolean;
   isFileDocument: boolean;
+  pdfSrc:any
+  uploadForm: FormGroup;
+  signatureImage: string | undefined;
+
 
   constructor(
     private elementRef: ElementRef,
     private renderer: Renderer2,
     private router: Router,
     private activateRoute: ActivatedRoute,
-    private _sinatureService: SignatureService) 
+    private _sinatureService: SignatureService
+  )
     {
     this.requestId = this.activateRoute.snapshot.paramMap.get('requestId')
     this.userId = this.activateRoute.snapshot.paramMap.get('userId')
@@ -72,6 +81,7 @@ export class SignatureComponent implements OnInit {
   ngOnInit(): void {
     this.getData()
     console.log('Document ID:', this.documentId);
+    
   }
 
   async getData() {
@@ -85,10 +95,13 @@ export class SignatureComponent implements OnInit {
 
     // })
   }
+  
   async onFileSelected(event: any) {
     this.selectedFile = event.target.files[0] ?? null;
+    
     const btnAddBox = document.getElementById('btn-add-box');
 
+    
     if (this.selectedFile) {
       this.testFile = await this.blobToBase64(event.target.files[0]);
       console.log("test file : ", this.testFile);
@@ -127,7 +140,15 @@ export class SignatureComponent implements OnInit {
       }
     }
   }
-
+blobToBase64(blob: Blob): Promise<string | ArrayBuffer | null> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+  
   clearFileInput(): void {
     this.selectedFile = null;
     this.selectedFilePath = '';
@@ -146,16 +167,10 @@ export class SignatureComponent implements OnInit {
     if (btnAddBox) { // เพิ่มส่วนนี้
       btnAddBox.style.display = 'none';
     }
+    this.reload();  
   }
 
-  blobToBase64(blob: Blob): Promise<string | ArrayBuffer | null> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  }
+  
 
   startMarkSign() {
     this.stageMarkSign = true;
@@ -173,37 +188,14 @@ export class SignatureComponent implements OnInit {
   }
   addDrag(page, pos) {
     console.log("addDrag pos : ", pos);
-    const newId = "cdkDrag_" + (this.dragList.length == 0 ? 0 : +(this.dragList[this.dragList.length - 1].id.split("_")[1]) + 1);
     this.dragList.push({
-      id: newId,
+      id: "cdkDrag_" + (this.dragList.length == 0 ? 0 : +(this.dragList[this.dragList.length - 1].id.split("_")[1]) + 1),
       page: page,
       position: pos,
       name: "ตำแหน่งลายเซ็น",
     });
     console.log("this.dragList: ", this.dragList);
-
-    // เพิ่มปุ่มลบในกรอบตำแหน่ง
-    setTimeout(() => {
-      let ck = this.cdkDrag_.find((x, i) => x.nativeElement.id == newId).nativeElement;
-      if (ck) {
-        const removeBtn = document.createElement('button');
-        removeBtn.innerHTML = '&times;';
-        removeBtn.style.position = 'absolute';
-        removeBtn.style.top = '0px';
-        removeBtn.style.right = '0px';
-        removeBtn.style.backgroundColor = 'transparent';
-        removeBtn.style.border = 'none';
-        removeBtn.style.color = 'red';
-        removeBtn.style.fontSize = '20px';
-        removeBtn.style.cursor = 'pointer';
-        removeBtn.style.zIndex = '10';
-        removeBtn.onclick = () => this.remove(newId, page);
-
-        ck.appendChild(removeBtn);
-      }
-    }, 0);
   }
-
 
   selectEle(event) {
     if (this.stageMarkSign) {
@@ -262,17 +254,6 @@ export class SignatureComponent implements OnInit {
     console.log("this.dragList :", this.dragList);
 
   }
-
-  // dragEnd(event: CdkDragEnd) {
-  //   const { x, y } = event.source.getFreeDragPosition();
-  //   // ปรับตำแหน่งให้สัมพันธ์กับคอนเทนเนอร์
-  //   const adjustedX = x - this.canvasWrapper.nativeElement.offsetLeft;
-  //   const adjustedY = y - this.canvasWrapper.nativeElement.offsetTop;
-
-  //   // ตั้งค่าตำแหน่งใน array dragList หรือ array ที่เกี่ยวข้อง
-  //   this.dragList[i].position = { x: adjustedX, y: adjustedY };
-  // }
-
   remove(id, page) {
     let indexDragList = this.dragList.findIndex(x => x.id == id);
     if (indexDragList != -1) {
@@ -323,11 +304,17 @@ export class SignatureComponent implements OnInit {
   }
 
   async submitSign() {
+    console.log('dragList:', this.dragList);
     this.loading = false
-    let signData
+    let signData;
+
     if (this.dragList.length > 1) {
+      console.log("test", this.dragList.length);
+      
       const pdf = this.elementRef.nativeElement as HTMLElement;
       const canvasWrapper = pdf.querySelector<HTMLElement>(".canvasWrapper")
+      console.log('canvasWrapper:', canvasWrapper);
+      
       let clientWidth = canvasWrapper.clientWidth;
       let clientHeight = canvasWrapper.clientHeight;
 
@@ -442,7 +429,7 @@ export class SignatureComponent implements OnInit {
               formData.append('userId', this.userId);
               formData.append('pdfFile', new File([data], 'signaturedFile.pdf', { type: 'application/pdf' }));
               formData.append('oca', this.oca);
-
+              
               this._sinatureService.signature(formData).subscribe((res: any) => {
                 this.step = 2
                 this.signaturedFile = res
@@ -488,6 +475,7 @@ export class SignatureComponent implements OnInit {
       }
     await this.loadingFuction() 
   }
+  
   loadingFuction() {
     this.loading = true
   }
@@ -507,7 +495,9 @@ export class SignatureComponent implements OnInit {
     this.signaturePad.clear();
   }
   reload() {
-    window.location.reload()
+    this.step = 0;
+    this.selectedFile = this.signaturedFile;
+    // window.location.reload()
   }
   async lastSubmit() {
     this.loading = false
@@ -517,6 +507,9 @@ export class SignatureComponent implements OnInit {
     //     window.location.href = `https://training.oca.go.th/admin/Adm_ListRequest.aspx?ReqStID=${this.requestId}`;
     //   }
     // })
+
+    // window.location.reload()
+    this.reload();
   }
   useProfileSignCheckbox(event: Event) {
     const inputElement = event.target as HTMLInputElement;
@@ -524,8 +517,13 @@ export class SignatureComponent implements OnInit {
     console.log('useProfileSign:', this.useProfileSign);
   }
   choseTypeSignature(value) {
+    console.log('Selected PDF source:', value);
     this.typeSignature = value
     this.step++;
+  }
+  getPDFUrlFromPin(pin: string): string {
+    // Example logic to determine the URL
+    return `https://example.com/path/to/pdf/${pin}.pdf`;
   }
 
   BackRoot() {
