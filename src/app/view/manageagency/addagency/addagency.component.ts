@@ -52,15 +52,15 @@ export class AddagencyComponent implements OnInit {
     private ts :ProvinceService,
   ) {
     this.regisForm = this.fb.group({
-      agencyName: ["", Validators.required],
+      agency_name: ["", Validators.required],
       email: ["", [Validators.required, Validators.email]],
       phone: ["", Validators.required, Validators.pattern('^[0-9]{10}$')],
-      address:["", Validators.required],
+      address: ["", Validators.required],
       province: ['', Validators.required],
       amphure: ['', Validators.required],
       tambon: ['', Validators.required],
       postCode: ['', Validators.required],
-    }, { validator: this.passwordMatchValidator });
+    });
   }  
 
   ngOnInit(): void {
@@ -72,83 +72,55 @@ export class AddagencyComponent implements OnInit {
   }
 
 
-  onSubmit(data) {
-    console.log(1111)
-    this.Submitted = true; 
-    if (this.regisForm.invalid) {
-      if (this.regisForm.controls.password.errors?.minlength || this.regisForm.controls.confirmpassword.errors?.minlength) {
-        Swal.fire({
-          title: "รหัสผ่านไม่ครบ!",
-          text: "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร",
-          icon: "error",
-          confirmButtonText: "ตกลง",
-        });
-      }
-      return;
-    }
-  
-    if (this.regisForm.value.password !== this.regisForm.value.confirmpassword) {
-      Swal.fire({
-        title: "รหัสผ่านไม่ตรงกัน!",
-        text: "กรุณากรอกรหัสผ่านให้ตรงกัน",
-        icon: "error",
-        confirmButtonText: "ตกลง",
-        customClass: {
-          confirmButton: "custom-confirm-button",
-        },
-      });
-      return;
-    }
-  
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-    console.log(fileInput);
-    
-    const file = fileInput?.files?.[0]; // Get the file from the input
-  
+  onSubmit() {
+    console.log("Form Submitted");
+    this.Submitted = true;
+
     const formData = new FormData();
     Object.keys(this.regisForm.controls).forEach(key => {
-      formData.append(key, this.regisForm.get(key)?.value);
+        const value = this.regisForm.get(key)?.value;
+        console.log(`Key: ${key}, Value: ${value}`); // ตรวจสอบค่าก่อนใส่ลงใน formData
+        formData.append(key, value);
     });
-    if (file) {
-      formData.append('profileImage', file);
-    }
-  
-    this.lc.agency(formData).subscribe(
-      (response) => {
-        console.log("User registered successfully", response);
-        Swal.fire({
-          title: "ลงทะเบียนสำเร็จ!",
-          text: "ผู้ใช้ถูกลงทะเบียนเรียบร้อยแล้ว",
-          icon: "success",
-          confirmButtonText: "ตกลง",
-          customClass: {
-            confirmButton: "custom-confirm-button",
-          },
-        }).then((result) => {
-          if (result.isConfirmed) {
-            document.querySelector(".swal2-confirm")?.setAttribute(
-              "style",
-              "background-color: #24a0ed; color: white;"
-            );
-            this.router.navigate(["/manageagency"]);
-          }
-        })
-      },
-      (error) => {
-        console.error("Error registering user", error);
-        Swal.fire({
-          title: "เกิดข้อผิดพลาด!",
-          text: "เกิดข้อผิดพลาดในการลงทะเบียนผู้ใช้",
-          icon: "error",
-          confirmButtonText: "ตกลง",
-          customClass: {
-            confirmButton: "custom-confirm-button",
-          },
-        });
-      } 
-    );
 
-  }
+    console.log("Form Data:", formData); // ตรวจสอบข้อมูลใน FormData
+
+    this.lc.agency(formData).subscribe(
+        (response) => {
+            console.log("User registered successfully", response);
+            Swal.fire({
+                title: "ลงทะเบียนสำเร็จ!",
+                text: "ผู้ใช้ถูกลงทะเบียนเรียบร้อยแล้ว",
+                icon: "success",
+                confirmButtonText: "ตกลง",
+                customClass: {
+                    confirmButton: "custom-confirm-button",
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.querySelector(".swal2-confirm")?.setAttribute(
+                        "style",
+                        "background-color: #24a0ed; color: white;"
+                    );
+                    this.router.navigate(["/manageagency"]);
+                }
+            });
+        },
+        (error) => {
+            console.error("Error registering user", error);
+            Swal.fire({
+                title: "เกิดข้อผิดพลาด!",
+                text: "เกิดข้อผิดพลาดในการลงทะเบียนผู้ใช้",
+                icon: "error",
+                confirmButtonText: "ตกลง",
+                customClass: {
+                    confirmButton: "custom-confirm-button",
+                },
+            });
+        }
+    );
+}
+
 
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password');

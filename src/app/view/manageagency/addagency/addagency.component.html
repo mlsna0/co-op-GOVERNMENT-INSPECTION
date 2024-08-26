@@ -6,14 +6,13 @@
       </div>
   
       <div class="col-sm-12">
-        <form [formGroup]="regisForm" (ngSubmit)="onSubmit(regisForm.data)">
+        <form [formGroup]="regisForm" (ngSubmit)="onSubmit()">
           <div class="row box">
             <div class="col-sm-12" style="padding-right: 0;">
               <div class="form-group">
-                <label for="agencyName" style="font-size: 16px;">ชื่อองค์กร</label>
-                <input type="text" id="agencyName" formControlName="agencyName" required placeholder="กรอกอีเมลของคุณ">
-                <div
-                  *ngIf="regisForm.get('agencyName')?.invalid && (regisForm.get('agencyName')?.touched || regisForm.get('agencyName')?.dirty)">
+                <label for="agency_name" style="font-size: 16px;">ชื่อองค์กร</label>
+                <input type="text" id="agency_name" formControlName="agency_name" required placeholder="กรอกอีเมลของคุณ">
+                <div *ngIf="regisForm.get('agency_name')?.invalid && (regisForm.get('agency_name')?.touched || regisForm.get('agency_name')?.dirty)">
                   <small class="error-text">กรุณากรอกข้อมูล**</small>
                 </div>
               </div>
