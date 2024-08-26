@@ -114,9 +114,6 @@ export class ManageuserComponent implements OnInit {
       }
     }
 
-    openRegister(){
-      this.router.navigate(['/register']);
-    }
     exportToExcel(): void {
       // กำหนดข้อมูลตามลำดับคอลัมน์ที่ต้องการ
       const exportData = this.user.map((users, index) => ({
@@ -144,5 +141,8 @@ export class ManageuserComponent implements OnInit {
       // เพิ่มตัวนับ
       this.exportCounter++;
     }
+  openaddperson() {
+    this.router.navigate(['/addperson']);
+  }
 }
 

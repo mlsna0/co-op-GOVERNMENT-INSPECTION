@@ -95,6 +95,7 @@ function setRoutes(app): void {
 
   router.route('/agencyModel').get(agencyModelCtrl.getAll);
   router.route('/createagency').post(agencyModelCtrl.createAgency);
+//   router.route('/createagency').post(timestampModelCtrl.insert);
   router.route('getAgencies').get(agencyModelCtrl.getAgencies);
 //   router.route('/agencyModel').post(agencyModelCtrl.insert);
   router.route('/getAgencyById').get(agencyModelCtrl.getAgencyById);
@@ -243,7 +244,7 @@ function setRoutes(app): void {
 
             //เป็นการเลือกที่ ที่จะเก็บ ไฟล์ลงไป ว่าจะเก็บไว้ที่ไหน
             
-            fs.writeFileSync('D:/ProjFD/angualr-project-training/dist/server/singature/'+ req.body.oca + req.body.userId + '.pdf',
+            fs.writeFileSync('L:/projectNT/angualr-project-training/dist/server/singature/'+ req.body.oca + req.body.userId + '.pdf',
                 pdfBytes,
                 'binary'
             );
@@ -252,10 +253,10 @@ function setRoutes(app): void {
             console.log('userId:', req.body.userId);
 
             //ถ้าใช้เเบบนี้ จะมีการดึงข้อมูลเเบบรูปโปรไฟล์
-            return res.json(true)
+            // return res.json(true)
 
             //หรือ จะดึงมาใช้เเบบนี้ก็ได้
-            // return res.json('http://localhost:4200/singature/' + req.body.oca + req.body.requestId + req.body.userId + '.pdf')
+            return res.json('http://localhost:3000/api/stampSignature/ ' + req.body.oca + req.body.requestId + req.body.userId + '.pdf')
         } catch (err) {
             if (err.message == 'PKCS#12 MAC could not be verified. Invalid password?') {
                 console.log("Wrong Password =>");
