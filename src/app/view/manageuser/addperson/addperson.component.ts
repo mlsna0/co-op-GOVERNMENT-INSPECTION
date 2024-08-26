@@ -4,7 +4,7 @@ import { Router } from "@angular/router";
 import { loginservice } from "app/layouts/login.services.";
 import Swal from "sweetalert2";
 
-import { ThaiApiAddressService } from '../../services/thai-api-address.service'
+import { ThaiApiAddressService } from '../../../services/thai-api-address.service'
 import { ProvinceService } from "app/view/thaicounty/thaicounty.service";
 
 @Component({

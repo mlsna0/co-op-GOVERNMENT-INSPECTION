@@ -50,6 +50,11 @@ export class loginservice {
     console.log("data in formdata", formData)
     return this.http.post(`${this.baseUrl}/registerModel`, formData);
   }
+
+  agency(formData: FormData): Observable<any> {
+    console.log("data in formdata", formData)
+    return this.http.post(`${this.baseUrl}/createagency`, formData);
+  }                                        
   
   updateProfile(userData: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/registerModel/updateProfile`, userData).pipe(
@@ -189,5 +194,11 @@ resetUserPassword(userIdToReset: string): Observable<any> {
     })
   );
 }
+
+
+getagency(): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/agencyModel`);
+}
+
 }
 
