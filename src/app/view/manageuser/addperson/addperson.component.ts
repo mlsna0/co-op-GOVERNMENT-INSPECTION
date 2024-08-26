@@ -80,6 +80,7 @@ export class AddpersonComponent implements OnInit {
 
   onSubmit(data) {
     console.log(1111)
+    
     this.Submitted = true; 
     if (this.regisForm.invalid) {
       if (this.regisForm.controls.password.errors?.minlength || this.regisForm.controls.confirmpassword.errors?.minlength) {

@@ -13,14 +13,13 @@ import { ProvinceService } from "app/view/thaicounty/thaicounty.service";
   styleUrls: ['./addagency.component.css']
 })
 export class AddagencyComponent implements OnInit {
-  
   firstname: string;
   lastname: string;
   email: string;
   password: string;
   confirmpassword: string; // เพิ่มบรรทัดนี้
   phone: string;
-  regisForm: any;
+  agenForm: any;
   Submitted:boolean=false;
 
   provinces: any[] = [];
@@ -44,6 +43,7 @@ export class AddagencyComponent implements OnInit {
 
   imageSrc: string | ArrayBuffer | null = null;
   profileImage: string| ArrayBuffer | null = null;
+  
   constructor(
     private fb: FormBuilder,
     private lc: loginservice,
@@ -51,8 +51,8 @@ export class AddagencyComponent implements OnInit {
    
     private ts :ProvinceService,
   ) {
-    this.regisForm = this.fb.group({
-      agencyName: ["", Validators.required],
+    this.agenForm = this.fb.group({
+      agency_name: ["", Validators.required],
       email: ["", [Validators.required, Validators.email]],
       phone: ["", Validators.required, Validators.pattern('^[0-9]{10}$')],
       address:["", Validators.required],
@@ -60,7 +60,9 @@ export class AddagencyComponent implements OnInit {
       amphure: ['', Validators.required],
       tambon: ['', Validators.required],
       postCode: ['', Validators.required],
-    }, { validator: this.passwordMatchValidator });
+  
+      // profileImage: ['']
+    })
   }  
 
   ngOnInit(): void {
@@ -73,49 +75,18 @@ export class AddagencyComponent implements OnInit {
 
 
   onSubmit(data) {
-    console.log(1111)
-    this.Submitted = true; 
-    if (this.regisForm.invalid) {
-      if (this.regisForm.controls.password.errors?.minlength || this.regisForm.controls.confirmpassword.errors?.minlength) {
-        Swal.fire({
-          title: "รหัสผ่านไม่ครบ!",
-          text: "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร",
-          icon: "error",
-          confirmButtonText: "ตกลง",
-        });
-      }
-      return;
-    }
-  
-    if (this.regisForm.value.password !== this.regisForm.value.confirmpassword) {
-      Swal.fire({
-        title: "รหัสผ่านไม่ตรงกัน!",
-        text: "กรุณากรอกรหัสผ่านให้ตรงกัน",
-        icon: "error",
-        confirmButtonText: "ตกลง",
-        customClass: {
-          confirmButton: "custom-confirm-button",
-        },
-      });
-      return;
-    }
-  
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-    console.log(fileInput);
-    
-    const file = fileInput?.files?.[0]; // Get the file from the input
-  
-    const formData = new FormData();
-    Object.keys(this.regisForm.controls).forEach(key => {
-      formData.append(key, this.regisForm.get(key)?.value);
-    });
-    if (file) {
-      formData.append('profileImage', file);
-    }
-  
-    this.lc.agency(formData).subscribe(
+    console.log('data:',data)
+    this.Submitted = false; 
+   
+    // const formData = new FormData();
+    // Object.keys(this.agenForm.controls).forEach(key => {
+    //   formData.append(key, this.agenForm.get(key)?.value);
+    // });
+   
+
+    this.lc.agency(data).subscribe(
       (response) => {
-        console.log("User registered successfully", response);
+        console.log("User postagency successfully", response);
         Swal.fire({
           title: "ลงทะเบียนสำเร็จ!",
           text: "ผู้ใช้ถูกลงทะเบียนเรียบร้อยแล้ว",
@@ -130,7 +101,7 @@ export class AddagencyComponent implements OnInit {
               "style",
               "background-color: #24a0ed; color: white;"
             );
-            this.router.navigate(["/manageagency"]);
+            this.router.navigate(["/addagency"]);
           }
         })
       },
@@ -150,17 +121,6 @@ export class AddagencyComponent implements OnInit {
 
   }
 
-  passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password');
-    const confirmPassword = form.get('confirmpassword');
-
-    if (password?.value !== confirmPassword?.value) {
-      confirmPassword?.setErrors({ mustMatch: true });
-    } else {
-      confirmPassword?.setErrors(null);
-    }
-  }
-
   loadProvinces() {
     this.ts.getProvincesWithDetails().subscribe(data => {
       this.provinces = data;
@@ -168,8 +128,8 @@ export class AddagencyComponent implements OnInit {
   }
 
   onProvinceChange(provinceId: number) {
-    this.regisForm.controls['amphure'].setValue('');
-    this.regisForm.controls['tambon'].setValue('');
+    this.agenForm.controls['amphure'].setValue('');
+    this.agenForm.controls['tambon'].setValue('');
     this.filteredTambons = [];
 
     this.isAmphureDisabled = !provinceId;
@@ -188,7 +148,7 @@ export class AddagencyComponent implements OnInit {
   }
 
   onAmphuresChange(amphureId: any) {
-    this.regisForm.controls['tambon'].setValue('');
+    this.agenForm.controls['tambon'].setValue('');
 
     this.isTambonDisabled = !amphureId;
     this.isPostCodeDisabled = true;
@@ -217,7 +177,7 @@ export class AddagencyComponent implements OnInit {
   deletedFileUpload(fileInput:  ElementRef){
     this.imageSrc = null;
     fileInput.nativeElement.value = '';
-    this.regisForm.patchValue({
+    this.agenForm.patchValue({
       profileImage: null
     });
   }

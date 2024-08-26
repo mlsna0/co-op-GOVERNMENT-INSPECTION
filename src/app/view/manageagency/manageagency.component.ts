@@ -51,31 +51,10 @@ export class ManageagencyComponent implements OnInit {
     });
   }
 
-
       getUserReportProfile(userId: any) {
     this.router.navigate(['/profileuser', userId]);
     }
 
-
-
-  // onRoleChange(user: any) {
-  //   console.log('User ID:', user.id); // เพิ่มบรรทัดนี้เพื่อตรวจสอบค่า user.id
-  //   if (user.id) { // ตรวจสอบว่ามี user.id ก่อนทำการอัปเดต
-  //     this.ls.updateUserRole(user.id, user.role).subscribe(
-  //       (response) => {
-  //         console.log('Role updated successfully:', response);
-  //         // Optionally show a success message to the user
-  //       },
-  //       (error) => {
-  //         console.error('Error updating role:', error);
-  //         // Optionally show an error message to the user
-  //       }
-  //     );
-  //   } else {
-  //     console.error('User ID is missing');
-  //     // Optionally show an error message to the user
-  //   }
-  // }
   
   openaddagency() {
     this.router.navigate(['/addagency']);

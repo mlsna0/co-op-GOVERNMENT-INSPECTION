@@ -23,41 +23,26 @@
             <tr>
               <th  style="text-align: center; width: 5%;">ลำดับ</th>
               <th style="width: 10%;">ชื่อ</th>
-              <th style="width: 10%;">นามสกุล</th>
-              <th>อีเมล</th>
-              <th style="width: 10%;">ระดับผู้ใช้งาน</th>
-              <th  style="width: 12%;">สถานะผู้ใช้งาน</th>
-              <th  style="color: black;  font-size: 16px; text-align: center;"><i
-                  class="fa fa-gear"></i></th>
+              <th style="width: 10%;">เบอร์โทรศัพท์</th>
+              <th style="width: 10%;">อีเมล</th>
+              <!-- <th  style="color: black;  font-size: 16px; text-align: center;"><i
+                  class="fa fa-gear"></i></th> -->
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let users of user ; let i = index">
+            <tr *ngFor="let agency of agency ; let i = index">
               <td  style="text-align: center; width: 5%;">{{ i + 1 }}</td>
-              <td> {{ users.firstname }} </td>
-              <td> {{ users.lastname }} </td>
-              <td> {{ users.email }} </td>
-              <td>
-                <ng-container *ngIf="users.role === 'superadmin'; else roleDropdown">
-                  <span class="custom-role-display">superadmin</span>
-                </ng-container>
-                <ng-template #roleDropdown>
-                  <select [(ngModel)]="users.role" (change)="onRoleChange(users)" class="custom-role-display">
-                    <option value="user">user</option>
-                    <option value="admin">admin</option>
-                  </select>
-                </ng-template>
-              </td>
-              <td class="toggle-container">
-                 <input type="checkbox" id="checkbox{{i}}"  [(ngModel)]="users.isActive" (change)="updateUserStatus(users)">
-                 <label for="checkbox{{i}}" class="toggle-switch" ></label>
-              </td>
-               <td class="small-cell-text"> 
+              <td> {{ agency.agency_name }} </td>
+              <td> {{ agency.phone }} </td>
+              <td> {{ agency.email }} </td>
+            
+          
+               <!-- <td class="small-cell-text"> 
               <button (click)="getUserReportProfile(users.id)" style="border: none; background: none; color: black; text-align: center;" >
                 <i data-toggle="tooltip" title="ดูรายละเอียด" data-placement="top"
                   class="fa fa-file-text-o ModalIcon "></i>
               </button>
-            </td>  
+            </td>   -->
               </tr>
             </tbody>
         </table>
