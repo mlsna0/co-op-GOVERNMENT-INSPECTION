@@ -684,23 +684,39 @@ loadUser(): void {
                         }
                         this.provinceData[provinceName].users.push(document);
                         this.provinceData[provinceName].documentCount += document.documentCount;
-
                         document.documents.forEach(doc => {
-                            if (this.pdfs.some(pdf => pdf.name === doc.documentId)) {
-                                this.provinceData[provinceName].signedDocuments += 1;
-                            }
-
-                            // จัดกลุ่มข้อมูลตามเดือน
-                            const month = new Date(doc.creationDate).toLocaleString('default', { month: 'long' });
-                            if (!this.monthlyData[month]) {
-                                this.monthlyData[month] = { documentCount: 0, signedDocuments: 0 };
-                            }
-                            this.monthlyData[month].documentCount += 1;
-
-                            if (this.pdfs.some(pdf => pdf.name === doc.documentId)) {
-                                this.monthlyData[month].signedDocuments += 1;
-                            }
-                        });
+                          // ตรวจสอบว่ามีค่า doc.documentId และ doc.creationDate ก่อน
+                          if (!doc.documentId) {
+                              console.error('documentId is undefined or null');
+                              return;
+                          }
+                          if (!doc.creationDate) {
+                              console.error('creationDate is undefined or null');
+                              return;
+                          }
+                      
+                          if (this.pdfs.some(pdf => pdf.name === doc.documentId)) {
+                              this.provinceData[provinceName].signedDocuments += 1;
+                              console.log(`Document ID ${doc.documentId} is signed. Updated signedDocuments for province ${provinceName}: ${this.provinceData[provinceName].signedDocuments}`);
+                          }
+                      
+                          // จัดกลุ่มข้อมูลตามเดือน
+                          const month = new Date(doc.creationDate).toLocaleString('default', { month: 'long' });
+                          console.log(`Document ID: ${doc.documentId}, Creation Date: ${doc.creationDate}, Month: ${month}`);
+                          
+                          if (!this.monthlyData[month]) {
+                              this.monthlyData[month] = { documentCount: 0, signedDocuments: 0 };
+                              console.log(`Initializing monthlyData for ${month}`);
+                          }
+                      
+                          this.monthlyData[month].documentCount += 1;
+                          console.log(`Updated documentCount for ${month}: ${this.monthlyData[month].documentCount}`);
+                      
+                          if (this.pdfs.some(pdf => pdf.name === doc.documentId)) {
+                              this.monthlyData[month].signedDocuments += 1;
+                              console.log(`Document ID ${doc.documentId} is signed. Updated signedDocuments for ${month}: ${this.monthlyData[month].signedDocuments}`);
+                          }
+                      });
 
                         this.totalDocuments += this.provinceData[provinceName].documentCount;
                         this.totalSignedDocuments += this.provinceData[provinceName].signedDocuments;
