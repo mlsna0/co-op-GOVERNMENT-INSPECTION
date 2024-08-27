@@ -13,14 +13,13 @@ import { ProvinceService } from "app/view/thaicounty/thaicounty.service";
   styleUrls: ['./addagency.component.css']
 })
 export class AddagencyComponent implements OnInit {
-  
   firstname: string;
   lastname: string;
   email: string;
   password: string;
   confirmpassword: string; // เพิ่มบรรทัดนี้
   phone: string;
-  regisForm: any;
+  agenForm: any;
   Submitted:boolean=false;
 
   provinces: any[] = [];
@@ -44,6 +43,7 @@ export class AddagencyComponent implements OnInit {
 
   imageSrc: string | ArrayBuffer | null = null;
   profileImage: string| ArrayBuffer | null = null;
+  
   constructor(
     private fb: FormBuilder,
     private lc: loginservice,
@@ -51,7 +51,7 @@ export class AddagencyComponent implements OnInit {
    
     private ts :ProvinceService,
   ) {
-    this.regisForm = this.fb.group({
+    this.agenForm = this.fb.group({
       agency_name: ["", Validators.required],
       email: ["", [Validators.required, Validators.email]],
       phone: ["", Validators.required, Validators.pattern('^[0-9]{10}$')],
@@ -60,7 +60,9 @@ export class AddagencyComponent implements OnInit {
       amphure: ['', Validators.required],
       tambon: ['', Validators.required],
       postCode: ['', Validators.required],
-    });
+  
+      // profileImage: ['']
+    })
   }  
 
   ngOnInit(): void {
@@ -72,66 +74,53 @@ export class AddagencyComponent implements OnInit {
   }
 
 
-  onSubmit() {
-    console.log("Form Submitted");
-    this.Submitted = true;
+  onSubmit(data) {
+    console.log('data:',data)
+    this.Submitted = false; 
+   
+    // const formData = new FormData();
+    // Object.keys(this.agenForm.controls).forEach(key => {
+    //   formData.append(key, this.agenForm.get(key)?.value);
+    // });
+   
 
-    const formData = new FormData();
-    Object.keys(this.regisForm.controls).forEach(key => {
-        const value = this.regisForm.get(key)?.value;
-        console.log(`Key: ${key}, Value: ${value}`); // ตรวจสอบค่าก่อนใส่ลงใน formData
-        formData.append(key, value);
-    });
-
-    console.log("Form Data:", formData); // ตรวจสอบข้อมูลใน FormData
-
-    this.lc.agency(formData).subscribe(
-        (response) => {
-            console.log("User registered successfully", response);
-            Swal.fire({
-                title: "ลงทะเบียนสำเร็จ!",
-                text: "ผู้ใช้ถูกลงทะเบียนเรียบร้อยแล้ว",
-                icon: "success",
-                confirmButtonText: "ตกลง",
-                customClass: {
-                    confirmButton: "custom-confirm-button",
-                },
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.querySelector(".swal2-confirm")?.setAttribute(
-                        "style",
-                        "background-color: #24a0ed; color: white;"
-                    );
-                    this.router.navigate(["/manageagency"]);
-                }
-            });
-        },
-        (error) => {
-            console.error("Error registering user", error);
-            Swal.fire({
-                title: "เกิดข้อผิดพลาด!",
-                text: "เกิดข้อผิดพลาดในการลงทะเบียนผู้ใช้",
-                icon: "error",
-                confirmButtonText: "ตกลง",
-                customClass: {
-                    confirmButton: "custom-confirm-button",
-                },
-            });
-        }
+    this.lc.agency(data).subscribe(
+      (response) => {
+        console.log("User postagency successfully", response);
+        Swal.fire({
+          title: "ลงทะเบียนสำเร็จ!",
+          text: "ผู้ใช้ถูกลงทะเบียนเรียบร้อยแล้ว",
+          icon: "success",
+          confirmButtonText: "ตกลง",
+          customClass: {
+            confirmButton: "custom-confirm-button",
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.querySelector(".swal2-confirm")?.setAttribute(
+              "style",
+              "background-color: #24a0ed; color: white;"
+            );
+            this.router.navigate(["/addagency"]);
+          }
+        })
+      },
+      (error) => {
+        console.error("Error registering user", error);
+        Swal.fire({
+          title: "เกิดข้อผิดพลาด!",
+          text: "เกิดข้อผิดพลาดในการลงทะเบียนผู้ใช้",
+          icon: "error",
+          confirmButtonText: "ตกลง",
+          customClass: {
+            confirmButton: "custom-confirm-button",
+          },
+        });
+      } 
     );
+
 }
 
-
-  passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password');
-    const confirmPassword = form.get('confirmpassword');
-
-    if (password?.value !== confirmPassword?.value) {
-      confirmPassword?.setErrors({ mustMatch: true });
-    } else {
-      confirmPassword?.setErrors(null);
-    }
-  }
 
   loadProvinces() {
     this.ts.getProvincesWithDetails().subscribe(data => {
@@ -140,8 +129,8 @@ export class AddagencyComponent implements OnInit {
   }
 
   onProvinceChange(provinceId: number) {
-    this.regisForm.controls['amphure'].setValue('');
-    this.regisForm.controls['tambon'].setValue('');
+    this.agenForm.controls['amphure'].setValue('');
+    this.agenForm.controls['tambon'].setValue('');
     this.filteredTambons = [];
 
     this.isAmphureDisabled = !provinceId;
@@ -160,7 +149,7 @@ export class AddagencyComponent implements OnInit {
   }
 
   onAmphuresChange(amphureId: any) {
-    this.regisForm.controls['tambon'].setValue('');
+    this.agenForm.controls['tambon'].setValue('');
 
     this.isTambonDisabled = !amphureId;
     this.isPostCodeDisabled = true;
@@ -189,7 +178,7 @@ export class AddagencyComponent implements OnInit {
   deletedFileUpload(fileInput:  ElementRef){
     this.imageSrc = null;
     fileInput.nativeElement.value = '';
-    this.regisForm.patchValue({
+    this.agenForm.patchValue({
       profileImage: null
     });
   }

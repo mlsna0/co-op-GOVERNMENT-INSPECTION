@@ -6,13 +6,22 @@
       </div>
   
       <div class="col-sm-12">
+<<<<<<< HEAD
         <form [formGroup]="regisForm" (ngSubmit)="onSubmit()">
+=======
+        <form [formGroup]="agenForm" (ngSubmit)="onSubmit(agenForm.value)">
+>>>>>>> 09cc02987e8734487728deab194f9b57849a3486
           <div class="row box">
             <div class="col-sm-12" style="padding-right: 0;">
               <div class="form-group">
                 <label for="agency_name" style="font-size: 16px;">ชื่อองค์กร</label>
                 <input type="text" id="agency_name" formControlName="agency_name" required placeholder="กรอกอีเมลของคุณ">
+<<<<<<< HEAD
                 <div *ngIf="regisForm.get('agency_name')?.invalid && (regisForm.get('agency_name')?.touched || regisForm.get('agency_name')?.dirty)">
+=======
+                <div
+                  *ngIf="agenForm.get('agency_name')?.invalid && (agenForm.get('agency_name')?.touched || agenForm.get('agency_name')?.dirty)">
+>>>>>>> 09cc02987e8734487728deab194f9b57849a3486
                   <small class="error-text">กรุณากรอกข้อมูล**</small>
                 </div>
               </div>
@@ -23,7 +32,7 @@
                 <label for="email" style="font-size: 16px;">อีเมล</label>
                 <input type="email" id="email" formControlName="email" required placeholder="กรอกรหัสผ่านของคุณ">
                 <div
-                  *ngIf="regisForm.get('email')?.invalid && (regisForm.get('email')?.touched || regisForm.get('email')?.dirty)">
+                  *ngIf="agenForm.get('email')?.invalid && (agenForm.get('email')?.touched || agenForm.get('email')?.dirty)">
                   <small class="error-text">กรุณากรอกข้อมูล**</small>
                 </div>
               </div>
@@ -34,7 +43,7 @@
                 <input type="text" id="phone" formControlName="phone" required
                   placeholder="กรอกรหัสผ่านของคุณ">
                 <div
-                  *ngIf="regisForm.get('phone')?.invalid && (regisForm.get('phone')?.touched || regisForm.get('phone')?.dirty)">
+                  *ngIf="agenForm.get('phone')?.invalid && (agenForm.get('phone')?.touched || agenForm.get('phone')?.dirty)">
                   <small class="error-text">กรุณากรอกข้อมูล**</small>
                 </div>
               </div>
@@ -48,7 +57,7 @@
                   <label for="address" style="font-size: 16px;">ที่ตั้งองค์กร</label>
                   <input type="text" id="address" formControlName="address" required placeholder="กรอกที่อยู่">
                   <div
-                    *ngIf="regisForm.get('address')?.invalid && (regisForm.get('address')?.touched || regisForm.get('address')?.dirty)">
+                    *ngIf="agenForm.get('address')?.invalid && (agenForm.get('address')?.touched || agenForm.get('address')?.dirty)">
                     <small class="error-text">กรุณากรอกข้อมูล****</small>
                   </div>
                 </div>

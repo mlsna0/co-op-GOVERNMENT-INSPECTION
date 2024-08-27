@@ -21,6 +21,8 @@ export class AddpersonComponent implements OnInit {
   phone: string;
   regisForm: any;
   Submitted:boolean=false;
+  organization: any[] = [];
+
 
   provinces: any[] = [];
   amphures: any[] = [];
@@ -75,11 +77,13 @@ export class AddpersonComponent implements OnInit {
     // this.loadTambon()
 
     this.loadProvinces(); // Load provinces when the component initializes
+    this.loadOrganizations();
   }
 
 
   onSubmit(data) {
     console.log(1111)
+    
     this.Submitted = true; 
     if (this.regisForm.invalid) {
       if (this.regisForm.controls.password.errors?.minlength || this.regisForm.controls.confirmpassword.errors?.minlength) {
@@ -242,5 +246,19 @@ onFileUploadImgChange(event: any) {
   }
 }
 
-
+loadOrganizations() {
+  this.lc.getagency().subscribe(data => {
+    console.log(data); // ตรวจสอบข้อมูลที่ได้รับ
+        this.organization = data;
+        console.log(data); // ตรวจสอบข้อมูลที่ได้รับ
+      });
+      
+    }
 }
+
+// loadProvinces() {
+//   this.lc.getagency().subscribe(data => {
+//     this.organizations = data;
+//   });
+// }
+// }
