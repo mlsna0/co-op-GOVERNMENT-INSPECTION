@@ -755,22 +755,22 @@ get personal(): FormArray {
               }
           });
         });
-        // this.toastr.error('กรุณากรอกข้อมูลให้ครบทุกช่อง', 'เกิดข้อผิดพลาด!', {
-        //   timeOut: 1500,
-        //   positionClass: 'toast-top-right'
-        // });
-      Swal.fire({
-        title: 'เกิดข้อผิดพลาด!',
-        text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง',
-        icon: 'error',
-        timer: 1500,
-        // confirmButtonText: 'ตกลง',
-        showConfirmButton: false, 
+        this.toastr.error('กรุณากรอกข้อมูลให้ครบทุกช่อง', 'เกิดข้อผิดพลาด!', {
+          timeOut: 1500,
+          positionClass: 'toast-top-right'
+        });
+      // Swal.fire({
+      //   title: 'เกิดข้อผิดพลาด!',
+      //   text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง',
+      //   icon: 'error',
+      //   timer: 1500,
+      //   // confirmButtonText: 'ตกลง',
+      //   showConfirmButton: false, 
         // customClass: {
         //   confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
         // }
 
-      });
+      // });
       return;
     }
    
@@ -785,30 +785,30 @@ get personal(): FormArray {
     
     this.sv.postDataTest(this.addItemForm.value, token).subscribe(res => {
       console.log("res submitted successfully", res);
-      // this.toastr.success('เพิ่มข้อมูลสำเร็จ', 'สำเร็จ', {
-      //   timeOut: 2500,  
-      //   positionClass: 'toast-top-right'
-      // })
-      // setTimeout(() => {
-      //   this.refreshPage(); // เรียกใช้ฟังก์ชันรีเฟรชหน้า
-      // }, 2500);
+      this.toastr.success('เพิ่มข้อมูลสำเร็จ', 'สำเร็จ', {
+        timeOut: 2500,  
+        positionClass: 'toast-top-right'
+      })
+      setTimeout(() => {
+        this.refreshPage(); // เรียกใช้ฟังก์ชันรีเฟรชหน้า
+      }, 2500);
       
-      Swal.fire({
-              title: 'เพิ่มรายการสำเร็จ!!',
-              text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
-              icon: 'success',
-              timer: 1500,
-              showConfirmButton: false, 
-              // confirmButtonText: 'ตกลง',
-              // customClass: {
-              //   confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-              // }
+      // Swal.fire({
+      //         title: 'เพิ่มรายการสำเร็จ!!',
+      //         text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
+      //         icon: 'success',
+      //         timer: 1500,
+      //         showConfirmButton: false, 
+      //         // confirmButtonText: 'ตกลง',
+      //         // customClass: {
+      //         //   confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+      //         // }
 
-      }).then((result)=>{
-        if (result.dismiss === Swal.DismissReason.timer){
-          this.refreshPage();
-        }
-      });
+      // }).then((result)=>{
+      //   if (result.dismiss === Swal.DismissReason.timer){
+      //     this.refreshPage();
+      //   }
+      // });
       $('#insertModel').modal('hide');
       this.addItemForm.reset();
       this.personInputs.clear(); // Clear FormArray
@@ -817,25 +817,25 @@ get personal(): FormArray {
     },
     error =>{
       console.error('Error submitting data:', error);
-      // this.toastr.error('การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ', 'เกิดข้อผิดพลาด!', {
-      //   timeOut: 1500,
-      //   positionClass: 'toast-top-right'
-      // });
-      Swal.fire({
-            title: 'เกิดข้อผิดพลาด!',
-            text: 'การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ',
-            icon: 'error',
-            timer: 1500,
-            showConfirmButton: false, 
-            // confirmButtonText: 'ตกลง',
-            // confirmButtonColor: "#24a0ed",
-            // customClass: {
-            //   confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-            // }
-          }).then((result)=>{
-            if (result.dismiss === Swal.DismissReason.timer){
-            }
-          });
+      this.toastr.error('การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ', 'เกิดข้อผิดพลาด!', {
+        timeOut: 1500,
+        positionClass: 'toast-top-right'
+      });
+      // Swal.fire({
+      //       title: 'เกิดข้อผิดพลาด!',
+      //       text: 'การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ',
+      //       icon: 'error',
+      //       timer: 1500,
+      //       showConfirmButton: false, 
+      //       // confirmButtonText: 'ตกลง',
+      //       // confirmButtonColor: "#24a0ed",
+      //       // customClass: {
+      //       //   confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
+      //       // }
+      //     }).then((result)=>{
+      //       if (result.dismiss === Swal.DismissReason.timer){
+      //       }
+      //     });
 
     }
     

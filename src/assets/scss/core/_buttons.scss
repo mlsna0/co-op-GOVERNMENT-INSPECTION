@@ -1,10 +1,12 @@
 .mat-button.btn,.mat-raised-button.btn,.mat-raised-button.btn:not([class*=mat-elevation-z]),
 .btn{
   position: relative;
-  padding: 12px 30px;
+  // padding: 12px 30px;
+  padding: 10px; //petch add
   margin: $bmd-btn-margin-bottom 1px;
   min-width: auto;
-  font-size: .75rem; //  12px
+  // font-size: .75rem; //  12px
+  font-size: 14px; //petch add
   font-weight: 400;
   line-height: $bmd-line-height;
   text-decoration: none;

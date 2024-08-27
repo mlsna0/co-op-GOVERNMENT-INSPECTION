@@ -6,42 +6,46 @@
       <li class="breadcrumb-item active"><a aria-current="page" >รายงานการเข้าใช้งาน</a></li>
     </ol>
   </nav>
-  <div class="card">
-    <div class="card-header"> <!-- card-header-danger-->
-      <div class="card-title">
-        <p style="margin: 0;" href="">รายงานการเข้าใช้งาน</p>
-        <!-- <div class="sub-title">
-            แสดงรายชื่อผู้เข้าใช้งานระบบ
-        </div> -->
+
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"> <!-- card-header-danger-->
+        <div class="card-title">
+          <p style="margin: 0;" href="">รายงานการเข้าใช้งาน</p>
+          <!-- <div class="sub-title">
+              แสดงรายชื่อผู้เข้าใช้งานระบบ
+          </div> -->
+        </div>
+        <button (click)="exportToExcel()" class="btn btn-success " style="float: right;">Export to excel</button>
       </div>
-      <button (click)="exportToExcel()" class="btn btn-success " style="float: right;">Export to excel</button>
-    </div>
-    <div class="card-body">
-      <table width="100%" datatable [dtOptions]="dtOptions" class="table table-striped table-bordered" *ngIf="!loading">
-        <thead>
-          <tr>
-            <th class="small-cell" style="text-align: center; width: 5%;">ลำดับ</th>
-            <th class="small-name">ชื่อ</th>
-            <th class="small-name">อีเมล</th>
-            <th class="small-name">ระดับผู้ใช้งาน</th>
-            <th class="small-cell">วันที่เข้าใช้งาน</th>
-            <th class="small-cell">เวลาที่เข้าใช้งาน</th>
-            <!-- <th class="small-cell" style="color: black; font-size: 16px; text-align: center;">
-              <i class="fa fa-gear"></i>
-            </th> -->
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let users of user; let i = index">
-            <td class="small-cell" style="text-align: center; width: 5%;">{{ i + 1 }}</td>
-            <td class="small-name">{{ users.firstname }}</td>
-            <td class="small-name">{{ users.email }}</td>
-            <td class="small-name">{{ users.role }}</td>
-            <td class="small-name">{{ users.date }}</td>
-            <td class="small-name">{{ users.time }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="card-body">
+        <table width="100%" datatable [dtOptions]="dtOptions" class="table table-striped table-bordered" *ngIf="!loading">
+          <thead>
+            <tr>
+              <th class="small-cell" style="text-align: center; width: 5%;">ลำดับ</th>
+              <th class="small-name">ชื่อ</th>
+              <th class="small-name">อีเมล</th>
+              <th class="small-name">ระดับผู้ใช้งาน</th>
+              <th class="small-cell">วันที่เข้าใช้งาน</th>
+              <th class="small-cell">เวลาที่เข้าใช้งาน</th>
+              <!-- <th class="small-cell" style="color: black; font-size: 16px; text-align: center;">
+                <i class="fa fa-gear"></i>
+              </th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let users of user; let i = index">
+              <td class="small-cell" style="text-align: center; width: 5%;">{{ i + 1 }}</td>
+              <td class="small-name">{{ users.firstname }}</td>
+              <td class="small-name">{{ users.email }}</td>
+              <td class="small-name">{{ users.role }}</td>
+              <td class="small-name">{{ users.date }}</td>
+              <td class="small-name">{{ users.time }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
+
 </div>
