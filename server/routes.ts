@@ -95,6 +95,7 @@ function setRoutes(app): void {
 
   router.route('/agencyModel').get(agencyModelCtrl.getAll);
   router.route('/createagency').post(agencyModelCtrl.createAgency);
+//   router.route('/createagency').post(timestampModelCtrl.insert);
   router.route('getAgencies').get(agencyModelCtrl.getAgencies);
 //   router.route('/agencyModel').post(agencyModelCtrl.insert);
   router.route('/getAgencyById').get(agencyModelCtrl.getAgencyById);
@@ -243,7 +244,7 @@ function setRoutes(app): void {
 
             //เป็นการเลือกที่ ที่จะเก็บ ไฟล์ลงไป ว่าจะเก็บไว้ที่ไหน
             
-            fs.writeFileSync('D:/ProjFD/angualr-project-training/dist/server/singature/'+ req.body.oca + req.body.userId + '.pdf',
+            fs.writeFileSync('L:/projectNT/angualr-project-training/dist/server/singature/'+ req.body.oca + req.body.userId + '.pdf',
                 pdfBytes,
                 'binary'
             );

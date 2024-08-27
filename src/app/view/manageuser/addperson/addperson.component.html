@@ -2,11 +2,11 @@
 <div class="register-card">
     <div class="row">
       <div class="col-sm-12">
-        <h2>เพิ่มผู้ใช้งาน</h2>
+        <h2>เพิ่มองค์กร</h2>
       </div>
   
       <div class="col-sm-12">
-        <form [formGroup]="regisForm" (ngSubmit)="onSubmit(regisForm.data)">
+        <form [formGroup]="regisForm" (ngSubmit)="onSubmit(regisForm.value)">
           <div class="row box">
             <div class="col-sm-12" style="padding-right: 0;">
               <div class="form-group">
@@ -74,12 +74,10 @@
               <div class="row">
                 <div class="col-sm-6">
                   <div class="form-group">
-                    <label for="organization" style="font-size: 16px;">องค์กร / หน่วยงาน</label>
-                    <input type="text" id="organization" formControlName="organization" required placeholder="กรอกชื่อของคุณ">
-                    <div
-                      *ngIf="regisForm.get('organization')?.invalid && (regisForm.get('organization')?.touched || regisForm.get('organization')?.dirty)">
-                      <small class="error-text">กรุณากรอกข้อมูล**</small>
-                    </div>
+                    <label for="organization">องค์กร / หน่วยงาน</label>
+                    <select id="organization" formControlName="organization" class="form-control">
+                      <option *ngFor="let org of organization" [value]="org.agency_name">{{ org.agency_name }}</option>
+                    </select>
                   </div>
                 </div>
                 <div class="col-sm-6" style="padding-right: 0;">
