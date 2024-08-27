@@ -5,12 +5,7 @@ class AgencyModelCtrl extends BaseCtrl {
     model = Agency;
     createAgency = async (req, res) => {
         try {
-<<<<<<< HEAD
-            console.log("Request Body:", req.body); // ตรวจสอบค่าที่ได้รับจาก request
-            
-=======
             console.log(req.body);
->>>>>>> 09cc02987e8734487728deab194f9b57849a3486
             const { agency_name, email, phone, address, province, amphure, tambon, postCode } = req.body;
     
             const agency = new this.model({

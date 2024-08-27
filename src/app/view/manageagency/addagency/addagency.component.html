@@ -6,22 +6,14 @@
       </div>
   
       <div class="col-sm-12">
-<<<<<<< HEAD
-        <form [formGroup]="regisForm" (ngSubmit)="onSubmit()">
-=======
         <form [formGroup]="agenForm" (ngSubmit)="onSubmit(agenForm.value)">
->>>>>>> 09cc02987e8734487728deab194f9b57849a3486
           <div class="row box">
             <div class="col-sm-12" style="padding-right: 0;">
               <div class="form-group">
                 <label for="agency_name" style="font-size: 16px;">ชื่อองค์กร</label>
                 <input type="text" id="agency_name" formControlName="agency_name" required placeholder="กรอกอีเมลของคุณ">
-<<<<<<< HEAD
-                <div *ngIf="regisForm.get('agency_name')?.invalid && (regisForm.get('agency_name')?.touched || regisForm.get('agency_name')?.dirty)">
-=======
                 <div
                   *ngIf="agenForm.get('agency_name')?.invalid && (agenForm.get('agency_name')?.touched || agenForm.get('agency_name')?.dirty)">
->>>>>>> 09cc02987e8734487728deab194f9b57849a3486
                   <small class="error-text">กรุณากรอกข้อมูล**</small>
                 </div>
               </div>
