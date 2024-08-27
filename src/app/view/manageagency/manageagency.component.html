@@ -8,13 +8,13 @@
     <div class="card">
       <div class="card-header "><!--card-header-danger-->
         <div class="card-title">  
-          <p> จัดการผู้ใช้งาน</p>
+          <p> จัดการองค์กร</p>
         
           <!-- <div class="sub-title">
             แสดงรายชื่อผู้ใช้งาน
           </div> -->
         </div>
-        <button (click)="openaddagency()" class="btn btn-add">เพิ่มผู้ใช้งาน</button>
+        <button (click)="openaddagency()" class="btn btn-add">เพิ่มองค์กร</button>
       </div>
       <div class="card-body">
         <table width="100%" datatable [dtOptions]="dtOptions" class="table table-striped table-bordered" *ngIf="!loading">

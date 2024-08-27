@@ -2,7 +2,7 @@
 <div class="register-card">
     <div class="row">
       <div class="col-sm-12">
-        <h2>เพิ่มองค์กร</h2>
+        <h2>เพิ่มผู้ใช้งาน</h2>
       </div>
   
       <div class="col-sm-12">
@@ -75,7 +75,8 @@
                 <div class="col-sm-6">
                   <div class="form-group">
                     <label for="organization">องค์กร / หน่วยงาน</label>
-                    <select id="organization" formControlName="organization" class="form-control">
+                    <select class="form-select" id="organization" formControlName="organization">
+                      <option value="" disabled selected>กรอกองค์กร / หน่วยงาน</option>
                       <option *ngFor="let org of organization" [value]="org.agency_name">{{ org.agency_name }}</option>
                     </select>
                   </div>
@@ -83,7 +84,7 @@
                 <div class="col-sm-6" style="padding-right: 0;">
                   <div class="form-group">
                     <label for="bearing" style="font-size: 16px;">ตำเเหน่ง / หน้าที่</label>
-                    <input type="text" id="bearing" formControlName="bearing" required placeholder="กรอกนามสกุลของคุณ">
+                    <input type="text" id="bearing" formControlName="bearing" required placeholder="ตำเเหน่ง / หน้าที่ ">
                     <div
                       *ngIf="regisForm.get('bearing')?.invalid && (regisForm.get('bearing')?.touched || regisForm.get('bearing')?.dirty)">
                       <small class="error-text">กรุณากรอกข้อมูล**</small>
@@ -115,6 +116,7 @@
                     <label for="province" style="font-size: 16px;">จังหวัด</label>
                     <select class="form-select" formControlName="province"
                       (change)="onProvinceChange($event.target.value)">
+                      <option value="" disabled selected>จังหวัด</option>
                       <option *ngFor="let province of provinces" [value]="province.id">{{ province.name_th }}</option>
                     </select>
                   </div>
@@ -125,6 +127,7 @@
                     <label for="amphure" style="font-size: 16px;">อำเภอ/เขต</label>
                     <select class="form-select" formControlName="amphure" (change)="onAmphuresChange($event.target.value)"
                       [attr.disabled]="isAmphureDisabled ? true : null">
+                      <option value="" disabled selected>อำเภอ/เขต</option>
                       <option *ngFor="let amphure of amphures" [value]="amphure.id">{{ amphure.name_th}}</option>
                     </select>
                   </div>
@@ -135,6 +138,7 @@
                     <label for="tambon" style="font-size: 16px;">ตำบล/แขวง</label>
                     <select class="form-select" formControlName="tambon" (change)="onTambonChange($event.target.value)"
                       [attr.disabled]="isTambonDisabled ? true : null">
+                      <option value="" disabled selected>ตำบล/แขวง</option>
                       <option *ngFor="let tambon of tambons" [value]="tambon.id">{{ tambon.name_th }}</option>
                     </select>
                   </div>
@@ -145,6 +149,7 @@
                     <label for="postCode" style="font-size: 16px;">รหัสไปรษณีย์</label>
                     <select class="form-select" formControlName="postCode"
                       [attr.disabled]="isPostCodeDisabled ? true : null">
+                      <option value="" disabled selected>รหัสไปรษณีย์</option>
                       <option *ngFor="let code of postCode" [value]="code">{{ code }}</option>
                     </select>
                   </div>
@@ -166,28 +171,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-sm-6" style="padding-right: 0;" >
-  
-              <label>อัปโหลดรูปภาพโปรไฟล์</label>
-              <div class="uploadPicture"[ngStyle]="{'display': imageSrc ? 'none' : 'flex'} ">
-                <div class="text-upload">
-                  <i class="fa fa-image"></i>
-                  <div>อัปโหลดไฟล์ หรือ โยนไฟล์ลงที่นี้</div>
-                </div>
-  
-                <input type="file" id="profileImage" formControlName="profileImage"  
-                accept="image/png, image/jpeg, image/jpg" 
-                (change)="onFileUploadImgChange($event)">
-  
-  
-  
-              </div>
-              <div class="profile-image-container" *ngIf="imageSrc">
-                <img [src]="imageSrc" alt="Profile Img" class="profile-image">
-                <i class="fa-regular fa-trash-can positionTrashCan" (click)="deletedFileUpload(fileInput)"></i>
-              </div>
-  
-            </div>
+           
           </div>
   
          
@@ -195,4 +179,8 @@
         </form>
       </div>
   
-    
+        <div class="col-sm-12">
+          <div class="footer-links">
+            <a style="font-size: 14px; color: #24a0ed;"></a> &nbsp; <a routerLink="/manageuser"
+              class="adduser-link" style="font-size: 14px;">ย้อนกลับ</a>
+          </div>
