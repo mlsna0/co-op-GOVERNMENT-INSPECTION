@@ -65,6 +65,7 @@ export class ManageuserComponent implements OnInit {
         firstname: regUser.firstname,
         lastname: regUser.lastname,
         email: regUser.email,
+        organization: regUser.organization,
         role: user ? user.role : 'N/A', // หากไม่พบข้อมูล role
         isActive: user ? user.isActive : false
       };

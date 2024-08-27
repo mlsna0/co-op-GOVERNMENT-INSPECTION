@@ -158,7 +158,7 @@
   
   
           <div class="row box">
-            <div class="col-sm-6" style="padding-right: 0;">
+            <div class="col-sm-12" style="padding-right: 0;">
               <div class="form-group">
                 <label for="phone" style="font-size: 16px;">เบอร์โทรศัพท์</label>
                 <input type="tel" id="phone" formControlName="phone" required placeholder="กรอกเบอร์โทรศัทพ์ของคุณ">
@@ -168,32 +168,14 @@
                 </div>
               </div>
             </div>
-            <div class="col-sm-6" style="padding-right: 0;" >
-  
-              <label>อัปโหลดรูปภาพโปรไฟล์</label>
-              <div class="uploadPicture"[ngStyle]="{'display': imageSrc ? 'none' : 'flex'} ">
-                <div class="text-upload">
-                  <i class="fa fa-image"></i>
-                  <div>อัปโหลดไฟล์ หรือ โยนไฟล์ลงที่นี้</div>
-                </div>
-  
-                <input type="file" id="profileImage" formControlName="profileImage"  
-                accept="image/png, image/jpeg, image/jpg" 
-                (change)="onFileUploadImgChange($event)">
-  
-  
-  
-              </div>
-              <div class="profile-image-container" *ngIf="imageSrc">
-                <img [src]="imageSrc" alt="Profile Img" class="profile-image">
-                <i class="fa-regular fa-trash-can positionTrashCan" (click)="deletedFileUpload(fileInput)"></i>
-              </div>
-  
-            </div>
           </div>
   
          
           <button type="submit" class="btn-create-account">สร้างบัญชี</button>
+          <div class="footer-links">
+            <a type="button" [routerLink]="['/manageagency']" class="login-link" style="font-size: 14px;">ย้อนกลับ</a>
+          </div>
+       
         </form>
       </div>
   

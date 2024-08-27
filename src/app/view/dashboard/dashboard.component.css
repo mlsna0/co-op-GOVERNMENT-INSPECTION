@@ -1,8 +1,9 @@
 .dashboard {
-  margin-top: 40px;
+  margin-top: 50px;
   padding:40px 15px 0;
   display: flex;
   flex-wrap: wrap;
+  min-height: calc(100vh - 123px);
 }
 
 .global-sales,
@@ -69,7 +70,7 @@ h4{
   justify-content: space-between;
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid black;
+  border: 1px solid rgb(205, 204, 204);
   overflow: hidden;
 }
 .fa {

@@ -14,6 +14,7 @@
     width: 260px;
     background: $white-color;
     @include shadow-big();
+    z-index: 1040; //petch add
 
     .caret{
       display: inline-block;
@@ -503,6 +504,7 @@
           position: absolute;
           width: 100%;
           bottom: 13px;
+          border-top: 1px solid #dce5f1;
         }
       }
     }

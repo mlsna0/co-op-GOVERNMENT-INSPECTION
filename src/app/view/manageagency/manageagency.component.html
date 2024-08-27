@@ -1,14 +1,21 @@
 <div class="main-content">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
+      <li class="breadcrumb-item active"><a aria-current="page" > จัดการองค์กร</a></li>
+    </ol>
+  </nav>
+  <div class="container-fluid">
     <div class="card">
       <div class="card-header "><!--card-header-danger-->
         <div class="card-title">  
-          <a href=""> จัดการผู้ใช้งาน</a>
+          <a href=""> จัดการรายชื่อองค์กร</a>
         
           <!-- <div class="sub-title">
             แสดงรายชื่อผู้ใช้งาน
           </div> -->
         </div>
-        <button (click)="openaddperson()" class="btn btn-add position-btn">เพิ่มองค์กร</button>
+        <button (click)="openaddperson()" class="btn btn-add ">เพิ่มองค์กร</button>
       </div>
       <div class="card-body">
         <table width="100%" datatable [dtOptions]="dtOptions" class="table table-striped table-bordered" *ngIf="!loading">
@@ -49,4 +56,6 @@
         </table>
       </div>
     </div>
+  </div>
+  
   </div>

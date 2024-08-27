@@ -99,7 +99,8 @@
     }
 
     &.navbar-absolute{
-        position: absolute;
+        position: fixed; //petch add
+        // position: absolute;
         width: 100%;
         padding-top: 10px;
         z-index: 1029;

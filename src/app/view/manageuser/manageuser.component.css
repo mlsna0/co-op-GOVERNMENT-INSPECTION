@@ -65,14 +65,14 @@ h4{
   transition: 0.2s ease-in;
 }
 input:checked + .toggle-switch{
-  background-color: green;
+  background-color: #4caf50;
 }
 input:checked + .toggle-switch::before{
   transform: translateX(65px);
 
 }
 input:not(:checked) + .toggle-switch {
-  background-color: #ff0000f1; /* สีพื้นฐานเมื่อไม่ active */
+  background-color: #f44336; /* สีพื้นฐานเมื่อไม่ active */
 }
 
 input:not(:checked) + .toggle-switch::before {

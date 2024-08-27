@@ -1,17 +1,18 @@
 <div class="main-content">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
-          <li class="breadcrumb-item active"><a aria-current="page" >หน้าผู้ใช้งาน</a></li>
+            <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
+            <li class="breadcrumb-item active"><a aria-current="page">หน้าผู้ใช้งาน</a></li>
         </ol>
-      </nav>
+    </nav>
     <div class="container-fluid">
 
 
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title">การจัดการผู้ใช้งาน</h4>
-                <button class="btn btn-add" (click)="goToChangePassword()">เปลี่ยนรหัสผ่าน</button>
+
+                <!-- <button class="btn btn-add" (click)="testModal()">เปลี่ยนรหัสผ่าน</button> -->
             </div>
 
             <div class="card-body">
@@ -21,62 +22,64 @@
                     <div class="col-md-3">
                         <div class="card-user">
                             <div class="card-avatar">
-                                <a href="javascript:void(0)">
+                                <div style="height: 220px;" href="javascript:void(0)">
                                     <img class="img" [src]="profileImgUrl" />
                                     <button type="button" class="upload" (click)="openModal()">
                                         <i class="fa fa-camera"></i>
                                     </button>
-                                </a>
+                                </div>
+                                <div class="modal fade" id="profile-Modal" tabindex="-1" role="dialog"
+                                    aria-labelledby="addItemModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header" class="card-header">
+                                                <h5 class="modal-title" id="addItemModalLabel"
+                                                    style="color: rgb(0, 0, 0); font-family: 'Sarabun', sans-serif !important; font-size: 18px; font-weight: 900;">
+                                                    เปลี่ยนรูปภาพโปรไฟล์</h5>
 
-                                <div class="modal-overlay" *ngIf="showModal">
-                                    <div class="modal-content">
-                                        <div class="card-header" style="padding: 0;">
-                                            <a>เปลี่ยนรูปภาพโปรไฟล์</a>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                                (click)="closeModal()">
-                                                <span aria-hidden="true"
-                                                    style="display: flex; color: black; justify-content: flex-end;">&times;</span>
-                                            </button>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close" style="color: black;">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <form [formGroup]="UserInfoForm" (ngSubmit)="SaveUserInfo()">
+                                                <div class="modal-body">
+
+
+
+                                                    <input type="file" id="profileImage" formControlName="profileImage"
+                                                        accept="image/png, image/jpeg, image/jpg"
+                                                        (change)="onFileUploadImgChange($event)">
+
+
+                                                    <div class="profile-image-container">
+                                                        <img [src]="profileImgUrl"
+                                                            alt="profileImgUrl file form database "
+                                                            class="profile-image" [ngClass]="{'d-none': imageSrc}">
+
+                                                        <img [src]="imageSrc" alt="imageSrc file to upload"
+                                                            class="profile-image" [ngClass]="{'d-none': !imageSrc}">
+                                                        <i class="fa-regular fa-trash-can positionTrashCan"
+                                                            (click)="deletedFileUpload()"></i>
+                                                    </div>
+
+
+
+                                                </div>
+                                                <div class="footer-content">
+                                                    <button *ngIf="imageSrc" type="submit" class="btn btn-add">
+                                                        บันทึกเป็นรูปโปรไฟล์</button>
+                                                    <button *ngIf="imageSrc" type="button" class="btn btn-danger"
+                                                        (click)="deletedFileUpload(fileInput)">ยกเลิก</button>
+
+                                                </div>
+                                            </form>
                                         </div>
-
-                                        <form [formGroup]="UserInfoForm" (ngSubmit)="SaveUserInfo()">
-
-                        
-                                            <input type="file" id="profileImage" formControlName="profileImage"  
-                                            accept="image/png, image/jpeg, image/jpg" 
-                                            (change)="onFileUploadImgChange($event)" >
-                                        
-                                         
-                                            <div class="profile-image-container" >
-                                                <img 
-                                                 
-                                                [src]="profileImgUrl" 
-                                                alt="profileImgUrl file form database " 
-                                                class="profile-image"
-                                                [ngClass]="{'d-none': imageSrc}">
-
-                                                <img 
-                                                
-                                                [src]="imageSrc" 
-                                                alt="imageSrc file to upload" 
-                                                class="profile-image"
-                                                [ngClass]="{'d-none': !imageSrc}">
-                                                <i class="fa-regular fa-trash-can positionTrashCan" (click)="deletedFileUpload(fileInput)"></i>                                          
-                                            </div>
-
-                                            <div class="foot-upload">
-                                                
-                                        
-
-                                                <button *ngIf="imageSrc" type="submit" class="btn btn-add">
-                                                    บันทึกเป็นรูปโปรไฟล์</button>
-                                                <button *ngIf="imageSrc" type="button" class="btn btn-danger"
-                                                    (click)="deletedFileUpload(fileInput)">ยกเลิก</button>
-                                            </div>
-                                        </form>
                                     </div>
 
                                 </div>
+
+                
                             </div>
 
                             <div class="card-info">
@@ -84,7 +87,7 @@
                                     ระดับผู้ใช้งาน : {{UserData?.role}}
                                 </a>
                                 <a>
-                                    ชื่อ-นามสกุล : {{ UserData?.employeeId?.firstname }}  &nbsp;
+                                    ชื่อ-นามสกุล : {{ UserData?.employeeId?.firstname }} &nbsp;
                                     {{UserData?.employeeId?.lastname}}
                                 </a>
                                 <a>
@@ -97,26 +100,34 @@
                     </div>
 
                     <div class="col-md-9">
-                       
-                            <div class="userInfo">
-                                <div class="title">
-                                    <h4> ข้อมูลผู้ใช้</h4>
+
+                        <div class="userInfo">
+                            <div class="title">
+                                <h4> ข้อมูลผู้ใช้</h4>
+                                <div>
                                     <button type="button" class="btn btn-edit" (click)=" editProfile()">
                                         <i class="fa fa-pencil-square-o"></i> &nbsp; แก้ไขข้อมูล
                                     </button>
+                                    <button class="btn btn-add" (click)="goToChangePassword()">
+                                        เปลี่ยนรหัสผ่าน
+                                    </button>
+            
+                            
                                 </div>
-                                <div class="user-content">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label for="">ชื่อ-นามสกุล</label>
-                                        </div>
-                                 
-                                        <div class="col-md-9">
-                                            {{UserData?.employeeId?.firstname}}  &nbsp;   {{UserData?.employeeId?.lastname}}
-                                        </div>
 
+                            </div>
+                            <div class="user-content info-fontSize">
+                                <div class="row">
+                                    <div class="col-md-3 ">
+                                        <label for="">ชื่อ-นามสกุล</label>
                                     </div>
-                                    <!-- <div class="row">
+
+                                    <div class="col-md-9 ">
+                                        {{UserData?.employeeId?.firstname}} &nbsp; {{UserData?.employeeId?.lastname}}
+                                    </div>
+
+                                </div>
+                                <!-- <div class="row">
                                         <div class="col-md-3">
                                             <label for="">นามสกุล</label>
                                         </div>
@@ -127,97 +138,97 @@
                                             {{UserData?.employeeId?.lastname}}
                                         </div>
                                     </div> -->
-                                    <div class="group-info">
-                                        <div class="title-info">
-                                            <h4>ข้อมูลสถานที่ทำงาน</h4>
+                                <div class="group-info">
+                                    <div class="title-info">
+                                        <h4>ข้อมูลสถานที่ทำงาน</h4>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="">บริษัท/องค์กร</label>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <label for="">บริษัท/องค์กร</label>
-                                            </div>
-            
-                                            <div class="col-md-9">
-                                                {{UserData?.employeeId?.organization}}
-                                            </div>
+
+                                        <div class="col-md-9">
+                                            {{UserData?.employeeId?.organization}}
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <label for="">ที่อยู่</label>
-                                            </div>
-                                            <div class="col-md-9" >
-                                                {{UserData?.employeeId?.address}}
-                                            </div>
-
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="">ที่อยู่</label>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <label for=""></label>
-                                            </div>
-                                    
-                                        
-                                        
-                                            <div class="col-md-5">
-                                                ตำบล/แขวง : {{getTambonName(UserData?.employeeId?.tambon)}}
-                                            </div>
-                                            <div class="col-md-4" >
-                                                อำเภอ/เขต : {{getAmphureName(UserData?.employeeId?.amphure)}}
-                                            </div>
-
+                                        <div class="col-md-9">
+                                            {{UserData?.employeeId?.address}}
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <label for=""></label>
-                                            </div>
 
-                    
-                                         
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for=""></label>
+                                        </div>
 
-                                            <!-- <div class="col-md-4" >
+
+
+                                        <div class="col-md-5">
+                                            ตำบล/แขวง : {{getTambonName(UserData?.employeeId?.tambon)}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            อำเภอ/เขต : {{getAmphureName(UserData?.employeeId?.amphure)}}
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for=""></label>
+                                        </div>
+
+
+
+
+                                        <!-- <div class="col-md-4" >
                                                 รหัสไปรษณีย์ :
                                                 <div class="form-control">{{ UserInfoForm.controls['postCode'].value }}
                                                 </div>
                                                 <input type="text"formControlName="postCode"  class="form-control"  placeholder="รหัสไปรษณีย์"> 
                                             </div> -->
-                                            <div class="col-md-5" >
-                                                จังหวัด : {{getProvinceName(UserData?.employeeId?.province)}}
-                                            </div>
-                                            <div class="col-md-4" >
-                                                รหัสไปรษณีย์ : {{UserData?.employeeId?.postCode}}
-                                            </div>
+                                        <div class="col-md-5">
+                                            จังหวัด : {{getProvinceName(UserData?.employeeId?.province)}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            รหัสไปรษณีย์ : {{UserData?.employeeId?.postCode}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="title-info">
+                                            <h4>ข้อมูลติดต่อ</h4>
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="title-info">
-                                                <h4>ข้อมูลติดต่อ</h4>
-                                            </div>
-                                        </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="">อีเมล</label>
+                                    </div>
 
+                                    <div class="col-md-9">
+                                        {{UserData?.email}}
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label for="">อีเมล</label>
-                                        </div>
-                                
-                                        <div class="col-md-9">
-                                            {{UserData?.email}}
-                                        </div>
-                                    </div>
-                                    <div class="row">
+                                </div>
+                                <div class="row">
 
 
-                                        <div class="col-md-3">
-                                            <label for="">เบอร์โทรศัพท์</label>
-                                        </div>
-                        
-                                        <div class="col-md-9" >
-                                            {{UserData?.employeeId?.phone}}
-                                        </div>
+                                    <div class="col-md-3">
+                                        <label for="">เบอร์โทรศัพท์</label>
                                     </div>
-                                 
-              
-                                    <!-- <div class="row" *ngIf="EditStatus">
+
+                                    <div class="col-md-9">
+                                        {{UserData?.employeeId?.phone}}
+                                    </div>
+                                </div>
+
+
+                                <!-- <div class="row" *ngIf="EditStatus">
                             <div class="col-md-12">
                                 <div class="title-info">
                                     <h4>เปลี่ยนรูปภาพโปรไฟล์</h4>
@@ -241,173 +252,194 @@
                         </div> -->
 
 
-                                </div>
-                         
                             </div>
-                    
+
+                        </div>
+
 
                     </div>
 
-                   
+
                 </div>
+
+
+
                 <div class="EditModal-modal-overlay" *ngIf="EditStatus">
 
+
                     <div class="EditModal-content">
+                        <div class="card-header" style="padding: 0; ">
+                            <a>แก้ไขข้อมูลส่วนตัว</a>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                (click)="closeModal()">
+                                <span aria-hidden="true"
+                                    style="display: flex; color: black; justify-content: flex-end;">&times;</span>
+                            </button>
+                        </div>
                         <form [formGroup]="UserInfoForm" (ngSubmit)="SaveUserInfo()">
-                        <div class="user-content">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label for="">ชื่อ-นามสกุล</label>
+                            <div class="user-content">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="">ชื่อ-นามสกุล</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" formControlName="firstname" class="form-control"
+                                            placeholder="ชื่อ">
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" formControlName="lastname" class="form-control"
+                                            placeholder="นามสกุล">
+                                    </div>
                                 </div>
-                                <div class="col-md-5">
-                                    <input type="text" formControlName="firstname" class="form-control" placeholder="ชื่อ">
-                       
+
+                                <div class="group-info">
+                                    <div class="title-info">
+                                        <h4>ข้อมูลสถานที่ทำงาน</h4>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="">บริษัท/องค์กร</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" formControlName="organization" class="form-control"
+                                                placeholder="บริษัท/องค์กร">
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="">ที่อยู่</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" formControlName="address" class="form-control"
+                                                placeholder="ที่อยู่">
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for=""></label>
+                                        </div>
+                                        <div class="col-md-5 select-wrapper">
+                                            จังหวัด :
+                                            <select class="form-select" formControlName="province"
+                                                (focus)="isProvinceSelectOpen = true"
+                                                (blur)="isProvinceSelectOpen = false"
+                                                (change)="onProvinceChange($event.target.value)">
+                                                <option *ngFor="let province of provinces" [value]="province.id">{{
+                                                    province.name_th }}</option>
+                                            </select>
+
+                                            <div class="iconSelect" [class.rotate]="isProvinceSelectOpen">
+                                                <i class="fa fa-chevron-down"></i>
+                                            </div>
+                                            <!-- <input type="text" formControlName="province" class="form-control" placeholder="จังหวัด"> -->
+                                        </div>
+
+                                        <div class="col-md-4 select-wrapper">
+                                            อำเภอ/เขต :
+                                            <select class="form-select" formControlName="amphure"
+                                                (focus)="isAmphureSelectOpen = true"
+                                                (blur)="isAmphureSelectOpen = false"
+                                                (change)="onAmphuresChange($event.target.value)"
+                                                [attr.disabled]="isAmphureDisabled ? true : null">
+                                                <option *ngFor="let amphure of amphures" [value]="amphure.id">{{
+                                                    amphure.name_th}}</option>
+                                            </select>
+
+                                            <div class="iconSelect" [class.rotate]="isAmphureSelectOpen">
+                                                <i class="fa fa-chevron-down"></i>
+                                            </div>
+                                            <!-- <input type="text"formControlName="amphure" class="form-control" placeholder="อำเภอ"> -->
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for=""></label>
+                                        </div>
+
+                                        <div class="col-md-5 select-wrapper">
+                                            ตำบล/แขวง :
+                                            <select class="form-select" formControlName="tambon"
+                                                (focus)="istAmbonSelectOpen = true" (blur)="istAmbonSelectOpen = false"
+                                                (change)="onTambonChange($event.target.value)"
+                                                [attr.disabled]="isTambonDisabled ? true : null">
+                                                <option *ngFor="let tambon of tambons" [value]="tambon.id">{{
+                                                    tambon.name_th }}</option>
+                                            </select>
+                                            <div class="iconSelect" [class.rotate]="istAmbonSelectOpen">
+                                                <i class="fa fa-chevron-down"></i>
+                                            </div>
+                                            <!-- <input type="text"formControlName="tambon" class="form-control" placeholder="ตำบล"> -->
+                                        </div>
+
+
+                                        <div class="col-md-4">
+                                            รหัสไปรษณีย์ :
+                                            <div class="form-control">{{ UserInfoForm.controls['postCode'].value }}
+                                            </div>
+                                            <!-- <input type="text"formControlName="postCode"  class="form-control"  placeholder="รหัสไปรษณีย์"> -->
+                                        </div>
+
+                                    </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <input type="text" formControlName="lastname" class="form-control" placeholder="นามสกุล">
-                                </div>
-                            </div>
-                
-                            <div class="group-info">
-                                <div class="title-info">
-                                    <h4>ข้อมูลสถานที่ทำงาน</h4>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="title-info">
+                                            <h4>ข้อมูลติดต่อ</h4>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <label for="">บริษัท/องค์กร</label>
+                                        <label for="">อีเมล</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="text" formControlName="organization" class="form-control" placeholder="บริษัท/องค์กร">
+                                        <input type="text" formControlName="email" class="form-control"
+                                            placeholder="อีเมล">
                                     </div>
-                               
+                                    <div class="col-md-9" *ngIf="!EditStatus">
+                                        {{UserData?.email}}
+                                    </div>
                                 </div>
                                 <div class="row">
+
+
                                     <div class="col-md-3">
-                                        <label for="">ที่อยู่</label>
+                                        <label for="">เบอร์โทรศัพท์</label>
                                     </div>
-                                    <div class="col-md-9" >
-                                        <input type="text" formControlName="address" class="form-control" placeholder="ที่อยู่">
+                                    <div class="col-md-9">
+                                        <input type="text" formControlName="phone" class="form-control"
+                                            placeholder="เบอร์โทรศัพท์">
                                     </div>
-                              
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label for=""></label>
-                                    </div>
-                                    <div class="col-md-5 select-wrapper" >
-                                        จังหวัด :
-                                        <select class="form-select" formControlName="province"
-                                            (focus)="isProvinceSelectOpen = true"
-                                            (blur)="isProvinceSelectOpen = false"
-                                            (change)="onProvinceChange($event.target.value)">
-                                            <option *ngFor="let province of provinces" [value]="province.id">{{
-                                                province.name_th }}</option>
-                                        </select>
-
-                                        <div class="iconSelect" [class.rotate]="isProvinceSelectOpen">
-                                            <i class="fa fa-chevron-down"></i>
-                                        </div>
-                                        <!-- <input type="text" formControlName="province" class="form-control" placeholder="จังหวัด"> -->
-                                    </div>
-                                
-                                    <div class="col-md-4 select-wrapper" >
-                                        อำเภอ/เขต :
-                                        <select class="form-select" formControlName="amphure"
-                                            (focus)="isAmphureSelectOpen = true"
-                                            (blur)="isAmphureSelectOpen = false"
-                                            (change)="onAmphuresChange($event.target.value)"
-                                            [attr.disabled]="isAmphureDisabled ? true : null">
-                                            <option *ngFor="let amphure of amphures" [value]="amphure.id">{{
-                                                amphure.name_th}}</option>
-                                        </select>
-
-                                        <div class="iconSelect" [class.rotate]="isAmphureSelectOpen">
-                                            <i class="fa fa-chevron-down"></i>
-                                        </div>
-                                        <!-- <input type="text"formControlName="amphure" class="form-control" placeholder="อำเภอ"> -->
-                                    </div>
-                            
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label for=""></label>
-                                    </div>
-
-                                    <div class="col-md-5 select-wrapper" >
-                                        ตำบล/แขวง :
-                                        <select class="form-select" formControlName="tambon"
-                                            (focus)="istAmbonSelectOpen = true"
-                                            (blur)="istAmbonSelectOpen = false"
-                                            (change)="onTambonChange($event.target.value)"
-                                            [attr.disabled]="isTambonDisabled ? true : null">
-                                            <option *ngFor="let tambon of tambons" [value]="tambon.id">{{
-                                                tambon.name_th }}</option>
-                                        </select>
-                                        <div class="iconSelect" [class.rotate]="istAmbonSelectOpen">
-                                            <i class="fa fa-chevron-down"></i>
-                                        </div>
-                                        <!-- <input type="text"formControlName="tambon" class="form-control" placeholder="ตำบล"> -->
-                                    </div>
-                                 
-
-                                    <div class="col-md-4">
-                                        รหัสไปรษณีย์ :
-                                        <div class="form-control">{{ UserInfoForm.controls['postCode'].value }}
-                                        </div>
-                                        <!-- <input type="text"formControlName="postCode"  class="form-control"  placeholder="รหัสไปรษณีย์"> -->
-                                    </div>
-                        
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="title-info">
-                                        <h4>ข้อมูลติดต่อ</h4>
+                                    <div class="col-md-9" *ngIf="!EditStatus">
+                                        {{UserData?.employeeId?.phone}}
                                     </div>
                                 </div>
 
                             </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label for="">อีเมล</label>
-                                </div>
-                                <div class="col-md-9" >
-                                    <input type="text" formControlName="email" class="form-control" placeholder="อีเมล">
-                                </div>
-                                <div class="col-md-9" *ngIf="!EditStatus">
-                                    {{UserData?.email}}
-                                </div>
+                            <div class="footer-content">
+                                <button type="submit" class="btn btn-success">ยืนยัน</button>
+                                <button type="button" class="btn btn-danger" (click)="cancelEdit()">ยกเลิก</button>
                             </div>
-                            <div class="row">
-
-
-                                <div class="col-md-3">
-                                    <label for="">เบอร์โทรศัพท์</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input type="text" formControlName="phone" class="form-control" placeholder="เบอร์โทรศัพท์">
-                                </div>
-                                <div class="col-md-9" *ngIf="!EditStatus">
-                                    {{UserData?.employeeId?.phone}}
-                                </div>
-                            </div>
-                         
-      
-    
-
-                        </div>
-                        <div class="footer-content">
-                            <button type="submit" class="btn btn-success">ยืนยัน</button>
-                            <button type="button" class="btn btn-danger" (click)="cancelEdit()">ยกเลิก</button>
-                        </div>
-                    </form>
+                        </form>
 
                     </div>
 
                 </div>
+                <!-- 
+                <div class="modal fade" id="testModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                aria-hidden="true">
+                <div class="EditModal-content">
+
+                </div>
+                </div> -->
 
             </div>
         </div>

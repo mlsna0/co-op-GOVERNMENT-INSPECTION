@@ -13,6 +13,7 @@ import { first } from 'rxjs';
 import { environment } from 'environments/environment';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ImageCropperComponent, ImageCroppedEvent, LoadedImage  } from 'ngx-image-cropper'
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-profile',
@@ -69,7 +70,9 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private ACrouter :ActivatedRoute,
     private ts: ProvinceService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private toastr: ToastrService 
+    
   ) { 
 
     this.UserInfoForm = this.fb.group({
@@ -316,22 +319,33 @@ loadTambons(amphureId: any) {
 
 
   openModal(): void {
-    document.body.classList.add('no-scroll');
-    this.showModal = true;
-    console.log("as",this.showModal)
+    $('#profile-Modal').modal({
+      backdrop: 'static', 
+      keyboard: false    
+    });
+    $('#profile-Modal').modal('show');
+    // document.body.classList.add('no-scroll');
+    // this.showModal = true;
+    // console.log("as",this.showModal)
   }
 
   closeModal(): void {
-    document.body.classList.remove('no-scroll');
+    // document.body.classList.remove('no-scroll');
     this.showModal = false;
     this.EditStatus= false;
   }
   editProfile() {
-    document.body.classList.add('no-scroll');
+    // document.body.classList.add('no-scroll');
     this.EditStatus= true;
   }
 
-
+  goToModal(){
+    $('#EditProfile-Modal').modal({
+      backdrop: 'static', // ป้องกันการปิดเมื่อคลิกด้านนอก
+      keyboard: false     // ป้องกันการปิดด้วยแป้นพิมพ์ (เช่น ปุ่ม Esc)
+    });
+    $('#EditProfile-Modal').modal('show');
+  }
 //////////////////////////////////////////////////////////
 
 
@@ -360,21 +374,37 @@ loadTambons(amphureId: any) {
       this.sv.updateUserProfileById(updatedData,userId).subscribe(response => {
         console.log('Response:', response);
   
-        if (response && response.user) {
-          if (response?.user?.employeeId && response?.user?.employeeId?.firstname) {
-            this.UserData = response;
-           
-          } else {
-            console.error('Firstname not found in user data');
-          }
-        } else {
-          console.error('Unexpected response format', response);
-        }
+        this.UserData = response;
+        this.toastr.success('อัปเดตโปรไฟล์สำเร็จ', 'สำเร็จ', {
+          timeOut: 2500,
+          positionClass: 'toast-top-right'
+        });
+        this.closeModal();
+        window.location.reload();
+        // if (response && response.user) {
+        //   if (response?.user?.employeeId && response?.user?.employeeId?.firstname) {
+        //     this.UserData = response;
+        //     this.closeModal();
+        //     window.location.reload();
+        //   } else {
+        //     console.error('Firstname not found in user data');
+        //   }
+        // } else {
+        //   console.error('Unexpected response format', response);
+        // }
 
+      },
+      error => {
+        console.error('Error:', error);
+        this.toastr.error('เกิดข้อผิดพลาดในการอัปเดตโปรไฟล์', 'ไม่สำเร็จ', {
+          timeOut: 2500,
+          positionClass: 'toast-top-right'
+        });
       });
     }
-    this.EditStatus = false;
+    // this.EditStatus = false;
   }
+
   cancelEdit(){
     this.EditStatus= false;
   }

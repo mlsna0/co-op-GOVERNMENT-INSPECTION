@@ -15,19 +15,6 @@
 
 
   <div class="container-fluid">
-    <!-- <div class="row justify-content-end">
-      <div class="col-sm-2">
-        <div class="insert-data">
-          <button class="btn btn-add pull-center " (click)="onInsertModal()">
-            <i class="fa fa-plus"></i> &nbsp;เพิ่มรายการ
-          </button>
-        </div>
-      </div>
-    </div> -->
-
-
-    <div class="row">
-      <div class="col-md-12">
         <div class="card">
           <!-- <div class="card-Edit"> -->
           <div  class="card-header "> <!--card-header-danger-->
@@ -54,7 +41,7 @@
           <!-- </div> card-Edit -->
 
           <div class="card-body">
-            <div class="table-responsive">
+       
               <table width="100%" datatable [dtOptions]="dtOptions" *ngIf="!loading"
                 class="table  table-border table-hover table-bordered nowrap" style="color: black;">
                 <thead class="text-primary" style="color: black; font-size: 16px;">
@@ -139,7 +126,7 @@
                 </tbody>
 
               </table>
-            </div>
+          
           </div>
 
           <!-- การเพิ่มข้อมูล-->
@@ -405,7 +392,7 @@
 
 
 
-                    <div class="modal-footer">
+                    <div class="modal-footer" style="padding-bottom: 0;">
                       <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;ยืนยัน</button>
                       <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"
                           (click)="closeModal()"></i>
@@ -429,12 +416,12 @@
             aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content card" [ngStyle]="{width: '230mm',padding:'10px'  }">
-                <div class="card-header ">
+                <div class="card-header " style="border-bottom: 1px solid #868686 ; border-radius: 10px 10px 0 0;">
                   <div  class="modal-title card-title" id="myModalLabel">
-                    <a href="">จดบันทึก</a>
-                    <div class="sub-title">
+                    <p  style="margin: 0;">จดบันทึก</p>
+                    <!-- <div class="sub-title">
                       เพิ่มเนื้อหาในเอกสาร 
-                    </div>
+                    </div> -->
                   </div>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" style="color: black;">&times;</span>
@@ -522,8 +509,7 @@
           </div>
 
 
-        </div>
-      </div>
+   
     </div>
   </div>
 </div>
