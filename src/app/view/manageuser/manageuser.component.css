@@ -37,6 +37,52 @@ h4{
   right: 230px;
   top: 45px;
 }
+.toggle-container{
+  position: relative;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+}
+.toggle-switch{
+  position: relative;
+  background-color: #ccc;
+  width: 90px;
+  height: 25px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.2s ease-in;
+}
+
+
+.toggle-switch::before{
+  position: absolute;
+  content: '';
+  background-color: #fff;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  margin: 2px;
+  transition: 0.2s ease-in;
+}
+input:checked + .toggle-switch{
+  background-color: #4caf50;
+}
+input:checked + .toggle-switch::before{
+  transform: translateX(65px);
+
+}
+input:not(:checked) + .toggle-switch {
+  background-color: #f44336; /* สีพื้นฐานเมื่อไม่ active */
+}
+
+input:not(:checked) + .toggle-switch::before {
+  transform: translateX(0); /* ตำแหน่ง knob เมื่อไม่ active */
+}
+
+input{
+  display: none;
+}
+
 
 .card-body {
   display: flex;
