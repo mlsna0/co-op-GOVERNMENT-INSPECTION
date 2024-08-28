@@ -82,6 +82,7 @@ export class SignatureComponent implements OnInit {
     this.getData()
     console.log('Document ID:', this.documentId);
     
+    
   }
 
   async getData() {
