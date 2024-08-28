@@ -1,7 +1,17 @@
 .card{
     padding: 30px;
 }
+.card-header{
+  position: relative;
+  /* background-color:rgb(255,209,0,0.2);  rgb(241, 245 ,255) */
 
+  display: flex;
+  justify-content: space-between ;
+  align-items: center;
+  margin: 0 ;
+  border-radius: 10px;
+  padding: 0.75rem 1.25rem ;
+}
 
 .card-title p{
     font-family: "Sarabun", sans-serif; 
@@ -12,6 +22,9 @@
 .navigate-bar{
     display: flex;
     justify-content: flex-start;
+}
+.form-group input{
+  border-radius: 5px;
 }
 .modal-content{
   
@@ -49,6 +62,61 @@
     color: red;
   }
 
+  .border-errorInDex{
+    position: relative;
+    bottom:0px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 0px;
+    margin: 2px;
+    width: 600px;
+    background-color: transparent;
+    color: red;
+    font-size: 0.875em;
+    text-align: left;
+    pointer-events: none;
+    border-radius: 5px;
+   z-index: 1;
+
+  }
+.border-errorPersonFullname{
+    position: relative;
+    bottom:0px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 0px;
+    margin: 2px;
+    background-color: transparent;
+    color: red;
+    font-size: 0.875em;
+    text-align: left;
+    pointer-events: none;
+    border-radius: 5px;
+  }
+.border-errorPersonRank{
+    position: relative;
+    bottom:0px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 0px;
+    margin: 2px;
+    width: auto;
+    background-color: transparent;
+    color: red;
+    font-size: 0.875em;
+    text-align: left;
+    pointer-events: none;
+    border-radius: 5px;
+  }
+
+.border-errorLocation {
+    position: relative;
+    bottom:0px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 0px;
+    margin: 2px;
+    /* background-color: white; */
+    color: red;
+    font-size: 0.875em;
+    text-align: left;
+    pointer-events: none;
+    border-radius: 5px;
+   z-index: 1;
+  
+  }
 :host ::ng-deep .btn-add{
     color: #fff;
     background-color: rgb(24,144,255) ;/*#000dc2ef rgb(24,144,255)  #24a0ed */

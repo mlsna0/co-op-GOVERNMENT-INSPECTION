@@ -19,6 +19,8 @@ export class DataDetailComponent implements OnInit {
 
   editItemForm: any;
   addPersonalForm: any;
+  PersonINT :number = 0;
+  personInputs: FormArray;
 
   Submitted:boolean =false;
   constructor(
@@ -47,7 +49,7 @@ export class DataDetailComponent implements OnInit {
     lastname: ['',Validators.required],
   }); //ช้อมูลไม่ได้มาด้วยนะ
 
-  // (this.editItemForm.get('personal') as FormArray).push(this.addPersonalForm);
+
    }
 
   ngOnInit(): void {
@@ -92,19 +94,20 @@ export class DataDetailComponent implements OnInit {
       this.viewPersonalData =res;
     
       if (res && Array.isArray(res)) {
-        const personalArray = this.addPersonalForm.get('personal') as FormArray;
+        const personalArray = this.editItemForm.get('personal') as FormArray;
     
         // Clear existing FormArray controls
         personalArray.clear();
     
         // Loop through the array of data and add a new FormGroup for each item
         res.forEach((item: any) => {
-          const group = this.fb.group({
+          const personalFormGroup = this.fb.group({
+            _id: [item._id || ''], 
             rank: [item.view_rank || '', Validators.required],
             firstname: [item.view_first_name || '', Validators.required],
             lastname: [item.view_last_name || '', Validators.required],
           });
-          personalArray.push(group);
+          personalArray.push(personalFormGroup);
         });
     
         console.log("Updated personal FormArray:", personalArray.value);
@@ -151,9 +154,82 @@ export class DataDetailComponent implements OnInit {
       role: user.role || 'N/A'
     }];
   }
-  
-  
+  // createPersonGroup(): FormGroup {
+  //   return this.fb.group({
+  //     rank: ['', Validators.required],
+  //     firstname: ['', Validators.required],
+  //     lastname: ['', Validators.required]
 
+  //   });
+    
+  // }
+  createPersonGroup(): FormGroup {
+    return this.fb.group({
+      rank: ['', Validators.required],
+      firstname: ['', Validators.required],
+      lastname: ['', Validators.required]
+      // fullname: ['', Validators.required]
+    });
+    
+  }
+  addPersonInput(){
+    console.log("connet..")
+    if (this.PersonINT < 4) {
+      this.PersonINT++;
+      const personalArray = this.personal; // ใช้ this.personal แทน this.personInputs
+      personalArray.push(this.fb.group({
+        rank: ['', Validators.required],
+        firstname: ['', Validators.required],
+        lastname: ['', Validators.required],
+      }));
+      console.log("Person count:", this.PersonINT);
+    } else {
+      alert("เพิ่มการกรอกข้อมูลผู้ตรวจได้สูงสุด 4 คน");
+    }
+    
+   }
+  
+  get personal(): FormArray {
+    return this.editItemForm.get('personal') as FormArray;
+  }
+   deletePersonInput() {
+    if (this.PersonINT > 0) {
+      this.PersonINT--;
+      this.personal.removeAt(this.personal.length - 1); // ใช้ this.personal แทน this.personInputs
+    }
+    console.log("Person count after delete:", this.PersonINT);
+   }
+  
+   canAddPerson(): boolean {
+    const personalArray = this.personal;
+   return personalArray.length < 4; 
+  }
+
+  //submit //////////////////////////////////////////////////////
+  onEditDataSubmit(){
+    this.Submitted = true; 
+    
+    if(this.editItemForm.invalid){
+      alert('Form is invalid');
+    return;
+    }
+    const formData = this.editItemForm.value;
+    formData._id = this.DataDetail._id;
+    console.log("DATA for update/edit: ",formData)
+    this.sv.updateDataDocument(formData).subscribe({
+      next: (response) => {
+        console.log('Update successful:', response);
+        // ปิดโมเดลหรือแสดงข้อความสำเร็จ
+      },
+      error: (error) => {
+        console.error('Update failed:', error);
+        // แสดงข้อความข้อผิดพลาด
+      }
+    });
+
+  }
+  
+///////////////////////////////////////////////////////////////////
   BackRoot(){
     this.router.navigate(['/table-main']);
   }
@@ -164,9 +240,7 @@ export class DataDetailComponent implements OnInit {
     });
     $('#EditModal').modal('show');
   }
-  onEditDataSubmit(){
 
-  }
   closeModal() {
     $('#EditModal').modal('hide');
     // รีเฟรชหน้าจอ
