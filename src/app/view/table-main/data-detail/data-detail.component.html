@@ -2,16 +2,16 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
-            <li class="breadcrumb-item"><a [routerLink]="['/table-main']">การลงตรวจอิเล็กทรอนิค</a></li>
+            <li class="breadcrumb-item"><a [routerLink]="['/table-main']">การตรวจอิเล็กทรอนิค</a></li>
             <li class="breadcrumb-item active"><a aria-current="page">รายละเอียดเนื้อหาเอกสารที่สร้าง</a></li>
         </ol>
     </nav>
     <div class="container-fluid">
         <div class="card">
             <div class="navigate-bar">
-                <button type="button" class="btn btn-danger"
-                    style="display: flex; justify-content: center; align-items: center; " (click)="BackRoot()">
-                    <i class="fa fa-angle-left"></i>
+                <button type="button" 
+                    style="display: flex; justify-content: center; align-items: center;background: transparent; border: none; color: rgb(137, 135, 135); " (click)="BackRoot()">
+                    <i class="fa fa-arrow-left"> ย้อนกลับ</i>
                 </button>
             </div>
 
