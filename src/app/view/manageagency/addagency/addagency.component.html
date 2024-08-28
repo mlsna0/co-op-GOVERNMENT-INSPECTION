@@ -63,6 +63,7 @@
                     <label for="province" style="font-size: 16px;">จังหวัด</label>
                     <select class="form-select" formControlName="province"
                       (change)="onProvinceChange($event.target.value)">
+                      <option value="" disabled selected>จังหวัด</option>
                       <option *ngFor="let province of provinces" [value]="province.id">{{ province.name_th }}</option>
                     </select>
                   </div>
@@ -73,6 +74,7 @@
                     <label for="amphure" style="font-size: 16px;">อำเภอ/เขต</label>
                     <select class="form-select" formControlName="amphure" (change)="onAmphuresChange($event.target.value)"
                       [attr.disabled]="isAmphureDisabled ? true : null">
+                      <option value="" disabled selected>อำเภอ/เขต</option>
                       <option *ngFor="let amphure of amphures" [value]="amphure.id">{{ amphure.name_th}}</option>
                     </select>
                   </div>
@@ -83,6 +85,7 @@
                     <label for="tambon" style="font-size: 16px;">ตำบล/แขวง</label>
                     <select class="form-select" formControlName="tambon" (change)="onTambonChange($event.target.value)"
                       [attr.disabled]="isTambonDisabled ? true : null">
+                      <option value="" disabled selected>ตำบล/แขวง</option>
                       <option *ngFor="let tambon of tambons" [value]="tambon.id">{{ tambon.name_th }}</option>
                     </select>
                   </div>
@@ -93,6 +96,7 @@
                     <label for="postCode" style="font-size: 16px;">รหัสไปรษณีย์</label>
                     <select class="form-select" formControlName="postCode"
                       [attr.disabled]="isPostCodeDisabled ? true : null">
+                      <option value="" disabled selected>รหัสไปรษณีย์</option>
                       <option *ngFor="let code of postCode" [value]="code">{{ code }}</option>
                     </select>
                   </div>
@@ -109,4 +113,8 @@
         </form>
       </div>
   
-    
+      <div class="col-sm-12">
+        <div class="footer-links">
+          <a style="font-size: 14px; color: #24a0ed;"></a> &nbsp; <a routerLink="/manageagency"
+            class="addagency-link" style="font-size: 14px;">ย้อนกลับ</a>
+        </div>

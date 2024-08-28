@@ -42,7 +42,7 @@
               <td> {{ users.lastname }} </td>
               <td> {{ users.email }} </td>
               <td>
-                <ng-container *ngIf="users.role === 'superadmin'; else roleDropdown">
+                <ng-container *ngIf="users.role === 'superadmin'; else roleDropdown" >
                   <span class="custom-role-display">superadmin</span>
                 </ng-container>
                 <ng-template #roleDropdown>
