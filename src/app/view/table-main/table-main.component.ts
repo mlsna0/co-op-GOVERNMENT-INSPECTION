@@ -29,6 +29,7 @@ import { saveAs } from 'file-saver';
 import { loginservice } from 'app/layouts/login.services.';
 import { ToastrService } from 'ngx-toastr'; // นำเข้า ToastrService
 
+
 @Component({
   selector: 'app-table-main',
   templateUrl: './table-main.component.html',
@@ -188,86 +189,115 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
   }
  
   ngOnInit(){
-    
-    this.loading = true; //เป็นการตรวจ
+    this.loading = true;
     this.dtOptions = {
-      order:[0],
-      //ordering: false,
-      // columnDefs: [
-      //   {
-      //     // targets: [5],
-      //     // orderable: false
-      //   }
-      // ],
+      order: [0],
       pagingType: 'full_numbers',
-      "language": {
-        "lengthMenu": "แสดง _MENU_ รายการ",
-        "search": "ค้นหา"
-        ,
-        "info": "แสดงหน้า _PAGE_ จากทั้งหมด _PAGES_ หน้า",
-        "infoEmpty": "แสดง 0 ของ 0 รายการ",
-        "zeroRecords": "ไม่พบข้อมูล",
-        "paginate": {
-          "first": "หน้าแรก",
-          "last": "หน้าสุดท้าย",
-          "next": "ต่อไป",
-          "previous": "ย้อนกลับ"
+      language: {
+        lengthMenu: "แสดง _MENU_ รายการ",
+        search: "ค้นหา",
+        info: "แสดงหน้า _PAGE_ จากทั้งหมด _PAGES_ หน้า",
+        infoEmpty: "แสดง 0 ของ 0 รายการ",
+        zeroRecords: "ไม่พบข้อมูล",
+        paginate: {
+          first: "หน้าแรก",
+          last: "หน้าสุดท้าย",
+          next: "ต่อไป",
+          previous: "ย้อนกลับ"
         },
       }
-     
     };
-    console.log("DataTable : ",this.dtOptions)
+    console.log("DataTable: ", this.dtOptions);
 
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip();
+    this.fetchAndSetRecords();
 
-    });
-
-    this.sv.getData().subscribe(res => {
-      console.log("res getRecord:", res);
-      this.items = res;
-      this.loading = false;
-
-
-
-    },(err) => {
-      console.log("err : ",err);
-      this.loading = false;
-    });
-    
-    // this.sv.getRecordWithUserAndEmployee(this.record_id).subscribe(res=>{
-    //   console.log("ddd",this.item)
-    //   this.item= res;
-    //   this.loadig =false;
-    // });
-
-    document.addEventListener('keydown', this.handleKeydown.bind(this));
-
-    this.updateButtonCount();
-
-    // this.currentUserId = this.sv.getToken(); // หรือใช้ localStorage.getItem('userId') ถ้าคุณเก็บ userId
-    // if (this.currentUserId) {
-    //   this.loadData();
-    // } else {
-    //   console.error('User ID is not available.');
-    // }
-
-    // this.route.params.subscribe(params => {
-    //   this.userId = params['userId'];
-    //   if (this.userId) {
-    //     this.loadUserRecords(this.userId);
-    //   } else {
-    //     console.error('User ID is missing');
-    //   }
-    // });
     console.log("ngOnInit called");
-    const recordId = this.ContentRecordID;
-    if (recordId) {
-      console.log("Calling countRecordFilenames with recordId:", recordId);
-      this.countRecordFilenames(recordId);
+}
+
+fetchAndSetRecords() {
+    console.log("fetchAndSetRecords called");
+    this.loading = true;
+    
+    this.lg.getUserProfile().subscribe({
+      next: (userProfile) => {
+        console.log("User Profile fetched:", userProfile);
+        this.fetchRecords(userProfile.employeeId.organization); 
+         // ส่ง organization ของผู้ใช้เข้าไป
+      },
+      error: (error) => {
+        this.handleError(error);
+        console.log("Error in fetching user profile:", error);
+      },
+    });
+}
+
+fetchRecords(userOrganization: string) {
+  console.log("User Organization:", userOrganization); 
+  console.log("Fetching all records");
+
+  this.sv.getAllRecordsLinkedByEmployeeId().subscribe({
+    next: (records) => {
+      console.log("Records fetched:", records);
+      const groupedRecords = this.groupRecordsByOrganization(records);
+      console.log("Grouped Records by Organization:", groupedRecords);
+
+      const filteredRecords = this.filterByUserOrganization(groupedRecords, userOrganization);
+      console.log("Filtered Records by User Organization:", filteredRecords);
+      
+      // Combine documents from the filtered records only for the specific organization
+      this.items = this.combineDocuments(filteredRecords[userOrganization] || [], userOrganization);
+      console.log("Combined Documents:", this.items);
+
+      this.loading = false;
+    },
+    error: (error) => {
+      this.handleError(error);
+      console.log("Error in fetching records:", error);
+    },
+  });
+}
+
+groupRecordsByOrganization(records) {
+  console.log("Grouping records by organization");
+  return records.reduce((acc, record) => {
+      console.log("Current Record:", record); // ตรวจสอบข้อมูลในแต่ละ record
+      const organization = record.employee.organization || 'Unknown';
+      console.log("Current Record Documents:", record.documents); // ตรวจสอบ documents ภายใน record
+      if (!acc[organization]) {
+          acc[organization] = [];
+      }
+      acc[organization].push(record);
+      return acc;
+  }, {});
+}
+
+filterByUserOrganization(groupedRecords, userOrganization: string) {
+    console.log("Filtering grouped records by user organization");
+    return {[userOrganization]: groupedRecords[userOrganization] || []};
+}
+
+combineDocuments(items, userOrganization: string): any[] {
+  return items.reduce((acc, item) => {
+    // ล็อกข้อมูลของ item ที่กำลังพิจารณา
+    console.log("Current item:", item);
+    
+    // กรองเฉพาะ items ที่มี organization ตรงกับ userOrganization
+    if (item.employee.organization === userOrganization) {
+      console.log("Matched organization:", item.employee.organization);
+      console.log("Adding documents:", item.documents);
+      
+      return acc.concat(item.documents || []);
     }
-  
-  }
+
+    console.log("Skipped organization:", item.employee.organization);
+    return acc;
+  }, []);
+}
+
+handleError(error) {
+  console.error('Error:', error);
+  this.loading = false;
+}
   ngOnDestroy() {
     document.removeEventListener('keydown', this.handleKeydown.bind(this));
   }
