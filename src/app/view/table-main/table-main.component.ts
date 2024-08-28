@@ -229,7 +229,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
       this.loading = false;
 
 
-
+    console.log("data table-main",res)
     },(err) => {
       console.log("err : ",err);
       this.loading = false;

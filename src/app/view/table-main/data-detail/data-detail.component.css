@@ -13,6 +13,41 @@
     display: flex;
     justify-content: flex-start;
 }
+.modal-content{
+  
+  max-height: 1235.9px;
+  left: 50%;
+  transform: translateX(-50%);
+  justify-content: center;
+  font-family: "Sarabun", sans-serif;
+  
+}
+
+.border-error {
+    position: relative;
+    bottom:0px;  /* ให้ข้อความอยู่ใต้ input */
+    left: 0px;
+    margin: 2px;
+    background-color: transparent;
+    color: red;
+    font-size: 0.875em;
+    text-align: left;
+    pointer-events: none;
+    border-radius: 5px;
+   z-index: 1;
+  
+  }
+.box-validate{
+    border: 1px solid red;
+    border-radius: 5px;
+  }
+.box-validate + .text-validate .border-error {
+    display: block;
+  }
+  .text-validate{
+     
+    color: red;
+  }
 
 :host ::ng-deep .btn-add{
     color: #fff;

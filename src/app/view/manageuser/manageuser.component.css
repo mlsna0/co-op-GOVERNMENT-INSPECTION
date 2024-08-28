@@ -46,7 +46,7 @@ h4{
 .toggle-switch{
   position: relative;
   background-color: #ccc;
-  width: 90px;
+  width: 50px;
   height: 25px;
   border-radius: 20px;
   cursor: pointer;
@@ -68,7 +68,7 @@ input:checked + .toggle-switch{
   background-color: #4caf50;
 }
 input:checked + .toggle-switch::before{
-  transform: translateX(65px);
+  transform: translateX(25px);
 
 }
 input:not(:checked) + .toggle-switch {

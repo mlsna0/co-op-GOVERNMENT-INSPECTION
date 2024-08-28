@@ -15,7 +15,8 @@
             แสดงรายชื่อผู้ใช้งาน
           </div> -->
         </div>
-        <button (click)="openaddagency()" class="btn btn-add">เพิ่มรายชื่อองค์กร</button>
+        <button (click)="openaddagency()" class="btn btn-add">
+          <i class="fa fa-plus"></i> &nbsp;เพิ่มรายชื่อองค์กร</button>
       </div>
       <div class="card-body">
         <table width="100%" datatable [dtOptions]="dtOptions" class="table table-striped table-bordered" *ngIf="!loading">
