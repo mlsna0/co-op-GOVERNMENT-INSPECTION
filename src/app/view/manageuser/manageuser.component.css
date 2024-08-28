@@ -215,3 +215,17 @@ td select option {
   font-size: 14px;
   color: black;
 }
+
+
+.custom-role-display {
+width: 100%;
+padding:3.2px 32px;
+font-size: 14px;
+text-align: center;
+border: 1px solid #ccc;
+border-radius: 32px;
+background-color: white;
+font-family: 'Sarabun', sans-serif;
+color: black;
+transition: background-color 0.3s, border-color 0.3s;
+}
