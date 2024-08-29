@@ -132,12 +132,12 @@ export class ThaicountyComponent implements OnInit {
 
                 this.allDocuments.forEach(user => {
                     user.documentCount = user.documents.length;
-
-                    const provinceId = parseInt(user.employee.province, 10);
+                
+                    const provinceId = parseInt(user?.employee.province, 10);
                     const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
 
                     if (!provinceName || provinceName === 'ไม่ทราบจังหวัด') {
-                        // console.warn(`Skipping user with unknown province (Province ID: ${provinceId})`);
+                        console.warn(`Skipping user with unknown province (Province ID: ${provinceId})`);
                         return;
                     }
 
