@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 
 import { ThaiApiAddressService } from '../../../services/thai-api-address.service'
 import { ProvinceService } from "app/view/thaicounty/thaicounty.service";
-
+import { ToastrService } from 'ngx-toastr'; // นำเข้า ToastrService
 @Component({
   selector: 'app-addagency',
   templateUrl: './addagency.component.html',
@@ -50,6 +50,7 @@ export class AddagencyComponent implements OnInit {
     private router: Router,
    
     private ts :ProvinceService,
+    private toastr: ToastrService // เพิ่ม ToastrService ใน constructor
   ) {
     this.agenForm = this.fb.group({
       agency_name: ["", Validators.required],
