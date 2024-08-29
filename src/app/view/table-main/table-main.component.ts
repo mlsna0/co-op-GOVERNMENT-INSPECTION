@@ -28,7 +28,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { loginservice } from 'app/layouts/login.services.';
 import { ToastrService } from 'ngx-toastr'; // นำเข้า ToastrService
-
+import { DocumentService } from 'app/services/document.service';
 
 @Component({
   selector: 'app-table-main',
@@ -125,7 +125,8 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     private sanitizer: DomSanitizer,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private toastr: ToastrService 
+    private toastr: ToastrService,
+    private documentService: DocumentService
     
 
   ) { 
@@ -210,7 +211,6 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     // console.log("DataTable: ", this.dtOptions);
 
     this.fetchAndSetRecords();
-
     // console.log("ngOnInit called");
 }
 
@@ -247,7 +247,7 @@ fetchRecords(userOrganization: string) {
       // Combine documents from the filtered records only for the specific organization
       this.items = this.combineDocuments(filteredRecords[userOrganization] || [], userOrganization);
       // console.log("Combined Documents:", this.items);
-
+      // this.countUniqueUsers(this.items, userOrganization);
       this.loading = false;
     },
     error: (error) => {
@@ -277,21 +277,34 @@ filterByUserOrganization(groupedRecords, userOrganization: string) {
 }
 
 combineDocuments(items, userOrganization: string): any[] {
-  return items.reduce((acc, item) => {
-    // ล็อกข้อมูลของ item ที่กำลังพิจารณา
-    // console.log("Current item:", item);
-    
+  const userSet = new Set();
+  let combinedDocuments = [];
+
+  console.log("Processing documents and counting unique users for organization:", userOrganization);
+
+  items.forEach(item => {
+    console.log("Current item:", item);
+
     // กรองเฉพาะ items ที่มี organization ตรงกับ userOrganization
     if (item.employee.organization === userOrganization) {
-      // console.log("Matched organization:", item.employee.organization);
-      // console.log("Adding documents:", item.documents);
-      
-      return acc.concat(item.documents || []);
-    }
+      userSet.add(item.user.employeeId);
+      console.log("Matched organization:", item.employee.organization);
+      console.log("Adding documents:", item.documents);
 
-    // console.log("Skipped organization:", item.employee.organization);
-    return acc;
-  }, []);
+      combinedDocuments = combinedDocuments.concat(item.documents || []);
+    } else {
+      console.log("Skipped organization:", item.employee.organization);
+    }
+  });
+
+  const userCount = userSet.size;
+  console.log("User Count:", userCount);
+
+  // ส่งจำนวนผู้ใช้ไปยัง DocumentService
+  this.documentService.updateUserCount(userCount);
+
+  // Return the combined documents for use on the web page
+  return combinedDocuments;
 }
 
 handleError(error) {

@@ -33,4 +33,11 @@ export class DocumentService {
   setTotalSignedDocuments(total: number) {
     this.totalSignedDocumentsSubject.next(total);
   }
+  private userCountSubject = new BehaviorSubject<number>(0);
+  userCount$ = this.userCountSubject.asObservable();
+
+  updateUserCount(userCount: number): void {
+    console.log("Received user count:", userCount);
+    this.userCountSubject.next(userCount);
+  }
 }

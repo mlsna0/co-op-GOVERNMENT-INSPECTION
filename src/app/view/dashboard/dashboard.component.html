@@ -168,7 +168,23 @@
             </div>
           </div>
           <!-- จำนวนผู้ใช้งาน -->
-          <div class="col-md-3">
+          <div class="col-md-3" *ngIf="isAdmin">
+            <div class="card Box4">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <p class="title mb-0">จำนวนผู้ใช้งาน</p>
+                    <h2 class="amount">{{ userCount2 }}</h2>
+                  </div>
+                  <div class="imgBG">
+                    <img src="./assets/img/group.png" alt="paper" class="paper-img">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3" *ngIf="isSuperAdmin">
             <div class="card Box4">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -179,12 +195,10 @@
                   <div class="imgBG">
                     <img src="./assets/img/group.png" alt="paper" class="paper-img">
                   </div>
-
                 </div>
               </div>
             </div>
           </div>
-        </div>
       
 
 

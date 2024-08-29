@@ -48,9 +48,10 @@
     totalPages: number = 0;
     loading: boolean = true;
     routerSubscription: Subscription;
+
     //การส่งข้อมูลไปยัง component อื่น เช่น <app-thaicounty></app-thaicounty>
     filterCriteria = null;
-
+    userCount2: number;
     @ViewChild('provinceSelect') provinceSelect: MatSelect;
     constructor(
       private provinceService: ProvinceService,
@@ -69,14 +70,6 @@
       const isSuperAdmin = this.authService.hasRole('superadmin');
       // console.log('isSuperAdmin:', isSuperAdmin); // ตรวจสอบค่า
       return isSuperAdmin;
-    }
-
-    get isTwoRole(): boolean {
-      return this.isAdmin || this.isUser;
-    }
-
-    get isUser(): boolean {
-      return this.authService.hasRole('user');
     }
     ngOnInit(): void {
       this.loadProvinces();
@@ -109,7 +102,10 @@
         this.dtTrigger.next(this.provinces);
       });
       this.loadPDFs()
-      
+      this.documentService.userCount$.subscribe(count => {
+        this.userCount2 = count;
+        console.log("User count updated in AnotherComponent:", this.userCount2);
+      });
     }
     ngOnChanges(changes: SimpleChanges) {
       if (changes['filterCriteria']) {
@@ -736,47 +732,48 @@
 
 loadUser(): void {
   this.loginservice.getUserProfile().subscribe(
-      user => {
-          if (user && user._id) {
-              const userId = user._id;
+    user => {
+      if (user && user._id) {
+        const userId = user._id;
+        const role = user.role;
 
-              const loadDocuments = (documents: any[]) => {
-                  this.allDocuments = documents;
+        const loadDocuments = (documents: any[]) => {
+          this.allDocuments = documents;
 
-                  // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามจังหวัด
-                  this.processProvinceData(documents);
+          // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามจังหวัด
+          this.processProvinceData(documents);
 
-                  // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามเดือน
-                  this.processMonthlyData(documents);
+          // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามเดือน
+          this.processMonthlyData(documents);
 
-                  // สร้างกราฟหลังจากประมวลผลข้อมูลเสร็จ
-                  this.createChart();
-                  this.createDonutChart();
-                  this.createMonthlyChart();  // เรียกใช้งานฟังก์ชันเพื่อสร้างกราฟตามเดือน
-                  this.dtTrigger.next(this.provinces);
-              };
+          // สร้างกราฟหลังจากประมวลผลข้อมูลเสร็จ
+          this.createChart();
+          this.createDonutChart();
+          this.createMonthlyChart();  // เรียกใช้งานฟังก์ชันเพื่อสร้างกราฟตามเดือน
+          this.dtTrigger.next(this.provinces);
+        };
 
-              // ใช้ service เดียวกัน แต่แยกตาม role
-              this.sv.getAllRecordsLinkedByEmployeeId().subscribe(
-                  recordData => {
-                      if (recordData && recordData.length > 0) {
-                          loadDocuments(recordData);
-                          console.log(recordData)
-                      } else {
-                          console.error('ไม่พบเอกสาร');
-                      }
-                  },
-                  error => {
-                      console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล:', error);
-                  }
-              );
-          } else {
-              console.error('User ID is undefined or null.');
+        // ใช้ service เดียวกัน แต่แยกตาม role โดยใช้ getter
+        this.sv.getAllRecordsLinkedByEmployeeId().subscribe(
+          recordData => {
+            if (recordData && recordData.length > 0) {
+              loadDocuments(recordData);
+              console.log(recordData);
+            } else {
+              console.error('ไม่พบเอกสาร');
+            }
+          },
+          error => {
+            console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล:', error);
           }
-      },
-      error => {
-          console.error('Error fetching user profile:', error);
+        );
+      } else {
+        console.error('User ID is undefined or null.');
       }
+    },
+    error => {
+      console.error('Error fetching user profile:', error);
+    }
   );
 }
 
