@@ -64,6 +64,19 @@
   .card{
     font-family: 'Sarabun',sans-serif;
   }
+  a:hover{
+    cursor: pointer;
+    color: #9c27b0;
+  }
+  .BackPage{
+    display: flex;
+     justify-content: center; 
+     align-items: center;
+     background: transparent;
+      border: none; 
+      color: rgb(137, 135, 135);
+    padding-left: 20px;
+  }
   .signTool-content{
     display: flex;
     flex-direction: column;
