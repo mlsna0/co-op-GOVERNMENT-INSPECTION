@@ -78,7 +78,7 @@ import { ManageagencyComponent } from '../../view/manageagency/manageagency.comp
     // SignatureComponent,
   
     ReportuserComponent,
-   
+    
     ReportuserbuildComponent,
     ManageuserComponent,
     ManageagencyComponent,

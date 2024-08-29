@@ -96,7 +96,7 @@ function setRoutes(app): void {
   router.route('/agencyModel').get(agencyModelCtrl.getAll);
   router.route('/createagency').post(agencyModelCtrl.createAgency);
 //   router.route('/createagency').post(timestampModelCtrl.insert);
-  router.route('getAgencies').get(agencyModelCtrl.getAgencies);
+  router.route('/getAgencies').get(agencyModelCtrl.getAgencies);
 //   router.route('/agencyModel').post(agencyModelCtrl.insert);
   router.route('/getAgencyById').get(agencyModelCtrl.getAgencyById);
   router.route('/agencyModel/:id').put(agencyModelCtrl.update);

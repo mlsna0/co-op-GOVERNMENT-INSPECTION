@@ -33,7 +33,7 @@ class UserModelCtrl extends BaseCtrl {
       try {
           // ตรวจสอบว่า ID ถูกส่งมาหรือไม่
           // console.log("req.params : ",req.params)
-          console.log("req จาก body",req.body)
+          // console.log("req จาก body",req.body)
 
 
       
@@ -50,9 +50,9 @@ class UserModelCtrl extends BaseCtrl {
           // หา user จากฐานข้อมูล
           let user = await this.model.findById(id).populate('employeeId');
             if (user && user.employeeId) {
-                  console.log('Populated employeeId:', user.employeeId,user);
+                  // console.log('Populated employeeId:', user.employeeId,user);
               } else {
-                 console.error('EmployeeId not populated');
+                //  console.error('EmployeeId not populated');
               }
           
           // รับข้อมูลจาก request body
@@ -155,7 +155,7 @@ class UserModelCtrl extends BaseCtrl {
           // บันทึกข้อมูลที่อัปเดตลงฐานข้อมูล
           // await user.save();
       } catch (error) {
-          console.error('Error updating user:', error.message);
+          // console.error('Error updating user:', error.message);
           res.status(500).json({ msg: 'Server error' });
       }
   };
@@ -189,7 +189,7 @@ class UserModelCtrl extends BaseCtrl {
       async updateUserStatus(req, res): Promise<void> {
         const  { isActive } = req.body;
         const userId = req.params.userId;
-        console.log("userid params: ",userId)
+        // console.log("userid params: ",userId)
         if (!userId || !isActive === undefined) {
           res.status(400).send('Employee ID and Staus are required.');
           return;
@@ -214,7 +214,7 @@ class UserModelCtrl extends BaseCtrl {
       }
       resetPassword = async (req, res) => {
         try {
-            console.log('Request Body:', req.body);
+            // console.log('Request Body:', req.body);
             const { userIdToReset } = req.body;
     
             // กำหนดรหัสผ่านเริ่มต้นเป็น 12345678
@@ -224,8 +224,8 @@ class UserModelCtrl extends BaseCtrl {
             const userId = req.user ? req.user.id : null;
             const role = req.user ? req.user.role : null;
     
-            console.log('User ID:', userId);
-            console.log('Role:', role);
+            // console.log('User ID:', userId);
+            // console.log('Role:', role);
     
             if (!userId) {
                 return res.status(401).json({ msg: 'Authorization required' });
@@ -243,7 +243,7 @@ class UserModelCtrl extends BaseCtrl {
     
             // ค้นหา user ที่ต้องการรีเซ็ตรหัสผ่าน
             let user = await this.model.findById(userIdToReset);
-            console.log('User found:', user);
+            // console.log('User found:', user);
     
             if (!user) {
                 return res.status(400).json({ msg: 'User not found' });
@@ -252,14 +252,14 @@ class UserModelCtrl extends BaseCtrl {
             // รีเซ็ตรหัสผ่านเป็น defaultPassword
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(defaultPassword, salt);
-            console.log('New hashed default password:', hashedPassword);
+            // console.log('New hashed default password:', hashedPassword);
     
             user.password = hashedPassword;
             await user.save();
     
             res.status(200).json({ msg: `Password has been reset to default for user ID ${userIdToReset}` });
         } catch (error) {
-            console.error('Error in resetPassword function:', error);
+            // console.error('Error in resetPassword function:', error);
             res.status(500).send('Server error');
         }
     };

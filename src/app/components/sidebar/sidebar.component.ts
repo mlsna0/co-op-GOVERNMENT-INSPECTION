@@ -64,11 +64,11 @@ export class SidebarComponent implements OnInit {
  
   ngOnInit() {
     const role = this.authService.getRole();
-    console.log('Role in sidebar.component.ts:', role); // ตรวจสอบบทบาทในคอมโพเนนต์
+    // console.log('Role in sidebar.component.ts:', role); // ตรวจสอบบทบาทในคอมโพเนนต์
     this.menuItems = ROUTES.filter(menuItem => 
       !menuItem.roles || menuItem.roles.includes(role)
     );
-    console.log('Filtered menuItems:', this.menuItems); // ตรวจสอบรายการเมนูหลังการกรอง
+    // console.log('Filtered menuItems:', this.menuItems); // ตรวจสอบรายการเมนูหลังการกรอง
   }
 
 

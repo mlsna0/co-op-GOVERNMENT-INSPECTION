@@ -56,7 +56,7 @@ export class AddagencyComponent implements OnInit {
       agency_name: ["", Validators.required],
       email: ["", [Validators.required, Validators.email]],
       phone: ["", Validators.required, Validators.pattern('^[0-9]{10}$')],
-      address:["", Validators.required],
+      address: ["", Validators.required],
       province: ['', Validators.required],
       amphure: ['', Validators.required],
       tambon: ['', Validators.required],
@@ -120,7 +120,8 @@ export class AddagencyComponent implements OnInit {
       } 
     );
 
-  }
+}
+
 
   loadProvinces() {
     this.ts.getProvincesWithDetails().subscribe(data => {

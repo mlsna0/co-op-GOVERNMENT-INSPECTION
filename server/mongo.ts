@@ -5,7 +5,7 @@ dotenv.config(); // Load environment variables from .env file
 
 async function setMongo(): Promise<void> {
   const mongodbURI = process.env.NODE_ENV === 'test' ? process.env.MONGODB_TEST_URI : process.env.MONGODB_URI;
-  console.log("mongodbURI : ",mongodbURI)
+  // console.log("mongodbURI : ",mongodbURI)
 
   if (!mongodbURI) {
     throw new Error('MongoDB URI is not defined');
@@ -26,9 +26,9 @@ async function setMongo(): Promise<void> {
 
   try {
     await mongoose.connect(mongodbURI, options);
-    console.log('Connected to MongoDB');
+    // console.log('Connected to MongoDB');
   } catch (error) {
-    console.error('Error connecting to MongoDB', error);
+    // console.error('Error connecting to MongoDB', error);
     throw error;
   }
 }

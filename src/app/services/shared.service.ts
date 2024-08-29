@@ -42,7 +42,7 @@ export class SharedService {
   getData(): Observable<any> {
     return this.http.get(`${this.baseUrl}/data`).pipe(
       catchError(error => {
-        console.error('Error fetching data:', error);
+        // console.error('Error fetching data:', error);
         throw 'ไม่สามารถดึงข้อมูลได้';
       })
     );
@@ -52,7 +52,7 @@ export class SharedService {
   getRecord(): Observable<any> {
     return this.http.get(`${this.baseUrl}/recordModel`).pipe(
       catchError(error => {
-        console.error('Error fetching data:', error);
+        // console.error('Error fetching data:', error);
         throw 'ไม่สามารถดึงข้อมูลได้';
       })
     );
@@ -71,7 +71,7 @@ export class SharedService {
     return this.http.get<any[]>(`${this.baseUrl}/recordModel`).pipe(
       map(records => records.length), // นับจำนวนเอกสาร
       catchError(error => {
-        console.error('Error fetching data:', error);
+        // console.error('Error fetching data:', error);
         throw 'ไม่สามารถดึงข้อมูลได้';
       })
     );
@@ -86,7 +86,7 @@ export class SharedService {
         }
       }),
       catchError(error => {
-        console.error('Error fetching data:', error);
+        // console.error('Error fetching data:', error);
         return throwError('ไม่สามารถดึงข้อมูลได้');
       })
     );
@@ -104,7 +104,7 @@ export class SharedService {
   getRecordWithUserAndEmployee(userId: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/recordModel/getuser/${userId}`).pipe(
       catchError(error => {
-        console.error('Error fetching data:', error);
+        // console.error('Error fetching data:', error);
         throw 'ไม่สามารถดึงข้อมูลได้';
       })
     );
@@ -125,7 +125,7 @@ export class SharedService {
   getAggregatedData(): Observable<any> {
     return this.http.get(`${this.baseUrl}/aggregateRecordsAndView`).pipe(
       catchError(error => {
-        console.error('Error fetching aggregated data:', error);
+        // console.error('Error fetching aggregated data:', error);
         throw 'ไม่สามารถดึงข้อมูลได้';
       })
     );
@@ -142,7 +142,7 @@ export class SharedService {
   updateRecordContent(data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/record/updateContent`, data).pipe(
       catchError(error => {
-        console.error('Error updating record content:', error);
+        // console.error('Error updating record content:', error);
         throw 'ไม่สามารถอัปเดตข้อมูลได้';
       })
     );
@@ -151,7 +151,7 @@ export class SharedService {
   savePDF(data: FormData): Observable<any> {
     return this.http.put(`${this.baseUrl}/record/savepdf`, data).pipe(
       catchError(error => {
-        console.error('Error saving PDF:', error);
+        // console.error('Error saving PDF:', error);
         throw 'ไม่สามารถบันทึก PDF ได้';
       })
     );
@@ -160,7 +160,7 @@ export class SharedService {
   getPDF(id: string): Observable<Blob> {
     return this.http.get(`${this.baseUrl}/pdf/${id}`, { responseType: 'blob' }).pipe(
       catchError(error => {
-        console.error('Error fetching PDF:', error);
+        // console.error('Error fetching PDF:', error);
         throw 'ไม่สามารถดึง PDF ได้';
       })
     );
@@ -168,7 +168,7 @@ export class SharedService {
   getAllPDFs(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/pdfs`).pipe(
       catchError(error => {
-        console.error('Error fetching PDFs:', error);
+        // console.error('Error fetching PDFs:', error);
         return throwError('ไม่สามารถดึง PDF ได้');
       })
     );
@@ -177,7 +177,7 @@ export class SharedService {
   getAllRecordsLinkedByEmployeeId(): Observable<any> {
     return this.http.get(`${this.baseUrl}/getall`).pipe(
       catchError(error => {
-        console.error('Error fetching linked records:', error);
+        // console.error('Error fetching linked records:', error);
         return throwError('Failed to fetch linked records');
       })
     );
@@ -199,7 +199,7 @@ export class SharedService {
 
     return this.http.post(`${this.baseUrl}/postDataTest/`, data, { headers }).pipe(
       catchError(error => {
-        console.error('Error submitting data:', error);
+        // console.error('Error submitting data:', error);
         throw 'ไม่สามารถส่งข้อมูลได้';
       })
     );
@@ -236,11 +236,11 @@ export class SharedService {
     return this.http.put(`${this.baseUrl}/userModel/resetPassword`, body);
   }
   updateUserStatus(userId: string, isActive: boolean): Observable<any> {
-    console.log("user Id service: ",userId)
+    // console.log("user Id service: ",userId)
     return this.http.put<any>(`${this.baseUrl}/userModel/updateUserStatus/${userId}`, { isActive })
       .pipe(
         catchError(error => {
-          console.error('Error updating UserStatus:', error);
+          // console.error('Error updating UserStatus:', error);
           return throwError('Error updating UserStatus');
         })
       );

@@ -3,12 +3,11 @@ import BaseCtrl from "./base";
 
 class AgencyModelCtrl extends BaseCtrl {
     model = Agency;
-
     createAgency = async (req, res) => {
         try {
-            console.log(req.body);
+            // console.log(req.body);
             const { agency_name, email, phone, address, province, amphure, tambon, postCode } = req.body;
-
+    
             const agency = new this.model({
                 agency_name,
                 email,
@@ -19,9 +18,9 @@ class AgencyModelCtrl extends BaseCtrl {
                 tambon,
                 postCode,
             });
-
+    
             const savedAgency = await agency.save();
-            res.status(201).json(savedAgency);
+            res.status(201).json(savedAgency); // ส่งข้อมูลทั้งหมดกลับมา
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
