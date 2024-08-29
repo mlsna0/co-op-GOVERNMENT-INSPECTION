@@ -539,11 +539,9 @@ recordCommit() {
 
   if (!this.ContentRecordID) {
     console.error("ID is undefined");
-    Swal.fire({
-      title: 'เกิดข้อผิดพลาด!',
-      text: 'ไม่มีข้อมูล ID ส่งมา',
-      icon: 'error',
-      confirmButtonText: 'ตกลง'
+    this.toastr.error('ไม่มีข้อมูล ID ส่งมา', 'เกิดข้อผิดพลาด!', {
+      timeOut: 2500,
+      positionClass: 'toast-top-right'
     });
     return;
   }
@@ -563,14 +561,9 @@ recordCommit() {
           this.saveRecordContent();
         })
         .catch(error => {
-          Swal.fire({
-            title: 'เกิดข้อผิดพลาด!',
-            text: 'เกิดข้อผิดพลาดในการแปลงภาพเป็นข้อความ.',
-            icon: 'error',
-            confirmButtonText: 'ตกลง',
-            customClass: {
-              confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-            }
+          this.toastr.error('เกิดข้อผิดพลาดในการแปลงภาพเป็นข้อความ.', 'เกิดข้อผิดพลาด!', {
+            timeOut: 2500,
+            positionClass: 'toast-top-right'
           });
         });
     }
@@ -588,33 +581,25 @@ saveRecordContent() {
   this.sv.updateRecordContent(recordData).subscribe(
     response => {
       // console.log('บันทึกข้อมูลเรียบร้อย', response);
-      Swal.fire({
-        title: 'บันทึกข้อมูลสำเสร็จ!!',
-        text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
-        icon: 'success',
-        confirmButtonText: 'ตกลง',
-        customClass: {
-          confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          document.querySelector('.swal2-confirm').setAttribute('style', 'background-color: #24a0ed; color: white;');
-          this.refreshPage();
-        }
+      this.toastr.success('เพิ่มข้อมูลเนื้อหาการตรวจสอบเรียบร้อย', 'บันทึกข้อมูลสำเร็จ!!', {
+        timeOut: 2500,
+        positionClass: 'toast-top-right'
       });
+
+      // Hide the modal and clear the text field
       $('#writtenModel').modal('hide');
-      this.typroText = ''; // ล้างฟิลด์ข้อความ
+      this.typroText = ''; // Clear the text field
+
+      // Refresh the page after a short delay to allow Toastr notification to be seen
+      setTimeout(() => {
+        window.location.reload();
+      }, 1700); // Adjust the timeout if needed
     },
     error => {
-      // console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
-      Swal.fire({
-        title: 'เกิดข้อผิดพลาด!',
-        text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
-        icon: 'error',
-        confirmButtonText: 'ตกลง',
-        customClass: {
-          confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-        }
+      console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
+      this.toastr.error('เกิดข้อผิดพลาดในการเพิ่มข้อมูลเนื้อหาการตรวจสอบ.', 'เกิดข้อผิดพลาด!', {
+        timeOut: 2500,
+        positionClass: 'toast-top-right'
       });
     }
   );
@@ -737,7 +722,7 @@ get personal(): FormArray {
     nextId = this.items.records.length + 1;
     // console.log("items record :",this.items.records)
   } else {
-    nextId= 1;
+    nextId = 1;
    
   }
   const currentDate = moment().format('YYYY-MM-DD');
@@ -760,123 +745,70 @@ get personal(): FormArray {
 
 
   onInsertSummit(data) {
-    this.Submitted = true; 
-    // console.log(data);
-    // console.log('Item form:',this.addItemForm.value);
- 
-    // console.log('Personal array form : ',this.personal.value)
-    // console.log("onInsertSubmit..?data : ",data);
-    // console.log(this.addPersonalForm.value);
-    if (this.addItemForm.invalid || this.personal.invalid ) {
-      // console.log('ฟอร์มไม่ถูกต้อง');
-      // แสดงข้อความแสดงข้อผิดพลาดให้ผู้ใช้ดู
+    this.Submitted = true;
+  
+    if (this.addItemForm.invalid || this.personal.invalid) {
+      // Collecting invalid fields for detailed error reporting
       let invalidFields = [];
-        Object.keys(this.addItemForm.controls).forEach(key => {
-            if (this.addItemForm.controls[key].invalid) {
-                invalidFields.push(this.getFieldLabel(key));
-            }
+      Object.keys(this.addItemForm.controls).forEach(key => {
+        if (this.addItemForm.controls[key].invalid) {
+          invalidFields.push(this.getFieldLabel(key));
+        }
+      });
+  
+      (this.personal as FormArray).controls.forEach((person: AbstractControl, index: number) => {
+        let personGroup = person as FormGroup;
+        Object.keys(personGroup.controls).forEach(key => {
+          if (personGroup.controls[key].invalid) {
+            invalidFields.push(`Personal field ${index + 1} - ${this.getFieldLabel(key)}`);
+          }
         });
-
-        (this.personal as FormArray).controls.forEach((person: AbstractControl, index: number) => {
-          let personGroup = person as FormGroup;
-          Object.keys(personGroup.controls).forEach(key => {
-              if (personGroup.controls[key].invalid) {
-                  invalidFields.push(`Personal field ${index + 1} - ${this.getFieldLabel(key)}`);
-              }
-          });
-        });
-        this.toastr.error('กรุณากรอกข้อมูลให้ครบทุกช่อง', 'เกิดข้อผิดพลาด!', {
-          timeOut: 1500,
-          positionClass: 'toast-top-right'
-        });
-      // Swal.fire({
-      //   title: 'เกิดข้อผิดพลาด!',
-      //   text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง',
-      //   icon: 'error',
-      //   timer: 1500,
-      //   // confirmButtonText: 'ตกลง',
-      //   showConfirmButton: false, 
-        // customClass: {
-        //   confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-        // }
-
-      // });
-      return;
-    }
-   
-    ///การดึงข้อมูลจากผู้สร้างเอกสาร
-
-    // this.sv.postItemData(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
-    //   console.log("res postItemData:", res);
-    // });
-    const token = this.sv.getToken(); // ดึง token จากบริการที่คุณใช้
-
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    
-    this.sv.postDataTest(this.addItemForm.value, token).subscribe(res => {
-      // console.log("res submitted successfully", res);
-      this.toastr.success('เพิ่มข้อมูลสำเร็จ', 'สำเร็จ', {
-        timeOut: 2500,  
-        positionClass: 'toast-top-right'
-      })
-      setTimeout(() => {
-        this.refreshPage(); // เรียกใช้ฟังก์ชันรีเฟรชหน้า
-      }, 2500);
-      
-      // Swal.fire({
-      //         title: 'เพิ่มรายการสำเร็จ!!',
-      //         text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
-      //         icon: 'success',
-      //         timer: 1500,
-      //         showConfirmButton: false, 
-      //         // confirmButtonText: 'ตกลง',
-      //         // customClass: {
-      //         //   confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-      //         // }
-
-      // }).then((result)=>{
-      //   if (result.dismiss === Swal.DismissReason.timer){
-      //     this.refreshPage();
-      //   }
-      // });
-      $('#insertModel').modal('hide');
-      this.addItemForm.reset();
-      this.personInputs.clear(); // Clear FormArray
-      // this.addPersonInput();
-     
-    },
-    error =>{
-      // console.error('Error submitting data:', error);
-      this.toastr.error('การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ', 'เกิดข้อผิดพลาด!', {
-        timeOut: 1500,
+      });
+  
+      this.toastr.error('กรุณากรอกข้อมูลให้ครบทุกช่อง', 'เกิดข้อผิดพลาด!', {
+        timeOut: 2500,
         positionClass: 'toast-top-right'
       });
-      // Swal.fire({
-      //       title: 'เกิดข้อผิดพลาด!',
-      //       text: 'การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ',
-      //       icon: 'error',
-      //       timer: 1500,
-      //       showConfirmButton: false, 
-      //       // confirmButtonText: 'ตกลง',
-      //       // confirmButtonColor: "#24a0ed",
-      //       // customClass: {
-      //       //   confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-      //       // }
-      //     }).then((result)=>{
-      //       if (result.dismiss === Swal.DismissReason.timer){
-      //       }
-      //     });
-
+      return;
     }
-    
+  
+    // Data submission logic
+    const token = this.sv.getToken(); // Retrieve token from your service
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
+    this.sv.postDataTest(this.addItemForm.value, token).subscribe(
+      res => {
+        // Success notification
+        console.log('Data submission successful 11111' ,)
+        this.toastr.success('เพิ่มข้อมูลสำเร็จ', 'สำเร็จ', {
+          timeOut: 2500,
+          positionClass: 'toast-top-right'
+        });
 
-  );
-    
-  // this.fetchData()
-     // Close the modal
-     $('#insertModel').modal('hide');
-      
+
+        // Hide modal and reset forms
+        $('#insertModel').modal('hide');
+        this.addItemForm.reset();
+        this.personInputs.clear(); // Clear FormArray
+  
+        // Refresh the page after a short delay to allow Toastr notification to be seen
+        // setTimeout(() => {
+        //   this.refreshPage();
+        // }, 2500);
+      },
+      error => {
+        // Error notification
+        this.toastr.error('การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ', 'เกิดข้อผิดพลาด!', {
+          timeOut: 2500,
+          positionClass: 'toast-top-right'
+        });
+      }
+    );
+  
+    // Close the modal if not already handled
+    $('#insertModel').modal('hide');
   }
+
   
   getFieldLabel(fieldName: string): string {
     const fieldLabels = {

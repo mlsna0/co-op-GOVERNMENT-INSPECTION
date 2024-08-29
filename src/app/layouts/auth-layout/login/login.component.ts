@@ -25,9 +25,12 @@ export class LoginComponent implements OnInit {
     private as : AuthService,
     private lc : loginservice,
     private toastr: ToastrService // เพิ่ม ToastrService ใน constructor
-  ) { }
+  ) { 
+    
+  }
 
   ngOnInit(): void {
+    
   }
 
   // onSubmit() {
