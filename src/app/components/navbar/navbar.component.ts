@@ -66,24 +66,24 @@ export class NavbarComponent implements OnInit {
 
     this.LoginSV.getUserProfile().subscribe(
       res => {
-        console.log("UserData received:", res);
+        // console.log("UserData received:", res);
         this.UserData = res;
-        console.log("ProfileImage from UserData:", this.UserData?.employeeId?.profileImage);
+        // console.log("ProfileImage from UserData:", this.UserData?.employeeId?.profileImage);
   
         // ตรวจสอบว่า profileImage มีค่าอยู่หรือไม่
         if (this.UserData?.employeeId?.profileImage) {
           // ใช้ URL ที่เซิร์ฟเวอร์ให้บริการ
           this.profileImgUrl = `http://localhost:3000/uploads/${this.UserData.employeeId.profileImage.replace(/\\/g, '/')}`;
-          console.log('Generated profileImgUrl:', this.profileImgUrl);
+          // console.log('Generated profileImgUrl:', this.profileImgUrl);
         } else {
           this.profileImgUrl = './assets/img/Person-icon.jpg';
         }
   
-        console.log('profileImgUrl:', this.profileImgUrl);
+        // console.log('profileImgUrl:', this.profileImgUrl);
 
       },
       error => {
-        console.error('Error fetching user profile:', error);
+        // console.error('Error fetching user profile:', error);
       }
     );
 

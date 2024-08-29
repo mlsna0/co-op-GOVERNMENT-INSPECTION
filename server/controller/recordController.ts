@@ -31,14 +31,14 @@ class recorCon extends BaseCtrl {
   
   auth = async (req, res, next) => {
     const token = req.header('Authorization').replace('Bearer ', '');
-    console.log("auth ", token);
+    // console.log("auth ", token);
     if (!token) {
       return res.status(401).json({ msg: 'No token, authorization denied' });
     }
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_key');
-      console.log("decoded record : ",decoded)
+      // console.log("decoded record : ",decoded)
       req.user = decoded.user;
       next();
     } catch (err) {
@@ -47,7 +47,7 @@ class recorCon extends BaseCtrl {
   };
   
   postItemToView = async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
 
     try {
       const userID = req.user.id; // ใช้ userID จาก req.user
@@ -72,7 +72,7 @@ class recorCon extends BaseCtrl {
         createdTime: localTime // เก็บเวลาตามเขตเวลาท้องถิ่น
       }).save();
 
-      console.log("obj _Id: ", obj._id);
+      // console.log("obj _Id: ", obj._id);
       if (req.body.personal) {
         let newField = req.body.personal.map(x => { return { view_rank: x.rank, view_first_name: x.firstname, view_last_name: x.lastname, documentId: obj._id }; });
 
@@ -87,7 +87,7 @@ class recorCon extends BaseCtrl {
 
 
 updateRecordContent = async (req, res) => {
-console.log("Updating record content: ", req.body);
+// console.log("Updating record content: ", req.body);
 try {
   const { id, content } = req.body;
   const record = await this.model.findByIdAndUpdate(id, { record_content: content }, { new: true });
@@ -103,7 +103,7 @@ try {
 
 
 savePDF = async (req: Request, res: Response) => {
-console.log('savePDF');
+// console.log('savePDF');
 
 upload(req, res, async (err) => {
   if (err) {
@@ -129,7 +129,7 @@ upload(req, res, async (err) => {
   // บันทึกไฟล์
   fs.writeFile(filePath, file.buffer, async (err) => {
     if (err) {
-      console.error('Error writing PDF file:', err);
+      // console.error('Error writing PDF file:', err);
       return res.status(500).send('Failed to save PDF');
     }
 
@@ -140,7 +140,7 @@ upload(req, res, async (err) => {
       }
       res.status(200).json(record);
     } catch (err) {
-      console.error('Error updating record in database:', err);
+      // console.error('Error updating record in database:', err);
       res.status(500).send('Error updating record in database');
     }
   });
@@ -156,13 +156,13 @@ getPDF = async (req, res) => {
 
   res.sendFile(filePath, (err) => {
     if (err) {
-      console.error('Error sending PDF file:', err);
+      // console.error('Error sending PDF file:', err);
       res.status(500).send('Error sending PDF file');
     }
   });
 }
 postDataTest = async (req,res)=>{
-  console.log("body : ",req.body)
+  // console.log("body : ",req.body)
   try {
     // const obj = await new this.model({
     //   ...req.body
@@ -249,7 +249,7 @@ getRecordByDocumentId =async (req,res)=>{
       }
     });
   } catch (error) {
-    console.error('Error fetching document:', error);
+    // console.error('Error fetching document:', error);
     res.status(500).json({ message: 'Server error' });
   }
 
@@ -258,32 +258,32 @@ getRecordByDocumentId =async (req,res)=>{
 
 getRecordWithUserAndEmployee = async (req, res) => {
   const userId = req.params.userId;
-  console.log(`Params: ${JSON.stringify(req.params)}`);
-  console.log(`Received userId: ${userId}`);
+  // console.log(`Params: ${JSON.stringify(req.params)}`);
+  // console.log(`Received userId: ${userId}`);
 
   if (!userId) {
-    console.log('User ID is missing');
+    // console.log('User ID is missing');
     return res.status(400).send('User ID is required');
   }
 
   try {
     const documents = await this.model.find({ userId: userId });
-    console.log(`Found documents: ${documents}`);
+    // console.log(`Found documents: ${documents}`);
     if (documents.length === 0) {
-      console.log('No documents found');
+      // console.log('No documents found');
       return res.status(404).send('No documents found');
     }
 
     const user = await this.userModel.findById(userId);
     if (!user) {
-      console.log('User not found');
+      // console.log('User not found');
       return res.status(404).send('User not found');
     }
 
     // ส่งคืนเฉพาะ user และ documents
     res.status(200).json({ user, documents });
   } catch (error) {
-    console.error('Error in getRecordWithUserAndDocument function:', error.message);
+    // console.error('Error in getRecordWithUserAndDocument function:', error.message);
     res.status(500).send('Server error');
   }
 }
@@ -295,7 +295,7 @@ getAllPDFs = async (req, res) => {
     // อ่านไฟล์ทั้งหมดในไดเรกทอรี
     fs.readdir(directoryPath, (err, files) => {
       if (err) {
-        console.error('Error reading directory:', err);
+        // console.error('Error reading directory:', err);
         return res.status(500).send('Failed to read directory');
       }
 
@@ -310,7 +310,7 @@ getAllPDFs = async (req, res) => {
       res.status(200).json(pdfFiles);
     });
   } catch (err) {
-    console.error('Error fetching PDF files:', err);
+    // console.error('Error fetching PDF files:', err);
     res.status(500).send('Failed to fetch PDF files');
   }
 }

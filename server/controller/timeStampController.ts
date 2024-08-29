@@ -25,7 +25,7 @@ class TimeStampModelCtrl extends BaseCtrl {
       const savedTimeStamp = await newTimeStamp.save();
       return savedTimeStamp;
     } catch (error) {
-      console.error('Error adding timestamp:', error);
+      // console.error('Error adding timestamp:', error);
       throw error;
     }
   };
@@ -34,34 +34,34 @@ class TimeStampModelCtrl extends BaseCtrl {
     try {
       // ดึงข้อมูลของ users ทั้งหมด
       const users = await this.userModel.find({});
-      console.log(`Found users: ${users}`);
+      // console.log(`Found users: ${users}`);
   
       if (users.length === 0) {
-        console.log('No users found');
+        // console.log('No users found');
         return res.status(404).send('No users found');
       }
   
       // ดึงข้อมูลของ employees ทั้งหมด
       const employees = await this.employeeModel.find({});
-      console.log(`Found employees: ${employees}`);
+      // console.log(`Found employees: ${employees}`);
   
       if (employees.length === 0) {
-        console.log('No employees found');
+        // console.log('No employees found');
         return res.status(404).send('No employees found');
       }
   
       // ดึงข้อมูลของ documents ทั้งหมด
       const timestamp = await this.model.find({});
-      console.log(`Found documents: ${timestamp}`);
+      // console.log(`Found documents: ${timestamp}`);
   
       if (timestamp.length === 0) {
-        console.log('No timestamp found');
+        // console.log('No timestamp found');
         return res.status(404).send('No timestamp found');
       }
   
       res.status(200).json({ users, employees, timestamp });
     } catch (error) {
-      console.error('Error in getAllRecords function:', error.message);
+      // console.error('Error in getAllRecords function:', error.message);
       res.status(500).send('Server error');
     }
   }
