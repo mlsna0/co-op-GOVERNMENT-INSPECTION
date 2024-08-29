@@ -645,17 +645,23 @@
   
                   const loadDocuments = (documents: any[]) => {
                       this.allDocuments = documents;
-  
+                        console.log("ข้อมูลทั้งหมด : ",this.allDocuments)
                       this.provinceData = {};  // รีเซ็ตข้อมูลของจังหวัด
                       this.monthlyData = {};    // เริ่มต้นข้อมูลสำหรับแยกตามเดือน
   
                       this.totalDocuments = 0;
                       this.totalSignedDocuments = 0;
   
-                      this.allDocuments.forEach(user => {
-                          user.documentCount = user.documents.length;
+                      this.allDocuments.forEach((data,index) => {
+                          data.documentCount = data.documents.length;
+                          console.log("Index: ", index);
+                          // console.log("Email: ", data.data.email);
+                          console.log("Province: ", data.employee?.province);
+                           console.log("data.documentCount: ",data.documentCount)
+                          console.log("Document Count: ", data.documents.length)
+                         const provinceStr = data.employee?.province;
   
-                          const provinceId = parseInt(user.employee.province, 10);
+                          const provinceId = parseInt(provinceStr, 10);
                           const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
   
                           if (!provinceName || provinceName === 'ไม่ทราบจังหวัด') {
@@ -665,10 +671,10 @@
                           if (!this.provinceData[provinceName]) {
                               this.provinceData[provinceName] = { users: [], documentCount: 0, signedDocuments: 0 };
                           }
-                          this.provinceData[provinceName].users.push(user);
-                          this.provinceData[provinceName].documentCount += user.documentCount;
+                          this.provinceData[provinceName].users.push(data);
+                          this.provinceData[provinceName].documentCount += data.documentCount;
   
-                          user.documents.forEach(document => {
+                          data.documents.forEach(document => {
                               if (this.pdfs.some(pdf => pdf.name === document.documentId)) {
                                   this.provinceData[provinceName].signedDocuments += 1;
                               }
