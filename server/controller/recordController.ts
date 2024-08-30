@@ -238,6 +238,8 @@ getRecordByDocumentId =async (req,res)=>{
         record_topic: document.record_topic,
         createdDate: document.createdDate,
         createdTime: document.createdTime,
+        record_star_date: document.record_star_date,
+        
       },
       user: {
         role: user ? user.role : 'N/A'

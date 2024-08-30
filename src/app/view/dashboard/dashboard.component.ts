@@ -10,6 +10,7 @@
   import { loginservice } from 'app/layouts/login.services.';
   import { DocumentService } from 'app/services/document.service';
   import { BehaviorSubject, Subject } from 'rxjs';
+import { log } from "console";
 
 
   @Component({
@@ -25,6 +26,7 @@
     pdfs: any[] = [];
     errorMessage: string | null = null;
     pdfCount: number = 0;
+    currentUser: any;
     //filter
     allDocuments: any[] = [];
     isFilterActive: boolean = false;
@@ -650,11 +652,12 @@
           if (!provinceName || provinceName === 'ไม่ทราบจังหวัด') {
               return;
           }
+          // console.log(this.provinceData);
   
-          if (this.isAdmin && document.employee.province !== document.province) {
-              console.log(`Province mismatch for Admin. Skipping document.`);
-              return;
-          }
+          // if (this.isAdmin && document.employee.province !== document.province) {
+          //     console.log(`Province mismatch for Admin. Skipping document.`);
+          //     return;
+          // }
   
           if (!this.provinceData[provinceName]) {
               this.provinceData[provinceName] = { users: [], documentCount: 0, signedDocuments: 0 };
@@ -702,32 +705,60 @@
       });
   }
 
-  processMonthlyData(documents: any[]): void {
+  processMonthlyData(): void {
+    if (!this.isAdmin) {
+        console.log("Not an admin user, skipping monthly data processing.");
+        return;  // ถ้าไม่ใช่ Admin ไม่ต้องทำอะไรต่อ
+    }
+
     this.monthlyData = {};  // เริ่มต้นข้อมูลสำหรับแยกตามเดือน
 
-    documents.forEach(document => {
-        document.documents.forEach(doc => {
-            if (!doc.documentId) {
-                console.error(`documentId is undefined or null for document: ${JSON.stringify(doc)}`);
-                return;
-            }
-            if (!doc.creationDate) {
-                console.error(`creationDate is undefined or null for document: ${JSON.stringify(doc)}`);
-                return;
-            }
+    // ดึงจังหวัดของผู้ใช้ Admin
+    // console.log('currentUser:', this.currentUser.employeeId);
+    const adminProvinceId = this.currentUser.employeeId.province; // สมมติว่า currentUser มีข้อมูลผู้ใช้ที่ได้จาก loadUser()
+    // console.log(adminProvinceId);
+    
+    const adminProvinceName = this.provinceService.getProvinceNameById(parseInt(adminProvinceId, 10), this.provinces);
+    // console.log(adminProvinceName);
+    
+    // console.log(this.provinceData);
+    if (!adminProvinceName || adminProvinceName === 'ไม่ทราบจังหวัด') {
+        console.error("Admin province is unknown or invalid.");
+        return; // ออกจากฟังก์ชันหากไม่มีข้อมูลจังหวัดที่ถูกต้อง
+    }
 
-            const month = new Date(doc.creationDate).toLocaleString('default', { month: 'long' });
-            if (!this.monthlyData[month]) {
-                this.monthlyData[month] = { documentCount: 0, signedDocuments: 0 };
-            }
+    // ใช้ข้อมูลที่จัดกลุ่มตามจังหวัดใน this.provinceData เฉพาะจังหวัดของ Admin
+    if (this.provinceData[adminProvinceName]) {
+      
+        const province = this.provinceData[adminProvinceName];
+        province.users.forEach(document => {
+            document.documents.forEach(doc => {
+                if (!doc.createdDate) {
+                    console.error(`createdDate is undefined or null for document: ${JSON.stringify(doc)}`);
+                    return;
+                }
 
-            this.monthlyData[month].documentCount += 1;
+                const month = new Date(doc.createdDate).toLocaleString('default', { month: 'long' });
 
-            if (this.pdfs.some(pdf => pdf.name === doc.documentId)) {
-                this.monthlyData[month].signedDocuments += 1;
-            }
+                if (!this.monthlyData[month]) {
+                    this.monthlyData[month] = { documentCount: 0, signedDocuments: 0 };
+                }
+
+                this.monthlyData[month].documentCount += 1;
+
+                if (this.pdfs.some(pdf => pdf.name === doc.documentId)) {
+                    this.monthlyData[month].signedDocuments += 1;
+                }
+            });
         });
-    });
+
+        // แสดงข้อมูลรายเดือนเฉพาะสำหรับจังหวัดของ Admin
+        Object.keys(this.monthlyData).forEach(month => {
+            console.log(`${month}: ${this.monthlyData[month].documentCount} documents, ${this.monthlyData[month].signedDocuments} signed`);
+        });
+    } else {
+        console.log(`No data found for the admin's province: ${adminProvinceName}`);
+    }
 }
 
 loadUser(): void {
@@ -739,13 +770,18 @@ loadUser(): void {
 
         const loadDocuments = (documents: any[]) => {
           this.allDocuments = documents;
-
+          this.currentUser = user;  
           // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามจังหวัด
-          this.processProvinceData(documents);
-
-          // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามเดือน
-          this.processMonthlyData(documents);
-
+          console.log(this.currentUser);
+            // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามเดือนสำหรับ Admin
+            this.processProvinceData(documents);
+            if (this.isAdmin) {
+              // ถ้าเป็น Admin ให้ประมวลผลข้อมูลตามเดือน
+              this.processMonthlyData();
+            } 
+            // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามจังหวัดสำหรับ Superadmin
+        
+          
           // สร้างกราฟหลังจากประมวลผลข้อมูลเสร็จ
           this.createChart();
           this.createDonutChart();
