@@ -204,6 +204,10 @@ export class SharedService {
       })
     );
   }
+  updateDataDocument(data): Observable<any>{
+    return this.http.put(`${this.baseUrl}/updateDataDocument/${data._id}`, data);
+
+  }
 
   postItemData(data: any, personal: any): Observable<any> {
     const formData: any = {

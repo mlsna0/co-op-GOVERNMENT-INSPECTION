@@ -81,6 +81,7 @@ export class SignatureComponent implements OnInit {
   ngOnInit(): void {
     this.getData()
     console.log('Document ID:', this.documentId);
+
     
   }
 
@@ -508,8 +509,8 @@ blobToBase64(blob: Blob): Promise<string | ArrayBuffer | null> {
     //   }
     // })
 
-    // window.location.reload()
-    this.reload();
+    window.location.reload()
+    // this.reload();
   }
   useProfileSignCheckbox(event: Event) {
     const inputElement = event.target as HTMLInputElement;
@@ -527,7 +528,7 @@ blobToBase64(blob: Blob): Promise<string | ArrayBuffer | null> {
   }
 
   BackRoot() {
-    this.router.navigate(['/table-detail']);
+    this.router.navigate(['/table-detail', this.documentId]);
   }
 
   // prevPage() {

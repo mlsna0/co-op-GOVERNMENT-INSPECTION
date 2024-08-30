@@ -64,6 +64,19 @@
   .card{
     font-family: 'Sarabun',sans-serif;
   }
+  a:hover{
+    cursor: pointer;
+    color: #9c27b0 !important;
+  }
+  .BackPage{
+    display: flex;
+     /* justify-content: center;  */
+     align-items: center;
+     background: transparent;
+      border: none; 
+      color: rgb(137, 135, 135);
+    padding: 20px;
+  }
   .signTool-content{
     display: flex;
     flex-direction: column;
@@ -287,4 +300,15 @@ input[type="number"] {
   display: flex;
   justify-content: center;
   margin-top: 15px;
+}
+
+:host ::ng-deep .pdfViewer.removePageBorders {
+  border: 1px solid black; /* กำหนดขอบให้สม่ำเสมอทุกด้าน */
+  box-sizing: border-box;  /* เพื่อให้ขอบและ padding รวมอยู่ในขนาดขององค์ประกอบ */
+  width: 210mm; /* กำหนดความกว้างให้เท่ากับขนาดกระดาษ A4 */
+  height: 297mm; /* กำหนดความสูงให้เท่ากับขนาดกระดาษ A4 */
+  overflow: hidden; /* ป้องกันไม่ให้เนื้อหาล้นขอบ */
+ 
+  position: relative;
+  left: 20%;
 }

@@ -30,7 +30,7 @@
             <div class="group-btn">
               <button (click)="exportToExcel()" class="btn btn-success" style="float: right;">Export to excel</button>
               <button class="btn btn-add pull-center " (click)="onInsertModal()">
-                <i class="fa fa-plus"></i> &nbsp;เพิ่มหัวข้อเอกสาร
+            เพิ่มหัวข้อเอกสาร
               </button>
 
             </div>
@@ -118,7 +118,7 @@
                  
                       <h5 class="modal-title" id="addItemModalLabel"
                         style="color: rgb(0, 0, 0); font-family: 'Sarabun', sans-serif !important; font-size: 18px; font-weight: 900;">
-                        เพิ่มรายการ</h5>
+                        เพิ่มข้อมูลเอกสาร</h5>
               
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: black;">
                         <span aria-hidden="true">&times;</span>
@@ -208,7 +208,7 @@
 
                     <div class="col-sm-12" style="position: relative; display: flex; justify-content: flex-end;">
                       <button type="button" (click)="addPersonInput()" [disabled]="!canAddPerson()"
-                        style="border: none; background: none;"> <!---->
+                        style="border: none; background: none;"> 
                         <i class="fa fa-plus"></i>
                       </button>
                       <button type="button" (click)="deletePersonInput()" style="border: none; background: none;">
@@ -352,6 +352,7 @@
                                  addItemForm.controls['location'].dirty || Submitted)"
                           class="text-validate">*</span>
                       </label>
+                    
                       <input type="text" id="location" formControlName="location" class="form-control"
                         placeholder="--เลือกสถานที่--"
                         [ngClass]="{'box-validate': addItemForm.controls['location'].invalid && 
@@ -363,10 +364,11 @@
                         *ngIf="addItemForm.controls['location'].invalid && 
                         (addItemForm.controls['location'].touched || 
                           addItemForm.controls['location'].dirty || Submitted)">กรุณาเลือกสถานที่</span>
+                            <button type="button" class="btn btn-add" (click)="getCurrentLocation()">
+                              <i class="fa fa-location-dot">&nbsp;</i>เลือกสถานที่
+                              ปัจจุบัน</button>
                     </div>
-                    <button type="button" class="btn btn-add" (click)="getCurrentLocation()">
-                      <i class="fa fa-location-dot">&nbsp;</i>เลือกสถานที่
-                      ปัจจุบัน</button>
+                   
 
 
 

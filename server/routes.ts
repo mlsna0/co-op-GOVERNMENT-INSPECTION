@@ -52,6 +52,7 @@ function setRoutes(app): void {
   router.route('/postTyproText').post(recordModelCtrl.postItemToView);
   // router.route('/postAddDetail').post(itemModelCtrl.addDetail);
   router.route('/postDataTest').post(recordModelCtrl.auth,uploadService.none(),recordModelCtrl.postItemToView)
+  router.route('/updateDataDocument/:id').put(recordModelCtrl.updateDataDocument)
   // router.route('/postDataTest').post(uploadservice.none(), auth.authorize, recordModelCtrl.postItemToView);
  
 
@@ -244,19 +245,19 @@ function setRoutes(app): void {
 
             //เป็นการเลือกที่ ที่จะเก็บ ไฟล์ลงไป ว่าจะเก็บไว้ที่ไหน
             
-            fs.writeFileSync('D:/ProjFD/angualr-project-training/dist/server/singature'+ req.body.oca + req.body.userId + '.pdf',
+            fs.writeFileSync('L:/projectNT/angualr-project-training/dist/server/singature/'+ req.body.pdfFile + req.body.documentId + '.pdf',
                 pdfBytes,
                 'binary'
             );
             console.log("222222222 =>");
-            console.log('oca:', req.body.oca);
-            console.log('userId:', req.body.userId);
+            console.log('pdfFile:', req.body.pdfFile);
+            console.log('documentId:', req.body.documentId);
 
             //ถ้าใช้เเบบนี้ จะมีการดึงข้อมูลเเบบรูปโปรไฟล์
-            // return res.json(true)
+            return res.json(true)
 
             //หรือ จะดึงมาใช้เเบบนี้ก็ได้
-            return res.json('http://localhost:3000/api/stampSignature/ ' + req.body.oca + req.body.requestId + req.body.userId + '.pdf')
+            // return res.json('http://localhost:3000/api' + req.body.oca + req.body.requestId + req.body.userId + '.pdf')
         } catch (err) {
             if (err.message == 'PKCS#12 MAC could not be verified. Invalid password?') {
                 console.log("Wrong Password =>");

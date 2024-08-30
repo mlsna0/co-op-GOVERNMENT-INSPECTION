@@ -646,6 +646,11 @@
   
           const provinceId = parseInt(document.employee.province, 10);
           const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
+                  const loadDocuments = (documents: any[]) => {
+                      this.allDocuments = documents;
+                        console.log("ข้อมูลทั้งหมด : ",this.allDocuments)
+                      this.provinceData = {};  // รีเซ็ตข้อมูลของจังหวัด
+                      this.monthlyData = {};    // เริ่มต้นข้อมูลสำหรับแยกตามเดือน
   
           if (!provinceName || provinceName === 'ไม่ทราบจังหวัด') {
               return;
@@ -679,7 +684,7 @@
   
           this.totalDocuments += this.provinceData[provinceName].documentCount;
           this.totalSignedDocuments += this.provinceData[provinceName].signedDocuments;
-      });
+    }});
   
       this.provinces.forEach(province => {
           province.count = 0;

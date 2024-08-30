@@ -26,7 +26,7 @@ h4{
   align-items: self-start;
   color: #7B809A;
 }
-.card-title a{
+.card-title p{
   font-family: "Sarabun", sans-serif; 
   font-weight: 900;
   font-size: 18px;
@@ -46,7 +46,7 @@ h4{
 .toggle-switch{
   position: relative;
   background-color: #ccc;
-  width: 90px;
+  width: 50px;
   height: 25px;
   border-radius: 20px;
   cursor: pointer;
@@ -68,7 +68,7 @@ input:checked + .toggle-switch{
   background-color: #4caf50;
 }
 input:checked + .toggle-switch::before{
-  transform: translateX(65px);
+  transform: translateX(25px);
 
 }
 input:not(:checked) + .toggle-switch {
@@ -115,6 +115,56 @@ th, td {
   width: 50px; /* Adjust the width as needed */
   text-align: center;
 }
+
+/*Modal style*/
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+  font-family: 'Sarabun', sans-serif;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-family: 'Sarabun', sans-serif;
+}  
+
+.form-group input {
+  width: calc(100% - 20px);
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: 'Sarabun', sans-serif;
+}
+.form-select{
+  width: calc(100% - 20px);
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: 'Sarabun', sans-serif;
+  color:#5b5a5a;
+}
+
+
+.form-select:disabled {
+  background-color: #ccc; /* Light gray color for disabled state */
+  cursor: not-allowed; /* Show a 'not-allowed' cursor when hovering over the disabled select */
+}
+
+/*invalidate style*/
+.error-text{
+      font-size: 14px;
+      font-family: 'Sarabun', sans-serif;
+      color: red;
+}
+.form-group input.box-validate {
+      border: 1px solid red;
+      border-radius: 5px;
+}
+
 
 :host ::ng-deep .btn-add{
   color: rgb(255, 255, 255);
@@ -214,4 +264,18 @@ td select option {
   font-family: 'Sarabun', sans-serif;
   font-size: 14px;
   color: black;
+}
+
+
+.custom-role-display {
+width: 100%;
+padding:3.2px 32px;
+font-size: 14px;
+text-align: center;
+border: 1px solid #ccc;
+border-radius: 32px;
+background-color: white;
+font-family: 'Sarabun', sans-serif;
+color: black;
+transition: background-color 0.3s, border-color 0.3s;
 }

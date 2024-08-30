@@ -37,68 +37,61 @@
 
       <div class="row">
         <div class="col-md-6">
-          <div class="filter-container">
-            <div class="row">
-              <div class="col-md-3">
-                <h4>กรองข้อมูล</h4>
-                <div class="dropdown">
-                  <div class="filter-box" (click)="toggleDropdown('province',$event)">
-                    เลือกจังหวัด
-                    <span class="fa fa-chevron-down" [class.animate]="isProvinceDropdownOpen"
-                      *ngIf="isProvinceDropdownOpen"></span>
-                    <span class="fa fa-chevron-up" [class.animate]="!isProvinceDropdownOpen"
-                      *ngIf="!isProvinceDropdownOpen"></span>
+          <div class="row filter-container">
+            <div class="col-md-3 filter-item">
+              <h4>กรองข้อมูล</h4>
+              <div class="dropdown">
+                <div class="filter-box" (click)="toggleDropdown('province', $event)">
+                  เลือกจังหวัด
+                  <span class="fa fa-chevron-down" [class.animate]="isProvinceDropdownOpen"
+                    *ngIf="isProvinceDropdownOpen"></span>
+                  <span class="fa fa-chevron-up" [class.animate]="!isProvinceDropdownOpen"
+                    *ngIf="!isProvinceDropdownOpen"></span>
+                </div>
+                <div class="dropdown-content" [class.show]="isProvinceDropdownOpen">
+                  <div class="search">
+                    <input class="form-control form-control-sm inputSearch" type="text" placeholder="ค้นหา..."
+                      (input)="onSearch($event)">
                   </div>
-      
-                  <div class="dropdown-content" [class.show]="isProvinceDropdownOpen">
-                    <div class="search">
-                      <input class="form-control form-control-sm inputSearch" type="text" placeholder="ค้นหา..."
-                        (input)="onSearch($event)">
+                  <div class="dropdown-scroller">
+                    <div class="dropdown-item">
+                      <input type="checkbox" id="select-all" (change)="onSelectAll($event)">
+                      &nbsp;<label for="select-all">ทั้งหมด</label>
                     </div>
-                    <div class="dropdown-scroller">
-                      <div class="dropdown-item">
-                        <input type="checkbox" id="select-all" (change)="onSelectAll($event)">
-                        &nbsp;<label for="select-all">ทั้งหมด</label>
-                      </div>
-                      <div class="dropdown-item" *ngFor="let province of filteredProvinces">
-                        <input type="checkbox" [id]="province.id" [value]="province.id"
-                          (change)="onProvinceSelect($event)" [checked]="province.selected">
-                        &nbsp;<label [for]="province.id">{{ province.name_th }}</label>
-                      </div>
-                    </div>
-      
-      
-                    <div class="button-inline">
-                      <button class="apply-filter" (click)="applyFilter()">ยืนยัน</button>
-                      <button class="clear-filter" (click)=" clearFilter()">ล้าง</button>
+                    <div class="dropdown-item" *ngFor="let province of filteredProvinces">
+                      <input type="checkbox" [id]="province.id" [value]="province.id"
+                        (change)="onProvinceSelect($event)" [checked]="province.selected">
+                      &nbsp;<label [for]="province.id">{{ province.name_th }}</label>
                     </div>
                   </div>
+                  <div class="button-inline">
+                    <button class="apply-filter" (click)="applyFilter()">ยืนยัน</button>
+                    <button class="clear-filter" (click)="clearFilter()">ล้าง</button>
+                  </div>
                 </div>
-              </div>
-      
-              <div class="col-md-3">
-                <h4>เริ่มต้นวันที่</h4>
-                <div class="filter-box" (click)="toggleDropdown('date',$event)">
-                  <input type="date" [(ngModel)]="startDate" (change)="onDateChange()" placeholder="เริ่มต้นวันที่">
-                </div>
-              </div>
-              
-              <div class="col-md-3">
-                <h4>สิ้นสุด</h4>
-                <div class="filter-box">
-                  <input type="date" [(ngModel)]="endDate">
-                </div>
-              </div>
-      
-              <div class="col-md-3 align-self-end">
-                <button type="submit" class="btn btn-add ">
-                  ดูข้อมูล
-                </button>
               </div>
             </div>
-     
-           </div>
+            <div class="col-md-3 filter-item">
+              <h4>เริ่มต้นวันที่</h4>
+              <div class="filter-box">
+                <input type="date" [(ngModel)]="startDate" (change)="onDateChange()" placeholder="เริ่มต้นวันที่">
+              </div>
+            </div>
+            <div class="col-md-3 filter-item">
+              <h4>สิ้นสุด</h4>
+              <div class="filter-box">
+                <input type="date" [(ngModel)]="endDate">
+              
+              </div>
+             
+            </div>
+  
+            <div class="col-md-3 align-self-end filter-item">
+              <button type="submit" class="btn btn-add">ดูข้อมูล</button>
+            </div>
+          </div>
         </div>
+        
         <div class="col-md-6" >
             <div class="donutChartBG">
                 <div class="text-donut">จำนวนการลงนาม</div>
@@ -120,7 +113,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                   <div>
                     <p class="title mb-0">เอกสารทั้งหมด</p>
-                    <h2 class="amount">{{ totalDocuments }}</h2>
+                    <h2 class="amount">{{ totalDocuments }}</h2> <!--recordCount-->
                   </div>
                   <div class="imgBG">
                     <img src="./assets/img/manage.png" alt="paper" class="paper-img">
@@ -157,7 +150,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                   <div>
                     <p class="title mb-0">จำนวนกระดาษ</p>
-                    <h2 class="amount">1,234</h2>
+                    <h2 class="amount">14</h2>
                   </div>
                   <div class="imgBG">
                     <img src="./assets/img/paper.png" alt="paper" class="paper-img">

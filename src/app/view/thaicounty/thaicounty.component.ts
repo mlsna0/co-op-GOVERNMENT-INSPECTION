@@ -121,7 +121,7 @@ export class ThaicountyComponent implements OnInit {
     // console.log('Starting to load user report...');
     this.sv.getAllRecordsLinkedByEmployeeId().subscribe(
         recordData => {
-            // console.log('API response received:', recordData);
+            console.log('API response received:', recordData);
             if (recordData && recordData.length > 0) {
                 this.allDocuments = recordData;
 
@@ -130,25 +130,26 @@ export class ThaicountyComponent implements OnInit {
                 this.totalDocuments = 0;
                 this.totalSignedDocuments = 0;
 
-                this.allDocuments.forEach(user => {
-                    user.documentCount = user.documents.length;
-
-                    const provinceId = parseInt(user.employee.province, 10);
+                this.allDocuments.forEach(data => {
+                    data.documentCount = data.documents.length;
+                    const provinceStr =  data.employee?.province;
+                
+                    const provinceId = parseInt(provinceStr, 10);
                     const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
-
+                    // console.log("ชือ่จังหวัด: " ,provinceName) ;
                     if (!provinceName || provinceName === 'ไม่ทราบจังหวัด') {
-                        // console.warn(`Skipping user with unknown province (Province ID: ${provinceId})`);
+                        console.warn(`Skipping user with unknown province (Province ID: ${provinceId})`);
                         return;
                     }
 
                     if (!provinceData[provinceName]) {
                         provinceData[provinceName] = { users: [], documentCount: 0, signedDocuments: 0 };
                     }
-                    provinceData[provinceName].users.push(user);
-                    provinceData[provinceName].documentCount += user.documentCount;
+                    provinceData[provinceName].users.push(data);
+                    provinceData[provinceName].documentCount += data.documentCount;
 
                     // เปรียบเทียบชื่อ documentId กับชื่อ PDF
-                    user.documents.forEach(document => {
+                    data.documents.forEach(document => {
                         if (this.pdfs.some(pdf => pdf.name === document.documentId)) {
                             provinceData[provinceName].signedDocuments += 1;
                         }

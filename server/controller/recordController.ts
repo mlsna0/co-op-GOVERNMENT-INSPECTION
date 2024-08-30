@@ -100,6 +100,71 @@ try {
   res.status(500).send('Error updating record');
 }
 }
+updateDataDocument = async (req, res) => {
+  try {
+    const documentId = req.params.id; // Getting the document _id from the URL
+    const updatedData = req.body; // Getting the updated data from the request body
+
+    console.log("_id Document?: ", documentId);
+    console.log("Edit data: ", updatedData);
+
+
+
+    // Update the document in the database using Mongoose
+    const updatedDocument = await this.model.findOneAndUpdate(
+      { _id: documentId }, 
+      {
+        record_id: updatedData?.id,
+        record_star_date: updatedData?.startDate,
+        record_end_date: updatedData?.endDate,
+        record_detail: updatedData?.detail,
+        record_location: updatedData?.location,
+        record_topic: updatedData?.topic,
+        // record_content: updatedData?.content,
+        // record_filename: updatedData?.filename,
+        record_place: updatedData?.place,
+        // personal: personal // กรณีต้องการอัปเดต personal array ด้วย
+      },
+      { new: true } // return the updated document
+    );
+
+    if (!updatedDocument) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+      // อัปเดตข้อมูลในคอลเล็กชัน `personal`
+      if (updatedData.personal && Array.isArray(updatedData.personal)) {
+        for (const person of updatedData.personal) {
+          if (person._id) {
+            await this.modelView.findOneAndUpdate(
+              { documentId: documentId, _id: person._id }, // Find by documentId and _id
+              {
+                view_rank: person.rank,
+                view_first_name: person.firstname,
+                view_last_name: person.lastname,
+              },
+              { new: true }
+            );
+          } else {
+            // If _id does not exist, add new personal record
+            await this.modelView.create({
+              view_rank: person.rank,
+              view_first_name: person.firstname,
+              view_last_name: person.lastname,
+              documentId: documentId // Link with the main document's _id
+            });
+          }
+        }
+      }
+
+    res.status(200).json({ message: 'Document updated successfully!', data: updatedDocument });
+  } catch (error) {
+    console.error("Error updating document:", error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
 
 
 savePDF = async (req: Request, res: Response) => {
