@@ -159,10 +159,6 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     this.personInputs = this.addItemForm.get('personal') as FormArray;
     this.addPersonInput(); // Add initial input group
     // this.loadViewData();
-
-  
-  
-    
     
   }
   
@@ -748,7 +744,6 @@ get personal(): FormArray {
     this.Submitted = true;
   
     if (this.addItemForm.invalid || this.personal.invalid) {
-      // Collecting invalid fields for detailed error reporting
       let invalidFields = [];
       Object.keys(this.addItemForm.controls).forEach(key => {
         if (this.addItemForm.controls[key].invalid) {
@@ -772,42 +767,33 @@ get personal(): FormArray {
       return;
     }
   
-    // Data submission logic
-    const token = this.sv.getToken(); // Retrieve token from your service
+    const token = this.sv.getToken(); 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
   
     this.sv.postDataTest(this.addItemForm.value, token).subscribe(
       res => {
-        // Success notification
-        console.log('Data submission successful 11111' ,)
         this.toastr.success('เพิ่มข้อมูลสำเร็จ', 'สำเร็จ', {
           timeOut: 2500,
           positionClass: 'toast-top-right'
         });
-
-
-        // Hide modal and reset forms
+  
         $('#insertModel').modal('hide');
         this.addItemForm.reset();
-        this.personInputs.clear(); // Clear FormArray
+        this.personInputs.clear();
   
-        // Refresh the page after a short delay to allow Toastr notification to be seen
-        // setTimeout(() => {
-        //   this.refreshPage();
-        // }, 2500);
+        // ตรวจสอบให้แน่ใจว่าไม่มีการนำทางหรือรีเฟรชเพิ่มเติมที่นี่
       },
       error => {
-        // Error notification
         this.toastr.error('การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ', 'เกิดข้อผิดพลาด!', {
           timeOut: 2500,
           positionClass: 'toast-top-right'
         });
       }
     );
-  
-    // Close the modal if not already handled
-    $('#insertModel').modal('hide');
+    
+    $('#insertModel').modal('hide'); // คำสั่งนี้เพื่อปิดโมดอล ไม่ใช่การรีเฟรชหน้า
   }
+  
 
   
   getFieldLabel(fieldName: string): string {
