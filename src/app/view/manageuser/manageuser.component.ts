@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { ProvinceService } from '../../../app/view/thaicounty/thaicounty.service';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -15,6 +16,37 @@ import { saveAs } from 'file-saver';
 })
 export class ManageuserComponent implements OnInit {
 
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  confirmpassword: string; // เพิ่มบรรทัดนี้
+  phone: string;
+  regisForm: any;
+  Submitted:boolean=false;
+  organization: any[] = [];
+
+  
+  provinces: any[] = [];
+  amphures: any[] = [];
+  
+  tambons: any[] = [];
+  nameTambons: string[] = [];
+
+  zipCode: any[] = [];
+  selectedProvince: any = null;
+  selectedTambon: any = null;
+  selectedAmphures: any = null;
+  postCode: any[] = [];
+
+  filteredAmphures = [];
+  filteredTambons = [];
+
+  isAmphureDisabled = true;
+  isTambonDisabled = true;
+  isPostCodeDisabled = true;
+
+
   user: any[] = [];
   dtOptions: any = {}; // datatable.setting = {}
   dtTrigger: Subject<any> = new Subject();
@@ -25,9 +57,31 @@ export class ManageuserComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private ls: loginservice,
+    
     private sv: SharedService,
     private router: Router,
-  ) { }
+    private fb: FormBuilder,
+    private ts :ProvinceService,
+  ) {
+    this.regisForm = this.fb.group({
+      firstname: ["", Validators.required],
+      lastname: ["", Validators.required],
+      email: ["", [Validators.required, Validators.email]],
+      password: ["",[Validators.required, Validators.minLength(8)]],
+      confirmpassword: ["", [Validators.required, Validators.minLength(8)]],
+      organization:['', Validators.required],
+      bearing:['', Validators.required],
+      address:["", Validators.required],
+      phone: ["", Validators.required, Validators.pattern('^[0-9]{10}$')],
+      province: ['', Validators.required],
+      amphure: ['', Validators.required],
+      tambon: ['', Validators.required],
+      postCode: ['', Validators.required],
+      role: ['', Validators.required],
+      profileImage: ['']
+    }, { validator: this.passwordMatchValidator });
+
+   }
 
   ngOnInit(): void {
     this.dtOptions = {
@@ -142,8 +196,131 @@ export class ManageuserComponent implements OnInit {
       // เพิ่มตัวนับ
       this.exportCounter++;
     }
+    onSubmit(data) {
+      console.log(1111)
+      
+      this.Submitted = true; 
+      if (this.regisForm.invalid) {
+        if (this.regisForm.controls.password.errors?.minlength || this.regisForm.controls.confirmpassword.errors?.minlength) {
+      
+        }
+        return;
+      }
+    
+      if (this.regisForm.value.password !== this.regisForm.value.confirmpassword) {
+  
+        return;
+      }
+    
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      console.log(fileInput);
+      
+      const file = fileInput?.files?.[0]; // Get the file from the input
+    
+      const formData = new FormData();
+      Object.keys(this.regisForm.controls).forEach(key => {
+        formData.append(key, this.regisForm.get(key)?.value);
+      });
+      if (file) {
+        formData.append('profileImage', file);
+      }
+    
+      this.ls.register(formData).subscribe(
+        (response) => {
+       
+        },
+        (error) => {
+          console.error("Error registering user", error);
+        
+        } 
+      );
+  
+    }
+
+    passwordMatchValidator(form: FormGroup) {
+      const password = form.get('password');
+      const confirmPassword = form.get('confirmpassword');
+  
+      if (password?.value !== confirmPassword?.value) {
+        confirmPassword?.setErrors({ mustMatch: true });
+      } else {
+        confirmPassword?.setErrors(null);
+      }
+    }
+
+    
+  loadProvinces() {
+    this.ts.getProvincesWithDetails().subscribe(data => {
+      this.provinces = data;
+    });
+  }
+
+  onProvinceChange(provinceId: number) {
+    this.regisForm.controls['amphure'].setValue('');
+    this.regisForm.controls['tambon'].setValue('');
+    this.filteredTambons = [];
+
+    this.isAmphureDisabled = !provinceId;
+    this.isTambonDisabled = true;
+    this.isPostCodeDisabled = true;
+
+    this.loadAmphures(provinceId); 
+  }
+  
+
+  loadAmphures(provinceId: any) {
+    this.ts.getamphures().subscribe(data => {
+      this.amphures = data.filter(amphure => amphure.province_id === parseInt(provinceId));
+      this.filteredAmphures = this.amphures;
+    });
+  }
+
+  onAmphuresChange(amphureId: any) {
+    this.regisForm.controls['tambon'].setValue('');
+
+    this.isTambonDisabled = !amphureId;
+    this.isPostCodeDisabled = true;
+
+    this.loadTambons(amphureId,); // Load tambons for the selected amphure
+  }
+
+  loadTambons(amphureId: any) {
+    this.ts.gettambons().subscribe(data => {
+      this.tambons = data.filter(tambon => tambon.amphure_id === parseInt(amphureId));
+      this.filteredTambons = this.tambons;
+      this.nameTambons = this.tambons.map(tambon => tambon.name_th);
+    });
+  }
+
+  onTambonChange(tambonId: any) {
+    const selectedTambon = this.filteredTambons.find(tambon => tambon.id === parseInt(tambonId));
+    if (selectedTambon) {
+      this.zipCode = selectedTambon.zip_code;
+      this.postCode = [this.zipCode]; // Update postCode as an array
+      this.isPostCodeDisabled = false;
+    }
+  }
+
   openaddperson() {
     this.router.navigate(['/addperson']);
+  }
+  openAddPersonModal(){
+    $('#manageUserModel').modal({
+      backdrop: 'static', // Prevent closing when clicking outside
+      keyboard: false     // Prevent closing with keyboard (Esc key)
+    });
+    $('#manageUserModel').modal('show');
+
+  }
+  closeModal() {
+    // ซ่อนโมดัล
+    $('#manageUserModel').modal('hide');
+
+    // รีเฟรชหน้าจอ
+    this.refreshPage();
+  }
+  refreshPage() {
+    window.location.reload();
   }
 }
 

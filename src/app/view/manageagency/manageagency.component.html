@@ -9,15 +9,14 @@
     <div class="card">
       <div class="card-header "><!--card-header-danger-->
         <div class="card-title">  
-          <p> จัดการองค์กร</p>
-          <a href=""> จัดการรายชื่อองค์กร</a>
+          <a href=""> จัดการข้อมูลองค์กร</a>
         
           <!-- <div class="sub-title">
             แสดงรายชื่อผู้ใช้งาน
           </div> -->
         </div>
         <button (click)="openaddagency()" class="btn btn-add">
-          <i class="fa fa-plus"></i> &nbsp;เพิ่มรายชื่อองค์กร</button>
+        เพิ่มข้อมูลองหน่อยงาน</button>
       </div>
       <div class="card-body">
         <table width="100%" datatable [dtOptions]="dtOptions" class="table table-striped table-bordered" *ngIf="!loading">
