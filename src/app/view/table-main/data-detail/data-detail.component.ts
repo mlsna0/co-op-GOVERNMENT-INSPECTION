@@ -10,6 +10,9 @@ import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
   styleUrls: ['./data-detail.component.css']
 })
 export class DataDetailComponent implements OnInit {
+openEditModal() {
+throw new Error('Method not implemented.');
+}
 
   recordId: any;
   DataDetail:any ={};

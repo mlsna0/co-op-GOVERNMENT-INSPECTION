@@ -643,26 +643,17 @@ import { log } from "console";
       this.totalDocuments = 0;
       this.totalSignedDocuments = 0;
   
-<<<<<<< HEAD
       documents.forEach(document => {
           document.documentCount = document.documents.length;
   
           const provinceId = parseInt(document.employee.province, 10);
           const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
-=======
-                  const loadDocuments = (documents: any[]) => {
-                      this.allDocuments = documents;
-                        console.log("ข้อมูลทั้งหมด : ",this.allDocuments)
-                      this.provinceData = {};  // รีเซ็ตข้อมูลของจังหวัด
-                      this.monthlyData = {};    // เริ่มต้นข้อมูลสำหรับแยกตามเดือน
->>>>>>> da1633fd364d8ca8e442938e6980c44702b1584a
   
           if (!provinceName || provinceName === 'ไม่ทราบจังหวัด') {
               return;
           }
           // console.log(this.provinceData);
   
-<<<<<<< HEAD
           // if (this.isAdmin && document.employee.province !== document.province) {
           //     console.log(`Province mismatch for Admin. Skipping document.`);
           //     return;
@@ -678,108 +669,6 @@ import { log } from "console";
               if (!doc.documentId) {
                   console.error(`documentId is undefined or null for document: ${JSON.stringify(doc)}`);
                   return;
-=======
-                      this.allDocuments.forEach((data,index) => {
-                          data.documentCount = data.documents.length;
-                          console.log("Index: ", index);
-                          // console.log("Email: ", data.data.email);
-                          console.log("Province: ", data.employee?.province);
-                           console.log("data.documentCount: ",data.documentCount)
-                          console.log("Document Count: ", data.documents.length)
-                         const provinceStr = data.employee?.province;
-  
-                          const provinceId = parseInt(provinceStr, 10);
-                          const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
-  
-                          if (!provinceName || provinceName === 'ไม่ทราบจังหวัด') {
-                              return;
-                          }
-  
-                          if (!this.provinceData[provinceName]) {
-                              this.provinceData[provinceName] = { users: [], documentCount: 0, signedDocuments: 0 };
-                          }
-                          this.provinceData[provinceName].users.push(data);
-                          this.provinceData[provinceName].documentCount += data.documentCount;
-  
-                          data.documents.forEach(document => {
-                              if (this.pdfs.some(pdf => pdf.name === document.documentId)) {
-                                  this.provinceData[provinceName].signedDocuments += 1;
-                              }
-  
-                              // จัดกลุ่มข้อมูลตามเดือน
-                              const month = new Date(document.creationDate).toLocaleString('default', { month: 'long' });
-                              if (!this.monthlyData[month]) {
-                                  this.monthlyData[month] = { documentCount: 0, signedDocuments: 0 };
-                              }
-                              this.monthlyData[month].documentCount += 1;
-  
-                              if (this.pdfs.some(pdf => pdf.name === document.documentId)) {
-                                  this.monthlyData[month].signedDocuments += 1;
-                              }
-                          });
-  
-                          this.totalDocuments += this.provinceData[provinceName].documentCount;
-                          this.totalSignedDocuments += this.provinceData[provinceName].signedDocuments;
-                      });
-  
-                      this.provinces.forEach(province => {
-                          province.count = 0;
-                          province.signedDocuments = 0;
-                          province.percentage = 0;
-                      });
-  
-                      this.provinces.forEach(province => {
-                          const provinceName = province.name_th;
-                          if (this.provinceData[provinceName]) {
-                              province.count = this.provinceData[provinceName].documentCount;
-                              province.signedDocuments = this.provinceData[provinceName].signedDocuments;
-  
-                              if (province.count > 0) {
-                                  province.percentage = (province.signedDocuments / province.count) * 100;
-                              } else {
-                                  province.percentage = 0;
-                              }
-                          }
-                      });
-  
-                      this.createChart();
-                      this.createDonutChart();
-                      this.createMonthlyChart();  // เรียกใช้งานฟังก์ชันเพื่อสร้างกราฟตามเดือน
-                      this.dtTrigger.next(this.provinces);
-                  };
-  
-                  if (this.isSuperAdmin) {
-                      this.sv.getAllRecordsLinkedByEmployeeId().subscribe(
-                          recordData => {
-                              if (recordData && recordData.length > 0) {
-                                  loadDocuments(recordData);
-                              } else {
-                                  console.error('ไม่พบเอกสาร');
-                              }
-                          },
-                          error => {
-                              console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล (superadmin):', error);
-                          }
-                      );
-                  } else if (this.isAdmin) {
-                      this.sv.getUserReportBuild(userId).subscribe(
-                          reportData => {
-                              if (reportData && reportData.documents && reportData.documents.length > 0) {
-                                  loadDocuments(reportData.documents);
-                              } else {
-                                  console.error('ไม่พบเอกสาร');
-                              }
-                          },
-                          error => {
-                              console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล (admin):', error);
-                          }
-                      );
-                  } else {
-                      console.error('User role is neither admin nor superadmin.');
-                  }
-              } else {
-                  console.error('User ID is undefined or null.');
->>>>>>> da1633fd364d8ca8e442938e6980c44702b1584a
               }
               if (!doc.creationDate) {
                   console.error(`creationDate is undefined or null for document: ${JSON.stringify(doc)}`);
