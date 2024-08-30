@@ -386,10 +386,11 @@
                         *ngIf="addItemForm.controls['location'].invalid && 
                         (addItemForm.controls['location'].touched || 
                           addItemForm.controls['location'].dirty || Submitted)">กรุณาเลือกสถานที่</span>
-                            <button type="button" class="btn btn-add" (click)="getCurrentLocation()">
-                              <i class="fa fa-location-dot">&nbsp;</i>เลือกสถานที่
-                              ปัจจุบัน</button>
+                         
                     </div>
+                    <button type="button" class="btn btn-add" (click)="getCurrentLocation()">
+                      <i class="fa fa-location-dot">&nbsp;</i>เลือกสถานที่
+                      ปัจจุบัน</button>
                    
 
 
