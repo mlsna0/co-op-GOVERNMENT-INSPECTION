@@ -19,7 +19,7 @@ export class AppComponent {
       this.currentUserRole = savedUser.role;
       // console.log('Loaded user from localStorage:', savedUser); // เพิ่มการพิมพ์ข้อมูลผู้ใช้ที่โหลดจาก localStorage
     } else {
-      console.log('No user in localStorage'); // ตรวจสอบว่าไม่มีผู้ใช้ใน localStorage
+      console.log('ไม่มีผู้ใช้ใน localStorage'); // ตรวจสอบว่าไม่มีผู้ใช้ใน localStorage
     }
 
     let token = localStorage.getItem("token")

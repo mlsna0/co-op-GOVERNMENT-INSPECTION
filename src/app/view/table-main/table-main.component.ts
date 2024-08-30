@@ -866,9 +866,7 @@ get personal(): FormArray {
         timeOut: 2500,  
         positionClass: 'toast-top-right'
       })
-      setTimeout(() => {
-        this.refreshPage(); // เรียกใช้ฟังก์ชันรีเฟรชหน้า
-      }, 2500);
+
       
       // Swal.fire({
       //         title: 'เพิ่มรายการสำเร็จ!!',
