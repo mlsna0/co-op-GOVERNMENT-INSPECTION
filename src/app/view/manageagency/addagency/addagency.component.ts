@@ -6,25 +6,22 @@ import Swal from "sweetalert2";
 
 import { ThaiApiAddressService } from '../../../services/thai-api-address.service'
 import { ProvinceService } from "app/view/thaicounty/thaicounty.service";
-
+import { ToastrService } from 'ngx-toastr'; // นำเข้า ToastrService
 @Component({
   selector: 'app-addagency',
   templateUrl: './addagency.component.html',
   styleUrls: ['./addagency.component.css']
 })
 export class AddagencyComponent implements OnInit {
-  firstname: string;
-  lastname: string;
+  agency_name: string;
   email: string;
-  password: string;
-  confirmpassword: string; // เพิ่มบรรทัดนี้
+  address: string;
   phone: string;
   agenForm: any;
   Submitted:boolean=false;
 
   provinces: any[] = [];
   amphures: any[] = [];
-  
   tambons: any[] = [];
   nameTambons: string[] = [];
 
@@ -41,8 +38,8 @@ export class AddagencyComponent implements OnInit {
   isTambonDisabled = true;
   isPostCodeDisabled = true;
 
-  imageSrc: string | ArrayBuffer | null = null;
-  profileImage: string| ArrayBuffer | null = null;
+  // imageSrc: string | ArrayBuffer | null = null;
+  // profileImage: string| ArrayBuffer | null = null;
   
   constructor(
     private fb: FormBuilder,
@@ -50,16 +47,17 @@ export class AddagencyComponent implements OnInit {
     private router: Router,
    
     private ts :ProvinceService,
+    private toastr: ToastrService // เพิ่ม ToastrService ใน constructor
   ) {
     this.agenForm = this.fb.group({
       agency_name: ["", Validators.required],
       email: ["", [Validators.required, Validators.email]],
       phone: ["", Validators.required, Validators.pattern('^[0-9]{10}$')],
       address: ["", Validators.required],
-      province: ['', Validators.required],
-      amphure: ['', Validators.required],
-      tambon: ['', Validators.required],
-      postCode: ['', Validators.required],
+      province:["", Validators.required],
+      amphure: ["", Validators.required],
+      tambon: ["", Validators.required],
+      postCode:["", Validators.required],
   
       // profileImage: ['']
     })
@@ -76,50 +74,46 @@ export class AddagencyComponent implements OnInit {
 
   onSubmit(data) {
     console.log('data:',data)
-    this.Submitted = false; 
+    this.Submitted = true; 
    
-    // const formData = new FormData();
-    // Object.keys(this.agenForm.controls).forEach(key => {
-    //   formData.append(key, this.agenForm.get(key)?.value);
-    // });
-   
+   if (this.agenForm.invalid) {
+      // แสดงข้อความแจ้งเตือนเมื่อฟอร์มไม่สมบูรณ์
+      this.toastr.error('กรุณากรอกข้อมูลให้ครบถ้วน', 'ข้อผิดพลาด!', {
+        timeOut: 2500,
+        positionClass: 'toast-top-right'
+      });
+      return;
+    }
 
-    this.lc.agency(data).subscribe(
+    this.lc.agency(this.agenForm.value).subscribe(
       (response) => {
-        console.log("User postagency successfully", response);
-        Swal.fire({
-          title: "ลงทะเบียนสำเร็จ!",
-          text: "ผู้ใช้ถูกลงทะเบียนเรียบร้อยแล้ว",
-          icon: "success",
-          confirmButtonText: "ตกลง",
-          customClass: {
-            confirmButton: "custom-confirm-button",
-          },
-        }).then((result) => {
-          if (result.isConfirmed) {
-            document.querySelector(".swal2-confirm")?.setAttribute(
-              "style",
-              "background-color: #24a0ed; color: white;"
-            );
-            this.router.navigate(["/addagency"]);
-          }
-        })
+        console.log("User post agency successfully", response);
+
+        // แสดงแจ้งเตือนด้วย Toastr เมื่อการลงทะเบียนสำเร็จ
+        this.toastr.success(' ลงทะเบียนองค์กรเรียบร้อยแล้ว', 'สำเร็จ', {
+          timeOut: 2500,
+          positionClass: 'toast-top-right'
+        });
+
+        // รีเฟรชหน้าเว็บหลังจากแสดงข้อความสำเร็จ
+        setTimeout(() => {
+          window.location.reload();
+        }, 1700); 
+
       },
       (error) => {
         console.error("Error registering user", error);
-        Swal.fire({
-          title: "เกิดข้อผิดพลาด!",
-          text: "เกิดข้อผิดพลาดในการลงทะเบียนผู้ใช้",
-          icon: "error",
-          confirmButtonText: "ตกลง",
-          customClass: {
-            confirmButton: "custom-confirm-button",
-          },
-        });
-      } 
-    );
 
-}
+        // แสดงแจ้งเตือนด้วย Toastr เมื่อเกิดข้อผิดพลาดในการลงทะเบียน
+        this.toastr.error('เกิดข้อผิดพลาดในการลงทะเบียนผู้ใช้', 'ข้อผิดพลาด', {
+          timeOut: 2500,
+          positionClass: 'toast-top-right'
+        });
+      }
+    );
+  
+  }
+
 
 
   loadProvinces() {
@@ -175,27 +169,27 @@ export class AddagencyComponent implements OnInit {
   }
 
 
-  deletedFileUpload(fileInput:  ElementRef){
-    this.imageSrc = null;
-    fileInput.nativeElement.value = '';
-    this.agenForm.patchValue({
-      profileImage: null
-    });
-  }
+  // deletedFileUpload(fileInput:  ElementRef){
+  //   this.imageSrc = null;
+  //   fileInput.nativeElement.value = '';
+  //   this.agenForm.patchValue({
+  //     profileImage: null
+  //   });
+  // }
 
 
-onFileUploadImgChange(event: any) {
-  const file = event.target.files[0];
-  console.log("file",file);
+// onFileUploadImgChange(event: any) {
+//   const file = event.target.files[0];
+//   console.log("file",file);
   
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      this.imageSrc = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-}
+//   if (file) {
+//     const reader = new FileReader();
+//     reader.onload = (e: any) => {
+//       this.imageSrc = e.target.result;
+//     };
+//     reader.readAsDataURL(file);
+//   }
+// }
 
 
 }
