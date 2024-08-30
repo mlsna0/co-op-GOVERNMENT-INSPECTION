@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 
 import { ThaiApiAddressService } from '../../../services/thai-api-address.service'
 import { ProvinceService } from "app/view/thaicounty/thaicounty.service";
-
+import { ToastrService } from 'ngx-toastr'; // Import ToastrService
 @Component({
   selector: 'app-addperson',
   templateUrl: './addperson.component.html',
@@ -49,7 +49,7 @@ export class AddpersonComponent implements OnInit {
     private fb: FormBuilder,
     private lc: loginservice,
     private router: Router,
-   
+    private toastr: ToastrService, // Inject ToastrService
     private ts :ProvinceService,
   ) {
     this.regisForm = this.fb.group({
@@ -82,82 +82,67 @@ export class AddpersonComponent implements OnInit {
 
 
   onSubmit(data) {
-    console.log(1111)
+    console.log(1111);
+  
+    this.Submitted = true;
     
-    this.Submitted = true; 
+    console.log('Form Valid:', this.regisForm.valid);
+  console.log('Form Errors:', this.regisForm.errors);
+  console.log('Password Errors:', this.regisForm.controls.password.errors);
+  console.log('Confirm Password Errors:', this.regisForm.controls.confirmpassword.errors);
+
+
     if (this.regisForm.invalid) {
-      if (this.regisForm.controls.password.errors?.minlength || this.regisForm.controls.confirmpassword.errors?.minlength) {
-        Swal.fire({
-          title: "รหัสผ่านไม่ครบ!",
-          text: "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร",
-          icon: "error",
-          confirmButtonText: "ตกลง",
+      // Check for specific errors in form controls
+      if (this.regisForm.controls.password.errors?.minlength) {
+        this.toastr.error('รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร', 'รหัสผ่านไม่ครบ!', {
+          timeOut: 2500,
+          positionClass: 'toast-top-right'
+        });
+      } else if (this.regisForm.controls.confirmpassword.errors?.minlength) {
+        this.toastr.error('รหัสผ่านยืนยันต้องมีความยาวอย่างน้อย 8 ตัวอักษร', 'รหัสผ่านยืนยันไม่ครบ!', {
+          timeOut: 2500,
+          positionClass: 'toast-top-right'
+        });
+      } else {
+        // General error message if form is invalid but specific errors are not found
+        this.toastr.error('กรุณากรอกข้อมูลให้ครบถ้วน', 'ข้อมูลไม่ครบถ้วน', {
+          timeOut: 2500,
+          positionClass: 'toast-top-right'
         });
       }
       return;
     }
   
     if (this.regisForm.value.password !== this.regisForm.value.confirmpassword) {
-      Swal.fire({
-        title: "รหัสผ่านไม่ตรงกัน!",
-        text: "กรุณากรอกรหัสผ่านให้ตรงกัน",
-        icon: "error",
-        confirmButtonText: "ตกลง",
-        customClass: {
-          confirmButton: "custom-confirm-button",
-        },
+      this.toastr.error('กรุณากรอกรหัสผ่านให้ตรงกัน', 'รหัสผ่านไม่ตรงกัน!', {
+        timeOut: 2500,
+        positionClass: 'toast-top-right'
       });
       return;
     }
   
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-    console.log(fileInput);
-    
-    const file = fileInput?.files?.[0]; // Get the file from the input
-  
-    const formData = new FormData();
-    Object.keys(this.regisForm.controls).forEach(key => {
-      formData.append(key, this.regisForm.get(key)?.value);
-    });
-    if (file) {
-      formData.append('profileImage', file);
-    }
-  
-    this.lc.register(formData).subscribe(
+    this.lc.register(this.regisForm.value).subscribe(
       (response) => {
         console.log("User registered successfully", response);
-        Swal.fire({
-          title: "ลงทะเบียนสำเร็จ!",
-          text: "ผู้ใช้ถูกลงทะเบียนเรียบร้อยแล้ว",
-          icon: "success",
-          confirmButtonText: "ตกลง",
-          customClass: {
-            confirmButton: "custom-confirm-button",
-          },
-        }).then((result) => {
-          if (result.isConfirmed) {
-            document.querySelector(".swal2-confirm")?.setAttribute(
-              "style",
-              "background-color: #24a0ed; color: white;"
-            );
-            this.router.navigate(["/manageuser"]);
-          }
-        })
+        this.toastr.success('ผู้ใช้ถูกลงทะเบียนเรียบร้อยแล้ว', 'ลงทะเบียนสำเร็จ!', {
+          timeOut: 2500,
+          positionClass: 'toast-top-right'
+        });
+  
+        // Redirect after a short delay to allow Toastr notification to be seen
+        setTimeout(() => {
+           window.location.reload(); 
+        }, 1700);
       },
       (error) => {
         console.error("Error registering user", error);
-        Swal.fire({
-          title: "เกิดข้อผิดพลาด!",
-          text: "เกิดข้อผิดพลาดในการลงทะเบียนผู้ใช้",
-          icon: "error",
-          confirmButtonText: "ตกลง",
-          customClass: {
-            confirmButton: "custom-confirm-button",
-          },
+        this.toastr.error('เกิดข้อผิดพลาดในการลงทะเบียนผู้ใช้', 'เกิดข้อผิดพลาด!', {
+          timeOut: 2500,
+          positionClass: 'toast-top-right'
         });
-      } 
+      }
     );
-
   }
 
   passwordMatchValidator(form: FormGroup) {

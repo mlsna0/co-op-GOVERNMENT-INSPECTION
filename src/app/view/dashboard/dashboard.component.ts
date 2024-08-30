@@ -23,10 +23,14 @@ import { log } from "console";
     provinces:any[] = []; 
     recordCount:number;
     userCount:number;
+    isAdmin: boolean;
+    isSuperAdmin: boolean;
     pdfs: any[] = [];
     errorMessage: string | null = null;
     pdfCount: number = 0;
     currentUser: any;
+    totalDocumentsCount: number = 0;
+    totalSignedDocumentsCount: number = 0;
     //filter
     allDocuments: any[] = [];
     isFilterActive: boolean = false;
@@ -63,16 +67,13 @@ import { log } from "console";
       private  eRef: ElementRef,
       private loginservice: loginservice, 
       private documentService: DocumentService,
-    ) {}
-    get isAdmin(): boolean {
-      return this.authService.hasRole('admin');
+      
+    ) {
+      this.isAdmin = false;
+      this.isSuperAdmin = false;
     }
 
-    get isSuperAdmin(): boolean {
-      const isSuperAdmin = this.authService.hasRole('superadmin');
-      // console.log('isSuperAdmin:', isSuperAdmin); // ตรวจสอบค่า
-      return isSuperAdmin;
-    }
+   
     ngOnInit(): void {
       this.loadProvinces();
 
@@ -108,6 +109,15 @@ import { log } from "console";
         this.userCount2 = count;
         console.log("User count updated in AnotherComponent:", this.userCount2);
       });
+      
+        this.documentService.totalDocumentsCount$.subscribe(count => {
+          this.totalDocumentsCount = count;
+          console.log("Total documents count updated in Component:", this.totalDocumentsCount);
+        });
+        this.documentService.signedDocumentsCount$.subscribe(count => {
+          this.totalSignedDocumentsCount = count;
+          console.log("Total documents count updated in Component:", this.totalSignedDocumentsCount);
+        });
     }
     ngOnChanges(changes: SimpleChanges) {
       if (changes['filterCriteria']) {
@@ -498,10 +508,20 @@ import { log } from "console";
     
       // Use the pdfCount from the loadPDFs method
       // const totalDocumentsCount = this.allDocuments.length;
-      const totalDocuments = this.totalDocuments;
-      const totalSignedDocuments = this.totalSignedDocuments;
+      let totalDocuments: number;
+      let totalSignedDocuments: number;
       // console.log('จำนวนไฟล์ PDF:', totalDocuments);
       // console.log('จำนวนเอกสารทั้งหมด:', totalSignedDocuments);
+
+      if (this.isAdmin) {
+        // ถ้าเป็น admin ใช้ข้อมูลจาก DocumentService
+        totalDocuments = this.totalDocumentsCount;
+        totalSignedDocuments = this.totalSignedDocumentsCount;
+      } else {
+        // ถ้าไม่ใช่ admin (เช่น superadmin) ใช้ข้อมูลเดิม
+        totalDocuments = this.totalDocuments;
+        totalSignedDocuments = this.totalSignedDocuments;
+      }
     
       if (this.donutChart) {
         this.donutChart.destroy();
@@ -622,7 +642,7 @@ import { log } from "console";
         data => {
           this.pdfs = data;
           this.pdfCount = this.pdfs.length; // Count the number of PDFs
-          // console.log('PDFs:', this.pdfs);
+          console.log('PDFs:', this.pdfs);
           // console.log('Number of PDFs:', this.pdfCount); // Log the count
     
           // Update the donut chart after loading PDFs
@@ -643,53 +663,72 @@ import { log } from "console";
       this.totalDocuments = 0;
       this.totalSignedDocuments = 0;
   
-      documents.forEach(document => {
-          document.documentCount = document.documents.length;
+      console.log('Starting processProvinceData with documents:', documents);
   
+      documents.forEach(document => {
+          // นับจำนวนเอกสารภายใน document
+          document.documentCount = document.documents.length;
+          // console.log(`Processing document for employee: ${document.employee.province}, documentCount: ${document.documentCount}`);
+  
+          // ดึง provinceId และ provinceName จากเอกสาร
           const provinceId = parseInt(document.employee.province, 10);
           const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
+          // console.log(`Province ID: ${provinceId}, Province Name: ${provinceName}`);
   
           if (!provinceName || provinceName === 'ไม่ทราบจังหวัด') {
+              // console.warn(`Skipping document as province name is not valid: ${provinceName}`);
               return;
           }
-          // console.log(this.provinceData);
   
-          // if (this.isAdmin && document.employee.province !== document.province) {
-          //     console.log(`Province mismatch for Admin. Skipping document.`);
-          //     return;
-          // }
-  
+          // ตรวจสอบว่ามี provinceName ใน this.provinceData หรือไม่ ถ้าไม่มีให้สร้างใหม่
           if (!this.provinceData[provinceName]) {
               this.provinceData[provinceName] = { users: [], documentCount: 0, signedDocuments: 0 };
+              // console.log(`Initializing province data for: ${provinceName}`);
           }
+  
           this.provinceData[provinceName].users.push(document);
           this.provinceData[provinceName].documentCount += document.documentCount;
+          // console.log(`Updated province data for ${provinceName}:`, this.provinceData[provinceName]);
   
+          // วนลูปภายในเอกสารเพื่อเช็คเอกสารที่มีการลงนาม
           document.documents.forEach(doc => {
-              if (!doc.documentId) {
-                  console.error(`documentId is undefined or null for document: ${JSON.stringify(doc)}`);
-                  return;
-              }
-              if (!doc.creationDate) {
-                  console.error(`creationDate is undefined or null for document: ${JSON.stringify(doc)}`);
+              // ตรวจสอบว่า doc._id มีค่าอยู่จริงหรือไม่
+              if (!doc._id) {
+                  // console.error(`documentId is undefined or null for document: ${JSON.stringify(doc)}`);
                   return;
               }
   
-              if (this.pdfs.some(pdf => pdf.name === doc.documentId)) {
+              // แสดงค่า doc._id ก่อนทำการเปรียบเทียบ
+              // console.log(`Checking document _id: ${doc._id}`);
+  
+              // ตรวจสอบและแสดงค่า pdf.name ที่มีอยู่ใน this.pdfs
+              this.pdfs.forEach(pdf => {
+                  // console.log(`PDF name: ${pdf.name}`);
+              });
+  
+              // เช็คว่ามีการจับคู่กันหรือไม่
+              if  (this.pdfs.includes(`${doc._id}.pdf`)) {
                   this.provinceData[provinceName].signedDocuments += 1;
+                  // console.log(`Match found: PDF name matches with document _id: ${doc._id}`);
+              } else {
+                  // console.log(`No match found for document _id: ${doc._id}`);
               }
           });
   
+          // อัพเดตข้อมูลรวมของเอกสารและเอกสารที่ลงนาม
           this.totalDocuments += this.provinceData[provinceName].documentCount;
           this.totalSignedDocuments += this.provinceData[provinceName].signedDocuments;
+          // console.log(`Total Documents: ${this.totalDocuments}, Total Signed Documents: ${this.totalSignedDocuments}`);
       });
   
+      // รีเซ็ตข้อมูลจังหวัดทั้งหมด
       this.provinces.forEach(province => {
           province.count = 0;
           province.signedDocuments = 0;
           province.percentage = 0;
       });
   
+      // อัพเดตข้อมูลจังหวัดตามข้อมูลที่ประมวลผลแล้ว
       this.provinces.forEach(province => {
           const provinceName = province.name_th;
           if (this.provinceData[provinceName]) {
@@ -701,13 +740,15 @@ import { log } from "console";
               } else {
                   province.percentage = 0;
               }
+              // console.log(`Updated province: ${provinceName}, Count: ${province.count}, Signed: ${province.signedDocuments}, Percentage: ${province.percentage}`);
           }
       });
+  
+      // console.log('Finished processing province data:', this.provinceData);
   }
-
   processMonthlyData(): void {
     if (!this.isAdmin) {
-        console.log("Not an admin user, skipping monthly data processing.");
+        // console.log("Not an admin user, skipping monthly data processing.");
         return;  // ถ้าไม่ใช่ Admin ไม่ต้องทำอะไรต่อ
     }
 
@@ -723,7 +764,7 @@ import { log } from "console";
     
     // console.log(this.provinceData);
     if (!adminProvinceName || adminProvinceName === 'ไม่ทราบจังหวัด') {
-        console.error("Admin province is unknown or invalid.");
+        // console.error("Admin province is unknown or invalid.");
         return; // ออกจากฟังก์ชันหากไม่มีข้อมูลจังหวัดที่ถูกต้อง
     }
 
@@ -734,7 +775,7 @@ import { log } from "console";
         province.users.forEach(document => {
             document.documents.forEach(doc => {
                 if (!doc.createdDate) {
-                    console.error(`createdDate is undefined or null for document: ${JSON.stringify(doc)}`);
+                    // console.error(`createdDate is undefined or null for document: ${JSON.stringify(doc)}`);
                     return;
                 }
 
@@ -746,7 +787,7 @@ import { log } from "console";
 
                 this.monthlyData[month].documentCount += 1;
 
-                if (this.pdfs.some(pdf => pdf.name === doc.documentId)) {
+                if (this.pdfs.includes(`${doc._id}.pdf`)) {
                     this.monthlyData[month].signedDocuments += 1;
                 }
             });
@@ -754,10 +795,10 @@ import { log } from "console";
 
         // แสดงข้อมูลรายเดือนเฉพาะสำหรับจังหวัดของ Admin
         Object.keys(this.monthlyData).forEach(month => {
-            console.log(`${month}: ${this.monthlyData[month].documentCount} documents, ${this.monthlyData[month].signedDocuments} signed`);
+            // console.log(`${month}: ${this.monthlyData[month].documentCount} documents, ${this.monthlyData[month].signedDocuments} signed`);
         });
     } else {
-        console.log(`No data found for the admin's province: ${adminProvinceName}`);
+        // console.log(`No data found for the admin's province: ${adminProvinceName}`);
     }
 }
 
@@ -771,14 +812,16 @@ loadUser(): void {
         const loadDocuments = (documents: any[]) => {
           this.allDocuments = documents;
           this.currentUser = user;  
+          this.isAdmin = role === 'admin';
+          this.isSuperAdmin = role === 'superadmin';
           // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามจังหวัด
           console.log(this.currentUser);
             // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามเดือนสำหรับ Admin
             this.processProvinceData(documents);
+
             if (this.isAdmin) {
-              // ถ้าเป็น Admin ให้ประมวลผลข้อมูลตามเดือน
               this.processMonthlyData();
-            } 
+            }
             // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามจังหวัดสำหรับ Superadmin
         
           

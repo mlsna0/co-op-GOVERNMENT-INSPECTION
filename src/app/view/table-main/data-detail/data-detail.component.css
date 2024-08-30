@@ -14,8 +14,6 @@
     justify-content: flex-start;
 }
 
-<<<<<<< HEAD
-=======
 .border-error {
     position: relative;
     bottom:0px;  /* ให้ข้อความอยู่ใต้ input */
@@ -109,7 +107,6 @@
   .BackPage:hover{
     color: black;
   }
->>>>>>> da1633fd364d8ca8e442938e6980c44702b1584a
 :host ::ng-deep .btn-add{
     color: #fff;
     background-color: rgb(24,144,255) ;/*#000dc2ef rgb(24,144,255)  #24a0ed */

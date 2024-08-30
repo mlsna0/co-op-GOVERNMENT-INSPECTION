@@ -1,303 +1,330 @@
 .example-box {
-    width: 140px;
-    height: 100px;
-    border: solid 1px #ccc;
-    color: rgba(0, 0, 0, 0.87);
-    cursor: move;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background: #fff;
-    border-radius: 4px;
-    margin-right: 25px;
-    position: relative;
-    z-index: 100;
-    box-sizing: border-box;
-    padding: 10px;
-    transition: box-shadow 200ms cubic-bezier(0, 0, 0.2, 1);
-    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
-      0 2px 2px 0 rgba(0, 0, 0, 0.14),
-      0 1px 5px 0 rgba(0, 0, 0, 0.12);
-  }
-  
-  .example-box:active {
-    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-      0 8px 10px 1px rgba(0, 0, 0, 0.14),
-      0 3px 14px 2px rgba(0, 0, 0, 0.12);
-  }
-  
-  .example-boundary {
-    width: 400px;
-    height: 400px;
-    max-width: 100%;
-    border: dotted #ccc 2px;
-  }
-  
-  .signature-container {
-    display: flex;
-    justify-content: center;
-    border-style: dashed;
-    border-width: 1px;
-    border-color: black;
-    background-color: #fff;
-    width: 400px;
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-    margin-top: 38px;
-  } 
-  .main-content{
-    position: relative;
-    /* max-height: 1235.9px; */
-    font-family: "Sarabun", sans-serif;
-
-  }
-  .deleteBtn {
-    font-size: 22px;
-    color: #f43643;
-    cursor: pointer;
-  }
-  
-  .card{
-    font-family: 'Sarabun',sans-serif;
-  }
-  a:hover{
-    cursor: pointer;
-    color: #9c27b0 !important;
-  }
-  .BackPage{
-    display: flex;
-     /* justify-content: center;  */
-     align-items: center;
-     background: transparent;
-      border: none; 
-      color: rgb(137, 135, 135);
-    padding: 20px;
-  }
-  .signTool-content{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .pageNext{
-    display: flex;
-    justify-content: center;
-  }
-
-  .btn-create-sign{
-    display: flex;
-    justify-content: center;
-  }
-   .submit-content{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-    margin-top: 38px;
-  }
-  :host ::ng-deep .uploadFilePDF{
-    position: relative;
-    margin: 0 0 0 40px ;
-    border-radius: 5px;
-    width: 360px;
-    display: flex;
-  
-  }
-  .btn-clearInput{
-    position: relative;
-    left:-25px; 
-    border: none; 
-    background-color  : transparent; 
-    z-index: 10;
-    margin-top: 8px;
-  }
-  :host ::ng-deep.flieUpload{
-    position: relative;
-    
-    justify-content: flex-end;
-    width: 360px;
-  
-    border-radius: 5px;
-  }
-  input{
-    border: 1px solid rgb(0, 0, 0);
-    border-radius: 5px;
-    width: 340px;
-    margin-top: 10px;
-  }
-  ::-webkit-file-upload-button{
-  
-    border: none;
-    background-color: #24a0ed;
-    color: white;
-    border-radius: 5px 0 0 5px ;
-  }
-  
-  :host ::ng-deep .btn-add{
-    color: #fff;
-    background-color: #24a0ed;/*#000dc2ef  */
-    border-color: #24a0ed85;;
-    /* box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd; */
-    font-family: 'Sarabun', sans-serif;
-
-  }
-  :host ::ng-deep .btn-add:hover{
-    background-color: #24a0ed; 
-    border-color: #00087c9f;
-    /* box-shadow: 0 14px 14px -12px #24a0ed51, 0 4px 14px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px #24a0ed51; */
-  }
-  .page-input {
-    border: 1px solid #000;
-    border-radius: 5px;
-    font-size: 18px;
-    padding: 5px 10px;
-    width: 60px;  /* หรือปรับเป็นขนาดที่ต้องการ */
-    margin: 10px 0 0 40px;
-    text-align: center;
+  width: 140px;
+  height: 100px;
+  border: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  cursor: move;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: #fff;
+  border-radius: 4px;
+  margin-right: 25px;
+  position: relative;
+  z-index: 100;
+  box-sizing: border-box;
+  padding: 10px;
+  transition: box-shadow 200ms cubic-bezier(0, 0, 0.2, 1);
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
 
-.d-flex {
+.example-box:active {
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.example-boundary {
+  width: 400px;
+  height: 400px;
+  max-width: 100%;
+  border: dotted #ccc 2px;
+}
+
+.signature-container {
+  display: flex;
+  justify-content: center;
+  border-style: dashed;
+  border-width: 1px;
+  border-color: black;
+  background-color: #fff;
+  width: 400px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
+  margin-top: 38px;
+} 
+.main-content{
+  position: relative;
+  /* max-height: 1235.9px; */
+  font-family: "Sarabun", sans-serif;
+
+}
+.deleteBtn {
+  font-size: 22px;
+  color: #f43643;
+  cursor: pointer;
+}
+
+.card{
+  font-family: 'Sarabun',sans-serif;
+}
+a:hover{
+  cursor: pointer;
+  color: #9c27b0 !important;
+}
+.BackPage{
+  display: flex;
+   /* justify-content: center;  */
+   align-items: center;
+   background: transparent;
+    border: none; 
+    color: rgb(137, 135, 135);
+  padding: 20px;
+}
+.signTool-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.pageNext{
+  display: flex;
+  justify-content: center;
+}
+
+.btn-create-sign{
+  display: flex;
+  justify-content: center;
+}
+ .submit-content{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  margin-top: 38px;
+}
+:host ::ng-deep .uploadFilePDF{
+  position: relative;
+  margin: 0 0 0 40px ;
+  border-radius: 5px;
+  width: 360px;
+  display: flex;
+
+}
+.btn-clearInput{
+  position: relative;
+  left:-25px; 
+  border: none; 
+  background-color  : transparent; 
+  z-index: 10;
+  margin-top: 8px;
+}
+:host ::ng-deep.flieUpload{
+  position: relative;
+  
+  justify-content: flex-end;
+  width: 360px;
+
+  border-radius: 5px;
+}
+input{
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 5px;
+  width: 340px;
+  margin-top: 10px;
+}
+::-webkit-file-upload-button{
+
+  border: none;
+  background-color: #24a0ed;
+  color: white;
+  border-radius: 5px 0 0 5px ;
+}
+
+:host ::ng-deep .btn-add{
+  color: #fff;
+  background-color: #24a0ed;/*#000dc2ef  */
+  border-color: #24a0ed85;;
+  /* box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd; */
+  font-family: 'Sarabun', sans-serif;
+
+}
+:host ::ng-deep .btn-add:hover{
+  background-color: #24a0ed; 
+  border-color: #00087c9f;
+  /* box-shadow: 0 14px 14px -12px #24a0ed51, 0 4px 14px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px #24a0ed51; */
+}
+.page-input {
+  border: 1px solid #000;
+  border-radius: 5px;
+  font-size: 18px;
+  padding: 5px 10px;
+  width: 60px;  /* หรือปรับเป็นขนาดที่ต้องการ */
+  margin: 10px 0 0 40px;
+  text-align: center;
+}
+
+.d-flex {
+display: flex;
+align-items: center;
+justify-content: center;
 }
 
 .btn-custom {
-  background-color: #24a0ed;
-  color: white;
-  border: none;
-  margin: 10px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 60px; /* Match the width of the number input */
- 
+background-color: #24a0ed;
+color: white;
+border: none;
+margin: 10px;
+padding: 5px 10px;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s ease;
+width: 60px; /* Match the width of the number input */
+
 }
 
 .btn-custom:hover {
-  background-color: #24a0ed;
+background-color: #24a0ed;
 }
 
 .page-display {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 50px; /* Keep width narrow */
-  text-align: center; /* Center the text inside the input */
+border: 1px solid #ccc;
+border-radius: 5px;
+width: 50px; /* Keep width narrow */
+text-align: center; /* Center the text inside the input */
 }
 
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+-webkit-appearance: none;
+margin: 0;
 }
 
 input[type="number"] {
-  -moz-appearance: textfield;
-  appearance: textfield;
+-moz-appearance: textfield;
+appearance: textfield;
 }
 
 .upload-section {
-  max-width: 600px;
-  margin: 0 auto; /* จัดให้อยู่ตรงกลางโดยตั้งค่า margin */
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
+max-width: 600px;
+margin: 0 auto; /* จัดให้อยู่ตรงกลางโดยตั้งค่า margin */
+padding: 20px;
+background-color: #f8f9fa;
+border-radius: 10px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+text-align: center;
 }
 
 .upload-section h3 {
-  font-family: 'Prompt', sans-serif;
-  font-size: 24px;
-  color: #343a40;
-  margin-bottom: 20px;
+font-family: 'Prompt', sans-serif;
+font-size: 24px;
+color: #343a40;
+margin-bottom: 20px;
 }
 
 .upload-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 2px dashed #007bff;
-  border-radius: 5px;
-  background-color: #fff;
-  font-size: 16px;
-  color: #007bff;
-  cursor: pointer;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
+width: 100%;
+padding: 10px;
+margin-bottom: 20px;
+border: 2px dashed #007bff;
+border-radius: 5px;
+background-color: #fff;
+font-size: 16px;
+color: #007bff;
+cursor: pointer;
+transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .pagination-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column; /* Stack the pagination controls and button vertically */
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column; /* Stack the pagination controls and button vertically */
 }
 
 .pagination-controls {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; /* Align controls slightly to the left */
-  /* gap: 10px;  */
-  /* margin-right: 50px;  */
+display: flex;
+align-items: center;
+justify-content: flex-start; /* Align controls slightly to the left */
+/* gap: 10px;  */
+/* margin-right: 50px;  */
 }
 
 /* .page-display {
-  width: 50px; 
-  text-align: center; 
+width: 50px; 
+text-align: center; 
 } */
 
 /* .btn-add {
-  width: 60px; 
-  height: 40px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  margin: 0 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+width: 60px; 
+height: 40px;
+background-color: #007bff;
+color: white;
+border: none;
+padding: 5px 10px;
+margin: 0 10px;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s ease;
 } */
 
 .btn.btn-add {
 
-  width: 175px;
-  /* height: 40px; */
-  display: flex;
-  justify-content: center;
-  margin: auto;
-  margin-top: 10px;
+/* width: 175px; */
+/* height: 40px; */
+display: flex;
+justify-content: center;
+margin: auto;
+margin-top: 5px;
 }
 
 .btn.btn-secondary{
-  width: 175px;
-  /* height: 40px; */
-  display: flex;
-  justify-content: center;
-  margin: auto;
-  margin-top: 10px;
-  background-color: #24a0ed;
-  color:white;
+width: 175px;
+/* height: 40px; */
+display: flex;
+justify-content: center;
+margin: auto;
+margin-top: 10px;
+background-color: #24a0ed;
+color:white;
 }
 
 .page-text1{
-  display: flex;
-  justify-content: center;
-  height: 30px;
+display: flex;
+justify-content: center;
+height: 30px;
 }
 
 .pageNumber{
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
+display: flex;
+justify-content: center;
+margin-bottom: 10px;
+}
+a:hover{
+cursor: pointer;
+color: #89229b !important;
+}
+
+.BackPage{
+display: flex;
+ align-items: center;
+ background: transparent;
+  border: none; 
+  color: rgb(137, 135, 135);
+padding-left: 20px;
+}
+.BackPage:hover{
+color: black;
 }
 
 .submit-content{
-  display: flex;
-  justify-content: center;
-  margin-top: 15px;
+display: flex;
+justify-content: center;
+margin-top: 15px;
+}
+
+:host ::ng-deep .pdfViewer.removePageBorders {
+border: 1px solid black; /* กำหนดขอบให้สม่ำเสมอทุกด้าน */
+box-sizing: border-box;  /* เพื่อให้ขอบและ padding รวมอยู่ในขนาดขององค์ประกอบ */
+width: 210mm; /* กำหนดความกว้างให้เท่ากับขนาดกระดาษ A4 */
+height: 297mm; /* กำหนดความสูงให้เท่ากับขนาดกระดาษ A4 */
+overflow: hidden; /* ป้องกันไม่ให้เนื้อหาล้นขอบ */
+
+position: relative;
+left: 20%;
 }

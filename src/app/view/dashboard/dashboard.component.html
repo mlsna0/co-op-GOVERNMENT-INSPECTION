@@ -112,9 +112,26 @@
 
 
 
-        <div class="row">
+        <div class="row" *ngIf="isAdmin" >
           <!-- เอกสารทั้งหมด -->
           <div class="col-md-3">
+            <div class="card Box1">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <p class="title mb-0">เอกสารทั้งหมด</p>
+                    <h2 class="amount">{{ totalDocumentsCount }}</h2> 
+                  </div>
+                  <div class="imgBG">
+                    <img src="./assets/img/manage.png" alt="paper" class="paper-img">
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3"  *ngIf="isSuperAdmin" >
             <div class="card Box1">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -130,8 +147,26 @@
               </div>
             </div>
           </div>
+
           <!-- เอกสารที่ถูกเซ็น -->
-          <div class="col-md-3" >
+          <div class="col-md-3" *ngIf="isAdmin" >
+            <div class="card Box2">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <p class="title mb-0">เอกสารที่ถูกเซ็น</p>
+                    <h2 class="amount">{{ totalSignedDocumentsCount }}</h2>
+                  </div>
+                  <div class="imgBG" style="padding-left: 12px;">
+                    <img src="./assets/img/contract.png" alt="paper" class="paper-img">
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3"  *ngIf="isSuperAdmin" >
             <div class="card Box2">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -150,6 +185,7 @@
               </div>
             </div>
           </div>
+
           <!-- จำนวนกระดาษ -->
           <div class="col-md-3" >
             <div class="card Box3">
@@ -183,7 +219,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-3" *ngIf="isSuperAdmin">
+          <div class="col-md-3"  *ngIf="isSuperAdmin">
             <div class="card Box4">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -227,7 +263,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-12" >
+          <div class="col-sm-12"  *ngIf="isSuperAdmin">
             <app-thaicounty [filterCriteria]="filterCriteria"></app-thaicounty>
           </div>
 

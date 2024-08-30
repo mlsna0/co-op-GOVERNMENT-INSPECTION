@@ -4,11 +4,9 @@
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
       <li class="breadcrumb-item"><a [routerLink]="['/table-main']">การลงตรวจอิเล็กทรอนิค</a></li>
-<<<<<<< HEAD
-      <li class="breadcrumb-item"><a [routerLink]="['/table-detail']">เนื้อหาเอกสาร</a></li>
-=======
+
       <li class="breadcrumb-item"><a (click)="BackRoot()" >เนื้อหาเอกสาร</a></li>
->>>>>>> da1633fd364d8ca8e442938e6980c44702b1584a
+
       <li class="breadcrumb-item active"><a aria-current="page">หน้าเอกสารการอัปโหลด</a></li>
     </ol>
   </nav>
@@ -22,7 +20,7 @@
         </button>
       </div>
     <div class="card">
-      <button type="button" class="BackPage">
+      <button type="button" class="BackPage" (click)="BackRoot()">
         <i class="fa fa-arrow-left"> &nbsp; ย้อนกลับ</i>
       </button>
 

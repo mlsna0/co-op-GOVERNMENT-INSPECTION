@@ -527,7 +527,7 @@ blobToBase64(blob: Blob): Promise<string | ArrayBuffer | null> {
   }
 
   BackRoot() {
-    this.router.navigate(['/table-detail']);
+    this.router.navigate(['/table-detail', this.documentId]);
   }
 
   // prevPage() {

@@ -209,11 +209,30 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
       }
     };
     // console.log("DataTable: ", this.dtOptions);
-
-    this.fetchAndSetRecords();
+    this.loadPDFs();
+  //  this.fetchAndSetRecords();
     // console.log("ngOnInit called");
 }
 
+loadPDFs(): void {
+  this.sv.getAllPDFs().subscribe(
+    data => {
+      this.pdfs = data;
+      this.pdfCount = this.pdfs.length; // Count the number of PDFs
+      console.log('PDFs:', this.pdfs);
+      // console.log('Number of PDFs:', this.pdfCount); // Log the count
+
+      // Update the donut chart after loading PDFs
+      this.fetchAndSetRecords();
+    },
+    error => {
+      this.errorMessage = error; // Handle the error
+      // console.error('Error loading PDFs:', error);
+    }
+  );
+
+
+}
 fetchAndSetRecords() {
     // console.log("fetchAndSetRecords called");
     this.loading = true;
@@ -279,6 +298,8 @@ filterByUserOrganization(groupedRecords, userOrganization: string) {
 combineDocuments(items, userOrganization: string): any[] {
   const userSet = new Set();
   let combinedDocuments = [];
+  let signedDocumentsCount = 0; // ตัวแปรสำหรับนับจำนวนเอกสารที่ถูกเซ็น
+  let totalDocumentsCount = 0; // ตัวแปรสำหรับนับจำนวนเอกสารทั้งหมด
 
   console.log("Processing documents and counting unique users for organization:", userOrganization);
 
@@ -291,7 +312,16 @@ combineDocuments(items, userOrganization: string): any[] {
       console.log("Matched organization:", item.employee.organization);
       console.log("Adding documents:", item.documents);
 
+      // รวมเอกสารใน combinedDocuments
       combinedDocuments = combinedDocuments.concat(item.documents || []);
+
+      totalDocumentsCount += item.documents.length;
+      // // ตรวจสอบว่าเอกสารใน item มี _id ตรงกับชื่อไฟล์ PDF หรือไม่
+      item.documents.forEach(document => {
+        if (this.pdfs.includes(`${document._id}.pdf`)) {
+          signedDocumentsCount++; // นับเอกสารที่ถูกเซ็น +1
+        }
+      });
     } else {
       console.log("Skipped organization:", item.employee.organization);
     }
@@ -299,10 +329,14 @@ combineDocuments(items, userOrganization: string): any[] {
 
   const userCount = userSet.size;
   console.log("User Count:", userCount);
-
+  console.log("Signed Documents Count:", signedDocumentsCount); // แสดงจำนวนเอกสารที่ถูกเซ็น
+  console.log("Total Documents Count:", totalDocumentsCount); // แสดงจำนวนเอกสารทั้งหมด
   // ส่งจำนวนผู้ใช้ไปยัง DocumentService
   this.documentService.updateUserCount(userCount);
 
+  // ส่งจำนวนเอกสารที่ถูกเซ็นไปยัง DocumentService หรือจัดการตามที่ต้องการ
+  this.documentService.updateSignedDocumentsCount(signedDocumentsCount);
+  this.documentService.updateTotalDocumentsCount(totalDocumentsCount);
   // Return the combined documents for use on the web page
   return combinedDocuments;
 }
