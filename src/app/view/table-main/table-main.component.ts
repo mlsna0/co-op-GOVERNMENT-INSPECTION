@@ -225,7 +225,7 @@ fetchAndSetRecords() {
          // ส่ง organization ของผู้ใช้เข้าไป
       },
       error: (error) => {
-        this.handleError(error);
+        this.handleError(error)
         // console.log("Error in fetching user profile:", error);
       },
     });
@@ -239,7 +239,7 @@ fetchRecords(userOrganization: string) {
     next: (records) => {
       // console.log("Records fetched:", records);
       const groupedRecords = this.groupRecordsByOrganization(records);
-      // console.log("Grouped Records by Organization:", groupedRecords);
+      console.log("Grouped Records by Organization:", groupedRecords);
 
       const filteredRecords = this.filterByUserOrganization(groupedRecords, userOrganization);
       // console.log("Filtered Records by User Organization:", filteredRecords);
