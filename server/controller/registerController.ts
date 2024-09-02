@@ -10,6 +10,8 @@ import crypto from 'crypto';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs'; // นำเข้า fs module
+import Agency from '../models/agencyModel'; 
+
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -49,6 +51,12 @@ class RegisterModelCtrl extends BaseCtrl {
     
                 const salt = await bcrypt.genSalt(10);
                 const hashedPassword = await bcrypt.hash(password, salt);
+
+                const agency = await Agency.findOne({ agency_name: organization });
+                if (!agency) {
+                    return res.status(400).json({ msg: 'Agency not found' });
+                }
+        
     
                 // เพิ่มการอัปโหลดรูปภาพ
                 const profileImage = req.file ? req.file.filename : null;
@@ -59,14 +67,15 @@ class RegisterModelCtrl extends BaseCtrl {
                     lastname,
                     email,
                     phone,
-                    organization,
+                    organization: agency.agency_name, 
                     bearing,
                     address,
                     province,
                     amphure,
                     tambon,
                     postCode,
-                    profileImage
+                    profileImage,
+                    agencies: [agency._id]
                 });
     
                 await employee.save();
@@ -165,7 +174,7 @@ class RegisterModelCtrl extends BaseCtrl {
             // ส่งผลลัพธ์กลับไปให้ client
             res.status(200).json(combinedResults);
         } catch (error) {
-            console.error('Error in getAllUsers function:', error.message);
+            // console.error('Error in getAllUsers function:', error.message);
             res.status(500).send('Server error');
         }
     };
@@ -225,7 +234,7 @@ class RegisterModelCtrl extends BaseCtrl {
             // ส่งข้อมูลผู้ใช้และโทเค็นกลับไป
             res.json({ token, user: payload.user });
         } catch (error) {
-            console.error(error.message);
+            // console.error(error.message);
             res.status(500).send('Server error');
         }
     };
@@ -263,16 +272,16 @@ class RegisterModelCtrl extends BaseCtrl {
      
         try {
             const userId = req.user.id; // Assuming the user ID is available in req.user.id
-            console.log("User ID:",userId);
+            // console.log("User ID:",userId);
             let user = await this.modelUser.findById(userId).select('-password').populate('employeeId'); // ใช้ populate เพื่อรวมข้อมูล employee
             if (!user) {
-                console.log("User not found in database.");
+                // console.log("User not found in database.");
                 return res.status(404).json({ msg: 'User not found' });
             }
-            console.log("Data user: ",user)
+            // console.log("Data user: ",user)
             res.status(200).json(user);
         } catch (error) {
-            console.error('Error in getUserProfile function:', error.message);
+            // console.error('Error in getUserProfile function:', error.message);
             res.status(500).send('Server error');
         }
     };
@@ -316,14 +325,14 @@ class RegisterModelCtrl extends BaseCtrl {
             await transporter.sendMail(mailOptions);
             res.status(200).json({ msg: 'An email has been sent to reset your password' });
         } catch (error) {
-            console.error('Error in forgotPassword:', error);
+            // console.error('Error in forgotPassword:', error);
             res.status(500).send('Server error');
         }
     };
     
     resetPassword = async (req, res) => {
         try {
-            console.log('Request Body:', req.body);
+            // console.log('Request Body:', req.body);
             const { oldPassword, newPassword, confirmPassword, userIdToReset } = req.body;
             
             if (!newPassword || !confirmPassword) {
@@ -336,8 +345,8 @@ class RegisterModelCtrl extends BaseCtrl {
     
             const userId = req.user ? req.user.id : null;
             const role = req.user ? req.user.role : null; // สมมติว่าคุณมี field "role" ใน user object
-            console.log('User ID:', userId);
-            console.log('Role:', role);
+            // console.log('User ID:', userId);
+            // console.log('Role:', role);
     
             if (!userId) {
                 return res.status(401).json({ msg: 'Authorization required' });
@@ -346,7 +355,7 @@ class RegisterModelCtrl extends BaseCtrl {
             // ค้นหา user ที่ต้องการเปลี่ยนรหัสผ่าน
             const targetUserId = role === 'superadmin' && userIdToReset ? userIdToReset : userId;
             let user = await this.modelUser.findById(targetUserId);
-            console.log('User found:', user);
+            // console.log('User found:', user);
             
             if (!user) {
                 return res.status(400).json({ msg: 'User not found' });
@@ -355,7 +364,7 @@ class RegisterModelCtrl extends BaseCtrl {
             // ตรวจสอบรหัสผ่านเก่าถ้าผู้ใช้ไม่ใช่ superadmin
             if (role !== 'superadmin') {
                 const isMatch = await bcrypt.compare(oldPassword, user.password);
-                console.log('Passwords match:', isMatch);
+                // console.log('Passwords match:', isMatch);
     
                 if (!isMatch) {
                     return res.status(400).json({ msg: 'Old password is incorrect' });
@@ -365,14 +374,14 @@ class RegisterModelCtrl extends BaseCtrl {
             // รีเซ็ตรหัสผ่าน
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(newPassword, salt);
-            console.log('New hashed password:', hashedPassword);
+            // console.log('New hashed password:', hashedPassword);
     
             user.password = hashedPassword;
             await user.save();
     
             res.status(200).json({ msg: 'Password has been reset successfully' });
         } catch (error) {
-            console.error('Error in resetPassword function:', error);
+            // console.error('Error in resetPassword function:', error);
             res.status(500).send('Server error');
         }
     };
@@ -419,7 +428,7 @@ class RegisterModelCtrl extends BaseCtrl {
                 res.status(200).json({ msg: 'Employee profile updated successfully' });
     
             } catch (error) {
-                console.error('Error in updateEmployeeProfile function:', error.message);
+                // console.error('Error in updateEmployeeProfile function:', error.message);
                 res.status(500).send('Server error');
             }
         });
@@ -428,8 +437,8 @@ class RegisterModelCtrl extends BaseCtrl {
         try {
             const { id } = req.params;
             const { role } = req.body;
-            console.log('Received update role request for user id:', id); // เพิ่มบรรทัดนี้
-            console.log('Role to update:', role); // เพิ่มบรรทัดนี้
+            // console.log('Received update role request for user id:', id); // เพิ่มบรรทัดนี้
+            // console.log('Role to update:', role); // เพิ่มบรรทัดนี้
     
             if (!role) {
                 return res.status(400).json({ msg: 'Role is required' });
@@ -445,7 +454,7 @@ class RegisterModelCtrl extends BaseCtrl {
     
             res.status(200).json({ msg: 'User role updated successfully' });
         } catch (error) {
-            console.error('Error in updateUserRole function:', error.message);
+            // console.error('Error in updateUserRole function:', error.message);
             res.status(500).send('Server error');
         }
     };
@@ -457,7 +466,7 @@ class RegisterModelCtrl extends BaseCtrl {
             // ส่งผลลัพธ์กลับไปให้ client
             res.status(200).json(users);
         } catch (error) {
-            console.error('Error in getUsers function:', error.message);
+            // console.error('Error in getUsers function:', error.message);
             res.status(500).send('Server error');
         }
     };

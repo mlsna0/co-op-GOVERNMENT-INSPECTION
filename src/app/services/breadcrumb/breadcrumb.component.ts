@@ -26,8 +26,8 @@ export class BreadcrumbComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('Breadcrumb component initialized');
-    console.log("มีกี่ตัว",this.breadcrumbs)
+    // console.log('Breadcrumb component initialized');
+    // console.log("มีกี่ตัว",this.breadcrumbs)
   }
 
   private createBreadcrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: Array<{ label: string, url: string }> = []): Array<{ label: string, url: string }> {

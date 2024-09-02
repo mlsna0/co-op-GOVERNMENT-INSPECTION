@@ -49,12 +49,12 @@ async function main(): Promise<void> {
     await setMongo(); 
     setRoutes(app);   
   } catch (err) {
-    console.error(err);
+    // console.error(err);
   }
   app.set('port', (3000));
   const PORT = 3000;
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    // console.log(`Server is running on port ${PORT}`);
   });
 }
 

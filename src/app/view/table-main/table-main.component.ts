@@ -28,6 +28,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { loginservice } from 'app/layouts/login.services.';
 import { ToastrService } from 'ngx-toastr'; // นำเข้า ToastrService
+import { DocumentService } from 'app/services/document.service';
 
 @Component({
   selector: 'app-table-main',
@@ -124,7 +125,8 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     private sanitizer: DomSanitizer,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private toastr: ToastrService 
+    private toastr: ToastrService,
+    private documentService: DocumentService
     
 
   ) { 
@@ -188,86 +190,162 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
   }
  
   ngOnInit(){
-    
-    this.loading = true; //เป็นการตรวจ
+    this.loading = true;
+    this.items = [];
     this.dtOptions = {
-      order:[0],
-      //ordering: false,
-      // columnDefs: [
-      //   {
-      //     // targets: [5],
-      //     // orderable: false
-      //   }
-      // ],
+      order: [0],
       pagingType: 'full_numbers',
-      "language": {
-        "lengthMenu": "แสดง _MENU_ รายการ",
-        "search": "ค้นหา"
-        ,
-        "info": "แสดงหน้า _PAGE_ จากทั้งหมด _PAGES_ หน้า",
-        "infoEmpty": "แสดง 0 ของ 0 รายการ",
-        "zeroRecords": "ไม่พบข้อมูล",
-        "paginate": {
-          "first": "หน้าแรก",
-          "last": "หน้าสุดท้าย",
-          "next": "ต่อไป",
-          "previous": "ย้อนกลับ"
+      language: {
+        lengthMenu: "แสดง _MENU_ รายการ",
+        search: "ค้นหา",
+        info: "แสดงหน้า _PAGE_ จากทั้งหมด _PAGES_ หน้า",
+        infoEmpty: "แสดง 0 ของ 0 รายการ",
+        zeroRecords: "ไม่พบข้อมูล",
+        paginate: {
+          first: "หน้าแรก",
+          last: "หน้าสุดท้าย",
+          next: "ต่อไป",
+          previous: "ย้อนกลับ"
         },
       }
-     
     };
-    console.log("DataTable : ",this.dtOptions)
+    // console.log("DataTable: ", this.dtOptions);
+    this.loadPDFs();
+  //  this.fetchAndSetRecords();
+    // console.log("ngOnInit called");
+}
 
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip();
+loadPDFs(): void {
+  this.sv.getAllPDFs().subscribe(
+    data => {
+      this.pdfs = data;
+      this.pdfCount = this.pdfs.length; // Count the number of PDFs
+      console.log('PDFs:', this.pdfs);
+      // console.log('Number of PDFs:', this.pdfCount); // Log the count
 
-    });
-
-    this.sv.getData().subscribe(res => {
-      console.log("res getRecord:", res);
-      this.items = res;
-      this.loading = false;
-
-
-    console.log("data table-main",res)
-    },(err) => {
-      console.log("err : ",err);
-      this.loading = false;
-    });
-    
-    // this.sv.getRecordWithUserAndEmployee(this.record_id).subscribe(res=>{
-    //   console.log("ddd",this.item)
-    //   this.item= res;
-    //   this.loadig =false;
-    // });
-
-    document.addEventListener('keydown', this.handleKeydown.bind(this));
-
-    this.updateButtonCount();
-
-    // this.currentUserId = this.sv.getToken(); // หรือใช้ localStorage.getItem('userId') ถ้าคุณเก็บ userId
-    // if (this.currentUserId) {
-    //   this.loadData();
-    // } else {
-    //   console.error('User ID is not available.');
-    // }
-
-    // this.route.params.subscribe(params => {
-    //   this.userId = params['userId'];
-    //   if (this.userId) {
-    //     this.loadUserRecords(this.userId);
-    //   } else {
-    //     console.error('User ID is missing');
-    //   }
-    // });
-    console.log("ngOnInit called");
-    const recordId = this.ContentRecordID;
-    if (recordId) {
-      console.log("Calling countRecordFilenames with recordId:", recordId);
-      this.countRecordFilenames(recordId);
+      // Update the donut chart after loading PDFs
+      this.fetchAndSetRecords();
+    },
+    error => {
+      this.errorMessage = error; // Handle the error
+      // console.error('Error loading PDFs:', error);
     }
-  
-  }
+  );
+
+
+}
+fetchAndSetRecords() {
+    // console.log("fetchAndSetRecords called");
+    this.loading = true;
+    
+    this.lg.getUserProfile().subscribe({
+      next: (userProfile) => {
+        // console.log("User Profile fetched:", userProfile);
+        this.fetchRecords(userProfile.employeeId.organization); 
+         // ส่ง organization ของผู้ใช้เข้าไป
+      },
+      error: (error) => {
+        this.handleError(error)
+        // console.log("Error in fetching user profile:", error);
+      },
+    });
+}
+
+fetchRecords(userOrganization: string) {
+  // console.log("User Organization:", userOrganization); 
+  // console.log("Fetching all records");
+
+  this.sv.getAllRecordsLinkedByEmployeeId().subscribe({
+    next: (records) => {
+      // console.log("Records fetched:", records);
+      const groupedRecords = this.groupRecordsByOrganization(records);
+      console.log("Grouped Records by Organization:", groupedRecords);
+
+      const filteredRecords = this.filterByUserOrganization(groupedRecords, userOrganization);
+      // console.log("Filtered Records by User Organization:", filteredRecords);
+      
+      // Combine documents from the filtered records only for the specific organization
+      this.items = this.combineDocuments(filteredRecords[userOrganization] || [], userOrganization);
+      // console.log("Combined Documents:", this.items);
+      // this.countUniqueUsers(this.items, userOrganization);
+      this.loading = false;
+    },
+    error: (error) => {
+      this.handleError(error);
+      // console.log("Error in fetching records:", error);
+    },
+  });
+}
+
+groupRecordsByOrganization(records) {
+  // console.log("Grouping records by organization");
+  return records.reduce((acc, record) => {
+      // console.log("Current Record:", record); // ตรวจสอบข้อมูลในแต่ละ record
+      const organization = record.employee.organization || 'Unknown';
+      // console.log("Current Record Documents:", record.documents); // ตรวจสอบ documents ภายใน record
+      if (!acc[organization]) {
+          acc[organization] = [];
+      }
+      acc[organization].push(record);
+      return acc;
+  }, {});
+}
+
+filterByUserOrganization(groupedRecords, userOrganization: string) {
+    // console.log("Filtering grouped records by user organization");
+    return {[userOrganization]: groupedRecords[userOrganization] || []};
+}
+
+combineDocuments(items, userOrganization: string): any[] {
+  const userSet = new Set();
+  let combinedDocuments = [];
+  let signedDocumentsCount = 0; // ตัวแปรสำหรับนับจำนวนเอกสารที่ถูกเซ็น
+  let totalDocumentsCount = 0; // ตัวแปรสำหรับนับจำนวนเอกสารทั้งหมด
+
+  console.log("Processing documents and counting unique users for organization:", userOrganization);
+
+  items.forEach(item => {
+    console.log("Current item:", item);
+
+    // กรองเฉพาะ items ที่มี organization ตรงกับ userOrganization
+    if (item.employee.organization === userOrganization) {
+      userSet.add(item.user.employeeId);
+      console.log("Matched organization:", item.employee.organization);
+      console.log("Adding documents:", item.documents);
+
+      // รวมเอกสารใน combinedDocuments
+      combinedDocuments = combinedDocuments.concat(item.documents || []);
+
+      totalDocumentsCount += item.documents.length;
+      // // ตรวจสอบว่าเอกสารใน item มี _id ตรงกับชื่อไฟล์ PDF หรือไม่
+      item.documents.forEach(document => {
+        if (this.pdfs.includes(`${document._id}.pdf`)) {
+          signedDocumentsCount++; // นับเอกสารที่ถูกเซ็น +1
+        }
+      });
+    } else {
+      console.log("Skipped organization:", item.employee.organization);
+    }
+  });
+
+  const userCount = userSet.size;
+  console.log("User Count:", userCount);
+  console.log("Signed Documents Count:", signedDocumentsCount); // แสดงจำนวนเอกสารที่ถูกเซ็น
+  console.log("Total Documents Count:", totalDocumentsCount); // แสดงจำนวนเอกสารทั้งหมด
+  // ส่งจำนวนผู้ใช้ไปยัง DocumentService
+  this.documentService.updateUserCount(userCount);
+
+  // ส่งจำนวนเอกสารที่ถูกเซ็นไปยัง DocumentService หรือจัดการตามที่ต้องการ
+  this.documentService.updateSignedDocumentsCount(signedDocumentsCount);
+  this.documentService.updateTotalDocumentsCount(totalDocumentsCount);
+  // Return the combined documents for use on the web page
+  return combinedDocuments;
+}
+
+handleError(error) {
+  console.error('Error:', error);
+  this.loading = false;
+}
   ngOnDestroy() {
     document.removeEventListener('keydown', this.handleKeydown.bind(this));
   }
@@ -275,7 +353,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
   updateButtonCount() {
     const count = this.items.filter(item => item.record_filename).length;
     this.sv.updateButtonCount(count);
-    console.log('Updated count:', count); // Debugging
+    // console.log('Updated count:', count); // Debugging
   }
 
   //parsetLatLang คือการทำงานเกี่ยวกับการแยก lat และ long ให้เป็นสองส่วน แล้วเก็บไปที่ตัวแปร lat ,lng 12/06
@@ -289,7 +367,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
  
   //
   searchLocation(local:any){
-    console.log("searchLocation : ",local)
+    // console.log("searchLocation : ",local)
     const [lat, lng] = this.parseLatLng(local);
     window.open(`https://www.google.com/maps?q=(${lat},${lng})` , "_blank");
   }
@@ -322,12 +400,12 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
         this.setupSignCanvas(index);
         const writteSignElement = this.writteSignElement.nativeElement as HTMLElement;
         writteSignElement.style.display = 'flex';
-        console.log("Setup activate or not: ",this.setupSignCanvas)
+        // console.log("Setup activate or not: ",this.setupSignCanvas)
       } else {
-        console.error('writteSignElement is null or undefined',this.writteSignElement);
+        // console.error('writteSignElement is null or undefined',this.writteSignElement);
       }
     }, 0);  
-    console.log("it openSign status : ",this.isSignModalVisible)
+    // console.log("it openSign status : ",this.isSignModalVisible)
   }
   // refreshSignCanvas(index: number){
   //   if(this.ctx2){
@@ -339,10 +417,10 @@ saveSignature() {
     if (this.canvas2) {
       const dataURL = this.canvas2.toDataURL();
       // Here you can handle the signature image dataURL as needed
-      console.log(dataURL);
+      // console.log(dataURL);
       $('#SignModal').modal('hide');
     } else {
-      console.error('Canvas element not found');
+      // console.error('Canvas element not found');
     }
   }
 //////////////////////////////////////////////////////////////////////
@@ -391,9 +469,9 @@ saveSignature() {
   }
 
   changeSize(size: string) {
-    console.log('Pen size before parsing:', size); // Check the size value before parsing
+    // console.log('Pen size before parsing:', size); // Check the size value before parsing
     this.penSize = parseInt(size, 10);
-    console.log('Pen size after parsing:', this.penSize); // Check the size value after parsing
+    // console.log('Pen size after parsing:', this.penSize); // Check the size value after parsing
   }
   refreshCanvas() {
     if (this.ctx) {
@@ -408,17 +486,17 @@ saveSignature() {
 
  setActive(button: string){
   this.activeButton = button;
-  console.log("connected..Active");
+  // console.log("connected..Active");
   if (button === 'typro'){
     this.isTyproActive = true;
     this.isWritteActive = false;
-    console.log("typro section", this.items);
+    // console.log("typro section", this.items);
   } else if (button === "writte"){
     this.isTyproActive = false;
     this.isWritteActive = true;
-    console.log("writte section..");
+    // console.log("writte section..");
   } else {
-    console.log("selection error");
+    // console.log("selection error");
   }
   if (this.isWritteActive) {
     setTimeout(() => this.setupCanvas(), 0);
@@ -427,7 +505,7 @@ saveSignature() {
 
 
   openDataDetail(recordId:any){
-    console.log("opendtail: ",recordId)
+    // console.log("opendtail: ",recordId)
     this.router.navigate(['/data-detail', recordId]);
   }
   //หน้าจอรายละเอียดข้อมูล
@@ -470,11 +548,11 @@ saveSignature() {
 
 onRecord(recordId: any) {
   this.ContentRecordID = recordId;
-  console.log("onRecord modal getID", this.ContentRecordID);
+  // console.log("onRecord modal getID", this.ContentRecordID);
 
   // ดึงข้อมูลจาก server
   this.sv.getDataById(recordId).subscribe(res => {
-    console.log("getDataById :", res);
+    // console.log("getDataById :", res);
     this.detailItems = res;
     
     // const recordFilenameCount = this.detailItems.record_filename ? this.detailItems.record_filename.length : 0;
@@ -495,17 +573,17 @@ onRecord(recordId: any) {
 countRecordFilenames(recordId: any) {
   this.sv.getDataById(recordId).subscribe(
     res => {
-      console.log("Data received:", res);
+      // console.log("Data received:", res);
       const recordFilenameCount = res.record_filename ? res.record_filename.length : 0;
-      console.log("Number of record_filename:", recordFilenameCount);
+      // console.log("Number of record_filename:", recordFilenameCount);
     },
     error => {
-      console.error("Error fetching data:", error);
+      // console.error("Error fetching data:", error);
     }
   );
 }
 recordCommit() {
-  console.log("this.ContentRecordID :", this.ContentRecordID);
+  // console.log("this.ContentRecordID :", this.ContentRecordID);
 
   if (!this.ContentRecordID) {
     console.error("ID is undefined");
@@ -518,7 +596,7 @@ recordCommit() {
     return;
   }
 
-  console.log("Record ID being committed:", this.ContentRecordID);
+  // console.log("Record ID being committed:", this.ContentRecordID);
 
   if (this.isWritteActive) {
     const canvas: HTMLCanvasElement = document.getElementById('writteCanvas') as HTMLCanvasElement;
@@ -557,7 +635,7 @@ saveRecordContent() {
 
   this.sv.updateRecordContent(recordData).subscribe(
     response => {
-      console.log('บันทึกข้อมูลเรียบร้อย', response);
+      // console.log('บันทึกข้อมูลเรียบร้อย', response);
       Swal.fire({
         title: 'บันทึกข้อมูลสำเสร็จ!!',
         text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
@@ -576,7 +654,7 @@ saveRecordContent() {
       this.typroText = ''; // ล้างฟิลด์ข้อความ
     },
     error => {
-      console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
+      // console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
       Swal.fire({
         title: 'เกิดข้อผิดพลาด!',
         text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
@@ -635,7 +713,7 @@ saveRecordContent() {
   this.PersonINT++;
   this.personInputs.push(this.createPersonGroup());
   // this.personInputs = Array(this.PersonINT).fill(1).map((x, i) => i);
-  console.log(this.PersonINT);
+  // console.log(this.PersonINT);
 }else{
   alert("เพิ่มการกรอกข้อมูลผู้ตรวจได้สูงสุด 4 คน");
 }
@@ -655,7 +733,7 @@ saveRecordContent() {
  this.personInputs.removeAt(this.personInputs.length - 1)
  
  }
- console.log("person delete: ",this.PersonINT)
+//  console.log("person delete: ",this.PersonINT)
  }
 
  canAddPerson(): boolean {
@@ -690,10 +768,10 @@ get personal(): FormArray {
 }
 
  addPersonCommit(value: any) {
-  console.log("commit success", value);
+  // console.log("commit success", value);
   // ส่งข้อมูลไปยัง controller
   this.sv.postPersonData(value).subscribe(res => {
-    console.log("res postPersonData:", res);
+    // console.log("res postPersonData:", res);
   });
 }
 
@@ -705,7 +783,7 @@ get personal(): FormArray {
   let nextId: number;
   if (this.items.records && this.items.records.length >= 0){
     nextId = this.items.records.length + 1;
-    console.log("items record :",this.items.records)
+    // console.log("items record :",this.items.records)
   } else {
     nextId= 1;
    
@@ -732,13 +810,13 @@ get personal(): FormArray {
   onInsertSummit(data) {
     this.Submitted = true; 
     // console.log(data);
-    console.log('Item form:',this.addItemForm.value);
+    // console.log('Item form:',this.addItemForm.value);
  
-    console.log('Personal array form : ',this.personal.value)
-    console.log("onInsertSubmit..?data : ",data);
+    // console.log('Personal array form : ',this.personal.value)
+    // console.log("onInsertSubmit..?data : ",data);
     // console.log(this.addPersonalForm.value);
     if (this.addItemForm.invalid || this.personal.invalid ) {
-      console.log('ฟอร์มไม่ถูกต้อง');
+      // console.log('ฟอร์มไม่ถูกต้อง');
       // แสดงข้อความแสดงข้อผิดพลาดให้ผู้ใช้ดู
       let invalidFields = [];
         Object.keys(this.addItemForm.controls).forEach(key => {
@@ -784,7 +862,7 @@ get personal(): FormArray {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     
     this.sv.postDataTest(this.addItemForm.value, token).subscribe(res => {
-      console.log("res submitted successfully", res);
+      // console.log("res submitted successfully", res);
       this.toastr.success('เพิ่มข้อมูลสำเร็จ', 'สำเร็จ', {
         timeOut: 2500,  
         positionClass: 'toast-top-right'
@@ -814,7 +892,7 @@ get personal(): FormArray {
      
     },
     error =>{
-      console.error('Error submitting data:', error);
+      // console.error('Error submitting data:', error);
       this.toastr.error('การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ', 'เกิดข้อผิดพลาด!', {
         timeOut: 1500,
         positionClass: 'toast-top-right'
@@ -872,10 +950,10 @@ get personal(): FormArray {
         });
         this.isReadonly = false; // ทำให้ input field สามารถพิมพ์ได้
       }, (error) => {
-        console.error(error)  ;
+        // console.error(error)  ;
       });
     } else {
-      console.error('Geolocation is not supported by this browser.');
+      // console.error('Geolocation is not supported by this browser.');
     }
   }
 
@@ -908,7 +986,7 @@ get personal(): FormArray {
 
 
   printPDF = () => {
-    console.log("working PDF..");
+    // console.log("working PDF..");
     const elementToPrint = document.getElementById('myDetail');
     html2canvas(elementToPrint,{scale:2}).then((canvas)=>{
       const pdf = new jsPDF('p','mm','a4');
@@ -919,11 +997,11 @@ get personal(): FormArray {
 }
 
 saveRCPDF = () => {
-  console.log("Updating PDF in dictionary...");
+  // console.log("Updating PDF in dictionary...");
   const elementToPrint = document.getElementById('myDetail');
 
   if (!elementToPrint) {
-    console.error('Element to print not found');
+    // console.error('Element to print not found');
     return;
   }
 
@@ -950,21 +1028,21 @@ saveRCPDF = () => {
       // Send the PDF to the backend
       this.sv.savePDF(formData).subscribe(
         response => {
-          console.log('PDF saved successfully:', response);
+          // console.log('PDF saved successfully:', response);
 
           
 
           this.refreshPage();
         },
         error => {
-          console.error('Error saving PDF:', error);
+          // console.error('Error saving PDF:', error);
         }
       );
     } else {
-      console.error('savePDF function is not defined or not a function');
+      // console.error('savePDF function is not defined or not a function');
     }
   }).catch((error) => {
-    console.error('Error generating PDF:', error);
+    // console.error('Error generating PDF:', error);
   });
   
   $('#myModal').modal('hide');
@@ -973,16 +1051,16 @@ saveRCPDF = () => {
 
 showPDF(id: string) {
   if (!id) {
-    console.error('ID is undefined');
+    // console.error('ID is undefined');
     return;
   } 
 
   // const pdfPath = `../img/${id}`; // แก้ไขวงเล็บเกิน
   const pdfPath = environment.URL_UPLOAD_IMG + id; // แก้ไขวงเล็บเกิน
-  console.log('pdfPath:', pdfPath);
+  // console.log('pdfPath:', pdfPath);
 
   this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(pdfPath);
-  console.log('Sanitized PDF Path:', this.pdfSrc);
+  // console.log('Sanitized PDF Path:', this.pdfSrc);
   window.open(pdfPath,'_blank')
 
 
@@ -1006,7 +1084,7 @@ showPDF(id: string) {
 
   searchData(data: string) {
     this.sv.searchData(data).subscribe(res => {
-      console.log("res searchData:", res);
+      // console.log("res searchData:", res);
     });
   }
 
@@ -1151,9 +1229,9 @@ loadContent() {
   copyText() {
     const plainText = this.stripStyles(this.typroText);
     navigator.clipboard.writeText(plainText).then(() => {
-      console.log('Text copied to clipboard');
+      // console.log('Text copied to clipboard');
     }).catch(err => {
-      console.error('Could not copy text: ', err);
+      // console.error('Could not copy text: ', err);
     });
   }
 
@@ -1167,7 +1245,7 @@ loadContent() {
       range.insertNode(document.createTextNode(text));
       this.typroText = this.typroText + text;
     }).catch(err => {
-      console.error('Could not paste text: ', err);
+      // console.error('Could not paste text: ', err);
     });
   }
 

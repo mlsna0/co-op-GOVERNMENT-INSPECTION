@@ -36,62 +36,69 @@
     <div class="BoxTotal">
 
       <div class="row">
-        <div class="col-md-6 ">
-          <div class="row filter-container">
-            <div class="col-md-3 filter-item">
-              <h4>กรองข้อมูล</h4>
-              <div class="dropdown">
-                <div class="filter-box" (click)="toggleDropdown('province', $event)">
-                  เลือกจังหวัด
-                  <span class="fa fa-chevron-down" [class.animate]="isProvinceDropdownOpen"
-                    *ngIf="isProvinceDropdownOpen"></span>
-                  <span class="fa fa-chevron-up" [class.animate]="!isProvinceDropdownOpen"
-                    *ngIf="!isProvinceDropdownOpen"></span>
-                </div>
-                <div class="dropdown-content" [class.show]="isProvinceDropdownOpen">
-                  <div class="search">
-                    <input class="form-control form-control-sm inputSearch" type="text" placeholder="ค้นหา..."
-                      (input)="onSearch($event)">
+        <div class="col-md-6">
+          <div class="filter-container">
+            <div class="row">
+              <div class="col-md-3">
+                <h4>กรองข้อมูล</h4>
+                <div class="dropdown">
+                  <div class="filter-box" (click)="toggleDropdown('province',$event)">
+                    เลือกจังหวัด
+                    <span class="fa fa-chevron-down" [class.animate]="isProvinceDropdownOpen"
+                      *ngIf="isProvinceDropdownOpen"></span>
+                    <span class="fa fa-chevron-up" [class.animate]="!isProvinceDropdownOpen"
+                      *ngIf="!isProvinceDropdownOpen"></span>
                   </div>
-                  <div class="dropdown-scroller">
-                    <div class="dropdown-item">
-                      <input type="checkbox" id="select-all" (change)="onSelectAll($event)">
-                      &nbsp;<label for="select-all">ทั้งหมด</label>
+      
+                  <div class="dropdown-content" [class.show]="isProvinceDropdownOpen">
+                    <div class="search">
+                      <input class="form-control form-control-sm inputSearch" type="text" placeholder="ค้นหา..."
+                        (input)="onSearch($event)">
                     </div>
-                    <div class="dropdown-item" *ngFor="let province of filteredProvinces">
-                      <input type="checkbox" [id]="province.id" [value]="province.id"
-                        (change)="onProvinceSelect($event)" [checked]="province.selected">
-                      &nbsp;<label [for]="province.id">{{ province.name_th }}</label>
+                    <div class="dropdown-scroller">
+                      <div class="dropdown-item">
+                        <input type="checkbox" id="select-all" (change)="onSelectAll($event)">
+                        &nbsp;<label for="select-all">ทั้งหมด</label>
+                      </div>
+                      <div class="dropdown-item" *ngFor="let province of filteredProvinces">
+                        <input type="checkbox" [id]="province.id" [value]="province.id"
+                          (change)="onProvinceSelect($event)" [checked]="province.selected">
+                        &nbsp;<label [for]="province.id">{{ province.name_th }}</label>
+                      </div>
                     </div>
-                  </div>
-                  <div class="button-inline">
-                    <button class="apply-filter" (click)="applyFilter()">ยืนยัน</button>
-                    <button class="clear-filter" (click)="clearFilter()">ล้าง</button>
+      
+      
+                    <div class="button-inline">
+                      <button class="apply-filter" (click)="applyFilter()">ยืนยัน</button>
+                      <button class="clear-filter" (click)=" clearFilter()">ล้าง</button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-md-3 filter-item">
-              <h4>เริ่มต้นวันที่</h4>
-              <div class="filter-box">
-                <input type="date" [(ngModel)]="startDate" (change)="onDateChange()" placeholder="เริ่มต้นวันที่">
+      
+              <div class="col-md-3">
+                <h4>เริ่มต้นวันที่</h4>
+                <div class="filter-box" (click)="toggleDropdown('date',$event)">
+                  <input type="date" [(ngModel)]="startDate" (change)="onDateChange()" placeholder="เริ่มต้นวันที่">
+                </div>
               </div>
-            </div>
-            <div class="col-md-3 filter-item">
-              <h4>สิ้นสุด</h4>
-              <div class="filter-box">
-                <input type="date" [(ngModel)]="endDate">
               
+              <div class="col-md-3">
+                <h4>สิ้นสุด</h4>
+                <div class="filter-box">
+                  <input type="date" [(ngModel)]="endDate">
+                </div>
               </div>
-             
+      
+              <div class="col-md-3 align-self-end">
+                <button type="submit" class="btn btn-add ">
+                  ดูข้อมูล
+                </button>
+              </div>
             </div>
-  
-            <div class="col-md-3 align-self-end filter-item">
-              <button type="submit" class="btn btn-add">ดูข้อมูล</button>
-            </div>
-          </div>
+     
+           </div>
         </div>
-        
         <div class="col-md-6" >
             <div class="donutChartBG">
                 <div class="text-donut">จำนวนการลงนาม</div>
@@ -105,9 +112,26 @@
 
 
 
-        <div class="row">
+        <div class="row"  >
           <!-- เอกสารทั้งหมด -->
-          <div class="col-md-3">
+          <div class="col-md-3"*ngIf="isAdmin">
+            <div class="card Box1">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <p class="title mb-0">เอกสารทั้งหมด</p>
+                    <h2 class="amount">{{ totalDocumentsCount }}</h2> 
+                  </div>
+                  <div class="imgBG">
+                    <img src="./assets/img/manage.png" alt="paper" class="paper-img">
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3"  *ngIf="isSuperAdmin" >
             <div class="card Box1">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -123,8 +147,26 @@
               </div>
             </div>
           </div>
+
           <!-- เอกสารที่ถูกเซ็น -->
-          <div class="col-md-3" >
+          <div class="col-md-3" *ngIf="isAdmin" >
+            <div class="card Box2">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <p class="title mb-0">เอกสารที่ถูกเซ็น</p>
+                    <h2 class="amount">{{ totalSignedDocumentsCount }}</h2>
+                  </div>
+                  <div class="imgBG" style="padding-left: 12px;">
+                    <img src="./assets/img/contract.png" alt="paper" class="paper-img">
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3"  *ngIf="isSuperAdmin" >
             <div class="card Box2">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -143,6 +185,7 @@
               </div>
             </div>
           </div>
+
           <!-- จำนวนกระดาษ -->
           <div class="col-md-3" >
             <div class="card Box3">
@@ -161,7 +204,22 @@
             </div>
           </div>
           <!-- จำนวนผู้ใช้งาน -->
-          <div class="col-md-3">
+          <div class="col-md-3" *ngIf="isAdmin">
+            <div class="card Box4">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <p class="title mb-0">จำนวนผู้ใช้งาน</p>
+                    <h2 class="amount">{{ userCount2 }}</h2>
+                  </div>
+                  <div class="imgBG">
+                    <img src="./assets/img/group.png" alt="paper" class="paper-img">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3"  *ngIf="isSuperAdmin">
             <div class="card Box4">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -172,12 +230,12 @@
                   <div class="imgBG">
                     <img src="./assets/img/group.png" alt="paper" class="paper-img">
                   </div>
-
                 </div>
               </div>
             </div>
           </div>
         </div>
+
       
 
 
@@ -207,7 +265,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-12" >
+          <div class="col-sm-12"  *ngIf="isSuperAdmin">
             <app-thaicounty [filterCriteria]="filterCriteria"></app-thaicounty>
           </div>
 

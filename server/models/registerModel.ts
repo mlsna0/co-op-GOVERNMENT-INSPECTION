@@ -19,7 +19,8 @@ const registerSchema = new mongoose.Schema({
     postCode: String,
     detail: String,
     profileImage: String, 
-    timestamps: [{ type: Schema.Types.ObjectId, ref: 'TimeStamp' }] // ฟิลด์ timestamps
+    timestamps: [{ type: Schema.Types.ObjectId, ref: 'TimeStamp' }] ,// ฟิลด์ timestamps
+    agencies: [{type: Schema.Types.ObjectId, ref: 'Agency'}]
 });
 
 export interface registerModel{

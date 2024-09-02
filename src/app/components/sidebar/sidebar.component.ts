@@ -17,12 +17,13 @@ declare interface RouteInfo {
 export const ROUTES: RouteInfo[] = [
     { path: '/dashboard', title: 'หน้าหลัก', icon: 'dashboard', class: '', roles: ['superadmin','admin'] },
     { path: '/profile', title: 'ผู้ใช้งาน', icon: 'person', class: '', roles: ['superadmin','admin', 'user'] },
-    { path: '/table-main', title: 'การลงตรวจอิเล็กทรอนิค', icon: 'content_paste', class: '', roles: ['superadmin','admin', 'user'] },
-    { path: '/manageuser', title: 'การจัดการผู้ใช้งาน', icon: 'manage_accounts', class: '', roles: ['superadmin'] },
+    { path: '/table-main', title: 'การลงตรวจอิเล็กทรอนิค', icon: 'content_paste', class: '', roles: ['admin', 'user'] },
+    
     
         // path: ' ', title: 'รายงาน', icon: 'assignment', class: '',
 
     { path: '/manageagency', title: 'การจัดการหน่วยงาน', icon: 'apartment', class: '', roles: ['superadmin'] },
+    { path: '/manageuser', title: 'การจัดการผู้ใช้งาน', icon: 'manage_accounts', class: '', roles: ['superadmin'] },
       {  path: ' ', title: 'รายงาน', icon: 'assignment', class: '',
         children: [
             { path: '/reportuser', title: 'รายงานการเข้าใช้งาน', icon: 'camera_front', class: '', roles: ['superadmin'] },
@@ -64,11 +65,11 @@ export class SidebarComponent implements OnInit {
  
   ngOnInit() {
     const role = this.authService.getRole();
-    console.log('Role in sidebar.component.ts:', role); // ตรวจสอบบทบาทในคอมโพเนนต์
+    // console.log('Role in sidebar.component.ts:', role); // ตรวจสอบบทบาทในคอมโพเนนต์
     this.menuItems = ROUTES.filter(menuItem => 
       !menuItem.roles || menuItem.roles.includes(role)
     );
-    console.log('Filtered menuItems:', this.menuItems); // ตรวจสอบรายการเมนูหลังการกรอง
+    // console.log('Filtered menuItems:', this.menuItems); // ตรวจสอบรายการเมนูหลังการกรอง
   }
 
 

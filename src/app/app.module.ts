@@ -27,6 +27,11 @@ import { NgApexchartsModule } from "ng-apexcharts";
 import { ToastrModule } from 'ngx-toastr';
 
 
+
+
+
+
+
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -42,6 +47,7 @@ import { ToastrModule } from 'ngx-toastr';
     SignaturePadModule,
     DragDropModule,
     PdfViewerModule,
+    // RouterModule.forRoot(routes, { useHash: false }),
     NgxLoadingModule.forRoot({}),
     NgApexchartsModule,
     ToastrModule.forRoot({
