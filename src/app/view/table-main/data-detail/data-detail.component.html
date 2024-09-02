@@ -1,11 +1,11 @@
 <div class="main-content">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
-            <li class="breadcrumb-item"><a [routerLink]="['/table-main']">การตรวจอิเล็กทรอนิค</a></li>
-            <li class="breadcrumb-item active"><a aria-current="page">รายละเอียดเนื้อหาเอกสารที่สร้าง</a></li>
+          <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
+          <li class="breadcrumb-item"><a [routerLink]="['/table-main']">การลงตรวจอิเล็กทรอนิค</a></li>
+          <li class="breadcrumb-item active"><a aria-current="page">รายละเอียดเนื้อหาที่สร้าง</a></li>
         </ol>
-    </nav>
+      </nav>
     <div class="container-fluid">
         <div class="card">
             <div class="navigate-bar">
@@ -22,13 +22,12 @@
 
             </div> -->
             <div class="card-body">
-          
                 <div class="row">
                     <!-- ข้อมูลเอกสาร -->
                     <div class="col-md-8">
                         <div class="row mb-3">
-                            <div class="col-md-6">
-                                <p> รายละเอียดเนื้อหาเอกสารที่สร้าง</p>
+                            <div class="col-md-6" style="display: flex;"> 
+                                <p style="display: flex; margin: 0; align-items: center; font-size: 18px; font-weight: 900;"> รายละเอียดเนื้อหาเอกสารที่สร้าง</p>
                             </div>
                             <div class="col-md-6" style="display: flex; justify-content: flex-end;">
                                 <button type="button" class="btn btn-warning" (click)="openEditModal()"
@@ -38,384 +37,109 @@
                             </div>
                         </div>
 
-                        <div class="row mb-2">
-                            <div class="col-md-5 font-weight-bold">
-                               ครั้งที่: <!-- เอกสารฉบับที่-->
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-5">
+                                เอกสารฉบับที่:
                             </div>
                             <div class="col-md-7">
-                                {{ DataDetail?.record_id }}
+                                {{DataDetail?.record_id}}
                             </div>
                         </div>
-                        <div class="row mb-2">
-                            <div class="col-md-5 font-weight-bold">
-                                วันที่เริ่มตรวจสอบ:
+                        <div class="row">
+                            <div class="col-md-5">
+                                หัวข้อเอกสาร :
                             </div>
                             <div class="col-md-7">
-                                {{ DataDetail?.record_star_date | thaidate: 'medium' }}
+                                {{DataDetail?.record_topic}}
                             </div>
                         </div>
-                        <div class="row mb-2">
-                            <div class="col-md-5 font-weight-bold">
-                                วันที่เสร็จสิ้นการตรวจสอบ:
-                            </div>
-                            <div class="col-md-7">
-                                {{ DataDetail?.record_end_date | thaidate: 'medium' }}
-                            </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-5 font-weight-bold">
-                                หัวข้อเอกสาร:
-                            </div>
-                            <div class="col-md-7">
-                                {{ DataDetail?.record_topic }}
-                            </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-5 font-weight-bold">
+                        <div class="row">
+                            <div class="col-md-5">
                                 รายละเอียด:
                             </div>
                             <div class="col-md-7">
-                                {{ DataDetail?.record_detail }}
+                                {{DataDetail?.record_detail}}
                             </div>
                         </div>
-                        <div class="row mb-2">
-                            <div class="col-md-5 font-weight-bold">
+                        <div class="row">
+                            <div class="col-md-5">
                                 รายละเอียด สถานที่:
                             </div>
                             <div class="col-md-7">
-                                {{ DataDetail?.record_place }}
+                                {{DataDetail?.record_place}}
                             </div>
                         </div>
-                        <div class="row mb-2">
-                            <div class="col-md-5 font-weight-bold">
+                        <div class="row">
+                            <div class="col-md-5">
                                 พิกัดสถานที่:
                             </div>
                             <div class="col-md-7">
-                                {{ DataDetail?.record_location }}
+                                {{DataDetail?.record_location}}
                             </div>
                         </div>
-                   
+                      
                         <div class="row">
-                            <div class="col-md-5 font-weight-bold">
-                                รายชื่อผู้ลงนาม:
+                            <div class="col-md-5">
+                               วันที่เริ่มตรวจสอบ:
                             </div>
                             <div class="col-md-7">
-                                <div class="viewPersonalData" *ngFor="let person of viewPersonalData; let i = index">
-                                    {{ person.view_rank }} &nbsp;
-                                    {{ person.view_first_name }} &nbsp;
-                                    {{ person.view_last_name }}
-                                </div>
+                                {{DataDetail?.record_star_date | thaidate: 'medium'}}
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                วันที่เสร็จสิ้นการตรวจสอบ:
+                            </div>
+                            <div class="col-md-7">
+                                {{DataDetail?.record_end_date  | thaidate: 'medium'}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                รายชื่อผู้ลงนาม:
+                            </div>
+                            <div class="col-md-7" >
+                                <div class="viewPersonalData" *ngFor="let person of viewPersonalData; let i = index">
+                                    {{ person.view_rank }} &nbsp; 
+                                    {{ person.view_first_name }} &nbsp;
+                                    {{person.view_last_name }} 
+                                </div>
+                            
+                            </div>
+                        </div>
+
                     </div>
 
-                    <!-- ข้อมูลผู้สร้างเอกสาร -->
                     <div class="col-md-4">
-                        <div class="row mb-2">
-                            <div class="col-md-6 font-weight-bold">
-                                ผู้สร้างเอกสาร:
+                        <div class="row">
+                            <div class="col-md-6">
+                                ผู้สร้างหัวข้อเอกสาร:
                             </div>
                             <div class="col-md-6">
-                                {{ createDocData[0]?.firstname }} &nbsp; {{ createDocData[0]?.lastname }}
+                                {{createDocData[0]?.firstname}} &nbsp; {{createDocData[0]?.lastname}}
                             </div>
                         </div>
-                        <div class="row mb-2">
-                            <div class="col-md-6 font-weight-bold">
+                        <div class="row">
+                            <div class="col-md-6">
                                 วันที่สร้างเอกสาร:
                             </div>
                             <div class="col-md-6">
-                                {{ createDocData[0]?.createdDate }}
+                                {{createDocData[0]?.createdDate }}
                             </div>
                         </div>
-                        <div class="row mb-2">
-                            <div class="col-md-6 font-weight-bold">
+                        <div class="row">
+                            <div class="col-md-6">
                                 เวลาที่สร้างเอกสาร:
                             </div>
                             <div class="col-md-6">
-                                {{ createDocData[0]?.createdTime }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal fade" id="EditModal" tabindex="-1" role="dialog"
-                        aria-labelledby="addItemModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header" class="card-header">
-                                    <h5 class="modal-title" id="addItemModalLabel"
-                                        style="color: rgb(0, 0, 0); font-family: 'Sarabun', sans-serif !important; font-size: 18px; font-weight: 900;">
-                                        แก้ไขรายละเอียดเอกสาร</h5>
-
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                        style="color: black;">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form [formGroup]="editItemForm" (ngSubmit)="onEditDataSubmit()">
-                                    <div class="modal-body">
-
-
-                                        <div class="row">
-                                            <div class="col-sm-2">
-                                                <div class="form-group">
-                                                    <label for="id" class="form-label">ครั้งที่
-                                                        <span
-                                                            *ngIf="editItemForm.controls['id'].invalid && (editItemForm.controls['id'].touched || editItemForm.controls['id'].dirty || Submitted)"
-                                                            class="text-validate">*</span>
-                                                    </label>
-
-                                                    <input type="id" id="id" formControlName="id" class="form-control"
-                                                        placeholder="ครั้งที่"
-                                                        [ngClass]="{'box-validate':  editItemForm.controls['id'].invalid && (editItemForm.controls['id'].touched || editItemForm.controls['id'].dirty || Submitted)}" />
-                                                    <div class="text-validate"
-                                                        *ngIf="editItemForm.controls['id'].invalid &&(editItemForm.controls['id'].touched || editItemForm.controls['id'].dirty || Submitted) ">
-                                                        <span class="border-errorInDex"
-                                                            *ngIf="editItemForm.controls['id'].invalid && (editItemForm.controls['id'].touched || editItemForm.controls['id'].dirty || Submitted)">จำเป็น**</span>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group">
-                                                    <label for="startDate">วันที่เริ่มตรวจสอบ
-                                                        <span
-                                                            *ngIf="editItemForm.controls['startDate'].invalid && (editItemForm.controls['startDate'].touched || editItemForm.controls['startDate'].dirty || Submitted)"
-                                                            class="text-validate">*</span>
-                                                    </label>
-                                                    <input type="date" id="startDate" formControlName="startDate"
-                                                        class="form-control" placeholder="วันที่เริ่มตรวจสอบ"
-                                                        [ngClass]="{'box-validate':  editItemForm.controls['startDate'].invalid && (editItemForm.controls['startDate'].touched || editItemForm.controls['startDate'].dirty || Submitted)}" />
-                                                    <div class="text-validate"
-                                                        *ngIf="editItemForm.controls['startDate'].invalid &&(editItemForm.controls['startDate'].touched || editItemForm.controls['startDate'].dirty || Submitted) ">
-                                                        <span class="border-error"
-                                                            *ngIf="editItemForm.controls['startDate'].invalid && (editItemForm.controls['startDate'].touched || editItemForm.controls['startDate'].dirty || Submitted)">กรุณากรอกข้อมูล</span>
-                                                    </div>
-
-                                                    <!--style="color:rgb(171, 171, 171)"-->
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label for="endDate">วันที่เสร็จสิ้น
-                                                        <span
-                                                            *ngIf="editItemForm.controls['endDate'].invalid && (editItemForm.controls['endDate'].touched || editItemForm.controls['endDate'].dirty || Submitted)"
-                                                            class="text-validate">*</span>
-                                                    </label>
-                                                    <input type="date" id="endDate" formControlName="endDate"
-                                                        class="form-control" placeholder="วันที่เสร็จสิ้น"
-                                                        [ngClass]="{'box-validate':  editItemForm.controls['endDate'].invalid && (editItemForm.controls['endDate'].touched || editItemForm.controls['endDate'].dirty || Submitted)}" />
-                                                    <div class="text-validate"
-                                                        *ngIf="editItemForm.controls['endDate'].invalid &&(editItemForm.controls['endDate'].touched || editItemForm.controls['endDate'].dirty || Submitted) ">
-                                                        <span class="border-error"
-                                                            *ngIf="editItemForm.controls['endDate'].invalid && (editItemForm.controls['endDate'].touched || editItemForm.controls['endDate'].dirty || Submitted)">กรุณากรอกข้อมูล</span>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="row">
-                                            <div class="col-sm">
-                                                <div class="form-group position-relative">
-                                                    <label for="topic">
-                                                        หัวข้อการตรวจสอบ
-                                                        <span
-                                                            *ngIf="editItemForm.controls['topic'].invalid && (editItemForm.controls['topic'].touched || editItemForm.controls['topic'].dirty || Submitted)"
-                                                            class="text-validate">*</span>
-                                                    </label>
-                                                    <input type="text" id="topic" formControlName="topic"
-                                                        class="form-control" placeholder="--กรอกหัวข้อการตรวจสอบ--"
-                                                        [ngClass]="{'box-validate': editItemForm.controls['topic'].invalid && (editItemForm.controls['topic'].touched || editItemForm.controls['topic'].dirty || Submitted)}" />
-                                                    <div class="text-validate"
-                                                        *ngIf="editItemForm.controls['topic'].invalid &&(editItemForm.controls['topic'].touched || editItemForm.controls['topic'].dirty || Submitted ) ">
-                                                        <span class="border-error"
-                                                            *ngIf="editItemForm.controls['topic'].invalid && (editItemForm.controls['topic'].touched || editItemForm.controls['topic'].dirty || Submitted)">กรุณากรอกข้อมูล</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-sm-12" style="position: relative; display: flex; justify-content: flex-end;">
-                                                <button type="button" (click)="addPersonInput()" [disabled]="!canAddPerson()"
-                                                  style="border: none; background: none;"> 
-                                                  <i class="fa fa-plus"></i>
-                                                </button>  
-                                                  <button type="button" (click)="deletePersonInput()" style="border: none; background: none;">
-                                                         <i class="fa fa-minus"></i>
-                                                     </button>                       
-                                            </div>
-                                        </div>
-                                        <div class="row inputLabel" [formGroup]="editItemForm">
-                                            <div class="col-sm-4">
-                                                <label>
-
-                                                    ตำแหน่ง/คำนำหน้า
-                                                    <span
-                                                        *ngIf="editItemForm.controls['personal'].invalid && (editItemForm.controls['personal'].touched || editItemForm.controls['personal'].dirty || Submitted)"
-                                                        class="text-validate"> *</span>
-                                                </label>
-                                            </div>
-                                            <div class="col-sm-2" style="padding-left: 0;">
-                                                <label for="firstname">ชื่อ
-                                                    <span
-                                                        *ngIf="editItemForm.controls['personal'].invalid && (editItemForm.controls['personal'].touched || editItemForm.controls['personal'].dirty || Submitted)"
-                                                        class="text-validate"> *</span>
-                                                </label>
-                                            </div>
-                                            <div class="col-sm-4" style="padding-left: 82px;">
-                                                <label for="lastname">นามสกุล
-                                                    <span
-                                                        *ngIf="editItemForm.controls['personal'].invalid && (editItemForm.controls['personal'].touched || editItemForm.controls['personal'].dirty || Submitted)"
-                                                        class="text-validate"> *</span>
-                                                </label>
-                                            </div>
-                                    
-
-
-                                        </div>
-
-                                        <div class="row" formArrayName="personal">
-                                            <div *ngFor="let person of personal.controls;  let i = index"
-                                                [formGroup]="editItemForm" [formGroupName]="i">
-                                                <div class="row " [formGroup]="person" style="padding: 0 15px 0 15px;">
-                                                    <div class="col-sm-4">
-                                                        <div class="form-group position-relative">
-
-                                                            <input type="text" id="rank-{{i}}" formControlName="rank"
-                                                                class="form-control" placeholder="--กรอกข้อมูล--"
-                                                                [ngClass]="{'box-validate':person.controls['rank'].invalid && (person.controls['rank'].touched || person.controls['rank'].dirty || Submitted)}" />
-                                                            <!---->
-                                                            <div *ngIf="person.controls['rank'].invalid && (person.controls['rank'].touched || person.controls['rank'].dirty || Submitted)"
-                                                                class="border-errorPersonRank">
-                                                                กรุณากรอกข้อมูล
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4" style="padding-left: 0;">
-                                                        <div class="form-group position-relative">
-
-                                                            <input type="text" id="firstname-{{i}}"
-                                                                formControlName="firstname" class="form-control"
-                                                                placeholder="--กรอกข้อมูล--"
-                                                                [ngClass]="{'box-validate': person.controls['firstname'].invalid && (person.controls['firstname'].touched || person.controls['firstname'].dirty || Submitted)}" />
-                                                            <!---->
-                                                            <div *ngIf="person.controls['firstname'].invalid && (person.controls['firstname'].touched || person.controls['firstname'].dirty || Submitted)"
-                                                                class="border-errorPersonFullname">
-                                                                กรุณากรอกข้อมูล
-                                                            </div>
-
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="col-sm-4"
-                                                        style="padding-left: 0; width: 40%; max-width: 40%;">
-                                                        <div class="form-group position-relative">
-
-                                                            <input type="text" id="lastname-{{i}}"
-                                                                formControlName="lastname" class="form-control"
-                                                                placeholder="--กรอกข้อมูล--"
-                                                                [ngClass]="{'box-validate': person.controls['lastname'].invalid && (person.controls['lastname'].touched || person.controls['lastname'].dirty || Submitted)}" />
-                                                            <!---->
-                                                            <div *ngIf="person.controls['lastname'].invalid && (person.controls['lastname'].touched || person.controls['lastname'].dirty || Submitted)"
-                                                                class="border-errorPersonFullname">
-                                                                กรุณากรอกข้อมูล
-                                                            </div>
-
-                                                        </div>
-
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-sm">
-                                                <div class="form-group">
-                                                    <label for="detail">รายละเอียด
-                                                        <span
-                                                            *ngIf="editItemForm.controls['detail'].invalid && (editItemForm.controls['detail'].touched || editItemForm.controls['detail'].dirty || Submitted)"
-                                                            class="text-validate">*</span></label>
-                                                    <input type="text" id="detail" formControlName="detail" class="form-control"
-                                                        placeholder="--กรอกรายละเอียด--"
-                                                        [ngClass]="{'box-validate': editItemForm.controls['detail'].invalid && (editItemForm.controls['detail'].touched || editItemForm.controls['detail'].dirty || Submitted)}" />
-                                                    <div class="text-validate"
-                                                        *ngIf="editItemForm.controls['detail'].invalid &&(editItemForm.controls['detail'].touched || editItemForm.controls['detail'].dirty || Submitted ) ">
-                                                        <span class="border-error"
-                                                            *ngIf="editItemForm.controls['detail'].invalid && (editItemForm.controls['detail'].touched || editItemForm.controls['topic'].dirty || Submitted)">กรุณากรอกข้อมูล</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        
-                                        
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-sm">
-                                                <div class="form-group">
-                                                    <label for="place">รายละเอียดสถานที่
-                                                      <span
-                                                        *ngIf="editItemForm.controls['place'].invalid && (editItemForm.controls['place'].touched || editItemForm.controls['place'].dirty || Submitted)"
-                                                        class="text-validate">*</span></label>
-                                                    <input type="text" id="place" formControlName="place" class="form-control"
-                                                      placeholder="--กรอกรายละเอียดสถานที่--"
-                                                      [ngClass]="{'box-validate': editItemForm.controls['place'].invalid && (editItemForm.controls['place'].touched || editItemForm.controls['place'].dirty || Submitted)}" />
-                                                    <div class="text-validate"
-                                                      *ngIf="editItemForm.controls['place'].invalid &&(editItemForm.controls['place'].touched || editItemForm.controls['place'].dirty || Submitted ) ">
-                                                      <span class="border-error"
-                                                        *ngIf="editItemForm.controls['place'].invalid && (editItemForm.controls['place'].touched || editItemForm.controls['topic'].dirty || Submitted)">กรุณากรอกข้อมูล</span>
-                                                    </div>
-                                                  </div>
-                                            </div>
-                                         
-
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm">
-                                                <div class="form-group">
-                                                    <label for="location">สถานที่
-                                                      <span
-                                                        *ngIf="editItemForm.controls['location'].invalid &&
-                                                              (editItemForm.controls['location'].touched ||
-                                                               editItemForm.controls['location'].dirty || Submitted)"
-                                                        class="text-validate">*</span>
-                                                    </label>
-                                                    <input type="text" id="location" formControlName="location" class="form-control"
-                                                      placeholder="--กรุณากรอกข้อมูล--"
-                                                      [ngClass]="{'box-validate': editItemForm.controls['location'].invalid && 
-                                                                                  (editItemForm.controls['location'].touched || 
-                                                                                  editItemForm.controls['location'].dirty || Submitted)}"
-                                                       >
-                                                    <span class="border-errorLocation"
-                                                      *ngIf="editItemForm.controls['location'].invalid && 
-                                                      (editItemForm.controls['location'].touched || 
-                                                        editItemForm.controls['location'].dirty || Submitted)">กรุณากรอกข้อมูล</span>
-                                                  </div>
-                                            </div>
-                                       
-                                        </div>
-
-
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-success"><i
-                                                class="fa fa-check"></i>&nbsp;ยืนยัน</button>
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i
-                                                class="fa fa-times" (click)="closeModal()"></i>
-                                            &nbsp; ปิด
-                                        </button>
-
-                                    </div>
-                                </form>
+                                {{createDocData[0]?.createdTime}}
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
 </div>

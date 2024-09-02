@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { SharedService } from 'app/services/shared.service';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-manageuser',
@@ -62,6 +63,7 @@ export class ManageuserComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private ts :ProvinceService,
+    private toastr: ToastrService
   ) {
     this.regisForm = this.fb.group({
       firstname: ["", Validators.required],
@@ -109,8 +111,10 @@ export class ManageuserComponent implements OnInit {
       console.error('Error fetching user data:', error);
       this.loading = false;
     });
+    this.loadProvinces(); 
+    this.loadOrganizations();
   }
-
+ 
   mergeUserData(registerData: any[], userData: any[]): any[] {
     return registerData.map(regUser => {
       const user = userData.find(u => u.employeeId === regUser._id); // ตรวจสอบให้แน่ใจว่าใช้ key ที่ถูกต้อง
@@ -197,17 +201,29 @@ export class ManageuserComponent implements OnInit {
       this.exportCounter++;
     }
     onSubmit(data) {
-      console.log(1111)
+   
       
       this.Submitted = true; 
       if (this.regisForm.invalid) {
+
+        this.toastr.error('กรุณากรอกข้อมูลทุกช่อง', 'เกิดข้อผิดพลาด!', {
+          timeOut: 1500,
+          positionClass: 'toast-top-right'
+        });
         if (this.regisForm.controls.password.errors?.minlength || this.regisForm.controls.confirmpassword.errors?.minlength) {
-      
+          this.toastr.error('รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร', 'เกิดข้อผิดพลาด!', {
+            timeOut: 1500,
+            positionClass: 'toast-top-right'
+          });
         }
         return;
       }
     
       if (this.regisForm.value.password !== this.regisForm.value.confirmpassword) {
+        this.toastr.error('รหัสผ่านไม่ตรงกัน', 'เกิดข้อผิดพลาด!', {
+          timeOut: 1500,
+          positionClass: 'toast-top-right'
+        });
   
         return;
       }
@@ -227,10 +243,19 @@ export class ManageuserComponent implements OnInit {
     
       this.ls.register(formData).subscribe(
         (response) => {
+          this.toastr.success('ลงทะเบียนสำเร็จ', 'สำเร็จ!', {
+            timeOut: 1500,
+            positionClass: 'toast-top-right'
+          });
+          this.closeModal();
        
         },
         (error) => {
-          console.error("Error registering user", error);
+          console.error('Error submitting data:', error);
+          this.toastr.error('การเพิ่มข้อมูลไม่สำเร็จ', 'เกิดข้อผิดพลาด!', {
+            timeOut: 1500,
+            positionClass: 'toast-top-right'
+          });
         
         } 
       );
@@ -254,6 +279,18 @@ export class ManageuserComponent implements OnInit {
       this.provinces = data;
     });
   }
+
+  loadOrganizations() {
+    this.ls.getagency().subscribe(data => {
+      console.log(data); // ตรวจสอบข้อมูลที่ได้รับ
+          this.organization = data;
+          console.log(data); // ตรวจสอบข้อมูลที่ได้รับ
+        });
+        
+      }
+  
+    
+  
 
   onProvinceChange(provinceId: number) {
     this.regisForm.controls['amphure'].setValue('');

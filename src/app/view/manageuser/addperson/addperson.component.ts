@@ -239,8 +239,6 @@ loadOrganizations() {
       });
       
     }
-
-  
 }
 
 // loadProvinces() {

@@ -9,6 +9,18 @@ h4{
   font-weight: 900;
   font-family: 'Sarabun',sans-serif;
 }
+.BackPage{
+  display: flex;
+   justify-content: center; 
+   align-items: center;
+   background: transparent;
+    border: none; 
+    color: rgb(137, 135, 135);
+  padding-left: 20px;
+}
+.BackPage:hover{
+  color: black;
+}
 
 
 /* 4. Add a border to .card and padding to .card-header */
@@ -45,12 +57,17 @@ h4{
   padding: 20px;
 }
 
+.card-title p{
+  font-family: "Sarabun", sans-serif; 
+  font-weight: 900;
+  font-size: 18px;
+}
 .card-category {
   font-size: 18px;
 }
 
 .card-body {
-  padding: 20px 40px 20px 40px !important;
+  padding:0 !important;
 
 }
 
@@ -186,6 +203,8 @@ i{
   display: flex;
   justify-content: center;
   flex-direction: column;
+
+  padding-left: 50px;
 }
 
 

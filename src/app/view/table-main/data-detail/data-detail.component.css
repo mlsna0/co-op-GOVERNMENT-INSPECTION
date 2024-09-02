@@ -1,17 +1,7 @@
 .card{
     padding: 30px;
 }
-.card-header{
-  position: relative;
-  /* background-color:rgb(255,209,0,0.2);  rgb(241, 245 ,255) */
 
-  display: flex;
-  justify-content: space-between ;
-  align-items: center;
-  margin: 0 ;
-  border-radius: 10px;
-  padding: 0.75rem 1.25rem ;
-}
 
 .card-title p{
     font-family: "Sarabun", sans-serif; 
@@ -22,18 +12,6 @@
 .navigate-bar{
     display: flex;
     justify-content: flex-start;
-}
-.form-group input{
-  border-radius: 5px;
-}
-.modal-content{
-  
-  max-height: 1235.9px;
-  left: 50%;
-  transform: translateX(-50%);
-  justify-content: center;
-  font-family: "Sarabun", sans-serif;
-  
 }
 
 .border-error {

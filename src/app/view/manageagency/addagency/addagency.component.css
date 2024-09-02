@@ -1,162 +1,160 @@
 :host {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 1rem;  /* เพิ่ม padding เพื่อความสวยงาม */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;  /* เพิ่ม padding เพื่อความสวยงาม */
+}
+
+.register-card {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 600px;
+    text-align: center;
+    position: relative;
+   
+  
+  }
+
+  .register-card h2{
+    margin-bottom: 20px;
+    color: #000000;
+
+    text-align: center;
+    font-size: 26px;
+    font-family:  'Sarabun', sans-serif;
   }
   
-  .register-card {
-      background-color: #ffffff;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      width: 600px;
-      text-align: center;
-      position: relative;
-     
-    
-    }
+  .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+    font-family: 'Sarabun', sans-serif;
+  }
   
-    .register-card h2{
-      margin-bottom: 20px;
-      color: #000000;
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-family: 'Sarabun', sans-serif;
+  }  
   
-      text-align: center;
-      font-size: 26px;
-      font-family:  'Sarabun', sans-serif;
-    }
-    
-    .form-group {
-      margin-bottom: 15px;
-      text-align: left;
-      font-family: 'Sarabun', sans-serif;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-size: 14px;
-      font-family: 'Sarabun', sans-serif;
-    }  
-    
-    .form-group input {
-      width: calc(100% - 20px);
-      padding: 8px 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 14px;
-      font-family: 'Sarabun', sans-serif;
-    }
-    .form-select{
-      width: calc(100% - 20px);
-      padding: 8px 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 14px;
-      font-family: 'Sarabun', sans-serif;
-      color: #5b5a5a;
-    }
-    .form-select:disabled {
-      background-color: #ccc; /* Light gray color for disabled state */
-      cursor: not-allowed; /* Show a 'not-allowed' cursor when hovering over the disabled select */
-    }
+  .form-group input {
+    width: calc(100% - 20px);
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: 'Sarabun', sans-serif;
+  }
+  .form-select{
+    width: calc(100% - 20px);
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: 'Sarabun', sans-serif;
+    color: #5b5a5a;
+  }
+  .form-select:disabled {
+    background-color: #ccc; /* Light gray color for disabled state */
+    cursor: not-allowed; /* Show a 'not-allowed' cursor when hovering over the disabled select */
+  }
+
+  /*resume ประวิติ*/
+
+  .box:focus-within{
+    background-color: #f1f5ff;
+    border-radius: 5px;
+  }
+  .title{
+    display: flex;
+    justify-content: flex-start;
+  }
+  .text-upload{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .uploadPicture{
+    position: relative;
+    display: flex;
+    height: 90px;
+    border: 1px solid  #525252;
+    border-radius: 5px;
+    background: repeating-linear-gradient(-45deg,  #ccc 4px, transparent,  transparent 10px ) ;
+    opacity: 0.5;
+    border-style:dashed ;
+    margin: 10px;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+  }
+  .uploadPicture input[type='file']{
+    position: absolute;
+    transform: scale(3);
+    opacity: 0;
+  }
+  .profile-image-container {
+    position: relative;
+    border: 1px solid  #525252;
+    border-radius: 5px;
+    border-style:dashed ;
+    margin: 20px;
+  }
+  .profile-image {
+    width: 150px; /* Adjust size as needed */
+    height: 150px;
+    object-fit: cover; /* Ensure the image covers the area */
+    border: 2px solid #ddd; /* Optional border around the image */
+  }
+  .positionTrashCan{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: red;
+  }
+  /*invalidate style*/
+  .error-text{
+    font-size: 14px;
+    font-family: 'Sarabun', sans-serif;
+    color: red;
+  }
+  .form-group input.box-validate {
+    border: 1px solid red;
+    border-radius: 5px;
+  }
+
+  /*btn submit*/
+  .btn-create-account {
+    background-color: #24a0ed;;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+  }
   
-    /*resume ประวิติ*/
+  .btn-create-account:hover {
+    background-color:  #24a0ed;;
+  }
   
-    .box:focus-within{
-      background-color: #f1f5ff;
-      border-radius: 5px;
-    }
-    .title{
-      display: flex;
-      justify-content: flex-start;
-    }
-    .text-upload{
-      display: flex;
-      flex-direction: column;
-    }
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    /* margin-top: 8px; */
+  }
   
-    .uploadPicture{
-      position: relative;
-      display: flex;
-      height: 90px;
-      border: 1px solid  #525252;
-      border-radius: 5px;
-      background: repeating-linear-gradient(-45deg,  #ccc 4px, transparent,  transparent 10px ) ;
-      opacity: 0.5;
-      border-style:dashed ;
-      margin: 10px;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
+  .addagency-link {
+    font-size: 0.8em;
+    color:  #24a0ed;
+    text-decoration: none;
+  }
   
-    }
-    .uploadPicture input[type='file']{
-      position: absolute;
-      transform: scale(3);
-      opacity: 0;
-    }
-    .profile-image-container {
-      position: relative;
-      border: 1px solid  #525252;
-      border-radius: 5px;
-      border-style:dashed ;
-      margin: 20px;
-    }
-    .profile-image {
-      width: 150px; /* Adjust size as needed */
-      height: 150px;
-      object-fit: cover; /* Ensure the image covers the area */
-      border: 2px solid #ddd; /* Optional border around the image */
-    }
-    .positionTrashCan{
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      cursor: pointer;
-      color: red;
-    }
-    /*invalidate style*/
-    .error-text{
-      font-size: 14px;
-      font-family: 'Sarabun', sans-serif;
-      color: red;
-    }
-    .form-group input.box-validate {
-      border: 1px solid red;
-      border-radius: 5px;
-    }
-  
-    /*btn submit*/
-    .btn-create-account {
-      background-color: #24a0ed;;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      width: 100%;
-    }
-    
-    .btn-create-account:hover {
-      background-color:  #24a0ed;;
-    }
-    
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      /* margin-top: 8px; */
-    }
-    
-    .addagency-link {
-      font-size: 0.8em;
-      color:  #24a0ed;
-      text-decoration: none;
-    }
-    
-    .addagency-link:hover {
-      text-decoration: underline;
-    }
-  
-    
+  .addagency-link:hover {
+    text-decoration: underline;
+  }
