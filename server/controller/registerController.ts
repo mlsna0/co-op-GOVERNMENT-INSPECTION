@@ -10,6 +10,8 @@ import crypto from 'crypto';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs'; // นำเข้า fs module
+import Agency from '../models/agencyModel'; 
+
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -49,6 +51,12 @@ class RegisterModelCtrl extends BaseCtrl {
     
                 const salt = await bcrypt.genSalt(10);
                 const hashedPassword = await bcrypt.hash(password, salt);
+
+                const agency = await Agency.findOne({ agency_name: organization });
+                if (!agency) {
+                    return res.status(400).json({ msg: 'Agency not found' });
+                }
+        
     
                 // เพิ่มการอัปโหลดรูปภาพ
                 const profileImage = req.file ? req.file.filename : null;
@@ -59,14 +67,15 @@ class RegisterModelCtrl extends BaseCtrl {
                     lastname,
                     email,
                     phone,
-                    organization,
+                    organization: agency.agency_name, 
                     bearing,
                     address,
                     province,
                     amphure,
                     tambon,
                     postCode,
-                    profileImage
+                    profileImage,
+                    agencies: [agency._id]
                 });
     
                 await employee.save();

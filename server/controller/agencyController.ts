@@ -6,11 +6,12 @@ class AgencyModelCtrl extends BaseCtrl {
     createAgency = async (req, res) => {
         try {
             // console.log(req.body);
-            const { agency_name, email, phone, address, province, amphure, tambon, postCode } = req.body;
+            const { agency_name, division,email, phone, address, province, amphure, tambon, postCode } = req.body;
     
             const agency = new this.model({
                 agency_name,
                 email,
+                division,
                 phone,
                 address,
                 province,

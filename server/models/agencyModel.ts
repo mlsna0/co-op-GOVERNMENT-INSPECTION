@@ -3,6 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 
 const agencySchema = new mongoose.Schema({
   agency_name: String,
+  division: String,
   email: String,
   phone: String,
   address: String,
