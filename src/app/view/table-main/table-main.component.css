@@ -494,7 +494,14 @@
       position: relative;
     }
   .form-group input{
-      border-radius: 5px;
+    display: block;
+    width: calc(100% - 0px);
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: 'Sarabun', sans-serif;
+      
     }
   .border-error {
       position: relative;
@@ -510,7 +517,7 @@
      z-index: 1;
     
     }
-  .box-validate{
+    .form-group input.box-validate{
       border: 1px solid red;
       border-radius: 5px;
     }

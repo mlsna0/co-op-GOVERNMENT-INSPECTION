@@ -22,7 +22,7 @@ export const ROUTES: RouteInfo[] = [
     
         // path: ' ', title: 'รายงาน', icon: 'assignment', class: '',
 
-    { path: '/manageagency', title: 'การจัดการองค์กร', icon: 'apartment', class: '', roles: ['superadmin'] },
+    { path: '/manageagency', title: 'การจัดการหน่วยงาน', icon: 'apartment', class: '', roles: ['superadmin'] },
       {  path: ' ', title: 'รายงาน', icon: 'assignment', class: '',
         children: [
             { path: '/reportuser', title: 'รายงานการเข้าใช้งาน', icon: 'camera_front', class: '', roles: ['superadmin'] },

@@ -104,6 +104,31 @@ th, td {
   background-color: #ccc; /* Light gray color for disabled state */
   cursor: not-allowed; /* Show a 'not-allowed' cursor when hovering over the disabled select */
 }
+.box:focus-within{
+  background-color: #f1f5ff;
+  border-radius: 5px;
+}
+:host ::ng-deep .form-control{
+  background-image: linear-gradient(to top, #000000 2px, rgba(156, 39, 176, 0) 2px), linear-gradient(to top, #d2d2d2 1px, rgba(210, 210, 210, 0) 1px);
+}
+/*invalidate style*/
+.error-text{
+      font-size: 14px;
+      font-family: 'Sarabun', sans-serif;
+      color: red;
+}
+
+.form-group input.box-validate {
+      border: 1px solid red;
+      border-radius: 5px;
+}
+    
+
+
+
+
+
+
 
 :host ::ng-deep .btn-add{
   color: rgb(255, 255, 255);

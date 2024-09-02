@@ -89,6 +89,7 @@ export class ManageagencyComponent implements OnInit {
       console.error('Error fetching user data:', error);
       this.loading = false;
     });
+    this.loadProvinces() 
   }
 
       getUserReportProfile(userId: any) {
@@ -96,12 +97,21 @@ export class ManageagencyComponent implements OnInit {
     }
     onSubmit(data) {
       console.log('data:',data)
-      this.Submitted = false; 
+      this.Submitted = true; 
      
       // const formData = new FormData();
       // Object.keys(this.agenForm.controls).forEach(key => {
       //   formData.append(key, this.agenForm.get(key)?.value);
       // });
+      if (this.agenForm.invalid) {
+
+        this.toastr.error('กรุณากรอกข้อมูลทุกช่อง', 'เกิดข้อผิดพลาด!', {
+          timeOut: 1500,
+          positionClass: 'toast-top-right'
+        });
+    
+        return;
+      }
      
   
       this.ls.agency(data).subscribe(
