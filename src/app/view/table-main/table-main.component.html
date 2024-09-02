@@ -41,72 +41,73 @@
           <!-- </div> card-Edit -->
 
           <div class="card-body">
-       
-              <table width="100%" datatable [dtOptions]="dtOptions" *ngIf="!loading"
-                class="table  table-border table-hover table-bordered nowrap" style="color: black;">
-                <thead class="text-primary" style="color: black; font-size: 16px;">
-                  <tr>
-                    <th style="width: 2%; white-space: nowrap; text-align: center; color: black;  font-size: 16px;">
-                      ครั้งที่</th>
-                    <th style="color: black;  font-size: 16px;">หัวข้อการตรวจสอบ</th>
-                    <th style="width: 9%; color: black; font-size: 16px;">วันที่เริ่มตรวจสอบ</th>
-                    <th style="width: 9%; color: black; font-size: 16px;">วันที่เสร็จสิ้น</th>
-                    <!-- <th style="width: 5%; color: black;  font-size: 16px;">ผู้สร้างเอกสาร</th> -->
-                    
-                    <th style="width: 5%; color: black;  font-size: 16px;">สถานที่</th>        
-                    <th style="width: 5%; color: black;  font-size: 16px; text-align: center;">สถานะ</th>
-                    <th class="text-center" style="color: black;  font-size: 16px;"><i class="fa fa-gear"></i></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of items">
-                    <td style="text-align: center;">
-                      {{item?.record_id}}
-                    </td>
-                    <td style="white-space: nowrap;"> 
-                      {{item?.record_topic}}
-                    </td>
-                    <td style="vertical-align: middle; white-space: nowrap; text-align: center;">
-                      {{item?.record_star_date | thaidate: "medium"}}
-                    </td>
-                    <td style="vertical-align: middle; white-space: nowrap; text-align: center;">
-                      {{item?.record_end_date | thaidate: "medium"}}
-                    </td>
-                    <td class="text-center" style="white-space: nowrap;">
-                      <button class="searchLocation" (click)="searchLocation(item?.record_location)">ดูพิกัด</button>
-                    </td>
-                    <td style="vertical-align: middle; white-space: nowrap; text-align: center; justify-content: center;">
-                      <i *ngIf="item.record_filename" class="fa-regular fa-circle-check checkIcon"> &nbsp;
-                        <div style="font-family: 'Sarabun',sans-serif;">เซ็นสำเร็จ</div>
-                      </i>
-                      <i *ngIf="!item.record_filename" class="fa-regular fa-circle-xmark cancleIcon"> &nbsp;
-                        <div style="font-family: 'Sarabun',sans-serif;">ยังไม่ได้เซ็น</div>
-                      </i>
-                    </td>
-                    <td class="text-center" style="width:1% ;white-space: nowrap;">
-                      <button (click)="openDataDetail(item?._id)" style="border: none; background: none; color: black;">
-                        <i data-toggle="tooltip" title="ดูรายละเอียดเอกสาร" data-placement="top"
-                          class="fa fa-pencil"></i>
-                      </button>
-                      <button *ngIf="!item.record_filename" (click)="onRecord(item?._id)" style="border: none; background: none; color: black;">
-                        <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top"
-                          class="fa fa-pencil-square-o Record"></i>
-                      </button>
-                      <button *ngIf="!item.record_filename" (click)="openDetailModal(item?._id)" style="border: none; background: none; color: black;">
-                        <i data-toggle="tooltip" title="เพิ่มเนื้อหา" data-placement="top"
-                          class="fa fa-file-text-o ModalIcon"></i>
-                      </button>
-                      <button *ngIf="item.record_filename" style="border: none; background: none; color: black;">
-                        <i class="fa fa-file-pdf-o" (click)="showPDF(item.record_filename)"></i>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-
-              </table>
-          
+            <table width="100%" datatable [dtOptions]="dtOptions" *ngIf="!loading"
+              class="table table-border table-hover table-bordered nowrap" style="color: black;">
+              <thead class="text-primary" style="color: black; font-size: 16px;">
+                <tr>
+                  <th style="width: 2%; white-space: nowrap; text-align: center; color: black; font-size: 16px;">
+                    ครั้งที่
+                  </th>
+                  <th style="color: black; font-size: 16px;">หัวข้อการตรวจสอบ</th>
+                  <th style="width: 9%; color: black; font-size: 16px;">วันที่เริ่มตรวจสอบ</th>
+                  <th style="width: 9%; color: black; font-size: 16px;">วันที่เสร็จสิ้น</th>
+                  <th style="width: 5%; color: black; font-size: 16px;">สถานที่</th>
+                  <th style="width: 5%; color: black; font-size: 16px; text-align: center;">สถานะ</th>
+                  <th class="text-center" style="color: black; font-size: 16px;"><i class="fa fa-gear"></i></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="items.length === 0">
+                  <!-- เพิ่ม colspan เท่ากับจำนวนคอลัมน์ใน thead -->
+                  <td colspan="7" style="text-align: center; color: black;">
+                    ไม่มีข้อมูล
+                  </td>
+                </tr>
+                <tr *ngFor="let item of items">
+                  <td style="text-align: center;">
+                    {{item?.record_id}}
+                  </td>
+                  <td style="white-space: nowrap;">
+                    {{item?.record_topic}}
+                  </td>
+                  <td style="vertical-align: middle; white-space: nowrap; text-align: center;">
+                    {{item?.record_star_date | thaidate: "medium"}}
+                  </td>
+                  <td style="vertical-align: middle; white-space: nowrap; text-align: center;">
+                    {{item?.record_end_date | thaidate: "medium"}}
+                  </td>
+                  <td class="text-center" style="white-space: nowrap;">
+                    <button class="searchLocation" (click)="searchLocation(item?.record_location)">ดูพิกัด</button>
+                  </td>
+                  <td style="vertical-align: middle; white-space: nowrap; text-align: center; justify-content: center;">
+                    <i *ngIf="item.record_filename" class="fa-regular fa-circle-check checkIcon"> &nbsp;
+                      <div style="font-family: 'Sarabun',sans-serif;">เซ็นสำเร็จ</div>
+                    </i>
+                    <i *ngIf="!item.record_filename" class="fa-regular fa-circle-xmark cancleIcon"> &nbsp;
+                      <div style="font-family: 'Sarabun',sans-serif;">ยังไม่ได้เซ็น</div>
+                    </i>
+                  </td>
+                  <td class="text-center" style="width:1% ;white-space: nowrap;">
+                    <button (click)="openDataDetail(item?._id)" style="border: none; background: none; color: black;">
+                      <i data-toggle="tooltip" title="ดูรายละเอียดเอกสาร" data-placement="top"
+                        class="fa fa-pencil"></i>
+                    </button>
+                    <button *ngIf="!item.record_filename" (click)="onRecord(item?._id)" style="border: none; background: none; color: black;">
+                      <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top"
+                        class="fa fa-pencil-square-o Record"></i>
+                    </button>
+                    <button *ngIf="!item.record_filename" (click)="openDetailModal(item?._id)" style="border: none; background: none; color: black;">
+                      <i data-toggle="tooltip" title="เพิ่มเนื้อหา" data-placement="top"
+                        class="fa fa-file-text-o ModalIcon"></i>
+                    </button>
+                    <button *ngIf="item.record_filename" style="border: none; background: none; color: black;">
+                      <i class="fa fa-file-pdf-o" (click)="showPDF(item.record_filename)"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-
           <!-- การเพิ่มข้อมูล-->
 
           <!--land insert-->

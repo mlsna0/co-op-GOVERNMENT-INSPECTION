@@ -17,9 +17,9 @@
         </div>
         <!-- <button (click)="openaddperson()" class="btn btn-add">
           <i class="fa fa-plus"></i> &nbsp;เพิ่มผู้ใช้งาน</button> -->
-          <button (click)="openaddperson()" class="btn btn-add">
-       เพิ่มผู้ใช้งาน</button>
-      </div>
+          <button (click)="openAddPersonModal()" class="btn btn-add">
+            เพิ่มผู้ใช้งาน</button>
+           </div>     
       <div class="card-body">
         <table width="100%" datatable [dtOptions]="dtOptions" class="table table-striped table-bordered"
           *ngIf="!loading">

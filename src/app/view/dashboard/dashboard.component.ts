@@ -532,7 +532,7 @@ import { log } from "console";
         data: {
           labels: ['เอกสารลงนาม', 'เอกสารยังไม่ลงนาม'],
           datasets: [{
-            data: [totalDocuments, totalSignedDocuments ],
+            data: [totalSignedDocuments, totalDocuments-totalSignedDocuments ],
             backgroundColor: ['rgba(255, 209, 0, 0.7)', 'rgba(195, 195, 198, 0.7)'],
             borderColor: ['rgb(255, 209, 0)', 'rgb(195, 195, 198)'],
             borderWidth: 1,

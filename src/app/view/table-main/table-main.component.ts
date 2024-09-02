@@ -191,6 +191,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
  
   ngOnInit(){
     this.loading = true;
+    this.items = [];
     this.dtOptions = {
       order: [0],
       pagingType: 'full_numbers',
