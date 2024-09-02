@@ -111,9 +111,9 @@
                               <div *ngIf="regisForm.get('password')?.invalid && (regisForm.get('password')?.touched || regisForm.get('password')?.dirty )">
                                   <small class="error-text">รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร</small>
                               </div>
-                              <div *ngIf="regisForm.get('password')?.invalid && (regisForm.get('password')?.touched || regisForm.get('password')?.dirty || Submitted)">
+                              <!-- <div *ngIf="regisForm.get('password')?.invalid && (regisForm.get('password')?.touched || regisForm.get('password')?.dirty || Submitted)">
                                 <small class="error-text">กรุณากรอกข้อมูล**</small>
-                            </div>
+                            </div> -->
                           </div>
                       </div>
               
@@ -125,9 +125,9 @@
                               <div *ngIf="regisForm.get('confirmpassword')?.invalid && (regisForm.get('confirmpassword')?.touched || regisForm.get('confirmpassword')?.dirty)">
                                   <small class="error-text">รหัสผ่านไม่ตรงกัน</small>
                               </div>
-                              <div *ngIf="regisForm.get('confirmpassword')?.invalid && (regisForm.get('confirmpassword')?.touched || regisForm.get('confirmpassword')?.dirty || Submitted)">
+                              <!-- <div *ngIf="regisForm.get('confirmpassword')?.invalid && (regisForm.get('confirmpassword')?.touched || regisForm.get('confirmpassword')?.dirty || Submitted)">
                                 <small class="error-text">กรุณากรอกข้อมูล**</small>
-                            </div>
+                            </div> -->
                           </div>
                       </div>
                   </div>

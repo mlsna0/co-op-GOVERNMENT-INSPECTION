@@ -143,7 +143,7 @@ upload(req, res, async (err) => {
       // console.error('Error updating record in database:', err);
       res.status(500).send('Error updating record in database');
     }
-  });
+  }); 
 });
 }
 getPDF = async (req, res) => {

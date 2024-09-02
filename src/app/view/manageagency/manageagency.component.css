@@ -229,3 +229,12 @@ td select option {
   font-size: 14px;
   color: black;
 }
+
+
+
+.modal-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Sarabun", sans-serif;
+}
