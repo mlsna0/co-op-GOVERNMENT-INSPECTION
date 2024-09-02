@@ -8,22 +8,16 @@
   <div class="container-fluid">
     <div class="card">
       <div class="card-header "><!--card-header-danger-->
-<<<<<<< HEAD
         <div class="card-title">
           <p> จัดการผู้ใช้งาน</p>
 
-=======
-        <div class="card-title">  
-          <a href=""> จัดการข้อมูลผู้ใช้งาน</a>
-        
->>>>>>> c5528410e907bd902d667430e90456c1893a6679
           <!-- <div class="sub-title">
             แสดงรายชื่อผู้ใช้งาน
           </div> -->
         </div>
         <!-- <button (click)="openaddperson()" class="btn btn-add">
           <i class="fa fa-plus"></i> &nbsp;เพิ่มผู้ใช้งาน</button> -->
-          <button (click)="openaddperson()" class="btn btn-add">
+          <button (click)="openAddPersonModal()" class="btn btn-add">
        เพิ่มผู้ใช้งาน</button>
       </div>
       <div class="card-body">
@@ -117,9 +111,9 @@
                               <div *ngIf="regisForm.get('password')?.invalid && (regisForm.get('password')?.touched || regisForm.get('password')?.dirty )">
                                   <small class="error-text">รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร</small>
                               </div>
-                              <div *ngIf="regisForm.get('password')?.invalid && (regisForm.get('password')?.touched || regisForm.get('password')?.dirty || Submitted)">
+                              <!-- <div *ngIf="regisForm.get('password')?.invalid && (regisForm.get('password')?.touched || regisForm.get('password')?.dirty || Submitted)">
                                 <small class="error-text">กรุณากรอกข้อมูล**</small>
-                            </div>
+                            </div> -->
                           </div>
                       </div>
               
@@ -131,9 +125,9 @@
                               <div *ngIf="regisForm.get('confirmpassword')?.invalid && (regisForm.get('confirmpassword')?.touched || regisForm.get('confirmpassword')?.dirty)">
                                   <small class="error-text">รหัสผ่านไม่ตรงกัน</small>
                               </div>
-                              <div *ngIf="regisForm.get('confirmpassword')?.invalid && (regisForm.get('confirmpassword')?.touched || regisForm.get('confirmpassword')?.dirty || Submitted)">
+                              <!-- <div *ngIf="regisForm.get('confirmpassword')?.invalid && (regisForm.get('confirmpassword')?.touched || regisForm.get('confirmpassword')?.dirty || Submitted)">
                                 <small class="error-text">กรุณากรอกข้อมูล**</small>
-                            </div>
+                            </div> -->
                           </div>
                       </div>
                   </div>

@@ -527,11 +527,7 @@ blobToBase64(blob: Blob): Promise<string | ArrayBuffer | null> {
   }
 
   BackRoot() {
-<<<<<<< HEAD
     this.router.navigate(['/table-detail', this.documentId]);
-=======
-    this.router.navigate(['/table-detail',this.documentId]);
->>>>>>> c5528410e907bd902d667430e90456c1893a6679
   }
 
   // prevPage() {

@@ -360,4 +360,3 @@ export class ManageuserComponent implements OnInit {
     window.location.reload();
   }
 }
-

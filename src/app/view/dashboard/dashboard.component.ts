@@ -55,6 +55,10 @@ export class DashboardComponent implements OnInit {
   loading: boolean = true;
   routerSubscription: Subscription;
 
+  ///land add(pdf count)//
+  totalPdfPages: number = 0;
+
+
   //การส่งข้อมูลไปยัง component อื่น เช่น <app-thaicounty></app-thaicounty>
   filterCriteria = null;
   userCount2: number;
@@ -118,6 +122,19 @@ export class DashboardComponent implements OnInit {
         this.totalSignedDocumentsCount = count;
         console.log("Total documents count updated in Component:", this.totalSignedDocumentsCount);
       });
+
+
+       ///land add(pdf count)//
+      // this.documentService.getPdfFiles().subscribe(pdfFiles => {
+      //   const pdfUrls = pdfFiles.map(file => `assets/pdf/${file}`);
+      //   this.documentService.getTotalPagesCount(pdfUrls).then((totalPages: number) => {
+      //     this.totalPdfPages = totalPages;
+      //     console.log('จำนวนหน้าทั้งหมดของ PDF:', this.totalPdfPages);
+      //   }).catch(error => {
+      //     console.error('เกิดข้อผิดพลาดในการคำนวณจำนวนหน้า:', error);
+      //   });
+      // });
+      
   }
   ngOnChanges(changes: SimpleChanges) {
     if (changes['filterCriteria']) {
