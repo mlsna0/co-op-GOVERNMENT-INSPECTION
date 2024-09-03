@@ -57,12 +57,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngIf="items.length === 0">
-                  <!-- เพิ่ม colspan เท่ากับจำนวนคอลัมน์ใน thead -->
-                  <td colspan="7" style="text-align: center; color: black;">
-                    ไม่มีข้อมูล
-                  </td>
-                </tr>
+              
                 <tr *ngFor="let item of items">
                   <td style="text-align: center;">
                     {{item?.record_id}}
@@ -367,7 +362,7 @@
 
 
                     <div class="modal-footer" style="padding-bottom: 0;">
-                      <button type="  " class="btn btn-success" (click)="onInsertSummit(data)"><i class="fa fa-check"></i>&nbsp;ยืนยัน</button>
+                      <button type=" submit " class="btn btn-success"><i class="fa fa-check"></i>&nbsp;ยืนยัน</button>
                       <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"
                           (click)="closeModal()"></i>
                         &nbsp; ปิด

@@ -35,7 +35,9 @@ import { DocumentService } from 'app/services/document.service';
   templateUrl: './table-main.component.html',
   styleUrls: ['./table-main.component.css']
 })
-export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: any;
+export class TableMainComponent implements OnInit,AfterViewInit  { 
+  [x: string]: any;
+  pdfs:any[]=[];
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
   @ViewChild('textArea') textArea: ElementRef;
 
@@ -200,7 +202,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
         search: "ค้นหา",
         info: "แสดงหน้า _PAGE_ จากทั้งหมด _PAGES_ หน้า",
         infoEmpty: "แสดง 0 ของ 0 รายการ",
-        zeroRecords: "ไม่พบข้อมูล",
+        // zeroRecords: "ไม่พบข้อมูล",
         paginate: {
           first: "หน้าแรก",
           last: "หน้าสุดท้าย",
@@ -211,7 +213,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  { [x: string]: 
     };
     // console.log("DataTable: ", this.dtOptions);
     this.loadPDFs();
-  //  this.fetchAndSetRecords();
+   this.fetchAndSetRecords(); 
     // console.log("ngOnInit called");
 }
 
@@ -781,8 +783,8 @@ get personal(): FormArray {
 //insert
   onInsertModal():void{
   let nextId: number;
-  if (this.items.records && this.items.records.length >= 0){
-    nextId = this.items.records.length + 1;
+  if (this.items && this.items.length >= 0){
+    nextId = this.items.length + 1;
     // console.log("items record :",this.items.records)
   } else {
     nextId= 1;

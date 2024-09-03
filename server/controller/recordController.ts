@@ -293,14 +293,15 @@ getAllPDFs = async (req, res) => {
   try {
     // กำหนด path ของไดเรกทอรีที่เก็บไฟล์ PDF
     const directoryPath = path.join(__dirname, '../img');
-
+  
+    
     // อ่านไฟล์ทั้งหมดในไดเรกทอรี
     fs.readdir(directoryPath, (err, files) => {
       if (err) {
         // console.error('Error reading directory:', err);
         return res.status(500).send('Failed to read directory');
       }
-
+      // L:\projectNT\angualr-project-training\dist\server\img
       // กรองเฉพาะไฟล์ที่มีนามสกุล .pdf
       const pdfFiles = files.filter(file => path.extname(file) === '.pdf');
 

@@ -84,6 +84,7 @@
     "node-signpdf": "^3.0.0",
     "nodemailer": "^6.9.14",
     "pdf-lib": "^1.17.1",
+    "pdf-page-counter": "^1.0.3",
     "pdfjs-dist": "^2.10.377",
     "perfect-scrollbar": "1.5.5",
     "popper.js": "1.16.1",
