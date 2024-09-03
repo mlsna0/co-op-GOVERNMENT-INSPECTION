@@ -36,10 +36,11 @@ import { DocumentService } from 'app/services/document.service';
   styleUrls: ['./table-main.component.css']
 })
 export class TableMainComponent implements OnInit,AfterViewInit  { 
-  [x: string]: any;
-  pdfs:any[]=[];
   @ViewChildren('writteSignElement') writteSignElement!: ElementRef;
   @ViewChild('textArea') textArea: ElementRef;
+  [x: string]: any;
+  pdfs: any[] = []
+
 
   startDate: string;
   exportCounter: number = 1;  // ตัวนับเริ่มที่ 1
@@ -220,21 +221,22 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
 loadPDFs(): void {
   this.sv.getAllPDFs().subscribe(
     data => {
+      // ตรวจสอบโครงสร้างของ data ที่ได้รับ
+      console.log('Raw data:', data);
+      
+      // สมมติว่า data เป็น array ของชื่อไฟล์ PDF
       this.pdfs = data;
       this.pdfCount = this.pdfs.length; // Count the number of PDFs
       console.log('PDFs:', this.pdfs);
-      // console.log('Number of PDFs:', this.pdfCount); // Log the count
 
       // Update the donut chart after loading PDFs
       this.fetchAndSetRecords();
     },
     error => {
       this.errorMessage = error; // Handle the error
-      // console.error('Error loading PDFs:', error);
+      console.error('Error loading PDFs:', error);
     }
   );
-
-
 }
 fetchAndSetRecords() {
     // console.log("fetchAndSetRecords called");
@@ -268,6 +270,7 @@ fetchRecords(userOrganization: string) {
       
       // Combine documents from the filtered records only for the specific organization
       this.items = this.combineDocuments(filteredRecords[userOrganization] || [], userOrganization);
+  
       // console.log("Combined Documents:", this.items);
       // this.countUniqueUsers(this.items, userOrganization);
       this.loading = false;
@@ -310,19 +313,26 @@ combineDocuments(items, userOrganization: string): any[] {
     console.log("Current item:", item);
 
     // กรองเฉพาะ items ที่มี organization ตรงกับ userOrganization
-    if (item.employee.organization === userOrganization) {
+    if (item.employee && typeof item.employee.organization === 'string' && item.employee.organization.includes(userOrganization)) {
       userSet.add(item.user.employeeId);
-      console.log("Matched organization:", item.employee.organization);
-      console.log("Adding documents:", item.documents);
+      // console.log("Matched organization:", item.employee.organization);
+      // console.log("Adding documents:", item.documents);
+      const documentData = item.documents;
 
       // รวมเอกสารใน combinedDocuments
-      combinedDocuments = combinedDocuments.concat(item.documents || []);
+      combinedDocuments = combinedDocuments.concat(documentData || []);
 
       totalDocumentsCount += item.documents.length;
       // // ตรวจสอบว่าเอกสารใน item มี _id ตรงกับชื่อไฟล์ PDF หรือไม่
+   
       item.documents.forEach(document => {
-        if (this.pdfs.includes(`${document._id}.pdf`)) {
+        const pdfFileName = `${document._id}.pdf`;
+        // console.log("Checking file:", pdfFileName);
+  
+        if (this.pdfs.includes(`${pdfFileName}.pdf`)) {
           signedDocumentsCount++; // นับเอกสารที่ถูกเซ็น +1
+        } else {
+          console.log("File not found in PDFs list:", pdfFileName);
         }
       });
     } else {
@@ -376,16 +386,16 @@ handleError(error) {
 
 
   
-  // loadUserRecords(userId: string) {
-  //   this.sv.getRecordWithUserAndEmployee(userId).subscribe(
-  //     data => {
-  //       this.detailItems = data.records;
-  //     },
-  //     error => {
-  //       console.error('Error loading user records:', error);
-  //     }
-  //   );
-  // }
+  loadUserRecords(userId: string) {
+    this.sv.getRecordWithUserAndEmployee(userId).subscribe(
+      data => {
+        this.detailItems = data.records;
+      },
+      error => {
+        console.error('Error loading user records:', error);
+      }
+    );
+  }
 
   //Writter section
   ngAfterViewInit(): void {
@@ -787,7 +797,7 @@ get personal(): FormArray {
     nextId = this.items.length + 1;
     // console.log("items record :",this.items.records)
   } else {
-    nextId= 1;
+    nextId=0 ;
    
   }
   const currentDate = moment().format('YYYY-MM-DD');
