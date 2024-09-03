@@ -10,12 +10,12 @@
 
       <div class="row">
         <div class="col-md-6">
-          <div class="filter-container">
-            <div class="row">
-              <div class="col-md-3">
+        
+            <div class="row filter-container">
+              <div class="col-md-3 filter-item">
                 <h4>กรองข้อมูล</h4>
                 <div class="dropdown">
-                  <div class="filter-box" (click)="toggleDropdown('province',$event)">
+                  <div class="filter-box" style="font-size: 14px;" (click)="toggleDropdown('province',$event)">
                     เลือกจังหวัด
                     <span class="fa fa-chevron-down" [class.animate]="isProvinceDropdownOpen"
                       *ngIf="isProvinceDropdownOpen"></span>
@@ -49,28 +49,28 @@
                 </div>
               </div>
       
-              <div class="col-md-3">
+              <div class="col-md-3 filter-item">
                 <h4>เริ่มต้นวันที่</h4>
                 <div class="filter-box" (click)="toggleDropdown('date',$event)">
                   <input type="date" [(ngModel)]="startDate" (change)="onDateChange()" placeholder="เริ่มต้นวันที่">
                 </div>
               </div>
               
-              <div class="col-md-3">
+              <div class="col-md-3 filter-item">
                 <h4>สิ้นสุด</h4>
                 <div class="filter-box">
                   <input type="date" [(ngModel)]="endDate">
                 </div>
               </div>
       
-              <div class="col-md-3 align-self-end">
+              <div class="col-md-3 align-self-end filter-item" style="max-width: 18%;">
                 <button type="submit" class="btn btn-add ">
                   ดูข้อมูล
                 </button>
               </div>
             </div>
      
-           </div>
+    
         </div>
         <div class="col-md-6" >
             <div class="donutChartBG">
@@ -240,7 +240,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-12"  *ngIf="isSuperAdmin">
+          <div class="col-sm-12" > <!-- *ngIf="isSuperAdmin"-->
             <app-thaicounty [filterCriteria]="filterCriteria"></app-thaicounty>
           </div>
 

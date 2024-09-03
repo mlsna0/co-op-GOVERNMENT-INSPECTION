@@ -232,9 +232,4 @@ td select option {
 
 
 
-.modal-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: "Sarabun", sans-serif;
-}
+

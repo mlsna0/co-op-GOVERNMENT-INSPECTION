@@ -11,6 +11,7 @@ import { loginservice } from 'app/layouts/login.services.';
 import { DocumentService } from 'app/services/document.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { log } from "console";
+import { coerceStringArray } from "@angular/cdk/coercion";
 
 
 @Component({
@@ -686,9 +687,9 @@ export class DashboardComponent implements OnInit {
         // นับจำนวนเอกสารภายใน document
         document.documentCount = document.documents.length;
         // console.log(`Processing document for employee: ${document.employee.province}, documentCount: ${document.documentCount}`);
-
+        const provinceApi = document.employee?.province
         // ดึง provinceId และ provinceName จากเอกสาร
-        const provinceId = parseInt(document.employee.province, 10);
+        const provinceId = parseInt(provinceApi, 10);
         const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
         // console.log(`Province ID: ${provinceId}, Province Name: ${provinceName}`);
 

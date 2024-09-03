@@ -50,12 +50,17 @@ h4{
   display: flex;
   align-items: center;
   padding: 20px;
+  flex-wrap: nowrap;
   background-color:white !important;
-  width: 100%;
+  /* width: 585px; */
   height: 100%; /*150px*/
   border-radius: 10px;
   margin-left: 0;
   transform: 0.3s ease-in;
+  gap: 10px;
+}
+.filter-item{
+  margin-bottom: 15px;
 }
 /* dropDown */
 .dropdown {
@@ -65,7 +70,7 @@ h4{
 }
 .filter-box{
   display: flex;
-  width: 150px;
+  width: 130px;
   align-items: center;
   justify-content: space-between;
   padding: 10px;
@@ -176,6 +181,7 @@ label{
   color: #aaa; /* เปลี่ยนสีของ placeholder */
 }
 input[type="date"] {
+  font-size: 14px;
   margin-bottom: 0px;
   padding: 0px;
   border: 0px solid #ccc;

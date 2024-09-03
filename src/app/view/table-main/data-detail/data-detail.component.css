@@ -8,6 +8,17 @@
     font-weight: 900;
     font-size: 18px;
 }
+.card-header{
+  position: relative;
+  /* background-color:rgb(255,209,0,0.2);  rgb(241, 245 ,255) */
+
+  display: flex;
+  justify-content: space-between ;
+  align-items: center;
+  margin: 0 ;
+  border-radius: 10px;
+  padding: 0.75rem 1.25rem ;
+}
 
 .navigate-bar{
     display: flex;
