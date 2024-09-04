@@ -10,7 +10,7 @@ import BaseCtrl from './base';
 import * as path from 'path';
 import * as fs from 'fs';
 import jwt from 'jsonwebtoken';
-
+const mongoose = require('mongoose'); 
 
 interface MulterRequest extends Request {
   file: Express.Multer.File;
@@ -47,18 +47,15 @@ class recorCon extends BaseCtrl {
   };
   
   postItemToView = async (req, res) => {
-    // console.log(req.body);
-
     try {
       const userID = req.user.id; // ใช้ userID จาก req.user
       const now = new Date();
       const localDate = now.toLocaleDateString('th-TH', { timeZone: 'Asia/Bangkok' }); // วันที่ตามเขตเวลาท้องถิ่น
       const localTime = now.toLocaleTimeString('th-TH', { timeZone: 'Asia/Bangkok' }); // เวลาตามเขตเวลาท้องถิ่น
-
-
+  
       const obj = await new this.model({
         record_id: req.body.id,
-        record_star_date: req.body.startDate, // start..
+        record_star_date: req.body.startDate, 
         record_end_date: req.body.endDate,
         record_detail: req.body.detail,
         record_location: req.body.location,
@@ -67,24 +64,62 @@ class recorCon extends BaseCtrl {
         record_provine: req.body.provine,
         record_place: req.body.place,
         record_filename: req.body.filename,
-        userId: userID, // เก็บ userID ใน record
-        createdDate: localDate, // เก็บวันที่ตามเขตเวลาท้องถิ่น
-        createdTime: localTime // เก็บเวลาตามเขตเวลาท้องถิ่น
+        userId: userID, 
+        createdDate: localDate, 
+        createdTime: localTime, 
+        status: 0 // ตั้งค่า status เป็น 0 อัตโนมัติ
       }).save();
-
-      // console.log("obj _Id: ", obj._id);
+  
       if (req.body.personal) {
         let newField = req.body.personal.map(x => { return { view_rank: x.rank, view_first_name: x.firstname, view_last_name: x.lastname, documentId: obj._id }; });
-
+  
         let result = await this.modelView.insertMany(newField);
       }
-
+  
       res.status(200).json("ok");
     } catch (err) {
       return res.status(400).json({ error: err.message });
     }
   }
 
+  updateStatus = async (req, res) => {
+    try {
+      const { id } = req.body; // รับ id จาก req.body
+  
+      // ตรวจสอบว่า id ถูกส่งเข้ามาหรือไม่
+      if (!id) {
+        return res.status(400).json({ error: "กรุณาส่ง id ที่ต้องการอัปเดต" });
+      }
+  
+      // ตรวจสอบว่า id เป็น ObjectId ที่ถูกต้องหรือไม่
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ error: "id ไม่ถูกต้อง" });
+      }
+  
+      // ค้นหาข้อมูลโดยใช้ _id
+      const item = await this.model.findById(id);
+  
+      // ตรวจสอบว่าพบข้อมูลที่ต้องการหรือไม่
+      if (!item) {
+        return res.status(404).json({ error: "ไม่พบข้อมูลที่ต้องการอัปเดต" });
+      }
+  
+      // ตรวจสอบว่า status ปัจจุบันเป็น 0 หรือไม่
+      if (Number(item.status) !== 0) {
+        return res.status(400).json({ error: "status ปัจจุบันไม่ใช่ 0 จึงไม่สามารถเปลี่ยนเป็น 1 ได้" });
+      }
+  
+      // อัปเดต status เป็น 1
+      item.status = 1;
+      await item.save();
+  
+      // ส่งข้อความยืนยันการอัปเดตสำเร็จ
+      res.status(200).json({ message: "อัปเดต status สำเร็จ", updatedItem: item });
+    } catch (err) {
+      // จัดการกับข้อผิดพลาดและส่งข้อความตอบกลับ
+      return res.status(400).json({ error: err.message });
+    }
+  }
 
 updateRecordContent = async (req, res) => {
 // console.log("Updating record content: ", req.body);

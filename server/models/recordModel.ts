@@ -20,6 +20,7 @@ const recordSchema = new mongoose.Schema({
     record_place: String,
     createdDate: String, // เพิ่มฟิลด์สำหรับเก็บวันที่
     createdTime: String, // เพิ่มฟิลด์สำหรับเก็บเวลา
+    status: Number,
     // userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' }, 
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
