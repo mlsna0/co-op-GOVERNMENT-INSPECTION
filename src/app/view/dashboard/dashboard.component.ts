@@ -107,16 +107,16 @@ import { log } from "console";
       this.loadPDFs()
       this.documentService.userCount$.subscribe(count => {
         this.userCount2 = count;
-        console.log("User count updated in AnotherComponent:", this.userCount2);
+        // console.log("User count updated in AnotherComponent:", this.userCount2);
       });
       
         this.documentService.totalDocumentsCount$.subscribe(count => {
           this.totalDocumentsCount = count;
-          console.log("Total documents count updated in Component:", this.totalDocumentsCount);
+          // console.log("Total documents count updated in Component:", this.totalDocumentsCount);
         });
         this.documentService.signedDocumentsCount$.subscribe(count => {
           this.totalSignedDocumentsCount = count;
-          console.log("Total documents count updated in Component:", this.totalSignedDocumentsCount);
+          // console.log("Total documents count updated in Component:", this.totalSignedDocumentsCount);
         });
     }
     ngOnChanges(changes: SimpleChanges) {
@@ -322,7 +322,7 @@ import { log } from "console";
     }
     applyFilter() {
       const selectedProvincesArray = Array.from(this.selectedProvinces);
-      console.log('Selected Provinces: ', selectedProvincesArray);
+      // console.log('Selected Provinces: ', selectedProvincesArray);
       this.filterCriteria = { selectedProvinces: selectedProvincesArray };
       this.isFilterActive = true;
       this.currentPage = 1; 
@@ -642,7 +642,7 @@ import { log } from "console";
         data => {
           this.pdfs = data;
           this.pdfCount = this.pdfs.length; // Count the number of PDFs
-          console.log('PDFs:', this.pdfs);
+          // console.log('PDFs:', this.pdfs);
           // console.log('Number of PDFs:', this.pdfCount); // Log the count
     
           // Update the donut chart after loading PDFs
@@ -815,7 +815,7 @@ loadUser(): void {
           this.isAdmin = role === 'admin';
           this.isSuperAdmin = role === 'superadmin';
           // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามจังหวัด
-          console.log(this.currentUser);
+          // console.log(this.currentUser);
             // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามเดือนสำหรับ Admin
             this.processProvinceData(documents);
 
@@ -837,7 +837,7 @@ loadUser(): void {
           recordData => {
             if (recordData && recordData.length > 0) {
               loadDocuments(recordData);
-              console.log(recordData);
+              // console.log(recordData);
             } else {
               console.error('ไม่พบเอกสาร');
             }
