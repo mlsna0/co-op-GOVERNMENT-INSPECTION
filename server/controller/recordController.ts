@@ -360,7 +360,7 @@ getAllPDFs = async (req, res) => {
     // กำหนด path ของไดเรกทอรีที่เก็บไฟล์ PDF
     const directoryPath = path.join(__dirname, '../../server/img');
 
-    console.log(`Path: ${directoryPath}`);
+    // console.log(`Path: ${directoryPath}`);
     // อ่านไฟล์ทั้งหมดในไดเรกทอรี
     fs.readdir(directoryPath, (err, files) => {
       if (err) {

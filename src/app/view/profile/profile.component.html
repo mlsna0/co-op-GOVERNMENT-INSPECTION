@@ -83,16 +83,25 @@
                             </div>
 
                             <div class="card-info">
-                                <a >
-                                    ระดับผู้ใช้งาน : {{UserData?.role}}
-                                </a>
-                                <a>
-                                    ชื่อ-นามสกุล : {{ UserData?.employeeId?.firstname }} &nbsp;
-                                    {{UserData?.employeeId?.lastname}}
-                                </a>
-                                <a>
-                                    ตำแหน่ง : {{UserData?.employeeId?.bearing}}
-                                </a>
+                                <div class="row">
+                                    <label for="">  ระดับผู้ใช้งาน : </label>
+                                    <a href="" >   &nbsp;   {{UserData?.role}}</a>
+                             
+
+                                </div>
+                                <div class="row">
+                                    <label for=""> ชื่อ-นามสกุล :</label>
+                                    <a href=""> &nbsp;  {{ UserData?.employeeId?.firstname }} &nbsp;
+                                        {{UserData?.employeeId?.lastname}} </a>
+                                  
+                                </div>
+                                <div class="row">
+                                    <label for=""> ตำแหน่ง : </label>
+                                    <a href=""> &nbsp;     {{UserData?.employeeId?.bearing}}</a>
+                                        
+                                </div>
+                          
+                           
 
                             </div>
                         </div>

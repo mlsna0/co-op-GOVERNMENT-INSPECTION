@@ -38,67 +38,67 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                 เอกสารฉบับที่:
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-9">
                                 {{DataDetail?.record_id}}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                 หัวข้อเอกสาร :
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-9">
                                 {{DataDetail?.record_topic}}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                 รายละเอียด:
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-9">
                                 {{DataDetail?.record_detail}}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                 รายละเอียด สถานที่:
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-9">
                                 {{DataDetail?.record_place}}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                 พิกัดสถานที่:
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-9">
                                 {{DataDetail?.record_location}}
                             </div>
                         </div>
                       
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                วันที่เริ่มตรวจสอบ:
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-9">
                                 {{DataDetail?.record_star_date | thaidate: 'medium'}}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                 วันที่เสร็จสิ้นการตรวจสอบ:
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-9">
                                 {{DataDetail?.record_end_date  | thaidate: 'medium'}}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                 รายชื่อผู้ลงนาม:
                             </div>
-                            <div class="col-md-7" >
+                            <div class="col-md-9" >
                                 <div class="viewPersonalData" *ngFor="let person of viewPersonalData; let i = index">
                                     {{ person.view_rank }} &nbsp; 
                                     {{ person.view_first_name }} &nbsp;
@@ -109,7 +109,7 @@
                         </div>  
 
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 align-self-end ">
                         <div class="row">
                             <div class="col-md-6">
                                 ผู้สร้างหัวข้อเอกสาร:
