@@ -214,22 +214,8 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
     };
     // console.log("DataTable: ", this.dtOptions);
     this.loadPDFs();
-
-    console.log('PDFs:', this.pdfs); // ตรวจสอบค่า PDFs ที่ได้รับ
-   this.fetchAndSetRecords();
-    console.log("ngOnInit called");
-
-    // this.sv.getData().subscribe(res => {
-    //   console.log("res getRecord:", res);
-    //   if (res) {
-    //     this.items = res;
-    //     console.log("Items assigned successfully:", this.items);
-    //   }
-    //   this.loading = false;
-    // }, (err) => {
-    //   console.error("Error occurred:", err);
-    //   this.loading = false;
-    // });
+   this.fetchAndSetRecords(); 
+    // console.log("ngOnInit called");
 }
 
 loadPDFs(): void {
@@ -807,7 +793,6 @@ get personal(): FormArray {
 //insert
   onInsertModal():void{
   let nextId: number;
-  // console.log("items record :",this.items)
   if (this.items && this.items.length >= 0){
     nextId = this.items.length + 1;
     // console.log("items record :",this.items.records)
