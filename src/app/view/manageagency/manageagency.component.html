@@ -75,8 +75,8 @@
                   <div class="row box">
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label for="agency_name" style="font-size: 16px;">ชื่อองค์กร/หน่วยงาน</label>
-                        <input type="text" id="agency_name" formControlName="agency_name" required placeholder="กรอกชื่อองค์กร" class="form-control"
+                        <label for="agency_name" style="font-size: 16px;">ชื่อหน่วยงาน</label>
+                        <input type="text" id="agency_name" formControlName="agency_name" required placeholder="กรอกชื่อหน่วยงาน" class="form-control"
                         [ngClass]="{'box-validate':  agenForm.controls['agency_name'].invalid && (agenForm.controls['agency_name'].touched || agenForm.controls['agency_name'].dirty || Submitted)}">
                         <div
                           *ngIf="agenForm.get('agency_name')?.invalid && (agenForm.get('agency_name')?.touched || agenForm.get('agency_name')?.dirty  || Submitted)">
@@ -116,7 +116,7 @@
                 <div class="row">
                   <div class="col-sm-12">
                     <div class="form-group">
-                      <label for="address" style="font-size: 16px;">ที่ตั้งองค์กร</label>
+                      <label for="address" style="font-size: 16px;">ที่ตั้งหน่วยงาน</label>
                       <input type="text" id="address" formControlName="address" required placeholder="กรอกที่อยู่" class="form-control"
                       [ngClass]="{'box-validate':  agenForm.controls['address'].invalid && (agenForm.controls['address'].touched || agenForm.controls['address'].dirty || Submitted)}">
                       <div

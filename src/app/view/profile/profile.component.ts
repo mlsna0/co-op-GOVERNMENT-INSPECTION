@@ -55,6 +55,7 @@ export class ProfileComponent implements OnInit {
   profileImage: string| ArrayBuffer | null = null;
 
   showModal = false;
+  shouldShowToast = false;
   // imageChangedEvent: any = '';
   // croppedImage: any = '';
   imageChangedEvent: any = null; // ใช้ any เพื่อความยืดหยุ่น
@@ -332,9 +333,31 @@ loadTambons(amphureId: any) {
   }
 
   closeModal(): void {
-    // document.body.classList.remove('no-scroll');
-    this.showModal = false;
-    this.EditStatus= false;
+    const modalContent = document.querySelector('.EditModal-content');
+  
+    if (modalContent) {
+      modalContent.classList.add('close');
+  
+      modalContent.addEventListener('animationend', () => {
+        this.showModal = false;
+        this.EditStatus = false;
+        modalContent.classList.remove('close');
+  
+        // ตรวจสอบว่าควรแสดง toast หรือไม่
+        if (this.shouldShowToast) {
+          this.toastr.success('อัปเดตโปรไฟล์สำเร็จ', 'สำเร็จ', {
+            timeOut: 2500,
+            positionClass: 'toast-top-right'
+          });
+  
+          setTimeout(() => {
+            window.location.reload();
+          }, 2500);
+        }
+  
+        this.shouldShowToast = false; // รีเซ็ตค่า
+      }, { once: true });
+    }
   }
   editProfile() {
     // document.body.classList.add('no-scroll');
@@ -376,24 +399,13 @@ loadTambons(amphureId: any) {
       this.sv.updateUserProfileById(updatedData,userId).subscribe(response => {
         console.log('Response:', response);
   
-        this.UserData = response;
-        this.toastr.success('อัปเดตโปรไฟล์สำเร็จ', 'สำเร็จ', {
-          timeOut: 2500,
-          positionClass: 'toast-top-right'
-        });
+
+        this.shouldShowToast = true; 
         this.closeModal();
-        window.location.reload();
-        // if (response && response.user) {
-        //   if (response?.user?.employeeId && response?.user?.employeeId?.firstname) {
-        //     this.UserData = response;
-        //     this.closeModal();
-        //     window.location.reload();
-        //   } else {
-        //     console.error('Firstname not found in user data');
-        //   }
-        // } else {
-        //   console.error('Unexpected response format', response);
-        // }
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 2500);
+
 
       },
       error => {

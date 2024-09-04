@@ -210,6 +210,7 @@ label{
   font-family: 'Sarabun',sans-serif;
 }
 
+
 .footer-content{
   display: flex;
   justify-content: center;
@@ -337,6 +338,8 @@ justify-content: center;
   justify-content: center;
   align-items: center;
   z-index: 1095;
+  transform: translateY(0);
+  animation: fadeIn 0.2s ease forwards;
 }
 
 .EditModal-content {
@@ -347,8 +350,14 @@ justify-content: center;
   width: 610px;
   /* height: 700px; */
   transform: translateY(-10%); /* เริ่มจากนอกจอด้านบน */
-  animation: slideDown 0.5s ease forwards;
+  animation: slideDown 0.3s ease forwards;
 
+}
+.EditModal-modal-overlay.close{
+  animation: slideUp 0.2s ease forwards;
+}
+.EditModal-content.close {
+  animation: slideUp 0.2s ease forwards;
 }
 .no-scroll {
   overflow: hidden;
@@ -365,6 +374,24 @@ justify-content: center;
   }
 }
 
+@keyframes slideUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-50%);
+    opacity: 0;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
 
 

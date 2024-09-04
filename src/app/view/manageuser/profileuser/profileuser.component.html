@@ -29,7 +29,7 @@
                     <div class="col-md-3">
                         <div class="card-user">
                             <div class="card-avatar">
-                                <a href="javascript:void(0)">
+                                <a href="javascript:void(0)" style="height: 220px;">
                                 <img class="img" [src]="profileImgUrl" />
                                 <!-- <div class="upload">
                                     <i class="fa fa-camera"></i>
@@ -40,17 +40,27 @@
                             </div>
 
                             <div class="card-info">
-                                <a>
-                                    ระดับผู้ใช้งาน : {{UserData?.role}}
-                                </a>
-                                <a>
-                                    ชื่อ : {{ UserData?.employeeId?.firstname }}  นามสกุล : {{UserData?.employeeId?.lastname}}
-                                </a>
-                                <a>
-                                    ตำแหน่ง : {{UserData?.employeeId?.bearing}}
-                                </a>
-                    
-                             </div>
+                                <div class="row">
+                                    <label for="">  ระดับผู้ใช้งาน : </label>
+                                    <a href="" >   &nbsp;   {{UserData?.role}}</a>
+                             
+
+                                </div>
+                                <div class="row">
+                                    <label for=""> ชื่อ-นามสกุล :</label>
+                                    <a href=""> &nbsp;  {{ UserData?.employeeId?.firstname }} &nbsp;
+                                        {{UserData?.employeeId?.lastname}} </a>
+                                  
+                                </div>
+                                <div class="row">
+                                    <label for=""> ตำแหน่ง : </label>
+                                    <a href=""> &nbsp;     {{UserData?.employeeId?.bearing}}</a>
+                                        
+                                </div>
+                          
+                           
+
+                            </div>
                         </div>
                    
                     </div>
@@ -86,7 +96,7 @@
                     
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <label for="">บริษัท/องค์กร</label>
+                                                <label for="">ชื่อหน่วยงาน</label>
                                             </div>
                                             <div class="col-md-9"  *ngIf="EditStatus">
                                                 <input type="text" formControlName="organization" class="form-control">

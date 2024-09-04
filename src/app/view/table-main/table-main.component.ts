@@ -828,6 +828,8 @@ get personal(): FormArray {
       keyboard: false     // Prevent closing with keyboard (Esc key)
     });
     $('#insertModel').modal('show');
+
+ 
     
   }
 
@@ -891,7 +893,7 @@ get personal(): FormArray {
     this.sv.postDataTest(this.addItemForm.value, token).subscribe(res => {
       // console.log("res submitted successfully", res);
       this.toastr.success('เพิ่มข้อมูลสำเร็จ', 'สำเร็จ', {
-        timeOut: 2500,  
+        timeOut: 1500,  
         positionClass: 'toast-top-right'
       })
 
@@ -913,8 +915,8 @@ get personal(): FormArray {
       //   }
       // });
       $('#insertModel').modal('hide');
-      this.addItemForm.reset();
-      this.personInputs.clear(); // Clear FormArray
+      // this.addItemForm.reset();
+      // this.personInputs.clear(); // Clear FormArray
       // this.addPersonInput();
      
     },

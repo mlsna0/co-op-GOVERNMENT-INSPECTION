@@ -31,7 +31,7 @@
               <th>ชื่อ</th>
               <th>นามสกุล</th>
               <th>อีเมล</th>
-              <th>ชื่อองค์กร</th>
+              <th>ชื่อหน่วยงาน</th>
               <th style="width: 12%;">ระดับผู้ใช้งาน</th>
               <th style="width: 13%;">สถานะผู้ใช้งาน</th>
               <th style="color: black;  font-size: 16px; text-align: center; width: 10%;"><i class="fa fa-gear"></i></th>
@@ -159,9 +159,9 @@
                   <div class="row box">
                       <div class="col-sm-6">
                           <div class="form-group">
-                              <label for="organization">องค์กร / หน่วยงาน</label>
+                              <label for="organization">หน่วยงาน</label>
                               <select class="form-select" id="organization" formControlName="organization">
-                                  <option value="" disabled selected>เลือกองค์กร / หน่วยงาน</option>
+                                  <option value="" disabled selected>เลือกหน่วยงาน</option>
                                   <option *ngFor="let org of organization" [value]="org.agency_name">{{ org.agency_name }}</option>
                               </select>
                               <div *ngIf="regisForm.get('organization')?.invalid && (regisForm.get('organization')?.touched || regisForm.get('organization')?.dirty || Submitted)">

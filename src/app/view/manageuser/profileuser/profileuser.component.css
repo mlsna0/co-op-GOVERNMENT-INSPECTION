@@ -4,6 +4,10 @@
   /* height: 100%; */
   font-family: 'Sarabun',sans-serif;
 }
+label{
+  font-size: 16px;
+  font-weight: 650;
+}
 
 h4{
   font-weight: 900;
@@ -47,7 +51,21 @@ h4{
   background:rgb(255, 209, 0);
   font-family: 'Sarabun',sans-serif;
 }
+:host ::ng-deep .user-content .col-md-3{
+  display: flex;
+  align-items: center;
+  padding-left: 60px;
 
+}
+:host ::ng-deep .user-content .col-md-9{
+  font-size: 16px;
+}
+:host ::ng-deep .EditModal-content .col-md-3{
+  display: flex;
+  align-items: center;
+  padding: 15px;
+
+}
 /* 6. Increase the font size of .card-title and .card-category */
 .card-title {
   font-size: 18px;
@@ -206,7 +224,9 @@ i{
 
   padding-left: 50px;
 }
-
+.card-info a{
+  font-size: 16px;
+ }
 
 .card-avatar{
   position: relative;

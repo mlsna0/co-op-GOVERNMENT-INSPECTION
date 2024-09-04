@@ -316,18 +316,7 @@ a:hover{
   color: #89229b !important;
 }
 
-.BackPage{
-  display: flex;
-   justify-content: center; 
-   align-items: center;
-   background: transparent;
-    border: none; 
-    color: rgb(137, 135, 135);
-  padding-left: 20px;
-}
-.BackPage:hover{
-  color: black;
-}
+
 
 .submit-content{
 display: flex;
