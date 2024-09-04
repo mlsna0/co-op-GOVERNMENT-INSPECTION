@@ -194,7 +194,7 @@ export class MapComponent implements AfterViewInit {
           const userRole = user.role;
   
           if (userRole === 'superadmin' || userRole === 'admin') {
-            const reportRequest = userRole === 'superadmin' ? this.sv.getallRecordWithUserAndEmployee() : this.sv.getUserReportBuild(userId);
+            const reportRequest = userRole === 'superadmin' ? this.sv.getRecord() : this.sv.getUserReportBuild(userId);
  
   
             reportRequest.subscribe(
