@@ -84,10 +84,7 @@ getPdfPageCount(pdfUrl: string): Promise<number> {
   return new Promise<number>((resolve, reject) => {
     pdfjsLib.getDocument(pdfUrl).promise.then((pdfDoc: any) => {
       resolve(pdfDoc.numPages);
-    }).catch((error: any) => {
-      console.error('Error loading PDF:', error);
-      reject(error);
-    });
+    })
   });
 }
 
