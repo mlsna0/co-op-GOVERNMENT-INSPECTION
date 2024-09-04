@@ -48,8 +48,8 @@ export class SignatureComponent implements OnInit {
   oca
   
   toastr: any;
-  // pdfView: string | ArrayBuffer;
-  pdfView: any
+  pdfView: string | ArrayBuffer;
+  // pdfView: any
   labelImport: any;
   selectedFile: any;
   testFile: string | ArrayBuffer;
