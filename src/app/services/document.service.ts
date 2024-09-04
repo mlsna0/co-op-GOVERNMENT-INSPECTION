@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
+import * as pdfjsLib from 'pdfjs-dist';
+import { HttpClient } from '@angular/common/http';
 
 interface ProvinceData {
   name_th: string;
@@ -14,6 +16,14 @@ interface ProvinceData {
   providedIn: 'root',
 })
 export class DocumentService {
+  
+   ///land add(pdf count)//
+  constructor(private http: HttpClient) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+  }
+  private apiUrl = 'http://localhost:3000/api'; // แทนที่ด้วย URL ของ API ที่คุณสร้าง 
+   ///land add(pdf count) end...///
+
   private provincesSubject = new BehaviorSubject<ProvinceData[]>([]);
   private totalDocumentsSubject = new BehaviorSubject<number>(0);
   private totalSignedDocumentsSubject = new BehaviorSubject<number>(0);
@@ -58,4 +68,44 @@ export class DocumentService {
     console.log("Received total documents count:", totalDocumentsCount);
     this.totalDocumentsCountSubject.next(totalDocumentsCount);
   }
+
+ ///land add(pdf count)///
+
+ getPdfFiles(): Observable<string[]> {
+  return this.http.get<string[]>(this.apiUrl).pipe(
+    catchError(error => {
+      console.error('Error fetching PDF files:', error); // เพิ่มการจัดการข้อผิดพลาด
+      return throwError(error);
+    })  
+  );
+}
+
+getPdfPageCount(pdfUrl: string): Promise<number> {
+  return new Promise<number>((resolve, reject) => {
+    pdfjsLib.getDocument(pdfUrl).promise.then((pdfDoc: any) => {
+      resolve(pdfDoc.numPages);
+    })
+  });
+}
+
+async getTotalPagesCount(pdfUrls: string[]): Promise<number> {
+  let totalPageCount = 0;
+  for (const url of pdfUrls) {
+    try {
+      const pageCount = await this.getPdfPageCount(url);
+      totalPageCount += pageCount;
+    } catch (error) {
+      console.error('Failed to load PDF:', url, error);
+    }
+  }
+  return totalPageCount;
+}
+
+
+
+// getTotalPdfPages(): Observable<{ totalPages: number }> {
+//   return this.http.get<{ totalPages: number }>('/api/pdf-page-count');
+// }
+
+ ///land add(pdf count) end...///
 }

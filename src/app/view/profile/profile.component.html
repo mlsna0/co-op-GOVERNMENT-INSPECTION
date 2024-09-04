@@ -83,7 +83,7 @@
                             </div>
 
                             <div class="card-info">
-                                <a>
+                                <a >
                                     ระดับผู้ใช้งาน : {{UserData?.role}}
                                 </a>
                                 <a>
@@ -140,6 +140,7 @@
                                     </div> -->
                                 <div class="group-info">
                                     <div class="title-info">
+                                        <!-- <h4>ข้อมูลสถานที่ทำงาน</h4> -->
                                        
                                     </div>
                                     <div class="row">
@@ -164,9 +165,6 @@
                                         <div class="col-md-3">
                                             <label for=""></label>
                                         </div>
-
-
-
                                         <div class="col-md-5">
                                             ตำบล/แขวง : {{getTambonName(UserData?.employeeId?.tambon)}}
                                         </div>
@@ -179,16 +177,14 @@
                                         <div class="col-md-3">
                                             <label for=""></label>
                                         </div>
-
-
-
-
                                         <!-- <div class="col-md-4" >
                                                 รหัสไปรษณีย์ :
                                                 <div class="form-control">{{ UserInfoForm.controls['postCode'].value }}
                                                 </div>
                                                 <input type="text"formControlName="postCode"  class="form-control"  placeholder="รหัสไปรษณีย์"> 
                                             </div> -->
+                                       
+                                    
                                         <div class="col-md-5">
                                             จังหวัด : {{getProvinceName(UserData?.employeeId?.province)}}
                                         </div>
@@ -198,58 +194,39 @@
                                     </div>
                                 </div>
 
-                                <!-- <div class="row">
+                            <!-- <div class="row">
                                     <div class="col-md-12">
                                         <div class="title-info">
+                                             <h4>ข้อมูลติดต่อ</h4> 
                                             
+                                        </div>
+                                    </div> -->
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="">อีเมล</label>
+                                        </div>
+    
+                                        <div class="col-md-9">
+                                            {{UserData?.email}}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+    
+    
+                                        <div class="col-md-3">
+                                            <label for="">เบอร์โทรศัพท์</label>
+                                        </div>
+    
+                                        <div class="col-md-9">
+                                            {{UserData?.employeeId?.phone}}
                                         </div>
                                     </div>
 
-                                </div> -->
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label for="">อีเมล</label>
-                                    </div>
-
-                                    <div class="col-md-9">
-                                        {{UserData?.email}}
-                                    </div>
-                                </div>
-                                <div class="row">
+                                </div> 
+                          
 
 
-                                    <div class="col-md-3">
-                                        <label for="">เบอร์โทรศัพท์</label>
-                                    </div>
-
-                                    <div class="col-md-9">
-                                        {{UserData?.employeeId?.phone}}
-                                    </div>
-                                </div>
-
-
-                                <!-- <div class="row" *ngIf="EditStatus">
-                            <div class="col-md-12">
-                                <div class="title-info">
-                                    <h4>เปลี่ยนรูปภาพโปรไฟล์</h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row"  *ngIf="EditStatus">
-                            <div class="col-md-3">
-                                <label for="">อัปโหลดรูปภาพโปรไฟล์</label>
-                            </div>
-                            <div class="col-md-9">
-                                <input type="file" id="profileImage" formControlName="profileImage"  
-                                accept="image/png, image/jpeg, image/jpg" 
-                                (change)="onFileUploadImgChange($event)">
-
-                                <div class="profile-image-container" *ngIf="imageSrc">
-                                    <img [src]="imageSrc" alt="Profile Img" class="profile-image">
-                                    <i class="fa-regular fa-trash-can positionTrashCan" (click)="deletedFileUpload(fileInput)"></i>
-                                  </div>
-                            </div>
-                        </div> -->
+                        
 
 
                             </div>
@@ -312,10 +289,10 @@
                                 </div>
 
                                 <div class="group-info">
-                                    <!-- <div class="title-info">
-                                        <h4>ข้อมูลสถานที่ทำงาน</h4>
-                                    </div> -->
-                                    <!-- <div class="row">
+                                    <div class="title-info">
+                                        <!-- <h4>ข้อมูลสถานที่ทำงาน</h4> -->
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-3">
                                             <label for="">องค์กร/หน่วยงาน</label>
                                         </div>
@@ -333,7 +310,7 @@
                                             <input type="text" formControlName="bearing" class="form-control"
                                                 placeholder="ตำแหน่ง">
                                         </div>
-                                    </div> -->
+                                    </div> 
                                     <div class="row">
                                         <div class="col-md-3">
                                             <label for="">ที่อยู่</label>
@@ -469,9 +446,4 @@
                 </div> -->
 
             </div>
-        </div>
-
-
-
-    </div>
-</div>
+      

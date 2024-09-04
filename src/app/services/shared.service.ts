@@ -212,6 +212,10 @@ export class SharedService {
     };
     return this.http.post(`${this.baseUrl}/postItemData`, formData);
   }
+  updateDataDocument(data): Observable<any>{
+    return this.http.put(`${this.baseUrl}/updateDataDocument/${data._id}`, data);
+
+  }
 
   searchData(query: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/searchData?query=${query}`);

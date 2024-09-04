@@ -51,6 +51,7 @@ function setRoutes(app): void {
   router.route('/postItemData').post(recordModelCtrl.auth, recordModelCtrl.postItemToView);
   router.route('/postTyproText').post(recordModelCtrl.postItemToView);
   // router.route('/postAddDetail').post(itemModelCtrl.addDetail);
+  router.route('/updateDataDocument/:id').put(recordModelCtrl.updateDataDocument)
   router.route('/postDataTest').post(recordModelCtrl.auth,uploadService.none(),recordModelCtrl.postItemToView)
   // router.route('/postDataTest').post(uploadservice.none(), auth.authorize, recordModelCtrl.postItemToView);
  
