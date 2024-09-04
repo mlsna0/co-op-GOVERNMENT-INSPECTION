@@ -531,39 +531,42 @@ export class DashboardComponent implements OnInit {
   }
   createDonutChart(): void {
     const ctx = document.getElementById('myDonutChart') as HTMLCanvasElement | null;
-
+  
     if (!ctx) {
       console.error('ไม่พบองค์ประกอบ Canvas ที่มี ID "myDonutChart"');
       return;
     }
-
-    // Use the pdfCount from the loadPDFs method
-    // const totalDocumentsCount = this.allDocuments.length;
-    let totalDocuments: number;
-    let totalSignedDocuments: number;
-    // console.log('จำนวนไฟล์ PDF:', totalDocuments);
-    // console.log('จำนวนเอกสารทั้งหมด:', totalSignedDocuments);
-
+  
+    let totalDocuments = 0;
+    let totalSignedDocuments = 0;
+  
     if (this.isAdmin) {
       // ถ้าเป็น admin ใช้ข้อมูลจาก DocumentService
-      totalDocuments = this.totalDocumentsCount;
-      totalSignedDocuments = this.totalSignedDocumentsCount;
+      totalDocuments = this.totalDocumentsCount || 0;
+      totalSignedDocuments = this.totalSignedDocumentsCount || 0;
     } else {
       // ถ้าไม่ใช่ admin (เช่น superadmin) ใช้ข้อมูลเดิม
-      totalDocuments = this.totalDocuments;
-      totalSignedDocuments = this.totalSignedDocuments;
+      totalDocuments = this.totalDocuments || 0;
+      totalSignedDocuments = this.totalSignedDocuments || 0;
     }
-
+  
+    // การจัดการค่าศูนย์เพื่อป้องกันการเกิดข้อผิดพลาด
+    if (totalDocuments === 0) {
+      totalDocuments = 1;  // กำหนดค่าเป็น 1 เพื่อให้กราฟแสดงได้
+    }
+  
+    const unsignedDocuments = totalDocuments - totalSignedDocuments;
+  
     if (this.donutChart) {
       this.donutChart.destroy();
     }
-
+  
     this.donutChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
         labels: ['เอกสารลงนาม', 'เอกสารยังไม่ลงนาม'],
         datasets: [{
-          data: [totalSignedDocuments, totalDocuments-totalSignedDocuments],
+          data: [totalSignedDocuments, unsignedDocuments],
           backgroundColor: ['rgba(255, 209, 0, 0.7)', 'rgba(195, 195, 198, 0.7)'],
           borderColor: ['rgb(255, 209, 0)', 'rgb(195, 195, 198)'],
           borderWidth: 1,
@@ -575,7 +578,6 @@ export class DashboardComponent implements OnInit {
         layout: {
           padding: {
             left: 90,  // ระยะห่างจากขอบซ้าย
-
           }
         },
         plugins: {

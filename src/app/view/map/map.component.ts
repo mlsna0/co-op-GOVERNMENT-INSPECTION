@@ -194,19 +194,19 @@ export class MapComponent implements AfterViewInit {
           const userRole = user.role;
   
           if (userRole === 'superadmin' || userRole === 'admin') {
-            const reportRequest = userRole === 'superadmin' ? this.sv.getRecord() : this.sv.getUserReportBuild(userId);
+            const reportRequest = userRole === 'superadmin' ? this.sv.getallRecordWithUserAndEmployee() : this.sv.getUserReportBuild(userId);
  
   
             reportRequest.subscribe(
               (data) => {
                 const documents = userRole === 'superadmin' ? data : data.documents;
 
-                // if (userRole === 'superadmin') {
-                //   this.processSuperAdminData(documents);  // ประมวลผลข้อมูลสำหรับ superadmin
-                // } else if (userRole === 'admin') {
-                //   this.processAdminData(documents);  // ประมวลผลข้อมูลสำหรับ admin
-                // }
-                this.processAdminData(documents);
+                if (userRole === 'superadmin') {
+                  this.processSuperAdminData(documents);  // ประมวลผลข้อมูลสำหรับ superadmin
+                } else if (userRole === 'admin') {
+                  this.processAdminData(documents);  // ประมวลผลข้อมูลสำหรับ admin
+                }
+                // this.processAdminData(documents);
               },
               (error) => {
                 console.error(`Error loading data for ${userRole}:`, error);
@@ -269,73 +269,58 @@ export class MapComponent implements AfterViewInit {
     }
   }
 }
-// processSuperAdminData(data: any[]): void {
-//   // Initialize an empty object to group data by province
-//   const dataByProvince: { [provinceName: string]: any[] } = {};
 
-//   // Iterate over each item in the data array
-//   data.forEach(item => {
-//     // console.log('Item data:', item); 
+processSuperAdminData(data: any[]): void {
+  const dataByProvince: { [provinceName: string]: any[] } = {};
 
-//     // Ensure the item has a valid employee and province information
-//     const rawProvince = item.employee?.province;
-//     if (rawProvince === undefined || rawProvince === null) {
-//       // console.warn(`Province is missing in the data:`, item);
-//       return;
-//     }
-    
-//     console.log('Raw province value:', rawProvince);
+  data.forEach(item => {
+    const rawProvince = item.employee?.province;
+    if (!rawProvince) return;
 
-//     // Check if the province value is a number
-//     if (isNaN(parseInt(rawProvince, 10))) {
-//       // console.warn(`Skipping non-numeric province value: ${rawProvince}`);
-//       return;
-//     }
+    const provinceId = parseInt(rawProvince, 10);
+    if (isNaN(provinceId)) return;
 
-//     // Convert province to an integer and find the corresponding province name
-//     const provinceId = parseInt(rawProvince, 10);
-//     const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
+    const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
+    if (!provinceName) return;
 
-//     // console.log(`Province ID: ${provinceId}, Province Name: ${provinceName}`);
+    if (!dataByProvince[provinceName]) {
+      dataByProvince[provinceName] = [];
+    }
 
-//     // Initialize the province array if it doesn't exist
-//     if (!dataByProvince[provinceName]) {
-//       dataByProvince[provinceName] = [];
-//     }
+    dataByProvince[provinceName].push(item);
+  });
 
-//     // Add the current item to the corresponding province group
-//     dataByProvince[provinceName].push(item);
-//   });
+  Object.keys(dataByProvince).forEach(provinceName => {
+    const provinceData = dataByProvince[provinceName];
+    if (!provinceData.length) return;
 
-//   // Log the grouped data by province
-//   // console.log('Data grouped by province:', dataByProvince);
+    const loc = this.provinceCoordinates[provinceName];
+    if (loc) {
+      const topics: string[] = [];
+      const places: string[] = [];
+      const locations: string[] = [];
 
-//   // Process each province's data
-//   Object.keys(dataByProvince).forEach(provinceName => {
-//     const provinceData = dataByProvince[provinceName];
-//     // console.log(`Processing province: ${provinceName}, data:`, provinceData);
+      provinceData.forEach(item => {
+        console.log('Item:', item);
+        // สมมุติว่า documents มีอย่างน้อยหนึ่งรายการ
+        item.documents.forEach(doc => {
+          topics.push(doc.record_topic || ''); // ถ้าไม่มีข้อมูลให้เว้นช่องว่าง
+          places.push(doc.record_place || ''); // ถ้าไม่มีข้อมูลให้เว้นช่องว่าง
+          locations.push(doc.record_location || ''); // ถ้าไม่มีข้อมูลให้เว้นช่องว่าง
+        });
+      });
 
-//     // Check if the coordinates for the province exist
-//     if (this.provinceCoordinates[provinceName]) {
-//       const loc = this.provinceCoordinates[provinceName];
+      console.log(`Adding marker at ${loc.lat}, ${loc.lng} for province ${provinceName}`);
+      console.log('Topics:', topics);
+      console.log('Places:', places);
+      console.log('Locations:', locations);
 
-//       // Extract topics, places, and locations
-//       const topics = provinceData.map(item => item.record_topic || 'No topic available');
-//       const places = provinceData.map(item => item.record_place || 'No places available');
-//       const locations = provinceData.map(item => item.record_location || 'No location available');
-
-//       console.log(`Adding marker at ${loc.lat}, ${loc.lng} for province ${provinceName}`);
-//       console.log('Topics:', topics);
-//       console.log('Places:', places);
-//       console.log('Locations:', locations);
-
-//       // Add a marker on the map with the data
-//       this.addMarker(loc.lat, loc.lng, topics, places, locations);
-//     } else {
-//       console.warn(`No coordinates found for province: ${provinceName}`);
-//     }
-//   });
-// }
+      this.addMarker(loc.lat, loc.lng, topics, places, locations);
+    } else {
+      console.warn(`No coordinates found for province: ${provinceName}`);
+    }
+  });
+}
 
   
 }
