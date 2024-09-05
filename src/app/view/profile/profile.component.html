@@ -18,7 +18,6 @@
             <div class="card-body">
                 <div class="row">
 
-
                     <div class="col-md-3">
                         <div class="card-user">
                             <div class="card-avatar">
@@ -79,29 +78,29 @@
 
                                 </div>
 
-                
+
                             </div>
 
                             <div class="card-info">
                                 <div class="row">
-                                    <label for="">  ระดับผู้ใช้งาน : </label>
-                                    <a href="" >   &nbsp;   {{UserData?.role}}</a>
-                             
+                                    <label for=""> ระดับผู้ใช้งาน : </label>
+                                    <a href=""> &nbsp; {{UserData?.role}}</a>
+
 
                                 </div>
                                 <div class="row">
                                     <label for=""> ชื่อ-นามสกุล :</label>
-                                    <a href=""> &nbsp;  {{ UserData?.employeeId?.firstname }} &nbsp;
+                                    <a href=""> &nbsp; {{ UserData?.employeeId?.firstname }} &nbsp;
                                         {{UserData?.employeeId?.lastname}} </a>
-                                  
+
                                 </div>
                                 <div class="row">
                                     <label for=""> ตำแหน่ง : </label>
-                                    <a href=""> &nbsp;     {{UserData?.employeeId?.bearing}}</a>
-                                        
+                                    <a href=""> &nbsp; {{UserData?.employeeId?.bearing}}</a>
+
                                 </div>
-                          
-                           
+
+
 
                             </div>
                         </div>
@@ -114,14 +113,15 @@
                             <div class="title">
                                 <h4> ข้อมูลผู้ใช้</h4>
                                 <div>
-                                    <button type="button" class="btn btn-edit" (click)=" editProfile()">
+                                
+                                    <button type="button" class="btn btn-edit" (click)="openEditProfileModal()">
                                         <i class="fa fa-pencil-square-o"></i> &nbsp; แก้ไขข้อมูล
                                     </button>
                                     <button class="btn btn-add" (click)="goToChangePassword()">
                                         เปลี่ยนรหัสผ่าน
                                     </button>
-            
-                            
+
+
                                 </div>
 
                             </div>
@@ -150,19 +150,114 @@
                                 <div class="group-info">
                                     <div class="title-info">
                                         <!-- <h4>ข้อมูลสถานที่ทำงาน</h4> -->
-                                       
+
                                     </div>
                                     <div class="row">
                                         <div class="col-md-3">
                                             <label for="">ชื่อหน่วยงาน</label>
                                         </div>
 
-                                        <div class="col-md-9">
-                                            {{UserData?.employeeId?.organization}} 
+                                        <div class="col-md-9" style="display: flex;">
+                                            {{DataOrganization?.agency_name}}
+                                            <div class="DataOrganization" (click)="openorganizationModel()">
+                                                รายละเอียด
+                                            </div>
                                         </div>
-                                        <div class="detail-popup" style="display: none; position: absolute; top: 100%; left: 0; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); padding: 10px; z-index: 100;">
-                                            รายละเอียดอื่นๆ เช่น ที่อยู่บริษัท, โทรศัพท์, อีเมล, ฯลฯ
-                                          </div>
+                                        <div class="modal fade" id="organizationModel" tabindex="-1" role="dialog"
+                                            aria-labelledby="addItemModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content Organization-content "
+                                                    style="width: 800px; height: auto;">
+                                                    <div class="modal-header" class="card-header">
+                                                        <h5 class="modal-title" id="addItemModalLabel"
+                                                            style="color: rgb(0, 0, 0); font-family: 'Sarabun', sans-serif !important; font-size: 18px; font-weight: 900;">
+                                                            ข้อมูลหน่วยงาน</h5>
+
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close" style="color: black;">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <label for="">
+                                                                    ชื่อหน่วยงาน :
+                                                                </label>
+
+                                                            </div>
+                                                            <div class="col-md-9">
+                                                                {{DataOrganization?.agency_name}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <label for=""> ที่อยู่ :</label>
+
+                                                            </div>
+                                                            <div class="col-md-9">
+                                                                {{DataOrganization?.address}}
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <label for=""></label>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                ตำบล/แขวง : {{getTambonName(DataOrganization?.tambon)}}
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                อำเภอ/เขต :
+                                                                {{getAmphureName(DataOrganization?.amphure)}}
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <label for=""></label>
+                                                            </div>
+                                                            <!-- <div class="col-md-4" >
+                                                                    รหัสไปรษณีย์ :
+                                                                    <div class="form-control">{{ UserInfoForm.controls['postCode'].value }}
+                                                                    </div>
+                                                                    <input type="text"formControlName="postCode"  class="form-control"  placeholder="รหัสไปรษณีย์"> 
+                                                                </div> -->
+
+
+                                                            <div class="col-md-5">
+                                                                จังหวัด :
+                                                                {{getProvinceName(DataOrganization?.province)}}
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                รหัสไปรษณีย์ : {{DataOrganization?.postCode}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <label for=""> อิเมล :</label>
+                                                            </div>
+                                                            <div class="col-md-9">
+                                                                {{DataOrganization?.email}}
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <label for=""> เบอร์โทรศัพท์ :</label>
+
+                                                            </div>
+                                                            <div class="col-md-9">
+                                                                {{DataOrganization?.phone}}
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <!-- <div class="modal-footer"> </div> -->
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-3">
@@ -195,8 +290,8 @@
                                                 </div>
                                                 <input type="text"formControlName="postCode"  class="form-control"  placeholder="รหัสไปรษณีย์"> 
                                             </div> -->
-                                       
-                                    
+
+
                                         <div class="col-md-5">
                                             จังหวัด : {{getProvinceName(UserData?.employeeId?.province)}}
                                         </div>
@@ -206,46 +301,46 @@
                                     </div>
                                 </div>
 
-                            <!-- <div class="row">
+                                <!-- <div class="row">
                                     <div class="col-md-12">
                                         <div class="title-info">
                                              <h4>ข้อมูลติดต่อ</h4> 
                                             
                                         </div>
                                     </div> -->
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label for="">อีเมล</label>
-                                        </div>
-    
-                                        <div class="col-md-9">
-                                            {{UserData?.email}}
-                                        </div>
-                                    </div>
-                                    <div class="row">
-    
-    
-                                        <div class="col-md-3">
-                                            <label for="">เบอร์โทรศัพท์</label>
-                                        </div>
-    
-                                        <div class="col-md-9">
-                                            {{UserData?.employeeId?.phone}}
-                                        </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="">อีเมล</label>
                                     </div>
 
-                                </div> 
-                          
+                                    <div class="col-md-9">
+                                        {{UserData?.email}}
+                                    </div>
+                                </div>
+                                <div class="row">
 
 
-                        
+                                    <div class="col-md-3">
+                                        <label for="">เบอร์โทรศัพท์</label>
+                                    </div>
 
+                                    <div class="col-md-9">
+                                        {{UserData?.employeeId?.phone}}
+                                    </div>
+                                </div>
 
                             </div>
 
+
+
+
+
+
                         </div>
 
-                        <!-- <div class="userInfo">
+                    </div>
+
+                    <!-- <div class="userInfo">
                             <div class="title">
                                 <h4> ข้อมูลสถานที่ทำงาน</h4>
                             </div>
@@ -264,26 +359,30 @@
                         </div> -->
 
 
-                    </div>
-
-
                 </div>
 
 
+            </div>
 
-                <div class="EditModal-modal-overlay" *ngIf="EditStatus">
 
 
-                    <div class="EditModal-content">
-                        <div class="card-header" style="padding: 0; ">
+            
+            
+            <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content EditModal-content">
+                        <div class="modal-header" class="card-header">
                             <a>แก้ไขข้อมูลส่วนตัว</a>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"
                                 (click)="closeModal()">
                                 <span aria-hidden="true"
                                     style="display: flex; color: black; justify-content: flex-end;">&times;</span>
                             </button>
+
                         </div>
                         <form [formGroup]="UserInfoForm" (ngSubmit)="SaveUserInfo()">
+                        <div class="modal-body">
                             <div class="user-content">
                                 <div class="row">
                                     <div class="col-md-3">
@@ -301,28 +400,7 @@
                                 </div>
 
                                 <div class="group-info">
-                                    <div class="title-info">
-                                        <!-- <h4>ข้อมูลสถานที่ทำงาน</h4> -->
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label for="">ชื่อหน่วยงาน</label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input type="text" formControlName="organization" class="form-control"
-                                                placeholder="ชื่อหน่วยงาน">
-                                        </div>
 
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label for="">ตำแหน่ง</label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input type="text" formControlName="bearing" class="form-control"
-                                                placeholder="ตำแหน่ง">
-                                        </div>
-                                    </div> 
                                     <div class="row">
                                         <div class="col-md-3">
                                             <label for="">ที่อยู่</label>
@@ -381,13 +459,13 @@
                                         <div class="col-md-5 select-wrapper">
                                             ตำบล/แขวง :
                                             <select class="form-select" formControlName="tambon"
-                                                (focus)="istAmbonSelectOpen = true" (blur)="istAmbonSelectOpen = false"
+                                                (focus)="isTambonSelectOpen = true" (blur)="isTambonSelectOpen = false"
                                                 (change)="onTambonChange($event.target.value)"
                                                 [attr.disabled]="isTambonDisabled ? true : null">
                                                 <option *ngFor="let tambon of tambons" [value]="tambon.id">{{
                                                     tambon.name_th }}</option>
                                             </select>
-                                            <div class="iconSelect" [class.rotate]="istAmbonSelectOpen">
+                                            <div class="iconSelect" [class.rotate]="isTambonSelectOpen">
                                                 <i class="fa fa-chevron-down"></i>
                                             </div>
                                             <!-- <input type="text"formControlName="tambon" class="form-control" placeholder="ตำบล"> -->
@@ -420,9 +498,7 @@
                                         <input type="text" formControlName="email" class="form-control"
                                             placeholder="อีเมล">
                                     </div>
-                                    <div class="col-md-9" *ngIf="!EditStatus">
-                                        {{UserData?.email}}
-                                    </div>
+                                 
                                 </div>
                                 <div class="row">
 
@@ -434,28 +510,18 @@
                                         <input type="text" formControlName="phone" class="form-control"
                                             placeholder="เบอร์โทรศัพท์">
                                     </div>
-                                    <div class="col-md-9" *ngIf="!EditStatus">
-                                        {{UserData?.employeeId?.phone}}
-                                    </div>
+                                 
                                 </div>
 
                             </div>
-                            <div class="footer-content">
-                                <button type="submit" class="btn btn-success">ยืนยัน</button>
-                                <button type="button" class="btn btn-danger"  (click)="closeModal()">ยกเลิก</button>
-                            </div>
-                        </form>
-
+                        </div>
+                        <div class="modal-footer"> 
+                            <button type="submit" class="btn btn-success">ยืนยัน</button>
+                            <button type="button" class="btn btn-danger" (click)="closeModal()">ยกเลิก</button>
+                        </div>
+                       </form>
                     </div>
-
                 </div>
-                <!-- 
-                <div class="modal fade" id="testModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                aria-hidden="true">
-                <div class="EditModal-content">
-
-                </div>
-                </div> -->
-
             </div>
-      
+
+        </div>

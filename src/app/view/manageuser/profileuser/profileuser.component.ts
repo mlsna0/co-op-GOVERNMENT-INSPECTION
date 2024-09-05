@@ -20,8 +20,12 @@ import { ProvinceService } from 'app/view/thaicounty/thaicounty.service';
 export class ProfileuserComponent implements OnInit {
 
   UserData:any ={};
+  DataOrganization:any ={};
   currenUser:any ={};
   UserID:any;
+  OrganizationID:any;
+  selectedOrganizationID:any;
+
   UserRole:any;
   isSuperAdmin: boolean = false;
   EmployeeID:any;
@@ -114,6 +118,15 @@ export class ProfileuserComponent implements OnInit {
       } else {
         this.profileImgUrl = './assets/img/Person-icon.jpg';
       }
+      this.OrganizationID = this.UserData?.employeeId?.agencies; //for infomation agency/organization
+      console.log( " this.OrganizationID > ",this.OrganizationID)
+      this.selectedOrganizationID = this.OrganizationID[0]; //for infomation agency/organization
+      console.log( "this.selectedOrganizationID > ",this.selectedOrganizationID)
+      this.sv.getOrganizationById(this.selectedOrganizationID).subscribe(res=>{
+        this.DataOrganization = res;
+        console.log("Data of Organiz: ",this.DataOrganization)
+      });
+
       this.UserRole =this.UserData?.role
       this.isSuperAdmin = this.UserRole === 'superadmin';
       this.UserInfoForm.patchValue({
@@ -152,6 +165,8 @@ export class ProfileuserComponent implements OnInit {
       // console.log('Tambons:', this.tambons);
 
     });
+
+ 
   }
 
  // Method to get province name from id
@@ -385,6 +400,15 @@ resetPassword(UserID: string, newPassword: string) {
   
   cancelEdit(){
     this.EditStatus= false;
+  }
+  openorganizationModel(){
+    $('#organizationModel').modal({
+      backdrop: 'static', 
+      keyboard: false    
+    });
+    $('#organizationModel').modal('show');
+ 
+
   }
   
 }

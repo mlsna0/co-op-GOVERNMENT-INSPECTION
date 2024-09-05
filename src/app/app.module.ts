@@ -32,6 +32,7 @@ import { ToastrModule } from 'ngx-toastr';
 
 
 
+
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -62,6 +63,7 @@ import { ToastrModule } from 'ngx-toastr';
     AuthLayoutComponent,
     SignatureComponent,
     HistoryComponent,
+
 
   ],
   providers: [SharedService,

@@ -9,5 +9,5 @@ const viewSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
 });
 
-const ViewModel = mongoose.model('inspector', viewSchema);
+const ViewModel = mongoose.model('inspector', viewSchema,'inspectors');
 export default ViewModel;

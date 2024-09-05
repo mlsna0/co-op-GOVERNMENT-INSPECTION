@@ -114,7 +114,8 @@ function setRoutes(app): void {
 
   router.route('/registerModel').get(registerModelCtrl.getAll);
   router.route('/registerModel/profile').get(auth.authorize, registerModelCtrl.getUserProfile);//petch add
-  
+  router.route('/registerModel/getOrganizationById/:id').get(registerModelCtrl.getOrganizationById);//petch add
+  router.route('/registerModel/getPersonsWithSameOrganization/:id').get(registerModelCtrl.getPersonsWithSameOrganization);//petch add
   router.route('/registerModel/count').get(registerModelCtrl.count);
   router.route('/registerModel').post(uploadService.single('profileImage'), registerModelCtrl.create);
   

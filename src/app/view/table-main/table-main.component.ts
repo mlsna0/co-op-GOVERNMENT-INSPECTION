@@ -196,7 +196,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
     this.loading = true;
     this.items = [];
     this.dtOptions = {
-      order: [0],
+      order: [0, 'desc'],
       pagingType: 'full_numbers',
       language: {
         lengthMenu: "แสดง _MENU_ รายการ",

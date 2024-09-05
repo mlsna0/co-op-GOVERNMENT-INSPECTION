@@ -282,6 +282,24 @@ justify-content: center;
   color: red;
 }
 
+.Organization-content  {
+  left: 50%;
+  transform: translate(-50%, 50%);
+ 
+ 
+ }
+ .DataOrganization{
+   font-size: 12px;
+   text-decoration: underline;
+   padding: 0 0 0 20px;
+ 
+ }
+ .DataOrganization:hover{
+   color: #24a0ed;
+   text-decoration: underline;
+   cursor: pointer;
+ }
+
 
 
 

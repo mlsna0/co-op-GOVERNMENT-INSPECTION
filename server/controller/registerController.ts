@@ -11,6 +11,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs'; // นำเข้า fs module
 import Agency from '../models/agencyModel'; 
+import mongoose from 'mongoose';
 
 
 const storage = multer.diskStorage({
@@ -31,6 +32,7 @@ const upload = multer({ storage });
 class RegisterModelCtrl extends BaseCtrl {
     model = RegisterModel; // ใช้ RegisterModel สำหรับ Employee
     modelUser = User; // ใช้ User สำหรับ userModel
+    modelAgency = Agency
 
     create = async (req, res) => {
             try {
@@ -283,6 +285,51 @@ class RegisterModelCtrl extends BaseCtrl {
         } catch (error) {
             // console.error('Error in getUserProfile function:', error.message);
             res.status(500).send('Server error');
+        }
+    };
+    getOrganizationById = async (req, res) => {
+        try {
+            const OrganizationID = req.params.id;
+            // console.log("Received Organization ID:", OrganizationID);
+    
+            if (!mongoose.Types.ObjectId.isValid(OrganizationID)) {
+                return res.status(400).json({ msg: 'Invalid Organization ID' });
+            }
+    
+            let Organization = await this.modelAgency.findById(OrganizationID);
+            console.log("Fetched Organization:", Organization);
+    
+            if (!Organization) {
+                return res.status(404).json({ msg: 'Organization not found' });
+            }
+    
+            res.status(200).json(Organization);
+        } catch (error) {
+            console.error('Error in getOrganizationById function:', error.message);
+            res.status(500).send('Server error');
+        }
+    };
+    getPersonsWithSameOrganization = async (req, res) => {
+        try {
+            const agencyID = req.params.id; // ดึง agency ID ที่ต้องการค้นหา
+    
+            if (!mongoose.Types.ObjectId.isValid(agencyID)) {
+                return res.status(400).json({ msg: 'รหัส Agency ไม่ถูกต้อง' });
+            }
+    
+            // ค้นหาบุคคลทั้งหมดที่มี agency ID ตรงกันใน agencies field
+            let persons = await this.model.find({
+                agencies: agencyID
+            });
+    
+            if (persons.length === 0) {
+                return res.status(404).json({ msg: 'ไม่พบบุคคลที่อยู่ใน Agency นี้' });
+            }
+    
+            res.status(200).json(persons);
+        } catch (error) {
+            console.error('เกิดข้อผิดพลาดในฟังก์ชัน getPersonsWithSameAgency:', error.message);
+            res.status(500).send('ข้อผิดพลาดในเซิร์ฟเวอร์');
         }
     };
 

@@ -97,6 +97,7 @@ export class SignatureComponent implements OnInit {
   }
   
   async onFileSelected(event: any) {
+    this.loading =false;
     this.selectedFile = event.target.files[0] ?? null;
     
     const btnAddBox = document.getElementById('btn-add-box');
@@ -115,16 +116,16 @@ export class SignatureComponent implements OnInit {
         this.selectedFilePath = path as string;
         this.selectedFileB64 = this.selectedFilePath.split(",")[1];
         this.testFile = reader.result;
-
+        this.loading = true;
         if (this.selectedFilePath.includes('image')) {
           this.isFileImage = true;
           this.isFileDocument = false;
         } else {
           this.isFileImage = false;
           this.isFileDocument = true;
-          this.pdfFile = this.selectedFilePath;
+          this.pdfFile = reader.result// this.selectedFileB64;
         }
-
+        console.log("this is selectedFilePath: ", this.selectedFileB64);
         console.log("this is files img: ", this.isFileImage);
         console.log("this is files Doc: ", this.isFileDocument);
 

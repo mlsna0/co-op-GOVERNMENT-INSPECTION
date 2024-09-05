@@ -25,7 +25,10 @@ export class ProfileComponent implements OnInit {
 
   UserID:any;
   EmployeeID:any;
+  OrganizationID:any;
+  selectedOrganizationID:any;
   UserData:any ={};
+  DataOrganization:any ={};
   UserInfoForm:FormGroup;
 
 
@@ -40,6 +43,12 @@ export class ProfileComponent implements OnInit {
   isAmphureDisabled = true;
   isTambonDisabled = true;
   isPostCodeDisabled = true;
+  
+  isProvinceSelectOpen = false;
+  isAmphureSelectOpen = false;
+  isTambonSelectOpen = false;
+  // isAmphureDisabled = false;
+  // isTambonDisabled = false;
 
   nameTambons: string[] = [];
   zipCode: any[] = [];
@@ -82,8 +91,8 @@ export class ProfileComponent implements OnInit {
       email: ["",  Validators.email],
       // password: ["", Validators.minLength(8)],
       // confirmpassword: ["", Validators.minLength(8)],
-      organization:['', ],
-      bearing:['', ],
+      // organization:['', ],
+      // bearing:['', ],
       address:["", ],
       phone: ["", Validators.pattern('^[0-9]{10}$')],
       province: ['' ],
@@ -105,8 +114,12 @@ export class ProfileComponent implements OnInit {
         this.UserData = res;
 
         this.UserID = this.UserData?._id;
-        console.log("UserID it send? >",this.UserID);
-        console.log("ProfileImage from UserData:", this.UserData?.employeeId?.profileImage);
+        this.OrganizationID = this.UserData?.employeeId?.agencies;
+        this.selectedOrganizationID = this.OrganizationID[0]; 
+        // console.log( " this.OrganizationID > ",this.OrganizationID)
+        console.log("Selected Organization ID:", this.selectedOrganizationID);
+        // console.log("UserID it send? >",this.UserID);
+        // console.log("ProfileImage from UserData:", this.UserData?.employeeId?.profileImage);
         // this.previousFile =  this.UserData?.employeeId?.profileImage
         // this.imageSrc = this.previousFile ? this.UserData?.employeeId?.profileImage : null;
         // ตรวจสอบว่า profileImage มีค่าอยู่หรือไม่
@@ -117,7 +130,12 @@ export class ProfileComponent implements OnInit {
         } else {
           this.profileImgUrl = './assets/img/Person-icon.jpg';
         }
-  
+
+        //Organization info
+        this.sv.getOrganizationById(this.selectedOrganizationID).subscribe(res=>{
+          this.DataOrganization = res;
+          // console.log("Data of Organiz: ",this.DataOrganization)
+        })
         console.log('profileImgUrl:', this.profileImgUrl);
         // this.UserInfoForm.patchValue(this.UserData);
         this.UserInfoForm.patchValue({
@@ -163,6 +181,8 @@ export class ProfileComponent implements OnInit {
   
 
     });
+
+ 
   }
 
  // Method to get province name from id
@@ -331,32 +351,40 @@ loadTambons(amphureId: any) {
     // this.showModal = true;
     // console.log("as",this.showModal)
   }
+  refreshPage() {
+    window.location.reload();
+  }
 
   closeModal(): void {
     const modalContent = document.querySelector('.EditModal-content');
   
-    if (modalContent) {
-      modalContent.classList.add('close');
+    // if (modalContent) {
+    //   modalContent.classList.add('close');
   
-      modalContent.addEventListener('animationend', () => {
-        this.showModal = false;
-        this.EditStatus = false;
-        modalContent.classList.remove('close');
+    //   modalContent.addEventListener('animationend', () => {
+    //     this.showModal = false;
+    //     this.EditStatus = false;
+    //     modalContent.classList.remove('close');
   
-        // ตรวจสอบว่าควรแสดง toast หรือไม่
-        if (this.shouldShowToast) {
-          this.toastr.success('อัปเดตโปรไฟล์สำเร็จ', 'สำเร็จ', {
-            timeOut: 2500,
-            positionClass: 'toast-top-right'
-          });
-  
-          setTimeout(() => {
-            window.location.reload();
-          }, 2500);
-        }
-  
-        this.shouldShowToast = false; // รีเซ็ตค่า
-      }, { once: true });
+    
+    //   }, { once: true });
+    // }
+    if($('#EditModal')){
+          // ตรวจสอบว่าควรแสดง toast หรือไม่
+          if (this.shouldShowToast) {
+            this.toastr.success('อัปเดตโปรไฟล์สำเร็จ', 'สำเร็จ', {
+              timeOut: 2500,
+              positionClass: 'toast-top-right'
+            });
+    
+            setTimeout(() => {
+              window.location.reload();
+            }, 2500);
+          }
+    
+          this.shouldShowToast = false; // รีเซ็ตค่า
+      $('#EditModal').modal('hide')
+    
     }
   }
   editProfile() {
@@ -370,6 +398,24 @@ loadTambons(amphureId: any) {
       keyboard: false     // ป้องกันการปิดด้วยแป้นพิมพ์ (เช่น ปุ่ม Esc)
     });
     $('#EditProfile-Modal').modal('show');
+  }
+
+  openorganizationModel(){
+    $('#organizationModel').modal({
+      backdrop: 'static', 
+      keyboard: false    
+    });
+    $('#organizationModel').modal('show');
+ 
+
+  }
+  openEditProfileModal(){
+    $('#EditModal').modal({
+      backdrop: 'static', 
+      keyboard: false    
+    });
+    $('#EditModal').modal('show');
+
   }
 //////////////////////////////////////////////////////////
 

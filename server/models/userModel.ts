@@ -26,6 +26,6 @@ export interface User{
     profileImage: string;
   }
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema,'users');
 
 export default User;

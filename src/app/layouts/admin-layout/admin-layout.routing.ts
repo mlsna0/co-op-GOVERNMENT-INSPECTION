@@ -22,6 +22,7 @@ import { ProfileuserComponent } from 'app/view/manageuser/profileuser/profileuse
 import { AuthGuard } from '../../auth.guard'; // นำเข้า AuthGuard ของคุณ
 import { MapComponent } from '../../view/map/map.component';
 import { ManageagencyComponent } from '../../view/manageagency/manageagency.component';
+import { ManagepersonComponent } from '../../view/manageperson/manageperson.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -75,6 +76,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'reportbuild',    component: ReportuserbuildComponent, canActivate: [AuthGuard] },
     { path: 'manageuser',     component: ManageuserComponent, canActivate: [AuthGuard] },
     { path: 'manageagency',     component: ManageagencyComponent, canActivate: [AuthGuard] },
+    { path: 'manageperson',     component: ManagepersonComponent, canActivate: [AuthGuard] },
 
     { path: 'profileuser',    component: ProfileuserComponent, canActivate: [AuthGuard] },
     { path: 'profileuser/:id', component: ProfileuserComponent, canActivate: [AuthGuard] },

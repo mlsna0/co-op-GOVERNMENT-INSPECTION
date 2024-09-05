@@ -109,6 +109,7 @@ export class SharedService {
       })
     );
   }
+
   
   getallRecordWithUserAndEmployee(): Observable<any> {
     return this.http.get(`${this.baseUrl}/getall`);
@@ -226,6 +227,12 @@ export class SharedService {
   }
   getUserProfileById(UserID: string){
     return this.http.get(`${this.baseUrl}/userModel/getUserById/${UserID}`)
+}
+getOrganizationById(OrganizationID: string){
+  return this.http.get(`${this.baseUrl}/registerModel/getOrganizationById/${OrganizationID}`)
+}
+getPersonsWithSameOrganization(OrganizationID: string): Observable<any>{
+  return this.http.get(`${this.baseUrl}/registerModel/getPersonsWithSameOrganization/${OrganizationID}`)
 }
   updateUserProfileById(updatedData: FormData,UserID:string): Observable<any> {
     return this.http.put(`${this.baseUrl}/userModel/updateUserById/${UserID}`, updatedData);

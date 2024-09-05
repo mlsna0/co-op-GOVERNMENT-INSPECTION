@@ -39,6 +39,6 @@ export interface registerModel{
     profileImage: string;
   }
 
-const RegisterModel = mongoose.model('Employee', registerSchema);
+const RegisterModel = mongoose.model('Employee', registerSchema, 'employees');
 
 export default RegisterModel;
