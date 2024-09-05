@@ -84,39 +84,33 @@ class recorCon extends BaseCtrl {
 
   updateStatus = async (req, res) => {
     try {
-      const { id } = req.body; // รับ id จาก req.body
+      const { id } = req.body;
+      
+      console.log("ID ที่ได้รับ:", id);  // ตรวจสอบค่า id ที่ได้รับ
   
-      // ตรวจสอบว่า id ถูกส่งเข้ามาหรือไม่
       if (!id) {
         return res.status(400).json({ error: "กรุณาส่ง id ที่ต้องการอัปเดต" });
       }
   
-      // ตรวจสอบว่า id เป็น ObjectId ที่ถูกต้องหรือไม่
       if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({ error: "id ไม่ถูกต้อง" });
       }
   
-      // ค้นหาข้อมูลโดยใช้ _id
       const item = await this.model.findById(id);
   
-      // ตรวจสอบว่าพบข้อมูลที่ต้องการหรือไม่
       if (!item) {
         return res.status(404).json({ error: "ไม่พบข้อมูลที่ต้องการอัปเดต" });
       }
   
-      // ตรวจสอบว่า status ปัจจุบันเป็น 0 หรือไม่
-      if (Number(item.status) !== 0) {
+      if (item.status !== "0") {
         return res.status(400).json({ error: "status ปัจจุบันไม่ใช่ 0 จึงไม่สามารถเปลี่ยนเป็น 1 ได้" });
       }
   
-      // อัปเดต status เป็น 1
-      item.status = 1;
+      item.status = "1";
       await item.save();
   
-      // ส่งข้อความยืนยันการอัปเดตสำเร็จ
       res.status(200).json({ message: "อัปเดต status สำเร็จ", updatedItem: item });
     } catch (err) {
-      // จัดการกับข้อผิดพลาดและส่งข้อความตอบกลับ
       return res.status(400).json({ error: err.message });
     }
   }

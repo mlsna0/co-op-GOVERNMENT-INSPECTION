@@ -184,91 +184,118 @@ export class MapComponent implements AfterViewInit {
   
       L.marker([lat, lng], { icon: customIcon }).addTo(this.map)
         .bindPopup(popupContent)
-        .openPopup();
+        
     }
   
     loadUserReport(): void {
-      this.loginservice.getUserProfile().subscribe(user => {
-        if (user && user._id) {
-          const userId = user._id;
-          const userRole = user.role;
-  
-          if (userRole === 'superadmin' || userRole === 'admin') {
-            const reportRequest = userRole === 'superadmin' ? this.sv.getallRecordWithUserAndEmployee() : this.sv.getUserReportBuild(userId);
- 
-  
-            reportRequest.subscribe(
+      this.loginservice.getUserProfile().subscribe(
+        (user) => {
+          if (user && user._id) {
+            const userRole = user.role;
+    
+            // ใช้ getallRecordWithUserAndEmployee() สำหรับทั้ง admin และ superadmin
+            this.sv.getallRecordWithUserAndEmployee().subscribe(
               (data) => {
-                const documents = userRole === 'superadmin' ? data : data.documents;
-
-                if (userRole === 'superadmin') {
-                  this.processSuperAdminData(documents);  // ประมวลผลข้อมูลสำหรับ superadmin
-                } else if (userRole === 'admin') {
-                  this.processAdminData(documents);  // ประมวลผลข้อมูลสำหรับ admin
-                }
-                // this.processAdminData(documents);
+                // เรียก processData เพื่อประมวลผลข้อมูลตามบทบาท
+                const documents = data;
+                this.processData(documents, userRole, user); // ส่ง user ไปด้วย
               },
               (error) => {
                 console.error(`Error loading data for ${userRole}:`, error);
               }
             );
           } else {
-            console.error('Unauthorized access: Only admin and superadmin can load this report.');
+            console.error('User ID is undefined or null.');
           }
-        } else {
-          console.error('User ID is undefined or null.');
+        },
+        (error) => {
+          console.error('Error fetching user profile:', error);
         }
-      },
-      (error) => {
-        console.error('Error fetching user profile:', error);
-      });
+      );
     }
-  
- processAdminData(data: any): void {
-  const locationMap: any = {};
-
-  data.forEach((record: any) => {
-    const topic = record.record_topic || 'No topic available';
-    const place = record.record_place || 'No places available';
-    let location = record.record_location || 'No location available';
-
-    if (location && location !== 'No location available') {
-      location = location.trim();
-
-      const locationPattern = /^Lat:\s*(-?\d+(\.\d+)?),\s*Lng:\s*(-?\d+(\.\d+)?)$/;
-      if (locationPattern.test(location)) {
-        const latLngString = location.replace("Lat:", "").replace("Lng:", "").split(',');
-        const lat = parseFloat(latLngString[0].trim());
-        const lng = parseFloat(latLngString[1].trim());
-        const key = `${lat.toFixed(4)},${lng.toFixed(4)}`;  // ใช้ 5 หลักทศนิยม
-
-        // console.log('Generated Key:', key);  // Log เพื่อดู key ที่สร้างขึ้น
-
-        if (!isNaN(lat) && !isNaN(lng)) {
-          if (!locationMap[key]) {
-            locationMap[key] = { lat, lng, topics: [], places: [], locations: [] };
-          }
-          locationMap[key].topics.push(topic);
-          locationMap[key].places.push(place);
-          locationMap[key].locations.push(location);
+    
+    // ฟังก์ชันประมวลผลข้อมูล ใช้ร่วมกันได้ทั้ง superadmin และ admin
+    processData(documents: any[], role: string, user: any): void {
+      if (role === 'superadmin') {
+        // หากเป็น superadmin ส่งข้อมูลทั้งหมดไป
+        this.processSuperAdminData(documents);
+      } else if (role === 'admin') {
+        // ตรวจสอบข้อมูลของ user.employeeId ก่อนเข้าถึง organization
+        const userEmployee = user.employeeId;
+        const userOrganization = userEmployee ? userEmployee.organization : undefined;
+    
+        console.log('User Employee:', userEmployee); // ตรวจสอบข้อมูล employee
+        console.log('User Organization:', userOrganization); // ตรวจสอบ organization
+    
+        if (userOrganization) {
+          // กรองข้อมูลเฉพาะบริษัทของผู้ใช้ที่ล็อกอินเข้ามา
+          const filteredDocuments = documents.filter((doc) => {
+            return doc.employee.organization === userOrganization;
+          });
+    
+          // Log ข้อมูลบริษัทที่ตรงกับผู้ใช้ที่ล็อกอิน
+          console.log(`User's Organization: ${userOrganization}`);
+          console.log('Filtered Documents:', filteredDocuments);
+    
+          // ส่งข้อมูลเฉพาะบริษัทของผู้ใช้ที่ล็อกอินไป
+          this.processAdminData(filteredDocuments);
         } else {
-          console.error('Invalid lat/lng values:', latLngString);
+          console.error('User organization is undefined.');
         }
-      } else {
-        console.error('Location does not match the expected pattern:', location);
       }
-    } else {
-      console.warn('No location data available for this record.');
     }
-  });
-
-  for (const key in locationMap) {
-    if (locationMap.hasOwnProperty(key)) {
-      const loc = locationMap[key];
-      this.addMarker(loc.lat, loc.lng, loc.topics, loc.places, loc.locations);
+    
+    processAdminData(filteredData: any): void {
+      const locationMap: any = {};
+    
+      // วนลูปข้อมูลที่ผ่านการกรอง ซึ่งประกอบด้วยข้อมูลพนักงานและเอกสาร
+      filteredData.forEach((recordGroup: any) => {
+        const documents = recordGroup.documents; // เข้าถึงอาร์เรย์ documents ของแต่ละ group
+    
+        documents.forEach((record: any) => {
+          const topic = record.record_topic || 'No topic available';
+          const place = record.record_place || 'No places available';
+          let location = record.record_location || 'No location available';
+    
+          if (location && location !== 'No location available') {
+            location = location.trim();
+    
+            // ตรวจสอบว่าค่าของ location ตรงตามรูปแบบ "Lat: xx, Lng: xx"
+            const locationPattern = /^Lat:\s*(-?\d+(\.\d+)?),\s*Lng:\s*(-?\d+(\.\d+)?)$/;
+            if (locationPattern.test(location)) {
+              const latLngString = location.replace("Lat:", "").replace("Lng:", "").split(',');
+              const lat = parseFloat(latLngString[0].trim());
+              const lng = parseFloat(latLngString[1].trim());
+              const key = `${lat.toFixed(4)},${lng.toFixed(4)}`;  // ใช้ 4 หลักทศนิยม
+    
+              if (!isNaN(lat) && !isNaN(lng)) {
+                if (!locationMap[key]) {
+                  locationMap[key] = { lat, lng, topics: [], places: [], locations: [] };
+                }
+                locationMap[key].topics.push(topic);
+                locationMap[key].places.push(place);
+                locationMap[key].locations.push(location); // เก็บข้อมูล location
+              } else {
+                console.error('Invalid lat/lng values:', latLngString);
+              }
+            } else {
+              console.error('Location does not match the expected pattern:', location);
+            }
+          } else {
+            console.warn('No location data available for this record.');
+          }
+        });
+      });
+    
+      // วน loop เพื่อนำข้อมูลใน locationMap ไปแสดง marker
+      for (const key in locationMap) {
+        if (locationMap.hasOwnProperty(key)) {
+          const loc = locationMap[key];
+          // เพิ่ม marker ในตำแหน่งที่ถูกต้องด้วยข้อมูลหัวข้อ สถานที่ และพิกัด
+          this.addMarker(loc.lat, loc.lng, loc.topics, loc.places, loc.locations);
+        }
+      }
     }
-  }
-}
 
 processSuperAdminData(data: any[]): void {
   const dataByProvince: { [provinceName: string]: any[] } = {};
@@ -301,7 +328,7 @@ processSuperAdminData(data: any[]): void {
       const locations: string[] = [];
 
       provinceData.forEach(item => {
-        console.log('Item:', item);
+        // console.log('Item:', item);
         // สมมุติว่า documents มีอย่างน้อยหนึ่งรายการ
         item.documents.forEach(doc => {
           topics.push(doc.record_topic || ''); // ถ้าไม่มีข้อมูลให้เว้นช่องว่าง
@@ -310,14 +337,14 @@ processSuperAdminData(data: any[]): void {
         });
       });
 
-      console.log(`Adding marker at ${loc.lat}, ${loc.lng} for province ${provinceName}`);
-      console.log('Topics:', topics);
-      console.log('Places:', places);
-      console.log('Locations:', locations);
+      // console.log(`Adding marker at ${loc.lat}, ${loc.lng} for province ${provinceName}`);
+      // console.log('Topics:', topics);
+      // console.log('Places:', places);
+      // console.log('Locations:', locations);
 
       this.addMarker(loc.lat, loc.lng, topics, places, locations);
     } else {
-      console.warn(`No coordinates found for province: ${provinceName}`);
+      // console.warn(`No coordinates found for province: ${provinceName}`);
     }
   });
 }

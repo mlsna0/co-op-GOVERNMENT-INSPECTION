@@ -217,30 +217,41 @@
  
         <div class="row">
           <div class="col-sm-8">
-
+        
             <div class="BGchart">
-              <h4>เอกสาร & ผู้ใช้งาน</h4>
-              <canvas id="myLineChart">
-              </canvas>
-              <div class="pagination-chart">
+              <h4 *ngIf="isSuperAdmin">เอกสารที่ลงนาม & เอกสารที่ยังไม่ลงนาม</h4>
+              <h4 *ngIf="isAdmin">สรุปเอกสารรายเดือน</h4>
+              
+              <!-- Canvas สำหรับ SuperAdmin -->
+              <canvas *ngIf="isSuperAdmin" id="myLineChart"></canvas>
+              
+              <!-- Canvas สำหรับ Admin -->
+              <canvas *ngIf="isAdmin" id="myMonthlyChart"></canvas>
+        
+              <!-- Pagination สำหรับ SuperAdmin -->
+              <div class="pagination-chart" *ngIf="isSuperAdmin">
                 <button (click)="prevPage()"
-                  [disabled]="currentPage === 1 || (displayedProvinces.length < itemsPerPage && totalPages === 1)"><i
-                    class="fa fa-angles-left"></i></button>
+                  [disabled]="currentPage === 1 || (displayedProvinces.length < itemsPerPage && totalPages === 1)">
+                  <i class="fa fa-angles-left"></i>
+                </button>
                 <button (click)="nextPage()"
-                  [disabled]="currentPage === totalPages|| (displayedProvinces.length < itemsPerPage && totalPages === 1)"><i
-                    class="fa fa-angles-right"></i></button>
-              </div>
-            </div>
-
-
-          </div>
+                  [disabled]="currentPage === totalPages|| (displayedProvinces.length < itemsPerPage && totalPages === 1)">
+                  <i class="fa fa-angles-right"></i>
+                </button>
+              </div> <!-- ปิด div นี้อย่างถูกต้อง -->
+              
+            </div> <!-- ปิด div class="BGchart" อย่างถูกต้อง -->
+        
+          </div> <!-- ปิด div class="col-sm-8" อย่างถูกต้อง -->
+  
+        
 
           <div class="col-sm-4" >
             <app-map></app-map>
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-12" > <!-- *ngIf="isSuperAdmin"-->
+          <div class="col-sm-12"  *ngIf="isSuperAdmin"> <!-- *ngIf="isSuperAdmin"-->
             <app-thaicounty [filterCriteria]="filterCriteria"></app-thaicounty>
           </div>
 

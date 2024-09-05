@@ -23,6 +23,8 @@ export class DashboardComponent implements OnInit {
   //  provinces: { id: number, name_th: string, selected: boolean }[] = []; // เปลี่ยนเป็น provinces
   provinces: any[] = [];
   recordCount: number;
+  companyData: { [key: string]: any } = {};
+  monthlyDataByProvince: { [key: string]: any } = {}; 
   userCount: number;
   isAdmin: boolean;
   isSuperAdmin: boolean;
@@ -223,6 +225,7 @@ export class DashboardComponent implements OnInit {
       if (this.router.url === '/dashboard') {
         if (!this.chart) {
           this.createChart();
+          this.createMonthlyChart(); 
         }
         if (!this.donutChart) {
           this.createDonutChart();
@@ -529,6 +532,7 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
   createDonutChart(): void {
     const ctx = document.getElementById('myDonutChart') as HTMLCanvasElement | null;
   
@@ -610,12 +614,15 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+
+
   createMonthlyChart(): void {
+    // console.log('Creating monthly chart for admin');
     const canvas = document.getElementById('myMonthlyChart') as HTMLCanvasElement | null;
     if (!canvas) {
       return;
     }
-
+  
     const ctx = canvas.getContext('2d');
     if (!ctx) {
       return;
@@ -623,14 +630,23 @@ export class DashboardComponent implements OnInit {
     if (this.chart) {
       this.chart.destroy();
     }
-
+  
     // กำหนดเดือนในภาษาไทย
     const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
-
-    // ดึงข้อมูลรายเดือนจาก monthlyData
-    const monthlyDocumentCounts = months.map(month => this.monthlyData[month]?.documentCount || 0);
-    const monthlySignedDocuments = months.map(month => this.monthlyData[month]?.signedDocuments || 0);
-
+  
+    // ตรวจสอบว่ามีข้อมูลบริษัทของผู้ใช้ใน companyData หรือไม่
+    const userCompany = this.currentUser.employeeId.organization;
+    const companyData = this.companyData[userCompany];
+  
+    if (!companyData) {
+      console.error(`No data available for the company: ${userCompany}`);
+      return;
+    }
+  
+    // ดึงข้อมูลรายเดือนจาก companyData
+    const monthlyDocumentCounts = months.map(month => companyData.monthlyData[month]?.documentCount || 0);
+    const monthlySignedDocuments = months.map(month => companyData.monthlyData[month]?.signedDocuments || 0);
+  
     this.chart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -696,7 +712,7 @@ export class DashboardComponent implements OnInit {
     this.totalDocuments = 0;
     this.totalSignedDocuments = 0;
 
-    console.log('Starting processProvinceData with documents:', documents);
+    // console.log('Starting processProvinceData with documents:', documents);
 
     documents.forEach(document => {
       // นับจำนวนเอกสารภายใน document
@@ -779,114 +795,118 @@ export class DashboardComponent implements OnInit {
 
     // console.log('Finished processing province data:', this.provinceData);
   }
-  processMonthlyData(): void {
-    if (!this.isAdmin) {
-      // console.log("Not an admin user, skipping monthly data processing.");
-      return;  // ถ้าไม่ใช่ Admin ไม่ต้องทำอะไรต่อ
+
+  private englishToThaiMonthMap: { [key: string]: string } = {
+    January: 'มกราคม',
+    February: 'กุมภาพันธ์',
+    March: 'มีนาคม',
+    April: 'เมษายน',
+    May: 'พฤษภาคม',
+    June: 'มิถุนายน',
+    July: 'กรกฎาคม',
+    August: 'สิงหาคม',
+    September: 'กันยายน',
+    October: 'ตุลาคม',
+    November: 'พฤศจิกายน',
+    December: 'ธันวาคม'
+  };
+
+ groupByCompany(documents: any[]): void {
+  this.companyData = {};
+  const userCompany = this.currentUser.employeeId.organization;
+
+  documents.forEach(record => {
+    const companyName = record.employee.organization;
+
+    if (!companyName || companyName !== userCompany) {
+      return;
     }
 
-    this.monthlyData = {};  // เริ่มต้นข้อมูลสำหรับแยกตามเดือน
-
-    // ดึงจังหวัดของผู้ใช้ Admin
-    // console.log('currentUser:', this.currentUser.employeeId);
-    const adminProvinceId = this.currentUser.employeeId.province; // สมมติว่า currentUser มีข้อมูลผู้ใช้ที่ได้จาก loadUser()
-    // console.log(adminProvinceId);
-
-    const adminProvinceName = this.provinceService.getProvinceNameById(parseInt(adminProvinceId, 10), this.provinces);
-    // console.log(adminProvinceName);
-
-    // console.log(this.provinceData);
-    if (!adminProvinceName || adminProvinceName === 'ไม่ทราบจังหวัด') {
-      // console.error("Admin province is unknown or invalid.");
-      return; // ออกจากฟังก์ชันหากไม่มีข้อมูลจังหวัดที่ถูกต้อง
+    if (!this.companyData[companyName]) {
+      this.companyData[companyName] = {
+        monthlyData: {}
+      };
     }
 
-    // ใช้ข้อมูลที่จัดกลุ่มตามจังหวัดใน this.provinceData เฉพาะจังหวัดของ Admin
-    if (this.provinceData[adminProvinceName]) {
+    record.documents.forEach(doc => {
+      if (doc.record_star_date) {
+        const englishMonth = new Date(doc.record_star_date).toLocaleString('default', { month: 'long' });
+        const thaiMonth = this.englishToThaiMonthMap[englishMonth]; // แปลงเป็นเดือนภาษาไทย
 
-      const province = this.provinceData[adminProvinceName];
-      province.users.forEach(document => {
-        document.documents.forEach(doc => {
-          if (!doc.createdDate) {
-            // console.error(`createdDate is undefined or null for document: ${JSON.stringify(doc)}`);
-            return;
-          }
-
-          const month = new Date(doc.createdDate).toLocaleString('default', { month: 'long' });
-
-          if (!this.monthlyData[month]) {
-            this.monthlyData[month] = { documentCount: 0, signedDocuments: 0 };
-          }
-
-          this.monthlyData[month].documentCount += 1;
-
-          if (this.pdfs.includes(`${doc._id}.pdf`)) {
-            this.monthlyData[month].signedDocuments += 1;
-          }
-        });
-      });
-
-      // แสดงข้อมูลรายเดือนเฉพาะสำหรับจังหวัดของ Admin
-      Object.keys(this.monthlyData).forEach(month => {
-        // console.log(`${month}: ${this.monthlyData[month].documentCount} documents, ${this.monthlyData[month].signedDocuments} signed`);
-      });
-    } else {
-      // console.log(`No data found for the admin's province: ${adminProvinceName}`);
-    }
-  }
-
-  loadUser(): void {
-    this.loginservice.getUserProfile().subscribe(
-      user => {
-        if (user && user._id) {
-          const userId = user._id;
-          const role = user.role;
-
-          const loadDocuments = (documents: any[]) => {
-            this.allDocuments = documents;
-            this.currentUser = user;
-            this.isAdmin = role === 'admin';
-            this.isSuperAdmin = role === 'superadmin';
-            // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามจังหวัด
-            console.log(this.currentUser);
-            // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามเดือนสำหรับ Admin
-            this.processProvinceData(documents);
-
-            if (this.isAdmin) {
-              this.processMonthlyData();
-            }
-            // เรียกใช้ฟังก์ชันประมวลผลข้อมูลตามจังหวัดสำหรับ Superadmin
-
-
-            // สร้างกราฟหลังจากประมวลผลข้อมูลเสร็จ
-            this.createChart();
-            this.createDonutChart();
-            this.createMonthlyChart();  // เรียกใช้งานฟังก์ชันเพื่อสร้างกราฟตามเดือน
-            this.dtTrigger.next(this.provinces);
+        if (!this.companyData[companyName].monthlyData[thaiMonth]) {
+          this.companyData[companyName].monthlyData[thaiMonth] = {
+            documentCount: 0,
+            signedDocuments: 0
           };
-
-          // ใช้ service เดียวกัน แต่แยกตาม role โดยใช้ getter
-          this.sv.getAllRecordsLinkedByEmployeeId().subscribe(
-            recordData => {
-              if (recordData && recordData.length > 0) {
-                loadDocuments(recordData);
-                console.log(recordData);
-              } else {
-                console.error('ไม่พบเอกสาร');
-              }
-            },
-            error => {
-              console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล:', error);
-            }
-          );
-        } else {
-          console.error('User ID is undefined or null.');
         }
-      },
-      error => {
-        console.error('Error fetching user profile:', error);
+
+        this.companyData[companyName].monthlyData[thaiMonth].documentCount += 1;
+
+        if (this.pdfs.includes(`${doc._id}.pdf`)) {
+          this.companyData[companyName].monthlyData[thaiMonth].signedDocuments += 1;
+        }
+      } else {
+        console.warn(`Document ${doc._id} does not have a valid start date.`);
       }
-    );
-  }
+    });
+  });
+
+  // console.log('Grouped data for the user\'s company:', this.companyData);
+}
+
+loadUser(): void {
+  this.loginservice.getUserProfile().subscribe(
+    user => {
+      if (user && user._id) {
+        const userId = user._id;
+        const role = user.role;
+        const userCompany = user.employeeId.organization;
+        const loadDocuments = (documents: any[]) => {
+          this.allDocuments = documents;
+          this.currentUser = user;
+          this.isAdmin = role === 'admin';
+          this.isSuperAdmin = role === 'superadmin';
+
+          console.log(this.currentUser);
+
+          // ประมวลผลข้อมูลตามบทบาท
+          if (this.isSuperAdmin) {
+            this.processProvinceData(documents);
+            this.createChart();
+          } else if (this.isAdmin) {
+            this.groupByCompany(documents);
+            this.createMonthlyChart();
+          }
+            // this.createChart();
+            this.createMonthlyChart();
+          
+
+          this.createDonutChart(); // เรียกใช้กราฟโดนัทที่ต้องการ
+
+          this.dtTrigger.next(this.provinces);
+        };
+
+        this.sv.getAllRecordsLinkedByEmployeeId().subscribe(
+          recordData => {
+            if (recordData && recordData.length > 0) {
+              loadDocuments(recordData);
+              console.log(recordData);
+            } else {
+              console.error('ไม่พบเอกสาร');
+            }
+          },
+          error => {
+            console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล:', error);
+          }
+        );
+      } else {
+        console.error('User ID is undefined or null.');
+      }
+    },
+    error => {
+      console.error('Error fetching user profile:', error);
+    }
+  );
+}
 
 }
