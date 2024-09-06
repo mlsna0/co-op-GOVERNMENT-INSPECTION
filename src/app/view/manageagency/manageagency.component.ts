@@ -119,9 +119,11 @@ export class ManageagencyComponent implements OnInit {
         (response) => {
           console.log("User postagency successfully", response);
           this.toastr.success('เพิ่มข้อมูลสำเร็จ', 'สำเร็จ', {
-            timeOut: 2500,  
+            timeOut: 1500,  
             positionClass: 'toast-top-right'
-          })
+          }).onHidden.subscribe(() => {
+            window.location.reload();  // รีเฟรชหน้าจอหลังจากแจ้งเตือนหายไป
+          });
         },
         (error) => {
           console.error("Error registering user", error);

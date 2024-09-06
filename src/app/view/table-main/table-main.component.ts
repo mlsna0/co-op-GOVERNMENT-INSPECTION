@@ -851,6 +851,7 @@ get personal(): FormArray {
           timeOut: 1500,
           positionClass: 'toast-top-right'
         });
+        
       // Swal.fire({
       //   title: 'เกิดข้อผิดพลาด!',
       //   text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง',
@@ -872,7 +873,6 @@ get personal(): FormArray {
     //   console.log("res postItemData:", res);
     // });
     const token = this.sv.getToken(); // ดึง token จากบริการที่คุณใช้
-
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     
     this.sv.postDataTest(this.addItemForm.value, token).subscribe(res => {
@@ -880,7 +880,9 @@ get personal(): FormArray {
       this.toastr.success('เพิ่มข้อมูลสำเร็จ', 'สำเร็จ', {
         timeOut: 1500,  
         positionClass: 'toast-top-right'
-      })
+      }).onHidden.subscribe(() => {
+        window.location.reload();  // รีเฟรชหน้าจอหลังจากแจ้งเตือนหายไป
+      });
 
       
       // Swal.fire({

@@ -246,7 +246,10 @@ export class ManageuserComponent implements OnInit {
           this.toastr.success('ลงทะเบียนสำเร็จ', 'สำเร็จ!', {
             timeOut: 1500,
             positionClass: 'toast-top-right'
+          }).onHidden.subscribe(() => {
+            window.location.reload();  // รีเฟรชหน้าจอหลังจากแจ้งเตือนหายไป
           });
+          
           this.closeModal();
        
         },
