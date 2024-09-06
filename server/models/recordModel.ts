@@ -21,7 +21,7 @@ const recordSchema = new mongoose.Schema({
     createdDate: String, // เพิ่มฟิลด์สำหรับเก็บวันที่
     createdTime: String, // เพิ่มฟิลด์สำหรับเก็บเวลา
     status: Number,
-    qrcode: String,
+    record_qrcode: String,
     // userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' }, 
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },

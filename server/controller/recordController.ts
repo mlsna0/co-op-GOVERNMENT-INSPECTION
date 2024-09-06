@@ -10,6 +10,7 @@ import BaseCtrl from './base';
 import * as path from 'path';
 import * as fs from 'fs';
 import jwt from 'jsonwebtoken';
+import QRCode from 'qrcode';
 const mongoose = require('mongoose'); 
 
 interface MulterRequest extends Request {
@@ -52,7 +53,8 @@ class recorCon extends BaseCtrl {
       const now = new Date();
       const localDate = now.toLocaleDateString('th-TH', { timeZone: 'Asia/Bangkok' }); // วันที่ตามเขตเวลาท้องถิ่น
       const localTime = now.toLocaleTimeString('th-TH', { timeZone: 'Asia/Bangkok' }); // เวลาตามเขตเวลาท้องถิ่น
-  
+      const record_qrcode = req.body.qrCode ? req.body.qrCode.split(',').pop() : null;
+      
       const obj = await new this.model({
         record_id: req.body.id,
         record_star_date: req.body.startDate, 
@@ -64,6 +66,7 @@ class recorCon extends BaseCtrl {
         record_provine: req.body.provine,
         record_place: req.body.place,
         record_filename: req.body.filename,
+        record_qrcode: record_qrcode, // เก็บเฉพาะชื่อไฟล์ QR Code
         userId: userID, 
         createdDate: localDate, 
         createdTime: localTime, 
@@ -169,7 +172,10 @@ upload(req, res, async (err) => {
     }
 
     try {
-      const record = await this.model.findByIdAndUpdate(id, { record_filename: newFilename }, { new: true });
+      const qrCodeDataURL = await QRCode.toDataURL(`http://localhost:4200/table-detail/${id}`);
+
+      const record = await this.model.findByIdAndUpdate(id, { record_filename: newFilename ,
+        qr_code: qrCodeDataURL}, { new: true });
       if (!record) {
         return res.status(404).send('Record not found');
       }
