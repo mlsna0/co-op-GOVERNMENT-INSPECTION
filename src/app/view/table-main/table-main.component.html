@@ -15,470 +15,504 @@
 
 
   <div class="container-fluid">
-        <div class="card">
-          <!-- <div class="card-Edit"> -->
-          <div  class="card-header "> <!--card-header-danger-->
-            <div class="card-title" style="text-align: center">
-              <p style="margin: 0;">
-                การลงตรวจอิเล็กทรอนิค
-              </p>
-            
-              <!-- <div class="sub-title">
+    <div class="card">
+      <!-- <div class="card-Edit"> -->
+      <div class="card-header "> <!--card-header-danger-->
+        <div class="card-title" style="text-align: center">
+          <p style="margin: 0;">
+            การลงตรวจอิเล็กทรอนิค
+          </p>
+
+          <!-- <div class="sub-title">
                 แสดงรายการเอกสารลงพื้นที่
               </div> -->
-            </div>
-            <div class="group-btn">
-              <button (click)="exportToExcel()" class="btn btn-success" style="float: right;">Export to excel</button>
-              <button class="btn btn-add pull-center " (click)="onInsertModal()">
+        </div>
+        <div class="group-btn">
+          <button (click)="exportToExcel()" class="btn btn-success" style="float: right;">Export to excel</button>
+          <button class="btn btn-add pull-center " (click)="onInsertModal()">
             เพิ่มหัวข้อเอกสาร
+          </button>
+
+        </div>
+
+
+      </div>
+
+      <!-- </div> card-Edit -->
+
+      <div class="card-body">
+        <table width="100%" datatable [dtOptions]="dtOptions" *ngIf="!loading"
+          class="table table-border table-hover table-bordered nowrap" style="color: black;">
+          <thead class="text-primary" style="color: black; font-size: 16px;">
+            <tr>
+              <th style="width: 2%; white-space: nowrap; text-align: center; color: black; font-size: 16px;">
+                ครั้งที่
+              </th>
+              <th style="color: black; font-size: 16px;">หัวข้อการตรวจสอบ</th>
+              <th style="width: 9%; color: black; font-size: 16px;">วันที่เริ่มตรวจสอบ</th>
+              <th style="width: 9%; color: black; font-size: 16px;">วันที่เสร็จสิ้น</th>
+              <th style="width: 5%; color: black; font-size: 16px;">สถานที่</th>
+              <th style="width: 5%; color: black; font-size: 16px; text-align: center;">สถานะ</th>
+              <th class="text-center" style="color: black; font-size: 16px;"><i class="fa fa-gear"></i></th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr *ngFor="let item of items">
+              <td style="text-align: center;">
+                {{item?.record_id}}
+              </td>
+              <td style="white-space: nowrap;">
+                {{item?.record_topic}}
+              </td>
+              <td style="vertical-align: middle; white-space: nowrap; text-align: center;">
+                {{item?.record_star_date | thaidate: "medium"}}
+              </td>
+              <td style="vertical-align: middle; white-space: nowrap; text-align: center;">
+                {{item?.record_end_date | thaidate: "medium"}}
+              </td>
+              <td class="text-center" style="white-space: nowrap;">
+                <button class="searchLocation" (click)="searchLocation(item?.record_location)">ดูพิกัด</button>
+              </td>
+              <td style="vertical-align: middle; white-space: nowrap; text-align: center; justify-content: center;">
+                <i *ngIf="item.record_filename" class="fa-regular fa-circle-check checkIcon"> &nbsp;
+                  <div style="font-family: 'Sarabun',sans-serif;">เซ็นสำเร็จ</div>
+                </i>
+                <i *ngIf="!item.record_filename" class="fa-regular fa-circle-xmark cancleIcon"> &nbsp;
+                  <div style="font-family: 'Sarabun',sans-serif;">ยังไม่ได้เซ็น</div>
+                </i>
+              </td>
+              <td class="text-center" style="width:1% ;white-space: nowrap;">
+                <button (click)="openDataDetail(item?._id)" style="border: none; background: none; color: black;">
+                  <i data-toggle="tooltip" title="ดูรายละเอียดเอกสาร" data-placement="top" class="fa fa-pencil"></i>
+                </button>
+                <button *ngIf="!item.record_filename" (click)="onRecord(item?._id)"
+                  style="border: none; background: none; color: black;">
+                  <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top"
+                    class="fa fa-pencil-square-o Record"></i>
+                </button>
+                <button *ngIf="!item.record_filename" (click)="openDetailModal(item?._id)"
+                  style="border: none; background: none; color: black;">
+                  <i data-toggle="tooltip" title="เพิ่มเนื้อหา" data-placement="top"
+                    class="fa fa-file-text-o ModalIcon"></i>
+                </button>
+                <button *ngIf="item.record_filename" style="border: none; background: none; color: black;">
+                  <i class="fa fa-file-pdf-o" (click)="showPDF(item.record_filename)"></i>
+                </button>
+                <!-- land insert Qr code -->
+                <button *ngIf="!item.record_filename" (click)="openQrcode(item?._id)"
+                  style="border: none; background: none; color: black;">
+                  <i data-toggle="tooltip" title="QR code" data-placement="top" class="bi bi-qr-code"></i>
+                </button>
+                <!-- land insert Qr code  end-->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- การเพิ่มข้อมูล-->
+
+      <!--land insert-->
+      <div class="modal fade" id="insertModel" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header" class="card-header">
+
+              <h5 class="modal-title" id="addItemModalLabel"
+                style="color: rgb(0, 0, 0); font-family: 'Sarabun', sans-serif !important; font-size: 18px; font-weight: 900;">
+                เพิ่มข้อมูลเอกสาร</h5>
+
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: black;">
+                <span aria-hidden="true">&times;</span>
               </button>
 
+
             </div>
-       
-            
-          </div>
-
-          <!-- </div> card-Edit -->
-
-          <div class="card-body">
-            <table width="100%" datatable [dtOptions]="dtOptions" *ngIf="!loading"
-              class="table table-border table-hover table-bordered nowrap" style="color: black;">
-              <thead class="text-primary" style="color: black; font-size: 16px;">
-                <tr>
-                  <th style="width: 2%; white-space: nowrap; text-align: center; color: black; font-size: 16px;">
-                    ครั้งที่
-                  </th>
-                  <th style="color: black; font-size: 16px;">หัวข้อการตรวจสอบ</th>
-                  <th style="width: 9%; color: black; font-size: 16px;">วันที่เริ่มตรวจสอบ</th>
-                  <th style="width: 9%; color: black; font-size: 16px;">วันที่เสร็จสิ้น</th>
-                  <th style="width: 5%; color: black; font-size: 16px;">สถานที่</th>
-                  <th style="width: 5%; color: black; font-size: 16px; text-align: center;">สถานะ</th>
-                  <th class="text-center" style="color: black; font-size: 16px;"><i class="fa fa-gear"></i></th>
-                </tr>
-              </thead>
-              <tbody>
-          
-                <tr *ngFor="let item of items">
-                  <td style="text-align: center;">
-                    {{item?.record_id}}
-                  </td>
-                  <td style="white-space: nowrap;">
-                    {{item?.record_topic}}
-                  </td>
-                  <td style="vertical-align: middle; white-space: nowrap; text-align: center;">
-                    {{item?.record_star_date | thaidate: "medium"}}
-                  </td>
-                  <td style="vertical-align: middle; white-space: nowrap; text-align: center;">
-                    {{item?.record_end_date | thaidate: "medium"}}
-                  </td>
-                  <td class="text-center" style="white-space: nowrap;">
-                    <button class="searchLocation" (click)="searchLocation(item?.record_location)">ดูพิกัด</button>
-                  </td>
-                  <td style="vertical-align: middle; white-space: nowrap; text-align: center; justify-content: center;">
-                    <i *ngIf="item.record_filename" class="fa-regular fa-circle-check checkIcon"> &nbsp;
-                      <div style="font-family: 'Sarabun',sans-serif;">เซ็นสำเร็จ</div>
-                    </i>
-                    <i *ngIf="!item.record_filename" class="fa-regular fa-circle-xmark cancleIcon"> &nbsp;
-                      <div style="font-family: 'Sarabun',sans-serif;">ยังไม่ได้เซ็น</div>
-                    </i>
-                  </td>
-                  <td class="text-center" style="width:1% ;white-space: nowrap;">
-                    <button (click)="openDataDetail(item?._id)" style="border: none; background: none; color: black;">
-                      <i data-toggle="tooltip" title="ดูรายละเอียดเอกสาร" data-placement="top"
-                        class="fa fa-pencil"></i>
-                    </button>
-                    <button *ngIf="!item.record_filename" (click)="onRecord(item?._id)" style="border: none; background: none; color: black;">
-                      <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top"
-                        class="fa fa-pencil-square-o Record"></i>
-                    </button>
-                    <button *ngIf="!item.record_filename" (click)="openDetailModal(item?._id)" style="border: none; background: none; color: black;">
-                      <i data-toggle="tooltip" title="เพิ่มเนื้อหา" data-placement="top"
-                        class="fa fa-file-text-o ModalIcon"></i>
-                    </button>
-                    <button *ngIf="item.record_filename" style="border: none; background: none; color: black;">
-                      <i class="fa fa-file-pdf-o" (click)="showPDF(item.record_filename)"></i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- การเพิ่มข้อมูล-->
-
-          <!--land insert-->
-          <div class="modal fade" id="insertModel" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header" class="card-header">
-                 
-                      <h5 class="modal-title" id="addItemModalLabel"
-                        style="color: rgb(0, 0, 0); font-family: 'Sarabun', sans-serif !important; font-size: 18px; font-weight: 900;">
-                        เพิ่มข้อมูลเอกสาร</h5>
-              
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: black;">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                
-
-                </div>
-                <div class="modal-body">
-                  <form [formGroup]="addItemForm" (ngSubmit)="onInsertSummit(addItemForm.value)">
-                    <div class="row">
-                      <div class="col-sm-2">
-                        <div class="form-group">
-                          <label for="id" class="form-label">ครั้งที่
-                            <span
-                              *ngIf="addItemForm.controls['id'].invalid && (addItemForm.controls['id'].touched || addItemForm.controls['id'].dirty || Submitted)"
-                              class="text-validate">*</span>
-                          </label>
-
-                          <input type="id" id="id" formControlName="id" class="form-control" placeholder="ครั้งที่"
-                            [ngClass]="{'box-validate':  addItemForm.controls['id'].invalid && (addItemForm.controls['id'].touched || addItemForm.controls['id'].dirty || Submitted)}" />
-                          <div class="text-validate"
-                            *ngIf="addItemForm.controls['id'].invalid &&(addItemForm.controls['id'].touched || addItemForm.controls['id'].dirty || Submitted) ">
-                            <span class="border-errorInDex"
-                              *ngIf="addItemForm.controls['id'].invalid && (addItemForm.controls['id'].touched || addItemForm.controls['id'].dirty || Submitted)">จำเป็น**</span>
-                          </div>
-
-                        </div>
-                      </div>
-                      <div class="col-sm-5">
-                        <div class="form-group">
-                          <label for="startDate">วันที่เริ่มตรวจสอบ
-                            <span
-                              *ngIf="addItemForm.controls['startDate'].invalid && (addItemForm.controls['startDate'].touched || addItemForm.controls['startDate'].dirty || Submitted)"
-                              class="text-validate">*</span>
-                          </label>
-                          <input type="date" id="startDate" [(ngModel)]="startDate" formControlName="startDate"
-                            class="form-control" placeholder="วันที่เริ่มตรวจสอบ"
-                            [ngClass]="{'box-validate':  addItemForm.controls['startDate'].invalid && (addItemForm.controls['startDate'].touched || addItemForm.controls['startDate'].dirty || Submitted)}" />
-                          <div class="text-validate"
-                            *ngIf="addItemForm.controls['startDate'].invalid &&(addItemForm.controls['startDate'].touched || addItemForm.controls['startDate'].dirty || Submitted) ">
-                            <span class="border-error"
-                              *ngIf="addItemForm.controls['startDate'].invalid && (addItemForm.controls['startDate'].touched || addItemForm.controls['startDate'].dirty || Submitted)">กรุณากรอกข้อมูล</span>
-                          </div>
-
-                          <!--style="color:rgb(171, 171, 171)"-->
-                        </div>
-                      </div>
-                      <div class="col-sm-5">
-                        <div class="form-group">
-                          <label for="endDate">วันที่เสร็จสิ้น
-                            <span
-                              *ngIf="addItemForm.controls['endDate'].invalid && (addItemForm.controls['endDate'].touched || addItemForm.controls['endDate'].dirty || Submitted)"
-                              class="text-validate">*</span>
-                          </label>
-                          <input type="date" id="endDate" formControlName="endDate" class="form-control"
-                            placeholder="วันที่เสร็จสิ้น"
-                            [ngClass]="{'box-validate':  addItemForm.controls['endDate'].invalid && (addItemForm.controls['endDate'].touched || addItemForm.controls['endDate'].dirty || Submitted)}" />
-                          <div class="text-validate"
-                            *ngIf="addItemForm.controls['endDate'].invalid &&(addItemForm.controls['endDate'].touched || addItemForm.controls['endDate'].dirty || Submitted) ">
-                            <span class="border-error"
-                              *ngIf="addItemForm.controls['endDate'].invalid && (addItemForm.controls['endDate'].touched || addItemForm.controls['endDate'].dirty || Submitted)">กรุณากรอกข้อมูล</span>
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm">
-                        <div class="form-group position-relative">
-                          <label for="topic">
-                            หัวข้อการตรวจสอบ
-                            <!-- <span
-                              *ngIf="addItemForm.controls['topic'].invalid && (addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty || Submitted)"
-                              class="text-validate">*</span> -->
-                          </label>
-                          <input type="text" id="topic" formControlName="topic" class="form-control"
-                            placeholder="กรอกหัวข้อการตรวจสอบ"
-                            [ngClass]="{'box-validate': addItemForm.controls['topic'].invalid && (addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty || Submitted)}" />
-                          <div class="text-validate"
-                            *ngIf="addItemForm.controls['topic'].invalid &&(addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty || Submitted ) ">
-                            <span class="border-error"
-                              *ngIf="addItemForm.controls['topic'].invalid && (addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty || Submitted)">กรุณากรอกข้อมูล*</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-sm-12" style="position: relative; display: flex; justify-content: flex-end;">
-                      <button type="button" (click)="addPersonInput()" [disabled]="!canAddPerson()"
-                        style="border: none; background: none;"> <!---->
-                        <i class="fa fa-plus"></i>
-                      </button>
-                      <button type="button" (click)="deletePersonInput()" style="border: none; background: none;">
-                        <i class="fa fa-minus"></i>
-                      </button>
-
-                    </div>
-
-                    <!-- <form action method="post" [formGroup]="addPersonalForm"> -->
-                    <div class="row inputLabel" [formGroup]="addItemForm">
-                      <div class="col-sm-4">
-                        <label>
-
-                          ตำแหน่ง/คำนำหน้า
-                          <!-- <span
-                            *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty || Submitted)"
-                            class="text-validate"> *</span> -->
-                        </label>
-                      </div>
-                      <div class="col-sm-2" style="padding-left: 0;">
-                        <label for="firstname">ชื่อ
-                          <!-- <span
-                            *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty || Submitted)"
-                            class="text-validate"> *</span> -->
-                        </label>
-                      </div>
-                      <div class="col-sm-4" style="padding-left: 82px;">
-                        <label for="lastname">นามสกุล
-                          <!-- <span
-                            *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty || Submitted)"
-                            class="text-validate"> *</span> -->
-                        </label>
-                      </div>
-                 
-
-                    </div>
-              
-                    <div>
-                      <div *ngFor="let person of addItemForm.get('personal')['controls']; let i = index"
-                        [formGroup]="addItemForm">
-                        <div class="row " [formGroup]="person">
-                          <div class="col-sm-4">
-                            <div class="form-group position-relative">
-
-                              <input type="text" id="rank-{{i}}" formControlName="rank" class="form-control"
-                                placeholder="กรอกข้อมูล"
-                                [ngClass]="{'box-validate':person.controls['rank'].invalid && (person.controls['rank'].touched || person.controls['rank'].dirty || Submitted)}" />
-                  
-                              <div
-                                *ngIf="person.controls['rank'].invalid && (person.controls['rank'].touched || person.controls['rank'].dirty || Submitted)"
-                                class="border-errorPersonRank">
-                                กรุณากรอกข้อมูล*
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-sm-4" style="padding-left: 0;">
-                            <div class="form-group position-relative">
-
-                              <input type="text" id="firstname-{{i}}" formControlName="firstname" class="form-control"
-                                placeholder="กรอกข้อมูล"
-                                [ngClass]="{'box-validate': person.controls['firstname'].invalid && (person.controls['firstname'].touched || person.controls['firstname'].dirty || Submitted)}" />
-                            
-                              <div
-                                *ngIf="person.controls['firstname'].invalid && (person.controls['firstname'].touched || person.controls['firstname'].dirty || Submitted)"
-                                class="border-errorPersonFullname">
-                                กรุณากรอกข้อมูล*
-                              </div>
-
-                            </div>
-
-                          </div>
-                          <div class="col-sm-4" style="padding-left: 0; width: 40%; max-width: 40%;">
-                            <div class="form-group position-relative">
-
-                              <input type="text" id="lastname-{{i}}" formControlName="lastname" class="form-control"
-                                placeholder="กรอกข้อมูล"
-                                [ngClass]="{'box-validate': person.controls['lastname'].invalid && (person.controls['lastname'].touched || person.controls['lastname'].dirty || Submitted)}" />
-                     
-                              <div
-                                *ngIf="person.controls['lastname'].invalid && (person.controls['lastname'].touched || person.controls['lastname'].dirty || Submitted)"
-                                class="border-errorPersonFullname">
-                                กรุณากรอกข้อมูล*
-                              </div>
-
-                            </div>
-
-                          </div>
-
-                        </div>
-
-                      </div>
-
-                    </div>
-                    <!-- </form> -->
-                    <!-- <form action method="post" [formGroup]="addPersonalForm">
-                      </form> -->
-
+            <div class="modal-body">
+              <form [formGroup]="addItemForm" (ngSubmit)="onInsertSummit(addItemForm.value)">
+                <div class="row">
+                  <div class="col-sm-2">
                     <div class="form-group">
-                    <label for="detail">รายละเอียด
-                      <!-- <span
-                        *ngIf="addItemForm.controls['detail'].invalid && (addItemForm.controls['detail'].touched || addItemForm.controls['detail'].dirty || Submitted)"
-                        class="text-validate">*</span> -->
-                      </label>
-                    <input type="text" id="detail" formControlName="detail" class="form-control"
-                      placeholder="กรอกรายละเอียด"
-                      [ngClass]="{'box-validate': addItemForm.controls['detail'].invalid && (addItemForm.controls['detail'].touched || addItemForm.controls['detail'].dirty || Submitted)}" />
-                    <div class="text-validate"
-                      *ngIf="addItemForm.controls['detail'].invalid &&(addItemForm.controls['detail'].touched || addItemForm.controls['detail'].dirty || Submitted ) ">
-                      <span class="border-error"
-                        *ngIf="addItemForm.controls['detail'].invalid && (addItemForm.controls['detail'].touched || addItemForm.controls['topic'].dirty || Submitted)">กรุณากรอกข้อมูล*</span>
-                    </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label for="place">รายละเอียดสถานที่
-                        <!-- <span
-                          *ngIf="addItemForm.controls['place'].invalid && (addItemForm.controls['place'].touched || addItemForm.controls['place'].dirty || Submitted)"
-                          class="text-validate">*</span> -->
-                        </label>
-                      <input type="text" id="place" formControlName="place" class="form-control"
-                        placeholder="กรอกรายละเอียดสถานที่"
-                        [ngClass]="{'box-validate': addItemForm.controls['place'].invalid && (addItemForm.controls['place'].touched || addItemForm.controls['place'].dirty || Submitted)}" />
-                      <div class="text-validate"
-                        *ngIf="addItemForm.controls['place'].invalid &&(addItemForm.controls['place'].touched || addItemForm.controls['place'].dirty || Submitted ) ">
-                        <span class="border-error"
-                          *ngIf="addItemForm.controls['place'].invalid && (addItemForm.controls['place'].touched || addItemForm.controls['topic'].dirty || Submitted)">กรุณากรอกข้อมูล*</span>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="location">สถานที่
+                      <label for="id" class="form-label">ครั้งที่
                         <span
-                          *ngIf="addItemForm.controls['location'].invalid &&
-                                (addItemForm.controls['location'].touched ||
-                                 addItemForm.controls['location'].dirty || Submitted)"
+                          *ngIf="addItemForm.controls['id'].invalid && (addItemForm.controls['id'].touched || addItemForm.controls['id'].dirty || Submitted)"
                           class="text-validate">*</span>
                       </label>
-                      <input type="text" id="location" formControlName="location" class="form-control"
-                        placeholder="--เลือกสถานที่--"
-                        [ngClass]="{'box-validate': addItemForm.controls['location'].invalid && 
+
+                      <input type="text" id="id" formControlName="id" class="form-control" placeholder="ครั้งที่"
+                        [ngClass]="{'box-validate':  addItemForm.controls['id'].invalid && (addItemForm.controls['id'].touched || addItemForm.controls['id'].dirty || Submitted)}" />
+                      <div class="text-validate"
+                        *ngIf="addItemForm.controls['id'].invalid &&(addItemForm.controls['id'].touched || addItemForm.controls['id'].dirty || Submitted) ">
+                        <span class="border-errorInDex"
+                          *ngIf="addItemForm.controls['id'].invalid && (addItemForm.controls['id'].touched || addItemForm.controls['id'].dirty || Submitted)">จำเป็น**</span>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label for="startDate">วันที่เริ่มตรวจสอบ
+                        <span
+                          *ngIf="addItemForm.controls['startDate'].invalid && (addItemForm.controls['startDate'].touched || addItemForm.controls['startDate'].dirty || Submitted)"
+                          class="text-validate">*</span>
+                      </label>
+                      <input type="date" id="startDate" [(ngModel)]="startDate" formControlName="startDate"
+                        class="form-control" placeholder="วันที่เริ่มตรวจสอบ"
+                        [ngClass]="{'box-validate':  addItemForm.controls['startDate'].invalid && (addItemForm.controls['startDate'].touched || addItemForm.controls['startDate'].dirty || Submitted)}" />
+                      <div class="text-validate"
+                        *ngIf="addItemForm.controls['startDate'].invalid &&(addItemForm.controls['startDate'].touched || addItemForm.controls['startDate'].dirty || Submitted) ">
+                        <span class="border-error"
+                          *ngIf="addItemForm.controls['startDate'].invalid && (addItemForm.controls['startDate'].touched || addItemForm.controls['startDate'].dirty || Submitted)">กรุณากรอกข้อมูล</span>
+                      </div>
+
+                      <!--style="color:rgb(171, 171, 171)"-->
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="endDate">วันที่เสร็จสิ้น
+                        <span
+                          *ngIf="addItemForm.controls['endDate'].invalid && (addItemForm.controls['endDate'].touched || addItemForm.controls['endDate'].dirty || Submitted)"
+                          class="text-validate">*</span>
+                      </label>
+                      <input type="date" id="endDate" formControlName="endDate" class="form-control"
+                        placeholder="วันที่เสร็จสิ้น"
+                        [ngClass]="{'box-validate':  addItemForm.controls['endDate'].invalid && (addItemForm.controls['endDate'].touched || addItemForm.controls['endDate'].dirty || Submitted)}" />
+                      <div class="text-validate"
+                        *ngIf="addItemForm.controls['endDate'].invalid &&(addItemForm.controls['endDate'].touched || addItemForm.controls['endDate'].dirty || Submitted) ">
+                        <span class="border-error"
+                          *ngIf="addItemForm.controls['endDate'].invalid && (addItemForm.controls['endDate'].touched || addItemForm.controls['endDate'].dirty || Submitted)">กรุณากรอกข้อมูล</span>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm">
+                    <div class="form-group position-relative">
+                      <label for="topic">
+                        หัวข้อการตรวจสอบ
+                        <!-- <span
+                              *ngIf="addItemForm.controls['topic'].invalid && (addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty || Submitted)"
+                              class="text-validate">*</span> -->
+                      </label>
+                      <input type="text" id="topic" formControlName="topic" class="form-control"
+                        placeholder="กรอกหัวข้อการตรวจสอบ"
+                        [ngClass]="{'box-validate': addItemForm.controls['topic'].invalid && (addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty || Submitted)}" />
+                      <div class="text-validate"
+                        *ngIf="addItemForm.controls['topic'].invalid &&(addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty || Submitted ) ">
+                        <span class="border-error"
+                          *ngIf="addItemForm.controls['topic'].invalid && (addItemForm.controls['topic'].touched || addItemForm.controls['topic'].dirty || Submitted)">กรุณากรอกข้อมูล*</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-12" style="position: relative; display: flex; justify-content: flex-end;">
+                  <button type="button" (click)="addPersonInput()" [disabled]="!canAddPerson()"
+                    style="border: none; background: none;"> <!---->
+                    <i class="fa fa-plus"></i>
+                  </button>
+                  <button type="button" (click)="deletePersonInput()" style="border: none; background: none;">
+                    <i class="fa fa-minus"></i>
+                  </button>
+
+                </div>
+
+                <!-- <form action method="post" [formGroup]="addPersonalForm"> -->
+                <div class="row inputLabel" [formGroup]="addItemForm">
+                  <div class="col-sm-4">
+                    <label>
+
+                      ตำแหน่ง/คำนำหน้า
+                      <!-- <span
+                            *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty || Submitted)"
+                            class="text-validate"> *</span> -->
+                    </label>
+                  </div>
+                  <div class="col-sm-2" style="padding-left: 0;">
+                    <label for="firstname">ชื่อ
+                      <!-- <span
+                            *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty || Submitted)"
+                            class="text-validate"> *</span> -->
+                    </label>
+                  </div>
+                  <div class="col-sm-4" style="padding-left: 82px;">
+                    <label for="lastname">นามสกุล
+                      <!-- <span
+                            *ngIf="addItemForm.controls['personal'].invalid && (addItemForm.controls['personal'].touched || addItemForm.controls['personal'].dirty || Submitted)"
+                            class="text-validate"> *</span> -->
+                    </label>
+                  </div>
+
+
+                </div>
+
+                <div>
+                  <div *ngFor="let person of addItemForm.get('personal')['controls']; let i = index"
+                    [formGroup]="addItemForm">
+                    <div class="row " [formGroup]="person">
+                      <div class="col-sm-4">
+                        <div class="form-group position-relative">
+
+                          <input type="text" id="rank-{{i}}" formControlName="rank" class="form-control"
+                            placeholder="กรอกข้อมูล"
+                            [ngClass]="{'box-validate':person.controls['rank'].invalid && (person.controls['rank'].touched || person.controls['rank'].dirty || Submitted)}" />
+
+                          <div
+                            *ngIf="person.controls['rank'].invalid && (person.controls['rank'].touched || person.controls['rank'].dirty || Submitted)"
+                            class="border-errorPersonRank">
+                            กรุณากรอกข้อมูล*
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-4" style="padding-left: 0;">
+                        <div class="form-group position-relative">
+
+                          <input type="text" id="firstname-{{i}}" formControlName="firstname" class="form-control"
+                            placeholder="กรอกข้อมูล"
+                            [ngClass]="{'box-validate': person.controls['firstname'].invalid && (person.controls['firstname'].touched || person.controls['firstname'].dirty || Submitted)}" />
+
+                          <div
+                            *ngIf="person.controls['firstname'].invalid && (person.controls['firstname'].touched || person.controls['firstname'].dirty || Submitted)"
+                            class="border-errorPersonFullname">
+                            กรุณากรอกข้อมูล*
+                          </div>
+
+                        </div>
+
+                      </div>
+                      <div class="col-sm-4" style="padding-left: 0; width: 40%; max-width: 40%;">
+                        <div class="form-group position-relative">
+
+                          <input type="text" id="lastname-{{i}}" formControlName="lastname" class="form-control"
+                            placeholder="กรอกข้อมูล"
+                            [ngClass]="{'box-validate': person.controls['lastname'].invalid && (person.controls['lastname'].touched || person.controls['lastname'].dirty || Submitted)}" />
+
+                          <div
+                            *ngIf="person.controls['lastname'].invalid && (person.controls['lastname'].touched || person.controls['lastname'].dirty || Submitted)"
+                            class="border-errorPersonFullname">
+                            กรุณากรอกข้อมูล*
+                          </div>
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+                <!-- </form> -->
+                <!-- <form action method="post" [formGroup]="addPersonalForm">
+                      </form> -->
+
+                <div class="form-group">
+                  <label for="detail">รายละเอียด
+                    <!-- <span
+                        *ngIf="addItemForm.controls['detail'].invalid && (addItemForm.controls['detail'].touched || addItemForm.controls['detail'].dirty || Submitted)"
+                        class="text-validate">*</span> -->
+                  </label>
+                  <input type="text" id="detail" formControlName="detail" class="form-control"
+                    placeholder="กรอกรายละเอียด"
+                    [ngClass]="{'box-validate': addItemForm.controls['detail'].invalid && (addItemForm.controls['detail'].touched || addItemForm.controls['detail'].dirty || Submitted)}" />
+                  <div class="text-validate"
+                    *ngIf="addItemForm.controls['detail'].invalid &&(addItemForm.controls['detail'].touched || addItemForm.controls['detail'].dirty || Submitted ) ">
+                    <span class="border-error"
+                      *ngIf="addItemForm.controls['detail'].invalid && (addItemForm.controls['detail'].touched || addItemForm.controls['topic'].dirty || Submitted)">กรุณากรอกข้อมูล*</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="place">รายละเอียดสถานที่
+                    <!-- <span
+                          *ngIf="addItemForm.controls['place'].invalid && (addItemForm.controls['place'].touched || addItemForm.controls['place'].dirty || Submitted)"
+                          class="text-validate">*</span> -->
+                  </label>
+                  <input type="text" id="place" formControlName="place" class="form-control"
+                    placeholder="กรอกรายละเอียดสถานที่"
+                    [ngClass]="{'box-validate': addItemForm.controls['place'].invalid && (addItemForm.controls['place'].touched || addItemForm.controls['place'].dirty || Submitted)}" />
+                  <div class="text-validate"
+                    *ngIf="addItemForm.controls['place'].invalid &&(addItemForm.controls['place'].touched || addItemForm.controls['place'].dirty || Submitted ) ">
+                    <span class="border-error"
+                      *ngIf="addItemForm.controls['place'].invalid && (addItemForm.controls['place'].touched || addItemForm.controls['topic'].dirty || Submitted)">กรุณากรอกข้อมูล*</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="location">สถานที่
+                    <span *ngIf="addItemForm.controls['location'].invalid &&
+                                (addItemForm.controls['location'].touched ||
+                                 addItemForm.controls['location'].dirty || Submitted)" class="text-validate">*</span>
+                  </label>
+                  <input type="text" id="location" formControlName="location" class="form-control"
+                    placeholder="--เลือกสถานที่--" [ngClass]="{'box-validate': addItemForm.controls['location'].invalid && 
                                                     (addItemForm.controls['location'].touched || 
                                                     addItemForm.controls['location'].dirty || Submitted)}"
-                         [readonly]="isReadonly"
-                         (input)="onInputChange($event)" >
-                      <span class="border-errorLocation"
-                        *ngIf="addItemForm.controls['location'].invalid && 
+                    [readonly]="isReadonly" (input)="onInputChange($event)">
+                  <span class="border-errorLocation" *ngIf="addItemForm.controls['location'].invalid && 
                         (addItemForm.controls['location'].touched || 
                           addItemForm.controls['location'].dirty || Submitted)">กรุณาเลือกสถานที่*</span>
-                         
-                    </div>
-                    <button type="button" class="btn btn-add" (click)="getCurrentLocation()">
-                      <i class="fa fa-location-dot">&nbsp;</i>เลือกสถานที่
-                      ปัจจุบัน</button>
-                   
 
-
-
-                    <div class="modal-footer" style="padding-bottom: 0;">
-                      <button type="submit" class="btn btn-success" ><i class="fa fa-check"></i>&nbsp; ยืนยัน</button>
-                      <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"
-                          (click)="closeModal()"></i>
-                        &nbsp; ปิด
-                      </button>
-                    </div>
-                  </form>
                 </div>
-              </div>
+                <button type="button" class="btn btn-add" (click)="getCurrentLocation()">
+                  <i class="fa fa-location-dot">&nbsp;</i>เลือกสถานที่
+                  ปัจจุบัน</button>
+
+
+
+
+                <div class="modal-footer" style="padding-bottom: 0;">
+                  <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;ยืนยัน</button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"
+                      (click)="closeModal()"></i>
+                    &nbsp; ปิด
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-          <!--land Insert end here-->
-          <!-- รายละเอียด-->
+        </div>
+      </div>
+      <!--land Insert end here-->
+      <!-- รายละเอียด-->
 
 
-          <!--[formGroup]="Form" (ngSubmit)="addPersonCommit(Form.value)" modal อันที่เป็นของ add person หน้าเล็กๆๆ ถูกลบออกนะ-->
+      <!--[formGroup]="Form" (ngSubmit)="addPersonCommit(Form.value)" modal อันที่เป็นของ add person หน้าเล็กๆๆ ถูกลบออกนะ-->
 
 
-          <!-- จดบันทึก-->
-          <div class="modal fade" id="writtenModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content card" [ngStyle]="{width: '230mm',padding:'10px'  }">
-                <div class="card-header " style="border-bottom: 1px solid #ccc; border-radius: 10px 10px 0 0;">
-                  <div  class="modal-title card-title" id="myModalLabel">
-                    <p  style="margin: 0;">จดบันทึก</p>
-                    <!-- <div class="sub-title">
+      <!-- จดบันทึก-->
+      <div class="modal fade" id="writtenModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content card" [ngStyle]="{width: '230mm',padding:'10px'  }">
+            <div class="card-header " style="border-bottom: 1px solid #868686 ; border-radius: 10px 10px 0 0;">
+              <div class="modal-title card-title" id="myModalLabel">
+                <p style="margin: 0;">จดบันทึก</p>
+                <!-- <div class="sub-title">
                       เพิ่มเนื้อหาในเอกสาร 
                     </div> -->
-                  </div>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: black;">&times;</span>
-                  </button>
-                </div>
-                <div class="container">
-                  <div class="row">
-                    <div class="col-sm-6" style="padding-top: 20px;">
-                      <div class="section">
-                        &nbsp;
-                        <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'typro'}"
-                          (click)="setActive('typro')"><!-- data-toggle="tooltip" title="การพิมพ์ข้อความ" data-placement="top" -->
-                          <i class="fa fa-file-word-o"></i>
-                        </button>
-                        &nbsp;
-                        <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'writte'}"
-                          (click)="setActive('writte')"><!--data-toggle="tooltip" title="การเขียน" data-placement="top"-->
-                          <i class="fa fa-pencil-square-o"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="col-md-12" class="modal-body" style="width: 210mm; padding: 0 20px 0 20px;"
-                      [ngStyle]="{top:0 }">
-
-                      <div *ngIf="isTyproActive" class="full-page-textarea-container">
-                        <div class="typroTextBox">
-                          <div class="headerText">
-                            <div aria-label="Preview">พิมพ์ข้อความ</div>
-
-                          </div>
-                          <angular-editor [placeholder]="'พิมพ์ข้อความที่นี้...'" [config]="editorConfig"
-                            [(ngModel)]="typroText "></angular-editor>
-                        </div>
-                      </div>
-
-                      <div *ngIf="isWritteActive" class="full-page-pdf">
-
-                        <div class="writteDraw">
-                          <div class="toolbar">
-                            <div>การเขียน</div>
-                            <button (click)="refreshCanvas()">
-                              <i data-toggle="tooltip" title="ล้างหน้ากระดาษ" data-placement="top"
-                                class="fa fa-refresh"></i></button>
-                          </div>
-                          <canvas id="writteCanvas" class="full-page-canvas"></canvas>
-                        </div>
-
-                      </div>
-                    </div>
+              </div>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" style="color: black;">&times;</span>
+              </button>
+            </div>
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-6" style="padding-top: 20px;">
+                  <div class="section">
+                    &nbsp;
+                    <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'typro'}"
+                      (click)="setActive('typro')"><!-- data-toggle="tooltip" title="การพิมพ์ข้อความ" data-placement="top" -->
+                      <i class="fa fa-file-word-o"></i>
+                    </button>
+                    &nbsp;
+                    <button class="btn btn-just-icon" [ngClass]="{'active': activeButton === 'writte'}"
+                      (click)="setActive('writte')"><!--data-toggle="tooltip" title="การเขียน" data-placement="top"-->
+                      <i class="fa fa-pencil-square-o"></i>
+                    </button>
                   </div>
                 </div>
-                <div class="modal-footer">
-                  <button type="submit" class="btn btn-success pull-center" (click)="recordCommit()">
-                    <i class="fa fa-check"></i>&nbsp; ยืนยัน
-                  </button>
-                  <button type="button" class="btn btn-danger pull-center" data-dismiss="modal" (click)="closeModal()">
-                    <i class="fa fa-times"></i>&nbsp; ปิด
-                  </button>
+                <div class="col-md-12" class="modal-body" style="width: 210mm; padding: 0 20px 0 20px;"
+                  [ngStyle]="{top:0 }">
+
+                  <div *ngIf="isTyproActive" class="full-page-textarea-container">
+                    <div class="typroTextBox">
+                      <div class="headerText">
+                        <div aria-label="Preview">พิมพ์ข้อความ</div>
+
+                      </div>
+                      <angular-editor [placeholder]="'พิมพ์ข้อความที่นี้...'" [config]="editorConfig"
+                        [(ngModel)]="typroText "></angular-editor>
+                    </div>
+                  </div>
+
+                  <div *ngIf="isWritteActive" class="full-page-pdf">
+
+                    <div class="writteDraw">
+                      <div class="toolbar">
+                        <div>การเขียน</div>
+                        <button (click)="refreshCanvas()">
+                          <i data-toggle="tooltip" title="ล้างหน้ากระดาษ" data-placement="top"
+                            class="fa fa-refresh"></i></button>
+                      </div>
+                      <canvas id="writteCanvas" class="full-page-canvas"></canvas>
+                    </div>
+
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success pull-center" (click)="recordCommit()">
+                <i class="fa fa-check"></i>&nbsp; ยืนยัน
+              </button>
+              <button type="button" class="btn btn-danger pull-center" data-dismiss="modal" (click)="closeModal()">
+                <i class="fa fa-times"></i>&nbsp; ปิด
+              </button>
+            </div>
           </div>
+        </div>
+      </div>
 
+      <!-- qrcodemodel land start -->
+      <div class="modal fade" id="qrcodemodel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content card" [ngStyle]="{width: '230mm',padding:'10px'  }">
+            <div class="card-header " style="border-bottom: 1px solid #868686 ; border-radius: 10px 10px 0 0;">
+              <div class="modal-title card-title" id="myModalLabel">
+                <p style="margin: 0;">Qr code</p>
+                <!-- <div class="sub-title">
+                      เพิ่มเนื้อหาในเอกสาร 
+                    </div> -->
+                 
+              </div>
+            </div>
+              <div class="container">
+              <div class="qr-img">
+                <img [src]="qrCodeImage" alt="QR Code">
+              </div>
+            </div>
+        
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success pull-center" (click)="recordCommit()">
+                <i class="fa fa-check"></i>&nbsp; ยืนยัน
+              </button>
+              <button type="button" class="btn btn-danger pull-center" data-dismiss="modal" (click)="closeModal()">
+                <i class="fa fa-times"></i>&nbsp; ปิด
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+ <!-- qrcodemodel land end -->
 
-          <div class="modal fade" id="showpdf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content" [ngStyle]="{ width: '230mm', height: '327mm' }">
-                <!-- <div class="modal-header card-header card-header-danger" style="background: rgb(255, 209, 0)">
+      <div class="modal fade" id="showpdf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content" [ngStyle]="{ width: '230mm', height: '327mm' }">
+            <!-- <div class="modal-header card-header card-header-danger" style="background: rgb(255, 209, 0)">
                     <h5 class="modal-title" id="myModalLabel" style="color: white;">รายละเอียด</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div> -->
-                <div id="myDetail" class="modal-body-detail" [ngStyle]="{ width: '210mm', height: '297mm' }">
-                  <iframe [src]="pdfSrc" type="application/pdf" width="100%" height="100%"></iframe>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-danger" (click)="closePDF()">
-                    <i class="fa fa-times"></i>&nbsp; ปิด
-                  </button>
-                </div>
-              </div>
+            <div id="myDetail" class="modal-body-detail" [ngStyle]="{ width: '210mm', height: '297mm' }">
+              <iframe [src]="pdfSrc" type="application/pdf" width="100%" height="100%"></iframe>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" (click)="closePDF()">
+                <i class="fa fa-times"></i>&nbsp; ปิด
+              </button>
             </div>
           </div>
+        </div>
+      </div>
 
 
-   
+
     </div>
   </div>
 </div>

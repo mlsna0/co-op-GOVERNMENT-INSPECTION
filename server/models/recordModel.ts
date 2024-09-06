@@ -21,6 +21,7 @@ const recordSchema = new mongoose.Schema({
     createdDate: String, // เพิ่มฟิลด์สำหรับเก็บวันที่
     createdTime: String, // เพิ่มฟิลด์สำหรับเก็บเวลา
     status: String,
+    record_qrcode: String,
     // userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' }, 
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
@@ -40,6 +41,7 @@ export interface RecordModel {
   rank: string;
   fullName: string;
   details: string;
+  qrcode: String,
   viewData: {
     view_rank: string;
     view_full_name: string;
