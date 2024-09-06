@@ -24,10 +24,11 @@
             <tr>
               <th class="small-cell" style="text-align: center; width: 5%;">ลำดับ</th>
               <th class="small-name">ชื่อ</th>
+              <th class="small-name">นามสกุล</th>
               <th class="small-name">อีเมล</th>
-              <th class="small-name">ระดับผู้ใช้งาน</th>
-              <th class="small-cell">วันที่เข้าใช้งาน</th>
-              <th class="small-cell">เวลาที่เข้าใช้งาน</th>
+              <th class="small-name"style="vertical-align: middle; white-space: nowrap; text-align: center;">ระดับผู้ใช้งาน</th>
+              <th class="small-cell" style="vertical-align: middle; white-space: nowrap; text-align: center;">วันที่เข้าใช้งาน</th>
+              <th class="small-cell" style="vertical-align: middle; white-space: nowrap; text-align: center;">เวลาที่เข้าใช้งาน</th>
               <!-- <th class="small-cell" style="color: black; font-size: 16px; text-align: center;">
                 <i class="fa fa-gear"></i>
               </th> -->
@@ -37,10 +38,11 @@
             <tr *ngFor="let users of user; let i = index">
               <td class="small-cell" style="text-align: center; width: 5%;">{{ i + 1 }}</td>
               <td class="small-name">{{ users.firstname }}</td>
+              <td class="small-name">{{ users.lastname }}</td>
               <td class="small-name">{{ users.email }}</td>
-              <td class="small-name">{{ users.role }}</td>
-              <td class="small-name">{{ users.date }}</td>
-              <td class="small-name">{{ users.time }}</td>
+              <td class="small-name" style="vertical-align: middle; white-space: nowrap; text-align: center;">{{ users.role }}</td>
+              <td class="small-name" style="vertical-align: middle; white-space: nowrap; text-align: center;">{{ users.date | thaidate: 'thaiDate' }}</td>
+              <td class="small-name" style="vertical-align: middle; white-space: nowrap; text-align: center;">{{ users.time }}</td>
             </tr>
           </tbody>
         </table>

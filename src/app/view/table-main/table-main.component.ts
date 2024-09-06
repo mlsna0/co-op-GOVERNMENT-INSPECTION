@@ -99,6 +99,8 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
   pdfSrc: SafeResourceUrl;
   loadig:boolean = false;
   currentUserId: string;
+  currentUser:any;
+  RoleCurrenUser:any;
   filteredItems: any[] = [];
   initialFontSize: number = 14;
   htmlContent: string = '';
@@ -213,21 +215,38 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
       }
     };
     // console.log("DataTable: ", this.dtOptions);
+    this.getCurrentUser();
     this.loadPDFs();
-   this.fetchAndSetRecords(); 
+    this.fetchAndSetRecords(); 
     // console.log("ngOnInit called");
+}
+getCurrentUser(): void {
+  // ดึงข้อมูลจาก localStorage
+  const userData = localStorage.getItem('currentUser');
+
+  // ตรวจสอบว่ามีข้อมูลหรือไม่
+  if (userData) {
+    // แปลง JSON เป็นวัตถุ
+    this.currentUser = JSON.parse(userData);
+    this.RoleCurrenUser = this.currentUser?.role;
+
+    // console.log("currentUser: ",this.currentUser);
+    // console.log("this RoleCurrenUser : ", this.RoleCurrenUser);
+  } else {
+    console.log('No user data found in localStorage.');
+  }
 }
 
 loadPDFs(): void {
   this.sv.getAllPDFs().subscribe(
     data => {
       // ตรวจสอบโครงสร้างของ data ที่ได้รับ
-      console.log('Raw data:', data);
+      // console.log('Raw data:', data);
       
       // สมมติว่า data เป็น array ของชื่อไฟล์ PDF
       this.pdfs = data;
       this.pdfCount = this.pdfs.length; // Count the number of PDFs
-      console.log('PDFs:', this.pdfs);
+      // console.log('PDFs:', this.pdfs);
 
       // Update the donut chart after loading PDFs
       this.fetchAndSetRecords();
@@ -244,7 +263,7 @@ fetchAndSetRecords() {
     
     this.lg.getUserProfile().subscribe({
       next: (userProfile) => {
-        // console.log("User Profile fetched:", userProfile);
+        console.log("User Profile fetched:", userProfile);
         this.fetchRecords(userProfile.employeeId.organization); 
          // ส่ง organization ของผู้ใช้เข้าไป
       },
@@ -310,7 +329,7 @@ combineDocuments(items, userOrganization: string): any[] {
   console.log("Processing documents and counting unique users for organization:", userOrganization);
 
   items.forEach(item => {
-    console.log("Current item:", item);
+    // console.log("Current item:", item);
 
     // กรองเฉพาะ items ที่มี organization ตรงกับ userOrganization
     if (item.employee && typeof item.employee.organization === 'string' && item.employee.organization.includes(userOrganization)) {
@@ -341,10 +360,10 @@ combineDocuments(items, userOrganization: string): any[] {
   });
 
   const userCount = userSet.size;
-  console.log("User Count:", userCount);
-  console.log("Signed Documents Count:", signedDocumentsCount); // แสดงจำนวนเอกสารที่ถูกเซ็น
-  console.log("Total Documents Count:", totalDocumentsCount); // แสดงจำนวนเอกสารทั้งหมด
-  // ส่งจำนวนผู้ใช้ไปยัง DocumentService
+  // console.log("User Count:", userCount);
+  // console.log("Signed Documents Count:", signedDocumentsCount); // แสดงจำนวนเอกสารที่ถูกเซ็น
+  // console.log("Total Documents Count:", totalDocumentsCount); // แสดงจำนวนเอกสารทั้งหมด
+  // // ส่งจำนวนผู้ใช้ไปยัง DocumentService
   this.documentService.updateUserCount(userCount);
 
   // ส่งจำนวนเอกสารที่ถูกเซ็นไปยัง DocumentService หรือจัดการตามที่ต้องการ

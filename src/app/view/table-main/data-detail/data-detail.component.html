@@ -39,15 +39,17 @@
 
                         <div class="row">
                             <div class="col-md-3">
-                                เอกสารฉบับที่:
+                                <label for="">  เอกสารฉบับที่ :</label>
+                             
                             </div>
                             <div class="col-md-9">
-                                {{DataDetail?.record_id}}
+                                {{DataDetail?.record_id}} / {{DataDetail?.record_star_date | thaidate: 'year' }}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-3">
-                                หัวข้อเอกสาร :
+                                <label for=""> หัวข้อเอกสาร :</label>
+                          
                             </div>
                             <div class="col-md-9">
                                 {{DataDetail?.record_topic}}
@@ -55,7 +57,8 @@
                         </div>
                         <div class="row">
                             <div class="col-md-3">
-                                รายละเอียด:
+                                <label for=""> รายละเอียด:</label>
+                            
                             </div>
                             <div class="col-md-9">
                                 {{DataDetail?.record_detail}}
@@ -63,7 +66,8 @@
                         </div>
                         <div class="row">
                             <div class="col-md-3">
-                                รายละเอียด สถานที่:
+                                <label for=""> รายละเอียด สถานที่:</label>
+                               
                             </div>
                             <div class="col-md-9">
                                 {{DataDetail?.record_place}}
@@ -71,7 +75,8 @@
                         </div>
                         <div class="row">
                             <div class="col-md-3">
-                                พิกัดสถานที่:
+                                <label for="">     พิกัดสถานที่:</label>
+                           
                             </div>
                             <div class="col-md-9">
                                 {{DataDetail?.record_location}}
@@ -80,7 +85,8 @@
                       
                         <div class="row">
                             <div class="col-md-3">
-                               วันที่เริ่มตรวจสอบ:
+                                <label for=""> วันที่เริ่มตรวจสอบ:</label>
+                        
                             </div>
                             <div class="col-md-9">
                                 {{DataDetail?.record_star_date | thaidate: 'medium'}}
@@ -88,7 +94,8 @@
                         </div>
                         <div class="row">
                             <div class="col-md-3">
-                                วันที่เสร็จสิ้นการตรวจสอบ:
+                                <label for=""> วันที่เสร็จสิ้นการตรวจสอบ:</label>
+                               
                             </div>
                             <div class="col-md-9">
                                 {{DataDetail?.record_end_date  | thaidate: 'medium'}}
@@ -96,7 +103,8 @@
                         </div>
                         <div class="row">
                             <div class="col-md-3">
-                                รายชื่อผู้ลงนาม:
+                                <label for="">  รายชื่อผู้ลงนาม:</label>
+                             
                             </div>
                             <div class="col-md-9" >
                                 <div class="viewPersonalData" *ngFor="let person of viewPersonalData; let i = index">
@@ -112,7 +120,8 @@
                     <div class="col-md-4 align-self-end ">
                         <div class="row">
                             <div class="col-md-6">
-                                ผู้สร้างหัวข้อเอกสาร:
+                                <label for=""> ผู้สร้างหัวข้อเอกสาร:</label>
+                               
                             </div>
                             <div class="col-md-6">
                                 {{createDocData[0]?.firstname}} &nbsp; {{createDocData[0]?.lastname}}
@@ -120,15 +129,17 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                วันที่สร้างเอกสาร:
+                                <label for="">  วันที่สร้างเอกสาร:</label>
+                              
                             </div>
                             <div class="col-md-6">
-                                {{createDocData[0]?.createdDate }}
+                                {{createDocData[0]?.createdDate | thaidate: 'thaiDate' }}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                เวลาที่สร้างเอกสาร:
+                                <label for=""> เวลาที่สร้างเอกสาร:</label>
+                               
                             </div>
                             <div class="col-md-6">
                                 {{createDocData[0]?.createdTime}}
@@ -175,7 +186,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-5">
                                         <div class="form-group">
                                             <label for="startDate">วันที่เริ่มตรวจสอบ
                                                 <span
@@ -194,7 +205,7 @@
                                             <!--style="color:rgb(171, 171, 171)"-->
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-5">
                                         <div class="form-group">
                                             <label for="endDate">วันที่เสร็จสิ้น
                                                 <span

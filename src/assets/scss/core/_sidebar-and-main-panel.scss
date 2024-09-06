@@ -502,8 +502,9 @@
       .nav .nav-item {
         &.active-pro {
           position: absolute;
+      
           width: 100%;
-          bottom: 13px;
+          bottom: 1px; // 13px
           border-top: 1px solid #dce5f1;
         }
       }

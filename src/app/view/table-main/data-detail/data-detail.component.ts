@@ -116,7 +116,8 @@ export class DataDetailComponent implements OnInit {
 
     });
 
-    const targetDocumentId = this.recordId; 
+    const targetDocumentId = this.recordId; ;
+
     this.sv.getRecordByDocumentId(targetDocumentId).subscribe(data => {
       if (data && data.document && data.user && data.employee) {
         const mergedData = this.mergeUserData(data.employee, data.user, data.document);

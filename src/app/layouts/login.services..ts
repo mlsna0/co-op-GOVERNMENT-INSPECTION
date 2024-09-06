@@ -28,6 +28,11 @@ export class loginservice {
     // เพิ่มการตรวจสอบว่า token ยังไม่หมดอายุ หรือยังเป็น valid อยู่
     return !!token;
   }
+  getCurrentUser(): any {
+    // ดึงข้อมูลจาก localStorage
+    const userData = localStorage.getItem('currentUser');
+    return userData ? JSON.parse(userData) : null;
+  }
   
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
