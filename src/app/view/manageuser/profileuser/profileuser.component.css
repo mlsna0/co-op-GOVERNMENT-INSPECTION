@@ -51,15 +51,24 @@ h4{
   background:rgb(255, 209, 0);
   font-family: 'Sarabun',sans-serif;
 }
+.info-fontSize{
+  font-size: 16px
+}
 :host ::ng-deep .user-content .col-md-3{
   display: flex;
   align-items: center;
   padding-left: 60px;
+  margin: 0 0 10px;
 
 }
-:host ::ng-deep .user-content .col-md-9{
+
+:host ::ng-deep .user-content .col-md-5,
+:host ::ng-deep .user-content .col-md-4,
+:host ::ng-deep .user-content .col-md-9 {
   font-size: 16px;
+  margin: 0 0 10px;
 }
+
 :host ::ng-deep .EditModal-content .col-md-3{
   display: flex;
   align-items: center;

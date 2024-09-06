@@ -147,9 +147,13 @@ i{
   padding-left: 60px;
 
 }
-:host ::ng-deep .user-content .col-md-9{
+:host ::ng-deep .user-content .col-md-5,
+:host ::ng-deep .user-content .col-md-4,
+:host ::ng-deep .user-content .col-md-9 {
   font-size: 16px;
+  margin: 0 0 10px;
 }
+
 :host ::ng-deep .EditModal-content .col-md-3{
   display: flex;
   align-items: center;
