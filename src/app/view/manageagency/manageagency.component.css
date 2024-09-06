@@ -229,7 +229,12 @@ td select option {
   font-size: 14px;
   color: black;
 }
-
+.ellipsis {
+  white-space: nowrap; /* Prevent text from wrapping to the next line */
+  overflow: hidden;    /* Hide text that overflows */
+  text-overflow: ellipsis; /* Display ellipsis (...) for overflowing text */
+  display: inline-block/* Ensure it respects width constraints */
+}
 
 
 

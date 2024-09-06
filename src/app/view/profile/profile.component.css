@@ -348,9 +348,9 @@ justify-content: center;
   padding: 20px;
   border-radius: 8px;
   width: 610px;
-  /* height: 700px; */
-  transform: translateY(-10%); /* เริ่มจากนอกจอด้านบน */
-  animation: slideDown 0.3s ease forwards;
+  height: auto;
+  transform: none;
+  /* animation: slideDown 0.3s ease forwards; */
 
 }
 .EditModal-modal-overlay.close{
@@ -362,7 +362,23 @@ justify-content: center;
 .no-scroll {
   overflow: hidden;
 }
+.Organization-content  {
+ left: 50%;
+ transform: translate(-50%, 50%);
 
+
+}
+.DataOrganization{
+  font-size: 12px;
+  text-decoration: underline;
+  padding: 0 0 0 20px;
+
+}
+.DataOrganization:hover{
+  color: #24a0ed;
+  text-decoration: underline;
+  cursor: pointer;
+}
 @keyframes slideDown {
   from {
     transform: translateY(-50%);

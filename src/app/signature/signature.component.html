@@ -1,5 +1,4 @@
 <div class="main-content">
-
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
@@ -98,18 +97,28 @@
           <button *ngIf="step == 2" (click)="reload()" style="height: 40px;" type="button"
             class="btn btn-danger ms-2">ลงนามเอกสารอีกครั้ง</button>
 
-
           <div class="pageFile" *ngIf="selectedFile">
-            <div class="mt-2" *ngIf="loading">
-              <pdf-viewer *ngIf="step == 1 || step == 0" [src]="pdfFile" [render-text]="false" [original-size]="true"
-                [show-all]="false" [(page)]="pageVariable" (pages-initialized)="pageInitialized($event)"
+            <div class="mt-2" *ngIf="loading" style="display: flex; justify-content: center;">
+              <!--  -->
+
+              <pdf-viewer *ngIf="step == 1 || step == 0"
+                [src]="pdfFile"
+                [render-text]="false" 
+                [original-size]="true"
+                [show-all]="false" 
+                [(page)]="pageVariable"
+                 (pages-initialized)="pageInitialized($event)"
                 (click)="selectEle($event)" [ngClass]="{'cursor-copy': stageMarkSign}"
-                style="display: block;"></pdf-viewer>
+                style="display: flex; border: 1px solid black; 
+               box-shadow: 0 2px 5px rgba(0,0,0,0.1);  
+                width: 210mm;
+                height: 297mm; "></pdf-viewer>
 
               <pdf-viewer *ngIf="step == 2" [src]="signaturedFile" [render-text]="false" [original-size]="true"
                 [show-all]="false" [(page)]="pageVariable" (pages-initialized)="pageInitialized($event)"
                 (click)="selectEle($event)" [ngClass]="{'cursor-copy': stageMarkSign}"
-                style="display: block;"></pdf-viewer>
+                style=" width: 210mm;
+                height: 297mm;"></pdf-viewer>
 
               <div class="example-box" #cdkDrag_ cdkDragBoundary=".canvasWrapper" cdkDrag
                 *ngFor="let item of dragList; let i=index" [cdkDragFreeDragPosition]="item.position"

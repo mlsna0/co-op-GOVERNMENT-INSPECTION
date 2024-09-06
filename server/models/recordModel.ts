@@ -46,6 +46,6 @@ export interface RecordModel {
   };
   note: string;
 }
-const RecordModel = mongoose.model('document', recordSchema);
+const RecordModel = mongoose.model('document', recordSchema,'documents');
 export default RecordModel;
 

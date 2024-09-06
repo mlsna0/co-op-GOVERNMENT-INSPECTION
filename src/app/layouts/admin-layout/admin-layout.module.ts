@@ -39,6 +39,7 @@ import { AppComponent } from 'app/app.component';
 import { ManageuserComponent } from '../../view/manageuser/manageuser.component';
 import { ProfileuserComponent } from 'app/view/manageuser/profileuser/profileuser.component';
 import { ManageagencyComponent } from '../../view/manageagency/manageagency.component';
+import { ManagepersonComponent } from '../../view/manageperson/manageperson.component';
 
 @NgModule({
   imports: [
@@ -82,6 +83,7 @@ import { ManageagencyComponent } from '../../view/manageagency/manageagency.comp
     ReportuserbuildComponent,
     ManageuserComponent,
     ManageagencyComponent,
+    ManagepersonComponent,
     ProfileuserComponent,
   ],
   providers: [],

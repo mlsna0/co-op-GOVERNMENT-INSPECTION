@@ -1,4 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
+// import mongoose, { Schema } from 'mongoose';
+import * as mongoose from 'mongoose';
 
 
 const agencySchema = new mongoose.Schema({
@@ -22,6 +23,6 @@ export interface agencyModel{
   tambon: String,
   postCode: String,
 }
-const Agency = mongoose.model('Agency', agencySchema);
+const Agency = mongoose.model('Agency', agencySchema ,'agencies');
 
 export default Agency;

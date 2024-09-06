@@ -85,6 +85,7 @@ export class ManageagencyComponent implements OnInit {
     this.ls.getagency().subscribe(data => {
       this.agency = data
       this.loading = false;
+      console.log("agency data ",this.agency)
     }, error => {
       console.error('Error fetching user data:', error);
       this.loading = false;
@@ -138,8 +139,42 @@ export class ManageagencyComponent implements OnInit {
     loadProvinces() {
       this.ts.getProvincesWithDetails().subscribe(data => {
         this.provinces = data;
+        this.amphures = data.flatMap(province => province.amphures);
+        this.tambons = this.amphures.flatMap(amphure => amphure.tambons);
       });
     }
+    getTambonName(id: number): string {
+      // console.log('All Tambons:', this.tambons);
+      // แปลง id เป็น number เพื่อให้ตรงกับข้อมูลใน array
+      const tambonId = Number(id);
+      // console.log("tambonId",tambonId)
+      const tambon = this.tambons.find(t => t.id === tambonId);
+      // console.log(`Searching for Tambon ID: ${tambonId}. Found:`, tambon);
+      return tambon ? tambon.name_th : 'Not Found';
+    } 
+       // Method to get amphure name from id
+       getAmphureName(id: number): string {
+        // console.log('All Amphures:', this.amphures);
+        // แปลง id เป็น number เพื่อให้ตรงกับข้อมูลใน array
+        const amphureId = Number(id);
+        const amphure = this.amphures.find(a => a.id === amphureId);
+        // console.log(`Searching for Amphure ID: ${amphureId}. Found:`, amphure);
+        return amphure ? amphure.name_th : 'Not Found';
+      }
+
+    getProvinceName(id: number): string {
+      // ตรวจสอบประเภทของ id และแปลงให้ตรงกันถ้าจำเป็น
+      const provinceId = Number(id);
+      // ตรวจสอบข้อมูลใน provinces
+      // console.log('All Provinces:', this.provinces);
+      const province = this.provinces.find(p => p.id === provinceId);
+      // console.log(`Searching for Province ID: ${provinceId}. Found:`, province);
+      return province ? province.name_th : 'Not Found';
+    }
+      
+   
+      
+
   
     onProvinceChange(provinceId: number) {
       this.agenForm.controls['amphure'].setValue('');
@@ -188,6 +223,9 @@ export class ManageagencyComponent implements OnInit {
     }
   
   
+
+
+
 
 
 
