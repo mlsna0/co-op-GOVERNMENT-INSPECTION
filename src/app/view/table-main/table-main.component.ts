@@ -284,6 +284,11 @@ fetchRecords(userOrganization: string) {
       const groupedRecords = this.groupRecordsByOrganization(records);
       console.log("Grouped Records by Organization:", groupedRecords);
 
+      const totalCompanies = Object.keys(groupedRecords).length;
+      console.log(`Total number of companies: ${totalCompanies}`);
+
+      this.documentService.updateCompanyCount(totalCompanies);
+      
       const filteredRecords = this.filterByUserOrganization(groupedRecords, userOrganization);
       // console.log("Filtered Records by User Organization:", filteredRecords);
       
@@ -292,6 +297,8 @@ fetchRecords(userOrganization: string) {
   
       // console.log("Combined Documents:", this.items);
       // this.countUniqueUsers(this.items, userOrganization);
+
+      
       this.loading = false;
     },
     error: (error) => {
@@ -299,7 +306,7 @@ fetchRecords(userOrganization: string) {
       // console.log("Error in fetching records:", error);
     },
   });
-}
+} 
 
 groupRecordsByOrganization(records) {
   // console.log("Grouping records by organization");

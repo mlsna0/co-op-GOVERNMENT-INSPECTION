@@ -48,6 +48,7 @@ export class DashboardComponent implements OnInit {
   totalDocuments: number = 0;
   dtTrigger: BehaviorSubject<any> = new BehaviorSubject([]);
   totalSignedDocuments: number = 0;
+  totalCompanies: number = 0;
   //chart
   chart: any; // ใช้สำหรับ Bar Chart
   donutChart: any; // ตัวแปรใหม่ที่ใช้สำหรับ Donut Chart
@@ -124,6 +125,11 @@ export class DashboardComponent implements OnInit {
     this.documentService.signedDocumentsCount$.subscribe(count => {
       this.totalSignedDocumentsCount = count;
       console.log("Total documents count updated in Component:", this.totalSignedDocumentsCount);
+    });
+    
+    this.documentService.companyCount$.subscribe(count => {
+      this.totalCompanies = count;
+      console.log("Total compony count updated in Component:", this.totalCompanies);
     });
 
 
