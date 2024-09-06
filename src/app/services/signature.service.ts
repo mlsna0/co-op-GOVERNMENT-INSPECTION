@@ -18,7 +18,7 @@ export class SignatureService {
   constructor(private httpClient: HttpClient) { }
 
   signature(formData) {
-    console.log("Service");
+    console.log("Form Data:", formData);
     
     let API_URL = `${this.REST_API}/stampSignature`
     return this.httpClient.post(`${API_URL}`, formData)

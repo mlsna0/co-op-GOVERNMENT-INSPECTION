@@ -305,31 +305,31 @@ blobToBase64(blob: Blob): Promise<string | ArrayBuffer | null> {
 
   async submitSign() {
     console.log('dragList:', this.dragList);
-    this.loading = false
+    this.loading = false;
     let signData;
-
+  
     if (this.dragList.length > 1) {
       console.log("test", this.dragList.length);
       
       const pdf = this.elementRef.nativeElement as HTMLElement;
-      const canvasWrapper = pdf.querySelector<HTMLElement>(".canvasWrapper")
+      const canvasWrapper = pdf.querySelector<HTMLElement>(".canvasWrapper");
       console.log('canvasWrapper:', canvasWrapper);
       
       let clientWidth = canvasWrapper.clientWidth;
       let clientHeight = canvasWrapper.clientHeight;
-
-      let result = []
+  
+      let result = [];
       this.dragList.forEach((element, index) => {
         if ((this.dragList.length - 1) != index) {
           let convertPositive = (element.position.y - (this.offset * (element.index))) / -1;
           let x = element.position.x + this.center.x;
           let y = convertPositive - this.center.y;
-
+  
           let x1 = x + this.center.x;
           let x2 = x - this.center.x;
           let y1 = y + this.center.y;
           let y2 = y - this.center.y;
-
+  
           result.push({
             "page": element.page,
             "position_px": { x: x, y: y },
@@ -343,137 +343,109 @@ blobToBase64(blob: Blob): Promise<string | ArrayBuffer | null> {
               y1: (y1 / clientHeight) * 100,
               y2: (y2 / clientHeight) * 100,
             }
-          })
+          });
         }
       });
-      signData = JSON.stringify(result)
+      signData = JSON.stringify(result);
     }
-
-    let base64Data
-    this.typeSignature == 'ca' ? this.useProfileSign = true : ''
-
+  
+    let base64Data;
+    this.typeSignature == 'ca' ? this.useProfileSign = true : '';
+  
     if (this.useProfileSign == true) {
       getBase64ImageFromUrl(`${this.signatureProfile}`)
         .then((result: any) => {
-          console.log("result => ", result)
-          base64Data = result
+          console.log("result => ", result);
+          base64Data = result;
         }).then(res2 => {
-          this.signatureImg = base64Data
+          this.signatureImg = base64Data;
           compressImage(this.signatureImg, 200, 100)
             .then((compressed: any) => {
               this.signatureImg = compressed;
               fetch(this.pdfFile)
                 .then(response => response.blob())
                 .then(data => {
-
-                  if (this.typeSignature == 'ca') {
-                    let formData = new FormData
-
-                    formData.append('base64', compressed);
-                    formData.append('signData', signData);
-                    formData.append('requestId', this.requestId);
-                    formData.append('userId', this.userId);
-                    formData.append('type', this.typeSignature);
-                    formData.append('pdfFile', new File([data], 'signaturedFile.pdf', { type: 'application/pdf' }));
-                    formData.append('caPass', this.caPass);
-                    formData.append('user_ca', this.user_ca);
-                    formData.append('oca', this.oca);
-
-                    this._sinatureService.signature(formData).subscribe((res: any) => {
-                      if (res.status == false) {
-                        this.errorMessage = '*' + res.message
-                        return;
-                      } else {
-                        this.errorMessage = null
-                        this.step = 2
-                        this.signaturedFile = res
-                      }
-                    })
-
-                  } else {
-                    let formData = new FormData
-
-                    formData.append('base64', compressed);
-                    formData.append('signData', signData);
-                    formData.append('requestId', this.requestId);
-                    formData.append('userId', this.userId);
-                    formData.append('type', this.typeSignature);
-                    formData.append('pdfFile', new File([data], 'signaturedFile.pdf', { type: 'application/pdf' }));
-                    formData.append('oca', this.oca);
-
-                    this._sinatureService.signature(formData).subscribe((res: any) => {
-                      this.step = 2
-                      this.signaturedFile = res
-                    })
-                  }
-                })
-            })
+  
+                  let formData = new FormData();
+                  formData.append('base64', compressed);
+                  formData.append('signData', signData);
+                  formData.append('requestId', this.requestId);
+                  formData.append('userId', this.userId);
+                  formData.append('type', this.typeSignature);
+                  formData.append('pdfFile', new File([data], 'signaturedFile.pdf', { type: 'application/pdf' }));
+                  formData.append('documentId', this.documentId); // เพิ่ม documentId ลงใน formData
+                  formData.append('oca', this.oca);
+  
+                  this._sinatureService.signature(formData).subscribe((res: any) => {
+                    this.step = 2;
+                    this.signaturedFile = res;
+                  });
+                });
+            });
         })
         .catch(err => console.error(err));
     } else {
       base64Data = this.signaturePad.toDataURL();
       this.signatureImg = base64Data;
-
+  
       compressImage(this.signatureImg, 200, 100)
         .then((compressed: any) => {
           this.signatureImg = compressed;
           fetch(this.pdfFile)
             .then(response => response.blob())
             .then(data => {
-              let formData = new FormData
-
+              let formData = new FormData();
+  
               formData.append('type', this.typeSignature);
               formData.append('base64', compressed);
               formData.append('signData', signData);
               formData.append('requestId', this.requestId);
               formData.append('userId', this.userId);
               formData.append('pdfFile', new File([data], 'signaturedFile.pdf', { type: 'application/pdf' }));
+              formData.append('documentId', this.documentId); // เพิ่ม documentId ลงใน formData
               formData.append('oca', this.oca);
-              
+  
               this._sinatureService.signature(formData).subscribe((res: any) => {
-                this.step = 2
-                this.signaturedFile = res
-              })
-            })
-        })
+                this.step = 2;
+                this.signaturedFile = res;
+              });
+            });
+        });
     }
-
+  
     async function getBase64ImageFromUrl(imageUrl) {
       var res = await fetch(imageUrl);
       var blob = await res.blob();
-
+  
       return new Promise((resolve, reject) => {
         var reader = new FileReader();
         reader.addEventListener("load", function () {
           resolve(reader.result);
         }, false);
-
-        // reader.onerror = () => {
-        //   return reject(this);
-        // };
+  
         reader.readAsDataURL(blob);
-      })
+      });
     }
-
-      function compressImage(src, newX, newY) {
-        console.log("1111");
-        
-        return new Promise((res, rej) => {
-          const img = new Image();
-          img.src = src;
-          img.onload = () => {
-            const elem = document.createElement('canvas');
-            elem.width = newX;
-            elem.height = newY;
-            const ctx = elem.getContext('2d');
-            ctx.drawImage(img, 0, 0, newX, newY);
-            const data = ctx.canvas.toDataURL();
-            res(data);
-          }
-          img.onerror = error => rej(error);
-        })
-      }
-    await this.loadingFuction() 
+  
+    function compressImage(src, newX, newY) {
+      return new Promise((res, rej) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
+          const elem = document.createElement('canvas');
+          elem.width = newX;
+          elem.height = newY;
+          const ctx = elem.getContext('2d');
+          ctx.drawImage(img, 0, 0, newX, newY);
+          const data = ctx.canvas.toDataURL();
+          res(data);
+        };
+        img.onerror = error => rej(error);
+      });
+    }
+  
+    await this.loadingFuction();
+    this.router.navigate(['/signature'], { queryParams: { id: this.documentId } });
   }
   
   loadingFuction() {
@@ -509,6 +481,7 @@ blobToBase64(blob: Blob): Promise<string | ArrayBuffer | null> {
     // })
 
     // window.location.reload()
+    this.router.navigate(['/signature'], { queryParams: { id: this.documentId } });
     this.reload();
   }
   useProfileSignCheckbox(event: Event) {

@@ -162,13 +162,30 @@
           </div>
 
           <!-- จำนวนกระดาษ -->
-          <div class="col-md-3" >
+          <div class="col-md-3" *ngIf="isAdmin">
             <div class="card Box3">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                   <div>
                     <p class="title mb-0">จำนวนกระดาษ</p>
-                  <h2 class="amount">{{ totalPdfPages }}</h2> 
+                  <h2 class="amount">{{ totalSignedDocuments }}</h2> 
+                  </div>
+                  <div class="imgBG">
+                    <img src="./assets/img/paper.png" alt="paper" class="paper-img">
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3"  *ngIf="isSuperAdmin" >
+            <div class="card Box3">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <p class="title mb-0">จำนวนบริษัท</p>
+                  <h2 class="amount">{{ totalCompanies }}</h2> 
                   </div>
                   <div class="imgBG">
                     <img src="./assets/img/paper.png" alt="paper" class="paper-img">

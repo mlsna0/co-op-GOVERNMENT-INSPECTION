@@ -69,6 +69,17 @@ export class DocumentService {
     this.totalDocumentsCountSubject.next(totalDocumentsCount);
   }
 
+   // BehaviorSubject สำหรับนับจำนวนบริษัท
+   private companyCountSubject = new BehaviorSubject<number>(0);
+
+   companyCount$ = this.companyCountSubject.asObservable();
+ 
+ updateCompanyCount(companyCount: number): void {
+    console.log("Received company count:", companyCount);
+    this.companyCountSubject.next(companyCount);
+  }
+
+
  ///land add(pdf count)///
 
  getPdfFiles(): Observable<string[]> {
