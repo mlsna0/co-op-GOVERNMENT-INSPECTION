@@ -194,9 +194,9 @@ class RegisterModelCtrl extends BaseCtrl {
             if (!isMatch) {
                 return res.status(400).json({ msg: 'Invalid email or password' });
             }
-    
+            //ตรวจสอบสถานะการใช้สิทธิ
             if (user.isActive === false) {
-                return res.status(403).json({ msg: 'Account is inactive. Contact administrator.' });
+                return res.status(200).json({ msg: 'Account is inactive. Contact administrator.', userIsActive: user.isActive });
             }
     
             let employee = await this.model.findById(user.employeeId);

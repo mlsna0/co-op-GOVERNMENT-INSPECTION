@@ -6,9 +6,9 @@
 <!-- <div *ngIf="isNotSuper"> -->
 
 <div class="main-content">
-  <nav aria-label="breadcrumb">
+  <nav aria-label="breadcrumb" *ngIf="RoleCurrenUser !== 'user'">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
+      <li class="breadcrumb-item"><a [routerLink]="['/dashboard']" >หน้าหลัก</a></li>
       <li class="breadcrumb-item active"><a aria-current="page">การลงตรวจอิเล็กทรอนิค</a></li>
     </ol>
   </nav>

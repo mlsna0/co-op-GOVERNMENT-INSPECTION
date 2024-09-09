@@ -2,6 +2,11 @@
   max-width: 100%;
 }
 
+.disabled-link {
+  pointer-events: none;
+  color: gray; /* ทำให้ลิงก์ดูไม่สามารถคลิกได้ */
+  text-decoration: none; /* เอาเส้นใต้ของลิงก์ออก */
+}
 .card-header{
   position: relative;
   /* background-color:rgb(255,209,0,0.2) ;rgb(241, 245 ,255) */

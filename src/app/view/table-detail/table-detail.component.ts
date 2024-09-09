@@ -34,6 +34,12 @@ export class TableDetailComponent implements OnInit {
   @ViewChild('firstPage', { static: false }) firstPage: ElementRef; //break page
   @ViewChild('mainCenterPanel') mainCenterPanel: ElementRef;//for over sign-content
 
+
+  currentUser:any;
+  RoleCurrenUser:any;
+
+
+
   details: any[] = []; //break page
 
   textContentLength: number = 0;
@@ -152,6 +158,8 @@ export class TableDetailComponent implements OnInit {
     }, 0);
     });
 
+    this.getCurrentUser();//เพื่อปิด ไม่สามารถไปทีหน้าหลัก dashboard ได้
+
   }
 
   ngAfterViewInit() {
@@ -186,6 +194,24 @@ export class TableDetailComponent implements OnInit {
   }
   ngAfterViewChecked() {
     this.cdr.detectChanges();
+  }
+
+
+  getCurrentUser(): void {
+    // ดึงข้อมูลจาก localStorage
+    const userData = localStorage.getItem('currentUser');
+  
+    // ตรวจสอบว่ามีข้อมูลหรือไม่
+    if (userData) {
+      // แปลง JSON เป็นวัตถุ
+      this.currentUser = JSON.parse(userData);
+      this.RoleCurrenUser = this.currentUser?.role;
+  
+      // console.log("currentUser: ",this.currentUser);
+      // console.log("this RoleCurrenUser : ", this.RoleCurrenUser);
+    } else {
+      console.log('No user data found in localStorage.');
+    }
   }
 
   //////////////////////////////////////////////////////////////////////

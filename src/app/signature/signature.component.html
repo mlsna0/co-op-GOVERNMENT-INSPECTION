@@ -1,7 +1,7 @@
 <div class="main-content">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
+      <li class="breadcrumb-item" *ngIf="RoleCurrenUser !== 'user'"><a [routerLink]="['/dashboard']" >หน้าหลัก</a></li>
       <li class="breadcrumb-item"><a [routerLink]="['/table-main']">การลงตรวจอิเล็กทรอนิค</a></li>
 
       <li class="breadcrumb-item"><a (click)="BackRoot()">เนื้อหาเอกสาร</a></li>

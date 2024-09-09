@@ -85,12 +85,13 @@ export class ManageagencyComponent implements OnInit {
     this.ls.getagency().subscribe(data => {
       this.agency = data
       this.loading = false;
-      console.log("agency data ",this.agency)
+      // console.log("agency data ",this.agency)
     }, error => {
       console.error('Error fetching user data:', error);
       this.loading = false;
     });
-    this.loadProvinces() 
+    this.loadProvinces() ;
+
   }
 
       getUserReportProfile(userId: any) {

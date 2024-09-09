@@ -4,6 +4,11 @@
 .card-body{
   font-size: 16px;
 }
+.disabled-link {
+  pointer-events: none;
+  color: gray; /* ทำให้ลิงก์ดูไม่สามารถคลิกได้ */
+  text-decoration: none; /* เอาเส้นใต้ของลิงก์ออก */
+}
 label{
   font-size: 16px;
   font-weight: 500;

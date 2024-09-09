@@ -5,6 +5,11 @@
   :host ::ng-deep .card-header .card-header-danger .modal-title{
     font-family: "Sarabun", sans-serif !important; 
   }
+  .disabled-link {
+    pointer-events: none;
+    color: gray; /* ทำให้ลิงก์ดูไม่สามารถคลิกได้ */
+    text-decoration: none; /* เอาเส้นใต้ของลิงก์ออก */
+  }
   
   .card-header{
     position: relative;
