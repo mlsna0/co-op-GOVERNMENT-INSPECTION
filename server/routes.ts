@@ -148,45 +148,49 @@ function setRoutes(app): void {
     // Signature
     router.route('/stampSignature').post(upload.fields([{ name: "pdfFile" }]), async (req: any, res, next) => {
         try {
-            console.log("00000000 =>");
-            const pdfload = await PDFDocument.load(req.files['pdfFile'][0].buffer)
+            console.log("00000000 => Started processing PDF file upload");
+    
+            // Load PDF file
+            const pdfload = await PDFDocument.load(req.files['pdfFile'][0].buffer);
+            console.log("Loaded PDF file");
+    
+            // Create a new PDF document
             const pdfDoc = await PDFDocument.create();
-            let signBase64Trim = req.body.base64.replace('data:image/png;base64,', '')
+            console.log("Created a new PDF document");
+    
+            // Process base64 signature
+            let signBase64Trim = req.body.base64.replace('data:image/png;base64,', '');
             const buffer = Buffer.from(signBase64Trim, "base64");
             const signImage = await pdfDoc.embedPng(buffer);
+            console.log("Embedded signature image");
+    
             let signData = JSON.parse(req.body.signData);
+            console.log("Parsed sign data", signData);
+    
+            // Loop through each page of the PDF and apply the signature
             for (let index = 0; index < pdfload.getPageCount(); index++) {
-                let signPosition = signData.filter(
-                    (res) => {
-                        return res.page == index + 1;
-                    }
-                );
-
-                if (signPosition) {
-                    const [signCopyPage] = await pdfDoc.copyPages(pdfload, [
-                        index,
-                    ]);
+                console.log(`Processing page ${index + 1}`);
+    
+                let signPosition = signData.filter(res => res.page == index + 1);
+                if (signPosition.length > 0) {
+                    const [signCopyPage] = await pdfDoc.copyPages(pdfload, [index]);
                     const page = pdfDoc.addPage(signCopyPage);
-                    signPosition.forEach((element) => {
+    
+                    signPosition.forEach(element => {
                         const { width, height } = page.getSize();
                         let signSize = element.signSize;
-                        console.log('signSize: ', signSize);
-                        let imgWidth =
-                            (+signSize.x1 * width) / 100 - (+signSize.x2 * width) / 100;
-                        let imgHeight =
-                            (+signSize.y1 * height) / 100 - (+signSize.y2 * height) / 100;
+    
+                        console.log(`Sign size for page ${index + 1}:`, signSize);
+                        let imgWidth = (+signSize.x1 * width) / 100 - (+signSize.x2 * width) / 100;
+                        let imgHeight = (+signSize.y1 * height) / 100 - (+signSize.y2 * height) / 100;
                         let offsetX = imgWidth / 2;
                         let offsetY = imgHeight / 2;
-                        console.log('offsetX: ', offsetX);
-                        console.log('offsetY: ', offsetY);
-
-                        // let x = element.position_percentage.x - offsetX; //- center.x;
-                        // let y = element.position_percentage.y - offsetY; //- center.y
-                        let x = ((width * element.position_percentage.x) / 100) - offsetX//- center.x;
-                        let y = ((height * element.position_percentage.y) / 100) - offsetY//- center.y
-                        console.log('x: ', x);
-                        console.log('y: ', y);
-
+    
+                        let x = ((width * element.position_percentage.x) / 100) - offsetX;
+                        let y = ((height * element.position_percentage.y) / 100) - offsetY;
+    
+                        console.log(`Signature position: x=${x}, y=${y}, width=${imgWidth}, height=${imgHeight}`);
+    
                         page.drawImage(signImage, {
                             x: x,
                             y: y,
@@ -196,28 +200,32 @@ function setRoutes(app): void {
                         });
                     });
                 } else {
-                    const [firstDonorPage] = await pdfDoc.copyPages(pdfload, [
-                        index,
-                    ]);
+                    const [firstDonorPage] = await pdfDoc.copyPages(pdfload, [index]);
                     pdfDoc.insertPage(index, firstDonorPage);
+                    console.log(`No signature on page ${index + 1}`);
                 }
             }
+    
             const pdfBytes = await pdfDoc.save({ useObjectStreams: false });
-
+            console.log("Saved modified PDF");
+    
+            // Handle CA case
             if (req.body.type == 'ca') {
-                let CA = fs.readFileSync('D:/data/OrganizationWebupload/ca_files/' + req.body.user_ca + '.p12');
-
-                const p12Data = CA.toString('base64')
+                console.log("Handling CA signing");
+    
+                let CA = fs.readFileSync(path.join('D:/data/OrganizationWebupload/ca_files/', req.body.user_ca + '.p12'));
+                const p12Data = CA.toString('base64');
                 const p12Der = forge.util.decode64(p12Data);
-                const p12Asn1 = forge.asn1.fromDer(p12Der, { parseAllBytes: false });   
+                const p12Asn1 = forge.asn1.fromDer(p12Der, { parseAllBytes: false });
                 const p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, false, req.body.caPass);
                 const certificate = p12.getBags({ bagType: forge.pki.oids.certBag });
-
+    
                 const now = new Date();
-
                 if (now > certificate[forge.pki.oids.certBag][0].cert.validity.notAfter) {
+                    console.log("CA certificate expired");
                     return res.json({ status: false, message: ' CA หมดอายุ' });
                 }
+    
                 let pdfBuffer = await plainAddPlaceholder({
                     pdfBuffer: Buffer.from(pdfBytes),
                     reason: '',
@@ -226,53 +234,43 @@ function setRoutes(app): void {
                     name: '',
                     location: '',
                 });
-
-                // pdfBuffer = await SignPdf.sign(pdfBuffer, CA, {
-                //     passphrase: req.body.caPass,
-                // });
-
-                fs.writeFileSync('C:/Users/AFNC46/pj/angualr-project-training/dist/server/' + req.body.documentId + '.pdf',
-                    pdfBuffer,
-                    'binary'
-                );
+    
+                const filePath = path.join(__dirname, '..', 'dist', 'server', req.body.documentId + '.pdf');
+                if (!fs.existsSync(path.dirname(filePath))) {
+                    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+                }
+                fs.writeFileSync(filePath, pdfBuffer, 'binary');
+                console.log('Saved CA signed file at:', filePath);
+    
                 return res.json('http://localhost:3000/api/stampSignature/' + req.body.documentId + '.pdf');
             }
-            console.log("1111111 =>",req.body.type);
-            
-            // fs.writeFileSync('D:/data/OrganizationWebupload/signatured_documents/' + req.body.oca + req.body.requestId + req.body.userId + '.pdf',
-            //     pdfBytes,
-            //     'binary'
-            // );
-
-
-            //เป็นการเลือกที่ ที่จะเก็บ ไฟล์ลงไป ว่าจะเก็บไว้ที่ไหน
-            
-            fs.writeFileSync('C:/Users/AFNC46/pj/angualr-project-training/dist/server/' + req.body.documentId + '.pdf',
-                pdfBytes,
-                'binary'
-            );
-            console.log("222222222 =>");
+    
+            console.log("1111111 => Non-CA type, continuing");
+    
+            // Save the final signed PDF
+            const filePath = path.join(__dirname, '..', 'dist', 'server', req.body.documentId + '.pdf');
+            if (!fs.existsSync(path.dirname(filePath))) {
+                fs.mkdirSync(path.dirname(filePath), { recursive: true });
+            }
+            fs.writeFileSync(filePath, pdfBytes, 'binary');
+            console.log('Saved final file at:', filePath);
+    
+            console.log("222222222 => Finished processing");
             console.log('oca:', req.body.oca);
             console.log('userId:', req.body.userId);
-            console.log('document',req.body.documentId);
-            
-
-            //ถ้าใช้เเบบนี้ จะมีการดึงข้อมูลเเบบรูปโปรไฟล์
-            // return res.json(true)
-
-            //หรือ จะดึงมาใช้เเบบนี้ก็ได้
-            // return res.json('http://localhost:3000/api/stampSignature/ ' + req.body.oca + req.body.requestId + req.body.userId + '.pdf')
+            console.log('document:', req.body.documentId);
+    
             return res.json('http://localhost:3000/api/stampSignature/' + req.body.documentId + '.pdf');
         } catch (err) {
             if (err.message == 'PKCS#12 MAC could not be verified. Invalid password?') {
-                console.log("Wrong Password =>");
-                return res.status(200).json({ status: false, message: ' รหัสผ่าน CA ไม่ถูกต้อง' });
+                console.log("Wrong Password => CA Password incorrect");
+                return res.status(200).json({ status: false, message: 'รหัสผ่าน CA ไม่ถูกต้อง' });
             } else {
-                console.log("error =>", err.message);
+                console.log("Error =>", err.message);
                 return res.status(500).json({ error: err.message });
             }
         }
-    })
+    });
 
     router.route('/test').get(async (req, res: any) => {
         let CAFile = fs.readFileSync('C:/Users/Administrator/Desktop/oca/dist/oca/test.p12')
