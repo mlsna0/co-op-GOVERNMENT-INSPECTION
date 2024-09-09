@@ -111,8 +111,8 @@
                 (click)="selectEle($event)" [ngClass]="{'cursor-copy': stageMarkSign}"
                 style="display: flex; border: 1px solid black; 
                box-shadow: 0 2px 5px rgba(0,0,0,0.1);  
-                width: 210mm;
-                height: 297mm; "></pdf-viewer>
+                width: 211mm;
+                height: 300mm; "></pdf-viewer>
 
               <pdf-viewer *ngIf="step == 2" [src]="signaturedFile" [render-text]="false" [original-size]="true"
                 [show-all]="false" [(page)]="pageVariable" (pages-initialized)="pageInitialized($event)"
