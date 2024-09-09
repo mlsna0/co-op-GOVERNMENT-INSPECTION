@@ -29,6 +29,8 @@ import { saveAs } from 'file-saver';
 import { loginservice } from 'app/layouts/login.services.';
 import { ToastrService } from 'ngx-toastr'; // นำเข้า ToastrService
 import { DocumentService } from 'app/services/document.service';
+import * as QRCode from 'qrcode';
+
 
 @Component({
   selector: 'app-table-main',
@@ -150,6 +152,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
       // subDistrict: ['',Validators.required],
       // address: ['',Validators.required],
       place:['', Validators.required],
+      qrcode:[''],
       // data_: [''],
       // contentType: [''],
        personal: this.fb.array([]),
@@ -333,7 +336,7 @@ combineDocuments(items, userOrganization: string): any[] {
   let signedDocumentsCount = 0; // ตัวแปรสำหรับนับจำนวนเอกสารที่ถูกเซ็น
   let totalDocumentsCount = 0; // ตัวแปรสำหรับนับจำนวนเอกสารทั้งหมด
 
-  console.log("Processing documents and counting unique users for organization:", userOrganization);
+  // console.log("Processing documents and counting unique users for organization:", userOrganization);
 
   items.forEach(item => {
     // console.log("Current item:", item);
@@ -550,9 +553,58 @@ saveSignature() {
   openDetailModal(recordId: any) {
     this.router.navigate(['/table-detail', recordId]);  
   }
+  ///qr land start///
+  openQrcode(recordId: any){
+    this.qrData = this.generateQRCodeData(recordId);
+    this.generateQRCodeImage(this.qrData);
+
+    $('#qrcodemodel').modal({
+      backdrop: 'static', // ป้องกันการปิดเมื่อคลิกด้านนอก
+      keyboard: false     // ป้องกันการปิดด้วยแป้นพิมพ์ (เช่น ปุ่ม Esc)
+    });
+    $('#qrcodemodel').modal('show');
+ 
+  }
+
+  generateQRCodeData(recordId: any): string {
+    // Example logic to generate QR code data (e.g., a URL based on the recordId)
+    // Replace this with your actual logic to create the appropriate QR code data
+    const pdfUrl = `http://localhost:4200/table-detail/${recordId}`;
+    return pdfUrl;
+}
+
+generateQRCodeImage(data: string) {
+  QRCode.toDataURL(data)
+    .then(url => {
+      this.qrCodeImage = url;
+    })
+    .catch(err => {
+      console.error(err);
+    });
+}
+
+
+// openQrcode(recordId: any) {
+//   this.recordId = recordId;
+//   this.loadQRCodeFromDatabase();
   
+//   $('#qrcodemodel').modal({
+//     backdrop: 'static',
+//     keyboard: false
+//   });
+//   $('#qrcodemodel').modal('show');
+// }
 
-
+// loadQRCodeFromDatabase() {
+//   this.sv.getDataById(this.recordId).subscribe(record => {
+//     this.qrCodeImage = record.record_qrcode; // QR code ที่เป็น Base64
+//     console.log('qrcode',this.qrCodeImage);
+    
+//   }, error => {           
+//     console.error('Error fetching QR code:', error);
+//   });
+// }
+///qr land end///
 
   // loadViewData() {
   //   this.sv.getItems().subscribe(data => {
@@ -562,6 +614,52 @@ saveSignature() {
   //   });
   // }
 
+  ///download qr code land start////
+  printQrcode() {
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const elements = document.querySelectorAll('.qr-img'); // เลือกทุกองค์ประกอบที่ต้องการ
+    let promises = [];
+
+    if (elements.length === 0) {
+      console.error('No elements found to print.');
+      return;
+    }
+
+    const refreshButton = document.querySelector('.btn-refreshCanvas') as HTMLElement;
+    if (refreshButton) {
+        refreshButton.style.display = 'none';
+    }
+    elements.forEach((element, index) => {
+      const style = getComputedStyle(element as HTMLElement);
+      if (style.display === 'none') {
+        return; // ข้าม element ที่ไม่แสดง
+      }
+      promises.push(
+        html2canvas(element as HTMLElement, {
+          scale: 2,
+          useCORS: true
+        }).then(canvas => {
+          const imgWidth = 210; // A4 width in mm
+          const imgHeight = canvas.height * imgWidth / canvas.width;
+          const contentDataURL = canvas.toDataURL('image/png');
+          if (index > 0) { // เพิ่มหน้าใหม่ใน PDF ถ้าไม่ใช่หน้าแรก
+            pdf.addPage();
+          }
+          pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight);
+        }).catch(error => {
+          console.error('Error creating canvas for element:', element, error);
+        })
+      );
+    });
+
+    Promise.all(promises).then(() => {
+      pdf.save('qrcode.pdf');
+    }).catch(error => {
+      console.error('Error generating PDF:', error);
+    });
+  }
+
+///download qr code land end////
   uploadImage(index: number) {
     const fileInput = document.getElementById(`image-upload-${index}`) as HTMLInputElement;
     if (fileInput) {
@@ -845,126 +943,120 @@ get personal(): FormArray {
   }
 
 
+async onInsertSummit(data: any) {
+  this.Submitted = true;
 
+  if (this.addItemForm.invalid || this.personal.invalid) {
+    let invalidFields = [];
 
-  onInsertSummit(data) {
-    this.Submitted = true; 
-    // console.log(data);
-    // console.log('Item form:',this.addItemForm.value);
- 
-    // console.log('Personal array form : ',this.personal.value)
-    // console.log("onInsertSubmit..?data : ",data);
-    // console.log(this.addPersonalForm.value);
-    if (this.addItemForm.invalid || this.personal.invalid ) {
-      // console.log('ฟอร์มไม่ถูกต้อง');
-      // แสดงข้อความแสดงข้อผิดพลาดให้ผู้ใช้ดู
-      let invalidFields = [];
-        Object.keys(this.addItemForm.controls).forEach(key => {
-            if (this.addItemForm.controls[key].invalid) {
-                invalidFields.push(this.getFieldLabel(key));
-            }
-        });
+    Object.keys(this.addItemForm.controls).forEach(key => {
+      if (this.addItemForm.controls[key].invalid) {
+        invalidFields.push(this.getFieldLabel(key));
+      }
+    });
 
-        (this.personal as FormArray).controls.forEach((person: AbstractControl, index: number) => {
-          let personGroup = person as FormGroup;
-          Object.keys(personGroup.controls).forEach(key => {
-              if (personGroup.controls[key].invalid) {
-                  invalidFields.push(`Personal field ${index + 1} - ${this.getFieldLabel(key)}`);
-              }
-          });
-        });
-        this.toastr.error('กรุณากรอกข้อมูลให้ครบทุกช่อง', 'เกิดข้อผิดพลาด!', {
-          timeOut: 1500,
-          positionClass: 'toast-top-right'
-        });
-        
-      // Swal.fire({
-      //   title: 'เกิดข้อผิดพลาด!',
-      //   text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง',
-      //   icon: 'error',
-      //   timer: 1500,
-      //   // confirmButtonText: 'ตกลง',
-      //   showConfirmButton: false, 
-        // customClass: {
-        //   confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-        // }
+    (this.personal as FormArray).controls.forEach((person: AbstractControl, index: number) => {
+      let personGroup = person as FormGroup;
+      Object.keys(personGroup.controls).forEach(key => {
+        if (personGroup.controls[key].invalid) {
+          invalidFields.push(`Personal field ${index + 1} - ${this.getFieldLabel(key)}`);
+        }
+      });
+    });
 
-      // });
-      return;
-    }
-   
-    ///การดึงข้อมูลจากผู้สร้างเอกสาร
+    this.toastr.error('กรุณากรอกข้อมูลให้ครบทุกช่อง', 'เกิดข้อผิดพลาด!', {
+      timeOut: 1500,
+      positionClass: 'toast-top-right'
+    });
+    return;
+  }
 
-    // this.sv.postItemData(this.addItemForm.value,this.addPersonalForm.value).subscribe(res => {
-    //   console.log("res postItemData:", res);
-    // });
-    const token = this.sv.getToken(); // ดึง token จากบริการที่คุณใช้
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    
-    this.sv.postDataTest(this.addItemForm.value, token).subscribe(res => {
-      // console.log("res submitted successfully", res);
+  // ตรวจสอบข้อมูลก่อนสร้าง QR Code และแปลงให้เป็น string
+  if (!data.id) {
+    console.error('Invalid ID data for QR Code generation:', data.id);
+    this.toastr.error('ID ไม่ถูกต้องสำหรับการสร้าง QR Code', 'เกิดข้อผิดพลาด!', {
+      timeOut: 1500,
+      positionClass: 'toast-top-right'
+    });
+    return;
+  }
+
+  // แปลง ID เป็น string
+  const idString = data.id.toString();
+
+  // สร้าง QR Code
+  let qrData: string;
+  try {
+    qrData = await QRCode.toDataURL(idString); // สร้าง QR code โดยใช้ ID ที่แปลงเป็น string
+  } catch (error) {
+    console.error('เกิดข้อผิดพลาดในการสร้าง QR code:', error);
+    this.toastr.error('เกิดข้อผิดพลาดในการสร้าง QR Code', 'เกิดข้อผิดพลาด!', {
+      timeOut: 1500,
+      positionClass: 'toast-top-right'
+    });
+    return;
+  }
+
+  // เตรียมข้อมูลที่จะส่งไปยัง backend
+  const token = this.sv.getToken();
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  const dataToSave = {
+    ...this.addItemForm.value,
+    qrCode: qrData
+  };
+
+  // ส่งข้อมูลไปยัง backend
+  this.sv.postDataTest(dataToSave, token).subscribe(
+    res => {
       this.toastr.success('เพิ่มข้อมูลสำเร็จ', 'สำเร็จ', {
-        timeOut: 1500,  
+        timeOut: 1500,
         positionClass: 'toast-top-right'
       }).onHidden.subscribe(() => {
         window.location.reload();  // รีเฟรชหน้าจอหลังจากแจ้งเตือนหายไป
       });
 
-      
-      // Swal.fire({
-      //         title: 'เพิ่มรายการสำเร็จ!!',
-      //         text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
-      //         icon: 'success',
-      //         timer: 1500,
-      //         showConfirmButton: false, 
-      //         // confirmButtonText: 'ตกลง',
-      //         // customClass: {
-      //         //   confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-      //         // }
-
-      // }).then((result)=>{
-      //   if (result.dismiss === Swal.DismissReason.timer){
-      //     this.refreshPage();
-      //   }
-      // });
       $('#insertModel').modal('hide');
-      // this.addItemForm.reset();
-      // this.personInputs.clear(); // Clear FormArray
-      // this.addPersonInput();
-     
+      this.addItemForm.reset();
+      this.personInputs.clear(); // Clear FormArray
+      this.addPersonInput();
     },
-    error =>{
-      // console.error('Error submitting data:', error);
+    error => {
+      console.error('Error submitting data:', error);
       this.toastr.error('การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ', 'เกิดข้อผิดพลาด!', {
         timeOut: 1500,
         positionClass: 'toast-top-right'
       });
-      // Swal.fire({
-      //       title: 'เกิดข้อผิดพลาด!',
-      //       text: 'การเพิ่มข้อมูลการตรวจสอบไม่สำเร็จ',
-      //       icon: 'error',
-      //       timer: 1500,
-      //       showConfirmButton: false, 
-      //       // confirmButtonText: 'ตกลง',
-      //       // confirmButtonColor: "#24a0ed",
-      //       // customClass: {
-      //       //   confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-      //       // }
-      //     }).then((result)=>{
-      //       if (result.dismiss === Swal.DismissReason.timer){
-      //       }
-      //     });
-
     }
-    
-
   );
-    
-  // this.fetchData()
-     // Close the modal
-     $('#insertModel').modal('hide');
-      
+
+  $('#insertModel').modal('hide');
+}
+
+  // ฟังก์ชันแสดงข้อผิดพลาดของฟิลด์ที่ไม่ถูกต้อง (เช่น ในฟอร์ม)
+  private displayInvalidFields() {
+    let invalidFields = [];
+
+    Object.keys(this.addItemForm.controls).forEach(key => {
+      if (this.addItemForm.controls[key].invalid) {
+        invalidFields.push(this.getFieldLabel(key));
+      }
+    });
+
+    (this.personal as FormArray).controls.forEach((person: AbstractControl, index: number) => {
+      let personGroup = person as FormGroup;
+      Object.keys(personGroup.controls).forEach(key => {
+        if (personGroup.controls[key].invalid) {
+          invalidFields.push(`Personal field ${index + 1} - ${this.getFieldLabel(key)}`);
+        }
+      });
+    });
+
+    this.toastr.error('กรุณากรอกข้อมูลให้ครบทุกช่อง', 'เกิดข้อผิดพลาด!', {
+      timeOut: 1500,
+      positionClass: 'toast-top-right'
+    });
   }
+
   
   getFieldLabel(fieldName: string): string {
     const fieldLabels = {

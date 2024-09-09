@@ -724,6 +724,13 @@
   :host ::ng-deep .form-control{
     background-image: linear-gradient(to top, #000000 2px, rgba(156, 39, 176, 0) 2px), linear-gradient(to top, #d2d2d2 1px, rgba(210, 210, 210, 0) 1px);
   }
+
+  .qr-img{
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  } 
+
   @media print {
     #myDetail{
       border: none;
