@@ -65,6 +65,7 @@ export class ThaiDatePipe implements PipeTransform {
         ];
         let returnDate: string;
         returnDate = outputDateMedium.join(" ");
+  
         if (format == 'full') {
             returnDate = outputDateFull.join(" ");
         }
@@ -88,7 +89,47 @@ export class ThaiDatePipe implements PipeTransform {
         }
         if (format == 'time') {
             returnDate = outputTime.join("");
+
         }
+        
+        if (date.includes('/')) {
+            let dateParts = date.split('/');
+            let day = parseInt(dateParts[0], 10);
+            let month = parseInt(dateParts[1], 10) - 1; // เดือนใน JavaScript นับจาก 0
+            let year = parseInt(dateParts[2], 10);
+
+            // แปลง พ.ศ. เป็น ค.ศ. ถ้าปีเป็นปี พ.ศ.
+            if (year > 2400) {
+                year = year - 543;
+            }
+
+            let inputDate = new Date(year, month, day);
+            let dataDate = [
+                inputDate.getDay(), inputDate.getDate(), inputDate.getMonth(), inputDate.getFullYear()
+            ];
+
+            let outputDateMedium = [
+                dataDate[1],
+                longThaiMonth[dataDate[2]],
+                dataDate[3] + 543 // แปลง ค.ศ. กลับเป็น พ.ศ.
+            ];
+
+            let returnDate: string;
+
+            // ตรวจสอบรูปแบบ
+            if (format === 'medium') {
+                returnDate = outputDateMedium.join(" ");
+            }
+
+            // เพิ่มรูปแบบใหม่ 'thaiDate'
+            if (format === 'thaiDate') {
+                returnDate = `${dataDate[1]} ${longThaiMonth[dataDate[2]]} ${dataDate[3] + 543}`;
+            }
+
+            return returnDate;
+        }
+
+
         return returnDate;
     }
 }

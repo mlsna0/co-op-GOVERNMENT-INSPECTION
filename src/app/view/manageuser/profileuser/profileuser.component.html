@@ -26,7 +26,7 @@
 
                 <div class="row">
 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="card-user">
                             <div class="card-avatar">
                                 <a href="javascript:void(0)" style="height: 220px;">
@@ -66,8 +66,8 @@
                     </div>
                     
         
-                    <div class="col-md-9">
-                            <form [formGroup]="UserInfoForm" (ngSubmit)="SaveUserInfo()">
+                    <div class="col-md-8">
+                     
                             <div class="userInfo">
                                 <div class="title">
                                    <h4> ข้อมูลผู้ใช้</h4>
@@ -77,13 +77,13 @@
                                     </div>
                                     
                                 </div>
-                                <div class="user-content">
+                                <div class="user-content info-fontSize">
                                     <div class="row">
                                         <div class="col-md-3">
                                             <label for="">ชื่อ-นามสกุล</label>
                                         </div>
 
-                                        <div class="col-md-9"  *ngIf="!EditStatus">
+                                        <div class="col-md-9"  >
                                             {{UserData?.employeeId?.firstname}} &nbsp;
                                             {{UserData?.employeeId?.lastname}}
                                         </div>
@@ -210,10 +210,10 @@
                                             </div>
                                            
                                           
-                                            <div class="col-md-5"  *ngIf="!EditStatus">
+                                            <div class="col-md-5"  >
                                                ตำบล/แขวง : {{getTambonName(UserData?.employeeId?.tambon)}}
                                             </div>
-                                            <div class="col-md-4"  *ngIf="!EditStatus">
+                                            <div class="col-md-4"  >
                                                อำเภอ/เขต : {{getAmphureName(UserData?.employeeId?.amphure)}}
                                             </div>
                                          
@@ -226,7 +226,7 @@
                                         
                                       
                                     
-                                            <div class="col-md-5"  *ngIf="!EditStatus">
+                                            <div class="col-md-5"  >
                                                จังหวัด :  {{getProvinceName(UserData?.employeeId?.province)}}
                                             </div>
                                             <div class="col-md-4"  >
@@ -243,10 +243,8 @@
                                         <div class="col-md-3">
                                             <label for="">อีเมล</label>
                                         </div>
-                                        <div class="col-md-9"  *ngIf="EditStatus">
-                                            <input type="text" formControlName="email" class="form-control">
-                                        </div>
-                                        <div class="col-md-9"  *ngIf="!EditStatus">
+                              
+                                        <div class="col-md-9"  >
                                             {{UserData?.email}}
                                         </div>
                                     </div>
@@ -256,18 +254,15 @@
                                             <label for="">เบอร์โทรศัพท์</label>
                                         </div>
                     
-                                        <div class="col-md-9"  *ngIf="!EditStatus">
+                                        <div class="col-md-9"  >
                                             {{UserData?.employeeId?.phone}}
                                         </div>
                                     </div>
                                      
                                 </div>
-                                <div class="footer-content" *ngIf="EditStatus">
-                                    <button type="submit" class="btn btn-success">ยืนยัน</button>
-                                    <button type="button"  class="btn btn-danger" (click)="cancelEdit()">ยกเลิก</button>
-                                </div>
+                           
                             </div>
-                            </form>
+                     
                     </div>
                   
                     

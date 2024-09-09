@@ -386,6 +386,23 @@ loadTambons(amphureId: any) {
       $('#EditModal').modal('hide')
     
     }
+    if($('#profile-Modal')){
+      // ตรวจสอบว่าควรแสดง toast หรือไม่
+      if (this.shouldShowToast) {
+        this.toastr.success('อัปเดตโปรไฟล์สำเร็จ', 'สำเร็จ', {
+          timeOut: 2500,
+          positionClass: 'toast-top-right'
+        });
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 2500);
+      }
+
+      this.shouldShowToast = false; // รีเซ็ตค่า
+  $('#profile-Modal').modal('hide')
+
+}
   }
   editProfile() {
     // document.body.classList.add('no-scroll');

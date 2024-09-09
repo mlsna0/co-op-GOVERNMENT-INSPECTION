@@ -21,6 +21,11 @@ export class SignatureComponent implements OnInit {
   @ViewChildren('cdkDrag_', { read: ElementRef }) cdkDrag_: QueryList<ElementRef>
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
   @ViewChild('canvasWrapper', { static: false }) canvasWrapper: ElementRef;
+
+  currentUser:any;
+  RoleCurrenUser:any;
+
+
   documentId: string;
   stageMarkSign = false;
   dragList: any = [];
@@ -86,6 +91,8 @@ export class SignatureComponent implements OnInit {
     this.getData()
     console.log('Document ID:', this.documentId);
     
+    this.getCurrentUser();//เพื่อปิด ไม่สามารถไปทีหน้าหลัก dashboard ได้
+    
   }
 
   async getData() {
@@ -98,6 +105,22 @@ export class SignatureComponent implements OnInit {
     await this.loadingFuction();
 
     // })
+  }
+  getCurrentUser(): void {
+    // ดึงข้อมูลจาก localStorage
+    const userData = localStorage.getItem('currentUser');
+  
+    // ตรวจสอบว่ามีข้อมูลหรือไม่
+    if (userData) {
+      // แปลง JSON เป็นวัตถุ
+      this.currentUser = JSON.parse(userData);
+      this.RoleCurrenUser = this.currentUser?.role;
+  
+      // console.log("currentUser: ",this.currentUser);
+      // console.log("this RoleCurrenUser : ", this.RoleCurrenUser);
+    } else {
+      console.log('No user data found in localStorage.');
+    }
   }
   
   async onFileSelected(event: any) {

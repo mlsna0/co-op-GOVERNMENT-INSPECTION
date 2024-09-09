@@ -59,8 +59,8 @@ export class LoginComponent implements OnInit {
           console.log('Stored role in AuthService:', this.as.currentUserRole);
         }
 
-        if (response.user.isActive  === false) {
-          console.log("response.user.isActive : ",response.user.isActive)
+        if (response.userIsActive  === false) {
+          console.log("response.user.isActive : ",response.userIsActive)
           // แสดงแจ้งเตือนเมื่อผู้ใช้ไม่มีสิทธิ์ในการเข้าสู่ระบบ
           this.toastr.error('คุณไม่มีสิทธิ์ในการเข้าสู่ระบบ', 'ข้อผิดพลาด', {
             timeOut: 2500,

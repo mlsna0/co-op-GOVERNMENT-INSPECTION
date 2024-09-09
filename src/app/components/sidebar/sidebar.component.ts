@@ -1,6 +1,7 @@
   import { Component, OnInit } from '@angular/core';
   import { Router, ActivatedRoute, NavigationEnd } from '@angular/router'; 
   import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
+  import Swal from 'sweetalert2';
 
   declare const $: any;
 
@@ -86,12 +87,13 @@
       return this.activeRoute === path;
     }
 
-    handleMenuClick(menuItem: RouteInfo) {
+    handleMenuClick(event: Event, menuItem: RouteInfo) {
       if (menuItem.path === '/login') {
         this.authService.logout(); // เรียกใช้ฟังก์ชัน logout
       }
-
     }
+   
 
+     
 
   }

@@ -21,6 +21,11 @@
     0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
 
+.disabled-link {
+  pointer-events: none;
+  color: gray; /* ทำให้ลิงก์ดูไม่สามารถคลิกได้ */
+  text-decoration: none; /* เอาเส้นใต้ของลิงก์ออก */
+}
 .example-box:active {
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
     0 8px 10px 1px rgba(0, 0, 0, 0.14),

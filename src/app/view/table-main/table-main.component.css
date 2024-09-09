@@ -5,6 +5,11 @@
   :host ::ng-deep .card-header .card-header-danger .modal-title{
     font-family: "Sarabun", sans-serif !important; 
   }
+  .disabled-link {
+    pointer-events: none;
+    color: gray; /* ทำให้ลิงก์ดูไม่สามารถคลิกได้ */
+    text-decoration: none; /* เอาเส้นใต้ของลิงก์ออก */
+  }
   
   .card-header{
     position: relative;
@@ -719,6 +724,13 @@
   :host ::ng-deep .form-control{
     background-image: linear-gradient(to top, #000000 2px, rgba(156, 39, 176, 0) 2px), linear-gradient(to top, #d2d2d2 1px, rgba(210, 210, 210, 0) 1px);
   }
+
+  .qr-img{
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  } 
+
   @media print {
     #myDetail{
       border: none;

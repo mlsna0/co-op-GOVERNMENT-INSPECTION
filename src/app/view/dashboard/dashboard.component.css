@@ -1,6 +1,6 @@
 .dashboard {
   margin-top: 50px;
-  padding:40px 15px 0;
+  padding:40px 15px ;
   display: flex;
   flex-wrap: wrap;
   min-height: calc(100vh - 123px);
@@ -328,7 +328,7 @@ height: 50px;
 }
 .text-donut{
   font-weight: 900;
-  width: 24%;
+  width: 29%;
 }
 .donutChartBG{
   background: white;

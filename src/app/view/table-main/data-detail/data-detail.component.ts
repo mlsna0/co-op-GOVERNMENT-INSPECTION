@@ -12,6 +12,9 @@ import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray,A
 })
 export class DataDetailComponent implements OnInit {
 
+  currentUser:any;
+  RoleCurrenUser:any;
+
 
   recordId: any;
   DataDetail:any ={};
@@ -116,7 +119,8 @@ export class DataDetailComponent implements OnInit {
 
     });
 
-    const targetDocumentId = this.recordId; 
+    const targetDocumentId = this.recordId; ;
+
     this.sv.getRecordByDocumentId(targetDocumentId).subscribe(data => {
       if (data && data.document && data.user && data.employee) {
         const mergedData = this.mergeUserData(data.employee, data.user, data.document);
@@ -128,6 +132,8 @@ export class DataDetailComponent implements OnInit {
     }, error => {
       console.error('Error fetching user data:', error);
     });
+
+    this.getCurrentUser();
     
     
   }
@@ -150,8 +156,27 @@ export class DataDetailComponent implements OnInit {
       role: user.role || 'N/A'
     }];
   }
+  getCurrentUser(): void {
+    // ดึงข้อมูลจาก localStorage
+    const userData = localStorage.getItem('currentUser');
+  
+    // ตรวจสอบว่ามีข้อมูลหรือไม่
+    if (userData) {
+      // แปลง JSON เป็นวัตถุ
+      this.currentUser = JSON.parse(userData);
+      this.RoleCurrenUser = this.currentUser?.role;
+  
+      // console.log("currentUser: ",this.currentUser);
+      console.log("this RoleCurrenUser : ", this.RoleCurrenUser);
+    } else {
+      console.log('No user data found in localStorage.');
+    }
+  }
   
   
+
+
+
 
 
   createPersonGroup(): FormGroup {
