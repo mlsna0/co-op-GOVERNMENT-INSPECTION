@@ -336,7 +336,7 @@ combineDocuments(items, userOrganization: string): any[] {
   let signedDocumentsCount = 0; // ตัวแปรสำหรับนับจำนวนเอกสารที่ถูกเซ็น
   let totalDocumentsCount = 0; // ตัวแปรสำหรับนับจำนวนเอกสารทั้งหมด
 
-  console.log("Processing documents and counting unique users for organization:", userOrganization);
+  // console.log("Processing documents and counting unique users for organization:", userOrganization);
 
   items.forEach(item => {
     // console.log("Current item:", item);
@@ -583,6 +583,7 @@ generateQRCodeImage(data: string) {
     });
 }
 
+
 // openQrcode(recordId: any) {
 //   this.recordId = recordId;
 //   this.loadQRCodeFromDatabase();
@@ -613,6 +614,52 @@ generateQRCodeImage(data: string) {
   //   });
   // }
 
+  ///download qr code land start////
+  printQrcode() {
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const elements = document.querySelectorAll('.qr-img'); // เลือกทุกองค์ประกอบที่ต้องการ
+    let promises = [];
+
+    if (elements.length === 0) {
+      console.error('No elements found to print.');
+      return;
+    }
+
+    const refreshButton = document.querySelector('.btn-refreshCanvas') as HTMLElement;
+    if (refreshButton) {
+        refreshButton.style.display = 'none';
+    }
+    elements.forEach((element, index) => {
+      const style = getComputedStyle(element as HTMLElement);
+      if (style.display === 'none') {
+        return; // ข้าม element ที่ไม่แสดง
+      }
+      promises.push(
+        html2canvas(element as HTMLElement, {
+          scale: 2,
+          useCORS: true
+        }).then(canvas => {
+          const imgWidth = 210; // A4 width in mm
+          const imgHeight = canvas.height * imgWidth / canvas.width;
+          const contentDataURL = canvas.toDataURL('image/png');
+          if (index > 0) { // เพิ่มหน้าใหม่ใน PDF ถ้าไม่ใช่หน้าแรก
+            pdf.addPage();
+          }
+          pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight);
+        }).catch(error => {
+          console.error('Error creating canvas for element:', element, error);
+        })
+      );
+    });
+
+    Promise.all(promises).then(() => {
+      pdf.save('qrcode.pdf');
+    }).catch(error => {
+      console.error('Error generating PDF:', error);
+    });
+  }
+
+///download qr code land end////
   uploadImage(index: number) {
     const fileInput = document.getElementById(`image-upload-${index}`) as HTMLInputElement;
     if (fileInput) {

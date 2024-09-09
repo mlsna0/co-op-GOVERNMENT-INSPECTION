@@ -472,14 +472,19 @@
             </div>
               <div class="container">
               <div class="qr-img">
-                <img [src]="qrCodeImage" alt="QR Code">
+                <!-- <a [routerLink]="['/table-detail/:id', recordId]"> -->
+                  <img [src]="qrCodeImage" alt="QR Code">
+                <!-- </a> -->
               </div>
             </div>
         
             <div class="modal-footer">
-              <button type="submit" class="btn btn-success pull-center" (click)="recordCommit()">
+              <!-- <button type="submit" class="btn btn-success pull-center" (click)="recordCommit()">
                 <i class="fa fa-check"></i>&nbsp; ยืนยัน
-              </button>
+              </button> -->
+              <button type="button" class="btn btn-success pull-center" (click)="printQrcode()">
+                <i class="fa fa-download"></i>&nbsp; ดาว์โหลด
+            </button>
               <button type="button" class="btn btn-danger pull-center" data-dismiss="modal" (click)="closeModal()">
                 <i class="fa fa-times"></i>&nbsp; ปิด
               </button>
