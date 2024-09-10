@@ -473,7 +473,7 @@
               <div class="container">
               <div class="qr-img">
                 <!-- <a [routerLink]="['/table-detail/:id', recordId]"> -->
-                  <img [src]="qrCodeImage" alt="QR Code">
+                  <img id="qrCodeElement" [src]="qrCodeImage" alt="QR Code">
                 <!-- </a> -->
               </div>
             </div>
@@ -482,7 +482,7 @@
               <!-- <button type="submit" class="btn btn-success pull-center" (click)="recordCommit()">
                 <i class="fa fa-check"></i>&nbsp; ยืนยัน
               </button> -->
-              <button type="button" class="btn btn-success pull-center" (click)="printQrcode()">
+              <button type="button" class="btn btn-success pull-center" (click)="saveAsImage()">
                 <i class="fa fa-download"></i>&nbsp; ดาว์โหลด
             </button>
               <button type="button" class="btn btn-danger pull-center" data-dismiss="modal" (click)="closeModal()">
