@@ -3,6 +3,25 @@
     height: auto;
   }
 
+  :host ::ng-deep .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    /* z-index: 1040; */
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+    z-index: 1040 !important; /* หรือค่าอื่น ๆ ที่ต่ำกว่า .modal-content */
+  }
+  
+  :host ::ng-deep .modal-dialog {
+    z-index: 1050 !important; /* ต้องมากกว่าค่า .modal-backdrop */
+  }
+  
+  :host ::ng-deep .modal-content {
+    z-index: 9999 !important; /* ต้องมากกว่าค่าของ .modal-dialog */
+  }
+
   /* Existing styles for reference */
 .sidebar-wrapper {
   padding: 15px 0px;

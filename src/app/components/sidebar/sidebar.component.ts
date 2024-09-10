@@ -32,7 +32,7 @@
           ],
           roles: ['superadmin']
       },
-      { path: '/login', title: 'ออกจากระบบ', icon: 'logout', class: 'active-pro nav-item', roles: ['superadmin','admin', 'user'] },
+      // { path: '/login', title: 'ออกจากระบบ', icon: 'logout', class: 'active-pro nav-item', roles: ['superadmin','admin', 'user'] },
   ];
 
   @Component({
@@ -88,12 +88,41 @@
     }
 
     handleMenuClick(event: Event, menuItem: RouteInfo) {
-      if (menuItem.path === '/login') {
-        this.authService.logout(); // เรียกใช้ฟังก์ชัน logout
-      }
-    }
-   
+      event.preventDefault(); // ป้องกันการเปลี่ยนเส้นทาง
+      event.stopPropagation(); // หยุดการกระทำที่ไม่ต้องการ
 
+      console.log('Menu item clicked:', menuItem);
+    
+      if (menuItem && menuItem.path) {
+        if (menuItem.path === '/login') {
+          $('#logoutModal').modal('show'); 
+          // const confirmLogout = window.confirm('คุณแน่ใจหรือว่าต้องการออกจากระบบ?');
+        //   if (confirmLogout) {
+        //     // this.authService.logout(); // เรียกใช้ฟังก์ชัน logout
+        //     // this.router.navigate(['/login']);
+        //   }
+        // } else {
+        //   this.router.navigate([menuItem.path]); 
+        // }
+      // } else {
+      //   console.error('menuItem is undefined or path is missing', menuItem);
+      // }
+    }}}
+    opentest(){
      
+      $('#manageUserModel').modal('show');
+    }
 
+    openModalLogout(){
+      $('#logoutModal').modal({
+        backdrop: 'static',
+        keyboard: false
+      }).modal('show');;
+   
+    }
+    confirmLogout() {
+      this.authService.logout(); // เรียกใช้ฟังก์ชัน logout ใน authService
+      $('#logoutModal').modal('hide'); // ซ่อนโมดัลหลังจากการออกจากระบบ
+     
+    }
   }

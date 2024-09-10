@@ -201,7 +201,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
     this.loading = true;
     this.items = [];
     this.dtOptions = {
-      order: [0, 'desc'],
+      order: [0, 'desc'], //'desc' จากมากมาน้อย  asce จากน้อยไปมาก
       pagingType: 'full_numbers',
       language: {
         lengthMenu: "แสดง _MENU_ รายการ",
@@ -218,6 +218,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
       }
     };
     // console.log("DataTable: ", this.dtOptions);
+
     this.getCurrentUser();
     this.loadPDFs();
     this.fetchAndSetRecords(); 
@@ -266,9 +267,10 @@ fetchAndSetRecords() {
     
     this.lg.getUserProfile().subscribe({
       next: (userProfile) => {
-        console.log("User Profile fetched:", userProfile);
+        // console.log("User Profile fetched:", userProfile);
         this.fetchRecords(userProfile.employeeId.organization); 
          // ส่ง organization ของผู้ใช้เข้าไป
+         this.loading = true;
       },
       error: (error) => {
         this.handleError(error)
@@ -285,15 +287,17 @@ fetchRecords(userOrganization: string) {
     next: (records) => {
       // console.log("Records fetched:", records);
       const groupedRecords = this.groupRecordsByOrganization(records);
-      console.log("Grouped Records by Organization:", groupedRecords);
+      // console.log("Grouped Records by Organization:", groupedRecords);
 
       const totalCompanies = Object.keys(groupedRecords).length;
-      console.log(`Total number of companies: ${totalCompanies}`);
+      // console.log(`Total number of companies: ${totalCompanies}`);
 
       this.documentService.updateCompanyCount(totalCompanies);
       
       const filteredRecords = this.filterByUserOrganization(groupedRecords, userOrganization);
       // console.log("Filtered Records by User Organization:", filteredRecords);
+      
+   
       
       // Combine documents from the filtered records only for the specific organization
       this.items = this.combineDocuments(filteredRecords[userOrganization] || [], userOrganization);
@@ -306,6 +310,7 @@ fetchRecords(userOrganization: string) {
     },
     error: (error) => {
       this.handleError(error);
+      this.loading = false;
       // console.log("Error in fetching records:", error);
     },
   });
@@ -329,6 +334,8 @@ filterByUserOrganization(groupedRecords, userOrganization: string) {
     // console.log("Filtering grouped records by user organization");
     return {[userOrganization]: groupedRecords[userOrganization] || []};
 }
+
+
 
 combineDocuments(items, userOrganization: string): any[] {
   const userSet = new Set();
@@ -361,7 +368,7 @@ combineDocuments(items, userOrganization: string): any[] {
         if (this.pdfs.includes(`${pdfFileName}.pdf`)) {
           signedDocumentsCount++; // นับเอกสารที่ถูกเซ็น +1
         } else {
-          console.log("File not found in PDFs list:", pdfFileName);
+          // console.log("File not found in PDFs list:", pdfFileName);
         }
       });
     } else {

@@ -23,34 +23,60 @@
 
   <ul class="nav">
     <li routerLinkActive="active" *ngFor="let menuItem of menuItems" [ngClass]="menuItem.class" class="nav-item">
-      <a class="nav-link" [routerLink]="[menuItem.path]" *ngIf="!menuItem.children" (click)="handleMenuClick(menuItem)">
+      <a class="nav-link" [routerLink]="[menuItem.path]" *ngIf="!menuItem.children">
+        <!-- [routerLink]="[menuItem.path]" -->
         <i class="material-icons">{{menuItem.icon}}</i>
-        <p >{{menuItem.title}}</p>
+        <p>{{menuItem.title}}</p>
       </a>
       <a href="javascript:void(0)" class="nav-link" *ngIf="menuItem.children" (click)="toggleMenu(menuItem)">
         <i class="material-icons">{{menuItem.icon}}</i>
-        <p >{{menuItem.title}}</p>
-        <i class="material-icons toggle-icon">{{ menuItem.open ? 'expand_less' : 'expand_more' }}</i>
+        <p>{{menuItem.title}}</p>
+        <i class="material-icons toggle-icon">{{ menuItem.open ? 'expand_less' :
+          'expand_more' }}</i>
       </a>
       <div class="submenu" *ngIf="menuItem.children && menuItem.open">
         <ng-container *ngFor="let child of menuItem.children">
-          <a class="dropdown-item" [routerLink]="[child.path]" 
-          routerLinkActive="submenu-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-           [ngClass]="{ 'active': isActive(child.path) }">
+          <a class="dropdown-item" [routerLink]="[child.path]" routerLinkActive="submenu-active"
+            [routerLinkActiveOptions]="{ exact: true }" [ngClass]="{ 'active': isActive(child.path) }">
             <i class="material-icons">{{child.icon}}</i>
             <p>{{child.title}}</p>
           </a>
         </ng-container>
       </div>
-      
+
     </li>
-    <!-- <li routerLinkActive="active" class="active-pro nav-item">
-      <a class="nav-link" >
-        <i class="fa fa-logout"></i>
-        <p >ออกจากระบบ</p>
+    <li routerLinkActive="active" class="active-pro nav-item" (click)="openModalLogout()">
+      <a class="nav-link">
+        <i class="material-icons">logout</i>
+        <p>ออกจากระบบ</p>
       </a>
 
-    </li> -->
+    </li>
+
   </ul>
+
+
+
+
+</div>
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+  aria-hidden="true">
+  <!-- <div class="modal-backdrop fade show"></div>  -->
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="logoutModalLabel">ยืนยันการออกจากระบบ</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        คุณแน่ใจหรือไม่ว่าต้องการออกจากระบบ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+        <button type="button" class="btn btn-danger" (click)="confirmLogout()">ออกจากระบบ</button>
+      </div>
+    </div>
+  </div>
 </div>
