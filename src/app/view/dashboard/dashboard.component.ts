@@ -127,10 +127,14 @@ export class DashboardComponent implements OnInit {
       // console.log("Total documents count updated in Component:", this.totalSignedDocumentsCount);
     });
     
-    this.documentService.companyCount$.subscribe(count => {
-      this.totalCompanies = count;
-      // console.log("Total compony count updated in Component:", this.totalCompanies);
-    });
+     this.documentService.getTotalCompanies().subscribe(res =>{
+      this.totalCompanies = res;
+    //  console.log(" จาก serveice",this.totalCompanies);
+     })
+    // this.documentService.companyCount$.subscribe(count => {
+    //   this.totalCompanies = count;
+    //   // console.log("Total compony count updated in Component:", this.totalCompanies);
+    // });
 
 
     ///land add(pdf count)//

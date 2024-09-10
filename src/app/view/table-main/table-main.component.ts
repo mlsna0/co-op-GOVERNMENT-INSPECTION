@@ -270,10 +270,11 @@ fetchAndSetRecords() {
         // console.log("User Profile fetched:", userProfile);
         this.fetchRecords(userProfile.employeeId.organization); 
          // ส่ง organization ของผู้ใช้เข้าไป
-         this.loading = true;
+         this.loading = true;  
       },
       error: (error) => {
         this.handleError(error)
+        this.loading = false;
         // console.log("Error in fetching user profile:", error);
       },
     });
@@ -297,12 +298,10 @@ fetchRecords(userOrganization: string) {
       const filteredRecords = this.filterByUserOrganization(groupedRecords, userOrganization);
       // console.log("Filtered Records by User Organization:", filteredRecords);
       
-   
-      
       // Combine documents from the filtered records only for the specific organization
       this.items = this.combineDocuments(filteredRecords[userOrganization] || [], userOrganization);
   
-      // console.log("Combined Documents:", this.items);
+      console.log("Combined Documents:", this.items);
       // this.countUniqueUsers(this.items, userOrganization);
 
       
@@ -314,6 +313,7 @@ fetchRecords(userOrganization: string) {
       // console.log("Error in fetching records:", error);
     },
   });
+
 } 
 
 groupRecordsByOrganization(records) {
@@ -336,6 +336,41 @@ filterByUserOrganization(groupedRecords, userOrganization: string) {
 }
 
 
+
+// combineDocuments(items, userOrganization: string): any[] {
+//   const userSet = new Set();
+//   let combinedDocuments = [];
+//   let signedDocumentsCount = 0;
+//   let totalDocumentsCount = 0;
+
+//   items.forEach(item => {
+//     if (item.employee && typeof item.employee.organization === 'string' && item.employee.organization.includes(userOrganization)) {
+//       userSet.add(item.user.employeeId);
+//       combinedDocuments = combinedDocuments.concat(item.documents || []);
+//       totalDocumentsCount += item.documents.length;
+
+//       item.documents.forEach(document => {
+//         const pdfFileName = `${document._id}.pdf`;
+//         if (this.pdfs.includes(pdfFileName)) {
+//           signedDocumentsCount++;
+//         }
+//       });
+//     }
+//   });
+
+//   const userCount = userSet.size;
+//   this.documentService.updateUserCount(userCount);
+//   this.documentService.updateSignedDocumentsCount(signedDocumentsCount);
+//   this.documentService.updateTotalDocumentsCount(totalDocumentsCount);
+
+//   // Sort documents based on a specific field, e.g., date or ID
+//   combinedDocuments.sort((a, b) => {
+//     // Replace 'dateField' with the actual field you want to sort by
+//     return new Date(b.dateField).getTime() - new Date(a.dateField).getTime();
+//   });
+
+//   return combinedDocuments;
+// }
 
 combineDocuments(items, userOrganization: string): any[] {
   const userSet = new Set();
@@ -368,10 +403,12 @@ combineDocuments(items, userOrganization: string): any[] {
         if (this.pdfs.includes(`${pdfFileName}.pdf`)) {
           signedDocumentsCount++; // นับเอกสารที่ถูกเซ็น +1
         } else {
+          this.loading = false;
           // console.log("File not found in PDFs list:", pdfFileName);
         }
       });
     } else {
+      this.loading = false;
       // console.log("Skipped organization:", item.employee.organization);
     }
   });
