@@ -38,7 +38,7 @@ export class ManagepersonComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     this.dtOptions = {
-      order: [0, 'asc'],
+      order: [0, 'desc  '],
       pagingType: 'full_numbers',
       language: {
         lengthMenu: "แสดง _MENU_ รายการ",

@@ -361,11 +361,11 @@ combineDocuments(items, userOrganization: string): any[] {
         if (this.pdfs.includes(`${pdfFileName}.pdf`)) {
           signedDocumentsCount++; // นับเอกสารที่ถูกเซ็น +1
         } else {
-          console.log("File not found in PDFs list:", pdfFileName);
+          // console.log("File not found in PDFs list:", pdfFileName);
         }
       });
     } else {
-      console.log("Skipped organization:", item.employee.organization);
+      // console.log("Skipped organization:", item.employee.organization);
     }
   });
 
@@ -553,7 +553,9 @@ saveSignature() {
   openDetailModal(recordId: any) {
     this.router.navigate(['/table-detail', recordId]);  
   }
+
   ///qr land start///
+  
   openQrcode(recordId: any){
     this.qrData = this.generateQRCodeData(recordId);
     this.generateQRCodeImage(this.qrData);
@@ -583,27 +585,6 @@ generateQRCodeImage(data: string) {
     });
 }
 
-
-// openQrcode(recordId: any) {
-//   this.recordId = recordId;
-//   this.loadQRCodeFromDatabase();
-  
-//   $('#qrcodemodel').modal({
-//     backdrop: 'static',
-//     keyboard: false
-//   });
-//   $('#qrcodemodel').modal('show');
-// }
-
-// loadQRCodeFromDatabase() {
-//   this.sv.getDataById(this.recordId).subscribe(record => {
-//     this.qrCodeImage = record.record_qrcode; // QR code ที่เป็น Base64
-//     console.log('qrcode',this.qrCodeImage);
-    
-//   }, error => {           
-//     console.error('Error fetching QR code:', error);
-//   });
-// }
 ///qr land end///
 
   // loadViewData() {
@@ -615,51 +596,28 @@ generateQRCodeImage(data: string) {
   // }
 
   ///download qr code land start////
-  printQrcode() {
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const elements = document.querySelectorAll('.qr-img'); // เลือกทุกองค์ประกอบที่ต้องการ
-    let promises = [];
 
-    if (elements.length === 0) {
-      console.error('No elements found to print.');
-      return;
+  saveAsImage() {
+    const qrElement = document.getElementById('qrCodeElement');
+    
+    if (qrElement) {
+      // ใช้ html2canvas เพื่อแปลงองค์ประกอบเป็นภาพ
+      html2canvas(qrElement).then(canvas => {
+        // แปลง canvas เป็นรูปภาพ PNG
+        const imgData = canvas.toDataURL('image/png'); 
+        
+        // สร้างลิงก์เพื่อดาวน์โหลดภาพ
+        const link = document.createElement('a');
+        link.href = imgData;
+        link.download = 'QRCode.png'; // ตั้งชื่อไฟล์ PNG
+        link.click(); // คลิกลิงก์เพื่อดาวน์โหลด
+      });
     }
-
-    const refreshButton = document.querySelector('.btn-refreshCanvas') as HTMLElement;
-    if (refreshButton) {
-        refreshButton.style.display = 'none';
-    }
-    elements.forEach((element, index) => {
-      const style = getComputedStyle(element as HTMLElement);
-      if (style.display === 'none') {
-        return; // ข้าม element ที่ไม่แสดง
-      }
-      promises.push(
-        html2canvas(element as HTMLElement, {
-          scale: 2,
-          useCORS: true
-        }).then(canvas => {
-          const imgWidth = 210; // A4 width in mm
-          const imgHeight = canvas.height * imgWidth / canvas.width;
-          const contentDataURL = canvas.toDataURL('image/png');
-          if (index > 0) { // เพิ่มหน้าใหม่ใน PDF ถ้าไม่ใช่หน้าแรก
-            pdf.addPage();
-          }
-          pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight);
-        }).catch(error => {
-          console.error('Error creating canvas for element:', element, error);
-        })
-      );
-    });
-
-    Promise.all(promises).then(() => {
-      pdf.save('qrcode.pdf');
-    }).catch(error => {
-      console.error('Error generating PDF:', error);
-    });
   }
 
+
 ///download qr code land end////
+
   uploadImage(index: number) {
     const fileInput = document.getElementById(`image-upload-${index}`) as HTMLInputElement;
     if (fileInput) {
