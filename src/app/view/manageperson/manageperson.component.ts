@@ -38,7 +38,7 @@ export class ManagepersonComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     this.dtOptions = {
-      order: [0, 'desc  '],
+      order: [0],
       pagingType: 'full_numbers',
       language: {
         lengthMenu: "แสดง _MENU_ รายการ",
@@ -85,9 +85,10 @@ export class ManagepersonComponent implements OnInit {
           console.error('Error fetching persons:', error);
         });
       
-     
+
       },
       error => {
+        this.loading = false;
         console.error('Error fetching user profile:', error);
       },
 

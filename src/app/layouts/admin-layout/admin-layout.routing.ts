@@ -24,6 +24,8 @@ import { MapComponent } from '../../view/map/map.component';
 import { ManageagencyComponent } from '../../view/manageagency/manageagency.component';
 import { ManagepersonComponent } from '../../view/manageperson/manageperson.component';
 
+import { AgencyMemberComponent } from '../../view/manageuser/agency-member/agency-member.component';
+
 export const AdminLayoutRoutes: Routes = [
     // {
     //   path: '',
@@ -75,6 +77,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'data-detail/:id',component: DataDetailComponent, canActivate: [AuthGuard] },
     { path: 'reportbuild',    component: ReportuserbuildComponent, canActivate: [AuthGuard] },
     { path: 'manageuser',     component: ManageuserComponent, canActivate: [AuthGuard] },
+    { path: 'agency-member/:id',  component: AgencyMemberComponent, canActivate: [AuthGuard] },
     { path: 'manageagency',     component: ManageagencyComponent, canActivate: [AuthGuard] },
     { path: 'manageperson',     component: ManagepersonComponent, canActivate: [AuthGuard] },
 

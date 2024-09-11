@@ -171,18 +171,21 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+ 
+  //ถ้าเอา  filterProvinces ไปใส่ใน apply แล้วข้อมูลจะหายไป
   filterProvinces() {
     if (this.filterCriteria && this.filterCriteria.selectedProvinces) {
       const selectedIds = this.filterCriteria.selectedProvinces; // Get selected province IDs
 
-      this.provinces = this.provinces.filter(province =>
+      this.filteredProvinces = this.provinces.filter(province =>
         selectedIds.includes(province.id) // Check if province ID is in selected IDs
 
       );
       // console.log('Filtered Provinces:', this.provinces);
-
+      console.log('Filtered Provinces:', this.filteredProvinces);
       // Update DataTable with filtered data
-      this.dtTrigger.next(this.provinces);
+      // this.dtTrigger.next(this.filteredProvinces);
+      // this.createChart();
       // $(document).ready(() => {
       //   const table = $('#yourDataTableId').DataTable(); // Update this with your table ID
       //   table.clear(); // Clear existing data
@@ -354,6 +357,7 @@ export class DashboardComponent implements OnInit {
     const isChecked = event.target.checked;
     const provinceId = Number(event.target.value);
     const province = this.provinces.find(p => p.id === provinceId);
+    console.log("จังหวัดที่ map : ",province)
 
     if (province) {
       province.selected = isChecked;
@@ -373,11 +377,11 @@ export class DashboardComponent implements OnInit {
     this.isProvinceDropdownOpen = false;
     this.updateDisplayedProvinces();
 
-    if (this.filterCriteria) {
-      // console.log('Applying filter with criteria: ', this.filterCriteria);
-      // โค้ดการกรองข้อมูลตาม this.filterCriteria
-      this.filterProvinces();
-    }
+    // if (this.filterCriteria) {
+    //   // console.log('Applying filter with criteria: ', this.filterCriteria);
+    //   // โค้ดการกรองข้อมูลตาม this.filterCriteria
+    //   this.filterProvinces();
+    // }
   }
   clearFilter() {
     // Clear the selected provinces
@@ -467,16 +471,24 @@ export class DashboardComponent implements OnInit {
   provinceData: { [provinceName: string]: { users: any[], documentCount: number, signedDocuments: number } } = {};
   monthlyData: { [month: string]: { documentCount: number; signedDocuments: number } } = {};
 
+// เพื่อการรวมข้อมูล ระหว่าง ข้อมูลบริษัท(agencies) ข้อมูลพนักงาน (Employee) ข้อมูล เอกสาร (record)
+//  const agencies = 
+//  const Employee =   recordData;
+
+
+
+
+  //super admin chart
   createChart(): void {
     const canvas = document.getElementById('myLineChart') as HTMLCanvasElement | null;
     if (!canvas) {
-      // console.error('ไม่พบองค์ประกอบ Canvas ที่มี ID "myLineChart"');
+      console.error('ไม่พบองค์ประกอบ Canvas ที่มี ID "#myLineChart"');
       return;
     }
 
     const ctx = canvas.getContext('2d');
     if (!ctx) {
-      // console.error('ไม่สามารถรับบริบทของ Canvas ได้');
+      console.error('ไม่สามารถรับบริบทของ Canvas ได้');
       return;
     }
     if (this.chart) {
@@ -900,7 +912,7 @@ loadUser(): void {
           recordData => {
             if (recordData && recordData.length > 0) {
               loadDocuments(recordData);
-              console.log(recordData);
+              console.log("getAllRecordsLinkedByEmployeeId : ",recordData);
             } else {
               console.error('ไม่พบเอกสาร');
             }
@@ -918,5 +930,7 @@ loadUser(): void {
     }
   );
 }
+
+
 
 }

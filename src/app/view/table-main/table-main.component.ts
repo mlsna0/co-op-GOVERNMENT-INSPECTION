@@ -427,6 +427,7 @@ combineDocuments(items, userOrganization: string): any[] {
   return combinedDocuments;
 }
 
+
 handleError(error) {
   console.error('Error:', error);
   this.loading = false;

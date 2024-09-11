@@ -137,8 +137,12 @@ export class ManageuserComponent implements OnInit {
   //   console.log('id',id)
   // }
 
-      getUserReportProfile(userId: any) {
+    getUserReportProfile(userId: any) {
     this.router.navigate(['/profileuser', userId]);
+    }
+    openAgencyMember(UserID){
+      console.log("User ID of next page: ",UserID)
+      this.router.navigate(['/agency-member',UserID]);
     }
 
 
@@ -344,6 +348,7 @@ export class ManageuserComponent implements OnInit {
   openaddperson() {
     this.router.navigate(['/addperson']);
   }
+
   openAddPersonModal(){
     $('#manageUserModel').modal({
       backdrop: 'static', // Prevent closing when clicking outside
