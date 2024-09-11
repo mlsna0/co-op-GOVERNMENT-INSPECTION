@@ -3,7 +3,7 @@ import { loginservice } from 'app/layouts/login.services.';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-forget-password',
   templateUrl: './forget-password.component.html',
@@ -15,12 +15,14 @@ export class ForgetPasswordComponent implements OnInit {
   oldPasswordFieldType: string = 'password';
   newPasswordFieldType: string = 'password';
   confirmNewPasswordFieldType: string = 'password'
+  
   constructor(
     private ls : loginservice,
     private router: Router,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private http: HttpClient,
+    private toastr: ToastrService
   ) { 
     this.changePasswordForm = this.fb.group({
       oldPassword: ['', [Validators.required]],
@@ -45,32 +47,33 @@ export class ForgetPasswordComponent implements OnInit {
     }
 }
 
-  onSubmit() {
-    if (this.changePasswordForm.invalid) {
-        alert('กรุณากรอกข้อมูลให้ถูกต้อง');
-        return;
-    }
+onSubmit() {
+  if (this.changePasswordForm.invalid) {
+    this.toastr.error('กรุณากรอกข้อมูลให้ถูกต้อง', 'ข้อผิดพลาด');
+    return;
+  }
 
-    const { oldPassword, newPassword, confirmNewPassword } = this.changePasswordForm.value;
+  const { oldPassword, newPassword, confirmNewPassword } = this.changePasswordForm.value;
 
-    if (newPassword !== confirmNewPassword) {
-        alert('รหัสผ่านใหม่ไม่ตรงกัน');
-        return;
-    }
+  if (newPassword !== confirmNewPassword) {
+    this.toastr.error('รหัสผ่านใหม่ไม่ตรงกัน', 'ข้อผิดพลาด');
+    return;
+  }
 
-    // ส่งข้อมูลไปที่ service โดยเพิ่ม confirmPassword
-    this.ls.changePassword(oldPassword, newPassword, confirmNewPassword)
-        .subscribe(
-            response => {
-                alert('รหัสผ่านถูกเปลี่ยนเรียบร้อยแล้ว');
-                this.router.navigate(['/profile']); // เปลี่ยนเส้นทางไปยังหน้าโปรไฟล์
-            },
-            error => {
-                console.error('Error:', error);
-                alert('เกิดข้อผิดพลาดในการเปลี่ยนรหัสผ่าน กรุณาลองใหม่อีกครั้ง');
-            }
-        );
+  // ส่งข้อมูลไปที่ service โดยเพิ่ม confirmPassword
+  this.ls.changePassword(oldPassword, newPassword, confirmNewPassword)
+    .subscribe(
+      response => {
+        this.toastr.success('รหัสผ่านถูกเปลี่ยนเรียบร้อยแล้ว', 'สำเร็จ');
+        this.router.navigate(['/profile']); // เปลี่ยนเส้นทางไปยังหน้าโปรไฟล์
+      },
+      error => {
+        console.error('Error:', error);
+        this.toastr.error('เกิดข้อผิดพลาดในการเปลี่ยนรหัสผ่าน กรุณาลองใหม่อีกครั้ง', 'ข้อผิดพลาด');
+      }
+    );
 }
+
   goBack(): void {
     this.router.navigate(['/profile']); // Adjust the route to your profile page
   }

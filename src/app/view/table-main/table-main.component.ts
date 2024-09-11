@@ -687,20 +687,11 @@ countRecordFilenames(recordId: any) {
   );
 }
 recordCommit() {
-  // console.log("this.ContentRecordID :", this.ContentRecordID);
-
   if (!this.ContentRecordID) {
     console.error("ID is undefined");
-    Swal.fire({
-      title: 'เกิดข้อผิดพลาด!',
-      text: 'ไม่มีข้อมูล ID ส่งมา',
-      icon: 'error',
-      confirmButtonText: 'ตกลง'
-    });
+    this.toastr.error('ไม่มีข้อมูล ID ส่งมา', 'เกิดข้อผิดพลาด!');
     return;
   }
-
-  // console.log("Record ID being committed:", this.ContentRecordID);
 
   if (this.isWritteActive) {
     const canvas: HTMLCanvasElement = document.getElementById('writteCanvas') as HTMLCanvasElement;
@@ -715,21 +706,15 @@ recordCommit() {
           this.saveRecordContent();
         })
         .catch(error => {
-          Swal.fire({
-            title: 'เกิดข้อผิดพลาด!',
-            text: 'เกิดข้อผิดพลาดในการแปลงภาพเป็นข้อความ.',
-            icon: 'error',
-            confirmButtonText: 'ตกลง',
-            customClass: {
-              confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-            }
-          });
+          console.error("Error in Tesseract recognition:", error);
+          this.toastr.error('เกิดข้อผิดพลาดในการแปลงภาพเป็นข้อความ', 'เกิดข้อผิดพลาด!');
         });
     }
   } else if (this.isTyproActive) {
     this.saveRecordContent();
   }
 }
+
 
 saveRecordContent() {
   const recordData = {
@@ -740,37 +725,22 @@ saveRecordContent() {
   this.sv.updateRecordContent(recordData).subscribe(
     response => {
       // console.log('บันทึกข้อมูลเรียบร้อย', response);
-      Swal.fire({
-        title: 'บันทึกข้อมูลสำเสร็จ!!',
-        text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
-        icon: 'success',
-        confirmButtonText: 'ตกลง',
-        customClass: {
-          confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          document.querySelector('.swal2-confirm').setAttribute('style', 'background-color: #24a0ed; color: white;');
-          this.refreshPage();
-        }
-      });
+      this.toastr.success('เพิ่มข้อมูลจดบันทึกเรียบร้อย', 'สำเสร็จ!!');
+      
+      setTimeout(() => {
+        this.refreshPage(); // รีเฟรชหน้าจอหลังจากแจ้งเตือนสำเร็จ
+      }, 2000); // หน่วงเวลา 2 วินาทีเพื่อให้ Toastr แสดงก่อน
+
       $('#writtenModel').modal('hide');
       this.typroText = ''; // ล้างฟิลด์ข้อความ
     },
     error => {
       // console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
-      Swal.fire({
-        title: 'เกิดข้อผิดพลาด!',
-        text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
-        icon: 'error',
-        confirmButtonText: 'ตกลง',
-        customClass: {
-          confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-        }
-      });
+      this.toastr.error('เกิดข้อผิดพลาดในการเพิ่มข้อมูล.', 'เกิดข้อผิดพลาด!');
     }
   );
 }
+
   closeModal() {
     // ซ่อนโมดัล
     $('#insertModel').modal('hide');

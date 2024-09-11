@@ -4,7 +4,7 @@ import {Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 import { FormGroup, FormsModule,FormControl,FormBuilder, Validators, FormArray,AbstractControl } from '@angular/forms';
  //การจะใช้ thaidate ให้มีการไปเชื่อมกับ admin-layout หรือ สถานที่อ้างถึง
-
+ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-data-detail',
   templateUrl: './data-detail.component.html',
@@ -34,6 +34,7 @@ export class DataDetailComponent implements OnInit {
     private ACrouter: ActivatedRoute,
     private authService: AuthService,
     private fb: FormBuilder,
+    private toastr: ToastrService,
   ) { 
     
     this.editItemForm = this.fb.group({
@@ -222,27 +223,32 @@ export class DataDetailComponent implements OnInit {
   }
 
   //submit //////////////////////////////////////////////////////
-  onEditDataSubmit(){
-    this.Submitted = true; 
-    
-    if(this.editItemForm.invalid){
-      alert('Form is invalid');
-    return;
+  onEditDataSubmit() {
+    this.Submitted = true;
+  
+    if (this.editItemForm.invalid) {
+      this.toastr.error('Form is invalid', 'Error');
+      return;
     }
+  
     const formData = this.editItemForm.value;
     formData._id = this.DataDetail._id;
-    console.log("DATA for update/edit: ",formData)
+    console.log("DATA for update/edit: ", formData);
+  
     this.sv.updateDataDocument(formData).subscribe({
       next: (response) => {
-        console.log('Update successful:', response);
-        // ปิดโมเดลหรือแสดงข้อความสำเร็จ
+        // console.log('Update successful:', response);
+        this.toastr.success('แก้ไขข้อมูลสำเร็จ', 'สำเร็จ');
+        // Refresh the page or do necessary actions after success
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500); // delay to allow the toastr to show
       },
       error: (error) => {
-        console.error('Update failed:', error);
-        // แสดงข้อความข้อผิดพลาด
+        // console.error('Update failed:', error);
+        this.toastr.error('ไม่สามารถแก้ไขข้อมูลได้', 'ข้อผิดพลาด');
       }
     });
-
   }
   
 ///////////////////////////////////////////////////////////////////
