@@ -245,7 +245,7 @@ loadPDFs(): void {
   this.sv.getAllPDFs().subscribe(
     data => {
       // ตรวจสอบโครงสร้างของ data ที่ได้รับ
-      // console.log('Raw data:', data);
+      console.log('Raw data:', data);
       
       // สมมติว่า data เป็น array ของชื่อไฟล์ PDF
       this.pdfs = data;
@@ -363,10 +363,13 @@ combineDocuments(items, userOrganization: string): any[] {
    
       item.documents.forEach(document => {
         const pdfFileName = `${document._id}.pdf`;
-        // console.log("Checking file:", pdfFileName);
-  
-        if (this.pdfs.includes(`${pdfFileName}.pdf`)) {
+        // console.log("Checking file:", pdfFileName); // ตรวจสอบชื่อไฟล์ที่สร้างขึ้น
+        // console.log("Current PDFs List:", this.pdfs); // แสดงข้อมูลทั้งหมดของ this.pdfs
+        
+        // ตรวจสอบให้ชัดเจนว่าชื่อไฟล์อยู่ใน this.pdfs หรือไม่
+        if (this.pdfs.includes(pdfFileName)) {
           signedDocumentsCount++; // นับเอกสารที่ถูกเซ็น +1
+          // console.log("File found:", pdfFileName);
         } else {
           // console.log("File not found in PDFs list:", pdfFileName);
         }
@@ -378,7 +381,7 @@ combineDocuments(items, userOrganization: string): any[] {
 
   const userCount = userSet.size;
   // console.log("User Count:", userCount);
-  // console.log("Signed Documents Count:", signedDocumentsCount); // แสดงจำนวนเอกสารที่ถูกเซ็น
+  console.log("Signed Documents Count:", signedDocumentsCount); // แสดงจำนวนเอกสารที่ถูกเซ็น
   // console.log("Total Documents Count:", totalDocumentsCount); // แสดงจำนวนเอกสารทั้งหมด
   // // ส่งจำนวนผู้ใช้ไปยัง DocumentService
   this.documentService.updateUserCount(userCount);
