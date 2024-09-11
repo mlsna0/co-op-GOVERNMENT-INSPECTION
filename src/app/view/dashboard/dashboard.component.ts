@@ -115,21 +115,21 @@ export class DashboardComponent implements OnInit {
     this.loadPDFs()
     this.documentService.userCount$.subscribe(count => {
       this.userCount2 = count;
-      console.log("User count updated in AnotherComponent:", this.userCount2);
+      // console.log("User count updated in AnotherComponent:", this.userCount2);
     });
 
     this.documentService.totalDocumentsCount$.subscribe(count => {
       this.totalDocumentsCount = count;
-      console.log("Total documents count updated in Component:", this.totalDocumentsCount);
+      // console.log("Total documents count updated in Component:", this.totalDocumentsCount);
     });
     this.documentService.signedDocumentsCount$.subscribe(count => {
       this.totalSignedDocumentsCount = count;
-      console.log("Total documents count updated in Component:", this.totalSignedDocumentsCount);
+      // console.log("Total documents count updated in Component:", this.totalSignedDocumentsCount);
     });
     
     this.documentService.companyCount$.subscribe(count => {
       this.totalCompanies = count;
-      console.log("Total compony count updated in Component:", this.totalCompanies);
+      // console.log("Total compony count updated in Component:", this.totalCompanies);
     });
 
 
@@ -140,7 +140,7 @@ export class DashboardComponent implements OnInit {
         const pdfUrls = pdfFiles.map(file => `assets/pdf/${file}`);
         this.documentService.getTotalPagesCount(pdfUrls).then((totalPages: number) => {
           this.totalPdfPages = totalPages;
-          console.log('จำนวนหน้าทั้งหมดของ PDF:', this.totalPdfPages);
+          // console.log('จำนวนหน้าทั้งหมดของ PDF:', this.totalPdfPages);
         }).catch(error => {
           console.error('เกิดข้อผิดพลาดในการคำนวณจำนวนหน้า:', error);
         });
