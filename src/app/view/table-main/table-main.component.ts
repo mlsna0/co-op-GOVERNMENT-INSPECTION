@@ -220,9 +220,14 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
     // console.log("DataTable: ", this.dtOptions);
 
     this.getCurrentUser();
-    this.loadPDFs();
+    if (this.isAdmin) {
+      this.loadPDFs(); // ถ้าเป็น admin
+    } else if (this.isUser) {
+      this.getUserDocuments(); // ถ้าเป็น user ทั่วไป
+    }
     this.fetchAndSetRecords(); 
     // console.log("ngOnInit called");
+    
 }
 getCurrentUser(): void {
   // ดึงข้อมูลจาก localStorage
@@ -391,6 +396,29 @@ combineDocuments(items, userOrganization: string): any[] {
   this.documentService.updateTotalDocumentsCount(totalDocumentsCount);
   // Return the combined documents for use on the web page
   return combinedDocuments;
+}
+getUserDocuments(): void {
+  this.sv.getUserDocuments().subscribe(
+    (documents) => {
+      console.log('User Documents:', documents);
+      
+      // Map the data to fit the structure for display
+      this.userDocuments = documents.map((doc: any) => ({
+        record_id: doc.record_id,
+        record_topic: doc.record_topic,
+        record_star_date: doc.record_star_date,
+        record_end_date: doc.record_end_date,
+        record_location: doc.record_location,
+        record_filename: doc.record_filename, // For checking if signed or not
+        _id: doc._id, // For detail actions
+      }));
+      
+      console.log('Mapped User Documents:', this.userDocuments);
+    },
+    (error) => {
+      console.error('Error fetching user documents:', error);
+    }
+  );
 }
 
 handleError(error) {

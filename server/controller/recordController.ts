@@ -316,6 +316,31 @@ getAllRecordsLinkedByEmployeeId = async (req, res) => {
   }
 };
 
+getUserDocuments = async (req, res) => {
+  try {
+    const userId = req.user.id; // ดึง userId จาก req.user หลังจากการผ่าน auth middleware
+
+    // ตรวจสอบว่ามี userId หรือไม่
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is missing' });
+    }
+
+    // ค้นหา documents ที่ userId ตรงกับ user ที่ล็อกอินอยู่
+    const userDocuments = await this.model.find({ userId });
+
+    // ตรวจสอบว่าเจอ documents หรือไม่
+    if (!userDocuments || userDocuments.length === 0) {
+      return res.status(404).json({ message: 'No documents found for this user' });
+    }
+
+    // ส่งคืน documents ที่เจอ
+    res.status(200).json(userDocuments);
+  } catch (error) {
+    console.error('Error fetching user documents:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 
 getRecordByDocumentId =async (req,res)=>{
   try {
