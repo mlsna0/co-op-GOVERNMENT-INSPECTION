@@ -7,7 +7,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import axios from 'axios';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { FormGroup } from '@angular/forms';
-
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { SharedService } from "../services/shared.service";
 
 @Component({
   selector: 'app-signature',
@@ -65,13 +67,15 @@ export class SignatureComponent implements OnInit {
   pdfSrc:any
   uploadForm: FormGroup;
   signatureImage: string | undefined;
-
+  saveCount = 0; 
+  recordId: any;
 
   constructor(
     private elementRef: ElementRef,
     private renderer: Renderer2,
     private router: Router,
     private activateRoute: ActivatedRoute,
+    private sv: SharedService,
     private _sinatureService: SignatureService
   )
     {
@@ -472,6 +476,127 @@ blobToBase64(blob: Blob): Promise<string | ArrayBuffer | null> {
     this.router.navigate(['/signature'], { queryParams: { id: this.documentId } });
   }
   
+  async saveRCPDF() {
+    console.log("Updating PDF in dictionary...");
+    const elements = document.querySelectorAll('.modal-body-detail');
+    const pdfViewerElement = document.getElementById('pdf-viewer');
+
+    if (!pdfViewerElement && elements.length === 0) {
+      console.error('No elements found to print.');
+      return;
+    }
+
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = 210; // A4 width in mm
+    const pdfHeight = 297; // A4 height in mm
+
+    let promises = [];
+
+    html2canvas(pdfViewerElement, { scale: 5 }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      const ratio = canvasWidth / pdfWidth;
+      const pdfCanvasHeight = canvasHeight / ratio;
+      const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
+
+      for (let i = 0; i < numOfPages; i++) {
+        const startY = i * pdfHeight * ratio;
+
+        // Create a temporary canvas to draw each part
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvasWidth;
+        tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
+
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
+
+        const tempImgData = tempCanvas.toDataURL('image/png');
+
+        // Check if the image data is not blank
+        if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
+          if (i > 0) {
+            pdf.addPage();
+          }
+          pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, (tempCanvas.height / ratio));
+        }
+      }
+    }).catch((error) => {
+      console.error('Error generating PDF:', error);
+    });
+    const refreshButton = document.querySelector('.btn-refreshCanvas') as HTMLElement;
+    if (refreshButton) {
+        refreshButton.style.display = 'none';
+    }
+    elements.forEach((element, index) => {
+      const htmlElement = element as HTMLElement; // Cast Element to HTMLElement
+      htmlElement.style.border = 'none';
+      htmlElement.style.borderCollapse = 'collapse';
+      promises.push(html2canvas(htmlElement, { scale: 5 }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        const ratio = canvasWidth / pdfWidth;
+        const pdfCanvasHeight = canvasHeight / ratio;
+        const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
+
+        for (let i = 0; i < numOfPages; i++) {
+          const startY = i * pdfHeight * ratio;
+
+          // Create a temporary canvas to draw each part
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = canvasWidth;
+          tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
+
+          const tempCtx = tempCanvas.getContext('2d');
+          tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
+
+          const tempImgData = tempCanvas.toDataURL('image/png');
+
+          // Check if the image data is not blank
+          if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
+            if (index > 0 || i > 0) {
+              pdf.addPage();
+            }
+            pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, (tempCanvas.height / ratio));
+          }
+        }
+      }).catch((error) => {
+        console.error('Error generating PDF:', error);
+      }));
+    });
+
+    Promise.all(promises).then(() => {
+      // Convert the PDF to Blob
+      const pdfBlob = pdf.output('blob');
+
+      // Create FormData to send the PDF to backend
+      const formData = new FormData();
+      const pdfFilename = 'การลงตรวจสอบ.pdf'; // Change to the desired filename
+      formData.append('id', this.recordId); // Adjust the ID as needed
+      formData.append('pdf', pdfBlob, pdfFilename);
+
+      // Check if this.sv.savePDF exists and is a function
+      if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
+        // Send the PDF to the backend
+        this.sv.savePDF(formData).subscribe(
+          response => {
+            this.saveCount++; // เพิ่มค่าตัวแปรเมื่อบันทึกสำเร็จ
+            console.log("PDF saved successfully " + this.saveCount + " times:", response); // แสดงจำนวนการบันทึกสำเร็จ
+            this.router.navigate(['/table-main']);
+          },
+          error => {
+            console.error('Error saving PDF:', error);
+          }
+        );
+      } else {
+        console.error('savePDF function is not defined or not a function');
+      }
+    });
+
+    $('#myModal').modal('hide');
+  }
+
   loadingFuction() {
     this.loading = true
   }

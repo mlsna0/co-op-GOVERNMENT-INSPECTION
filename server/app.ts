@@ -24,7 +24,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use('/uploads', express.static(path.join(__dirname, './uploads')));
 app.use('/img', express.static(path.join(__dirname, './img')));
-app.use('/stampSignature', express.static(path.join(__dirname, 'dist/server')));
+app.use('/api/stampSignature', express.static(__dirname));
+app.use('/pdfDocuments', express.static(path.join(__dirname, 'dist/server')));
 app.use('/', express.static(path.join(__dirname, '../public')));
 dotenv.config();
 app.use((req, res, next) => {
