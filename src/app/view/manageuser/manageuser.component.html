@@ -32,8 +32,8 @@
               <th>นามสกุล</th>
               <th>อีเมล</th>
               <th>ชื่อหน่วยงาน</th>
-              <th style="width: 12%;">ระดับผู้ใช้งาน</th>
-              <th style="width: 13%;">สถานะผู้ใช้งาน</th>
+              <th style="width: 12%; text-align: center;">ระดับผู้ใช้งาน</th>
+              <th style="width: 13%; text-align: center;">สถานะผู้ใช้งาน</th>
               <th style="color: black;  font-size: 16px; text-align: center; width: 10%;"><i class="fa fa-gear"></i></th>
             </tr>
           </thead>
@@ -45,16 +45,8 @@
               <td> {{ users.lastname }} </td>
               <td> {{ users.email }} </td>
               <td> {{ users.organization }} </td>
-              <td>
-                <ng-container *ngIf="users.role === 'superadmin'; else roleDropdown">
-                  <span class="custom-role-display">superadmin</span>
-                </ng-container>
-                <ng-template #roleDropdown>
-                  <select [(ngModel)]="users.role" (change)="onRoleChange(users)" class="custom-role-display">
-                    <option value="user">user</option>
-                    <option value="admin">admin</option>
-                  </select>
-                </ng-template>
+              <td  style=" text-align: center;">
+                 {{users?.role}}      
               </td>
               <td class="toggle-container">
                 <input type="checkbox" id="checkbox{{i}}" [(ngModel)]="users.isActive"
