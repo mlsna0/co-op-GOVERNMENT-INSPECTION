@@ -26,6 +26,8 @@ export class ManageuserComponent implements OnInit {
   regisForm: any;
   Submitted: boolean = false;
   organization: any[] = [];
+  availableOrganizations: any[] = []; // ตัวแปรใหม่สำหรับเก็บ organization ที่ยังไม่ถูกเลือก
+  selectedOrganization: string = ''; // เพิ่มตัวแปรใหม่เพื่อเก็บค่า organization ที่เลือก
 
 
   provinces: any[] = [];
@@ -115,6 +117,7 @@ export class ManageuserComponent implements OnInit {
 
       this.user = this.user.filter(user => user?.role === 'admin'); // กรองเฉพาะที่ role เป็น 'admin'
       //console.log("status: ", this.user);
+      console.log("status: ", this.user)
       this.loading = false;
     }, error => {
       console.error('Error fetching user data:', error);
@@ -153,6 +156,7 @@ export class ManageuserComponent implements OnInit {
     console.log("User ID of next page: ", UserID)
     this.router.navigate(['/agency-member', UserID]);
   }
+
 
 
 
@@ -221,12 +225,19 @@ export class ManageuserComponent implements OnInit {
     // เพิ่มตัวนับ
     this.exportCounter++;
   }
+
   onSubmit(data) {
-
-
+    const organizationValue = this.regisForm.get('organization')?.value;
+    if (!organizationValue) {
+      console.error('Organization value is required');
+      return;
+    }
+    console.log('Organization value:', organizationValue);
+  
+    this.selectedOrganization = organizationValue;
+  
     this.Submitted = true;
     if (this.regisForm.invalid) {
-
       this.toastr.error('กรุณากรอกข้อมูลทุกช่อง', 'เกิดข้อผิดพลาด!', {
         timeOut: 1500,
         positionClass: 'toast-top-right'
@@ -239,21 +250,17 @@ export class ManageuserComponent implements OnInit {
       }
       return;
     }
-
     if (this.regisForm.value.password !== this.regisForm.value.confirmpassword) {
       this.toastr.error('รหัสผ่านไม่ตรงกัน', 'เกิดข้อผิดพลาด!', {
         timeOut: 1500,
         positionClass: 'toast-top-right'
       });
-
       return;
     }
-
+  
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-    console.log(fileInput);
-
-    const file = fileInput?.files?.[0]; // Get the file from the input
-
+    const file = fileInput?.files?.[0];
+  
     const formData = new FormData();
     Object.keys(this.regisForm.controls).forEach(key => {
       formData.append(key, this.regisForm.get(key)?.value);
@@ -261,18 +268,16 @@ export class ManageuserComponent implements OnInit {
     if (file) {
       formData.append('profileImage', file);
     }
-
+  
     this.ls.register(formData).subscribe(
       (response) => {
         this.toastr.success('ลงทะเบียนสำเร็จ', 'สำเร็จ!', {
           timeOut: 1500,
           positionClass: 'toast-top-right'
         }).onHidden.subscribe(() => {
-          window.location.reload();  // รีเฟรชหน้าจอหลังจากแจ้งเตือนหายไป
+          this.filterAvailableOrganizations(); // Refresh the organizations
+          this.closeModal(); // Close the modal
         });
-
-        this.closeModal();
-
       },
       (error) => {
         console.error('Error submitting data:', error);
@@ -280,11 +285,10 @@ export class ManageuserComponent implements OnInit {
           timeOut: 1500,
           positionClass: 'toast-top-right'
         });
-
       }
     );
-
   }
+  
 
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password');
@@ -304,17 +308,31 @@ export class ManageuserComponent implements OnInit {
     });
   }
 
-  loadOrganizations() {
-    this.ls.getagency().subscribe(data => {
-      console.log(data); // ตรวจสอบข้อมูลที่ได้รับ
-      this.organization = data;
-      console.log(data); // ตรวจสอบข้อมูลที่ได้รับ
-    });
 
+  loadOrganizations(): void {
+    this.ls.getagency().subscribe(
+      (data: any) => {
+        this.organization = data;
+        console.log('All organizations:', this.organization);
+        this.filterAvailableOrganizations(); // Apply the filter here
+      },
+      (error) => console.error('Error loading organizations:', error)
+    );
   }
 
-
-
+  filterAvailableOrganizations(): void {
+    this.ls.getuserregister().subscribe(
+      (usedOrganizations: any[]) => {
+        console.log('Used organizations:', usedOrganizations); // Log used organizations
+        console.log('All organizations before filtering:', this.organization); // Log before filtering
+        this.availableOrganizations = this.organization.filter(org =>
+          !usedOrganizations.some(usedOrg => usedOrg.organization  === org.agency_name)
+        );
+        console.log('Available organizations:', this.availableOrganizations);
+      },
+      (error) => console.error('Error loading used organizations:', error)
+    );
+  }
 
   onProvinceChange(provinceId: number) {
     this.regisForm.controls['amphure'].setValue('');
@@ -365,8 +383,8 @@ export class ManageuserComponent implements OnInit {
   openaddperson() {
     this.router.navigate(['/addperson']);
   }
-
   openAddPersonModal() {
+    this.filterAvailableOrganizations(); // Ensure the dropdown is refreshed
     $('#manageUserModel').modal({
       backdrop: 'static', // Prevent closing when clicking outside
       keyboard: false     // Prevent closing with keyboard (Esc key)
@@ -382,6 +400,8 @@ export class ManageuserComponent implements OnInit {
     this.refreshPage();
   }
   refreshPage() {
+    this.loadOrganizations(); // Reload organizations to refresh the list
+    this.filterAvailableOrganizations(); // Apply the filter again
     window.location.reload();
   }
 }

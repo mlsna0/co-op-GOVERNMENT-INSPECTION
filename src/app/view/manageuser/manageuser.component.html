@@ -175,7 +175,7 @@
                               <label for="organization">หน่วยงาน</label>
                               <select class="form-select" id="organization" formControlName="organization">
                                   <option value="" disabled selected>เลือกหน่วยงาน</option>
-                                  <option *ngFor="let org of organization" [value]="org.agency_name">{{ org.agency_name }}</option>
+                                  <option *ngFor="let org of availableOrganizations" [value]="org.agency_name">{{ org.agency_name }}</option>
                               </select>
                               <div *ngIf="regisForm.get('organization')?.invalid && (regisForm.get('organization')?.touched || regisForm.get('organization')?.dirty || Submitted)">
                                 <small class="error-text">กรุณากรอกข้อมูล*</small>

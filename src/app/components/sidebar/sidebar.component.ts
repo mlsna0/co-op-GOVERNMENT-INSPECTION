@@ -17,7 +17,7 @@
   }
 
   export const ROUTES: RouteInfo[] = [
-    { path: '/profile', title: 'ข้อมูลผู้ใช้งาน', icon: 'person', class: 'sidePerson nav-item', roles: ['superadmin','admin', 'user'] },
+  
       { path: '/dashboard', title: 'หน้าหลัก', icon: 'dashboard', class: '', roles: ['superadmin','admin'] },
 
       { path: '/table-main', title: 'การลงตรวจอิเล็กทรอนิค', icon: 'content_paste', class: '', roles: ['admin', 'user'] },
@@ -34,6 +34,7 @@
           ],
           roles: ['superadmin']
       },
+      { path: '/profile', title: 'ข้อมูลผู้ใช้งาน', icon: 'person', class: 'sidePerson nav-item', roles: ['superadmin','admin', 'user'] },
       // { path: '/login', title: 'ออกจากระบบ', icon: 'logout', class: 'active-pro nav-item', roles: ['superadmin','admin', 'user'] },
   ];
 
