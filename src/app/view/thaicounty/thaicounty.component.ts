@@ -133,7 +133,7 @@ export class ThaicountyComponent implements OnInit {
 
                 this.allDocuments.forEach(data => {
                     data.documentCount = data.documents.length;
-                    const provinceStr =  data.employee?.province;
+                    const provinceStr =  data.agency?.province;
                 
                     const provinceId = parseInt(provinceStr, 10);
                     const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
@@ -151,7 +151,11 @@ export class ThaicountyComponent implements OnInit {
 
                     // เปรียบเทียบชื่อ documentId กับชื่อ PDF
                     data.documents.forEach(document => {
-                        if (this.pdfs.some(pdf => pdf.name === document.documentId)) {
+                      if (!document._id) {
+                        // console.warn('พบเอกสารที่ไม่มี _id, ข้าม:', doc);
+                        return; // ข้ามเอกสารที่ไม่มี _id
+                      }
+                        if (this.pdfs.includes(`${document._id}.pdf`)) {
                             provinceData[provinceName].signedDocuments += 1;
                         }
                     });

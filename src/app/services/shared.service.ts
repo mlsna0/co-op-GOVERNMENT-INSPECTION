@@ -48,6 +48,20 @@ export class SharedService {
     );
   }
 
+  getUserDocuments(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.getToken()}` // Fetch token from local storage
+    });
+
+    return this.http.get(`${this.baseUrl}/user/documents`, { headers }).pipe(
+      catchError(error => {
+        console.error('Error fetching user documents:', error);
+        return throwError(error);
+      })
+    );
+  }
+
   // ฟังก์ชันอื่นๆ ที่คุณมีใน SharedService
   getRecord(): Observable<any> {
     return this.http.get(`${this.baseUrl}/recordModel`).pipe(
