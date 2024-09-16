@@ -13,11 +13,13 @@
       children?: RouteInfo[];
       open?: boolean; // เพิ่มเพื่อเก็บสถานะของเมนู
       roles?: string[]; // เพิ่มเพื่อกำหนดบทบาทที่สามารถเห็นเมนูนี้ได้
+      items?:RouteInfo[]
   }
 
   export const ROUTES: RouteInfo[] = [
+    { path: '/profile', title: 'ข้อมูลผู้ใช้งาน', icon: 'person', class: 'sidePerson nav-item', roles: ['superadmin','admin', 'user'] },
       { path: '/dashboard', title: 'หน้าหลัก', icon: 'dashboard', class: '', roles: ['superadmin','admin'] },
-      { path: '/profile', title: 'ข้อมูลผู้ใช้งาน', icon: 'person', class: '', roles: ['superadmin','admin', 'user'] },
+
       { path: '/table-main', title: 'การลงตรวจอิเล็กทรอนิค', icon: 'content_paste', class: '', roles: ['admin', 'user'] },
       
       { path: '/manageperson', title: 'การจัดการบุคลลากร', icon: 'manage_accounts', class: '', roles: ['admin'] },
@@ -25,7 +27,7 @@
 
       { path: '/manageagency', title: 'การจัดการหน่วยงาน', icon: 'apartment', class: '', roles: ['superadmin'] },
       { path: '/manageuser', title: 'การจัดการผู้ใช้งาน', icon: 'manage_accounts', class: '', roles: ['superadmin'] },
-        {  path: ' ', title: 'รายงาน', icon: 'assignment', class: '',
+      {  path: ' ', title: 'รายงาน', icon: 'assignment', class: '',
           children: [
               { path: '/reportuser', title: 'รายงานการเข้าใช้งาน', icon: 'camera_front', class: '', roles: ['superadmin'] },
               { path: '/reportbuild', title: 'รายงานการสร้างเอกสาร', icon: 'badge', class: '', roles: ['superadmin'] }

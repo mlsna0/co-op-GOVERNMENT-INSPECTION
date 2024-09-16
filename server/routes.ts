@@ -65,6 +65,7 @@ function setRoutes(app): void {
   router.route('/recordModel/:id').put(recordModelCtrl.update);
   router.route('/recordModel/:id').delete(recordModelCtrl.delete);
   router.route('/recordModel/updateStatus').put(recordModelCtrl.updateStatus); 
+  router.route('/recordModel/getRecordWithSameOrganization/:id').put(recordModelCtrl.getRecordWithSameOrganization);
   
   router.route('/viewModel/getViewByRecordId/:id').get(viewModelCtrl.getViewByRecordId);
   /////report crate

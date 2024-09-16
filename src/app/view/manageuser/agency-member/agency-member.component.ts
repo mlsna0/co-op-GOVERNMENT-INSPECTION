@@ -55,6 +55,10 @@ export class AgencyMemberComponent implements OnInit {
   isAmphureDisabled = true;
   isTambonDisabled = true;
   isPostCodeDisabled = true;
+
+  
+  PasswordFieldType: string = 'password';
+  confirmPasswordFieldType: string = 'password'
   constructor(
     private router: Router,
     private ACrouter :ActivatedRoute,
@@ -188,6 +192,15 @@ updateUserStatus(person: any) {
     }, error => {
       console.error('Error updating status:', error);
     });
+  }
+}
+
+//toggle eyes 
+togglePasswordVisibility(field: string): void {
+  if (field === 'Password') {
+      this.PasswordFieldType = this.PasswordFieldType === 'password' ? 'text' : 'password';
+  } else if (field === 'confirmPassword') {
+      this.confirmPasswordFieldType = this.confirmPasswordFieldType === 'password' ? 'text' : 'password';
   }
 }
 

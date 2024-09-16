@@ -316,6 +316,75 @@ getAllRecordsLinkedByEmployeeId = async (req, res) => {
   }
 };
 
+async getRecordWithSameOrganization(req: Request, res: Response): Promise<void> {
+  try {
+    const  currentUserId  = req.params;
+    console.log(currentUserId)
+
+    if (!currentUserId) {
+      res.status(400).send('Current User ID is required.');
+      return;
+    }
+
+    // ดึงข้อมูลผู้ใช้ที่ตรงกับ currentUserId
+    const currentUser = await this.userModel.findById(currentUserId).exec();
+
+    if (!currentUser) {
+      res.status(404).send('User not found.');
+      return;
+    }
+
+    // ดึงข้อมูลพนักงานที่เชื่อมโยงกับ currentUser
+    const currentEmployee = await this.employeeModel.findById(currentUser.employeeId).exec();
+
+    if (!currentEmployee) {
+      res.status(404).send('Employee not found.');
+      return;
+    }
+
+    // ดึง agencyId ของ currentEmployee
+    const agencyId = currentEmployee.agencies; // รับค่า agencyId จาก currentEmployee
+
+    // ดึงข้อมูลพนักงานที่เชื่อมโยงกับ agencyId
+    const employees = await this.employeeModel.find({ agencies: agencyId }).exec();
+
+    if (!employees.length) {
+      res.status(404).send('No employees found for the provided agency.');
+      return;
+    }
+
+    const employeeIds = employees.map(emp => emp._id);
+
+    // ดึงข้อมูล records ที่สร้างโดย employeeIds
+    const records = await this.model.find({ createdBy: { $in: employeeIds } }).exec();
+
+    const result = await Promise.all(records.map(async (record) => {
+      // ดึงข้อมูลพนักงานที่เกี่ยวข้องกับ record
+      const recordEmployee = await this.employeeModel.findById(record.createdBy).exec();
+      
+      // ดึงข้อมูลผู้ใช้ที่เกี่ยวข้องกับพนักงาน
+      const recordUser = recordEmployee ? await this.userModel.findById(recordEmployee._id).exec() : null;
+
+      // ดึงข้อมูลวิวที่เกี่ยวข้องกับ record
+      const view = await this.modelView.findOne({ recordId: record._id }).exec();
+
+      return {
+        record,
+        employee: recordEmployee,
+        user: recordUser,
+        view
+      };
+    }));
+
+    res.send(result);
+  } catch (error) {
+    console.error('Error retrieving records with the same organization:', error);
+    res.status(500).send('Server error.');
+  }
+}
+
+
+
 
 getRecordByDocumentId =async (req,res)=>{
   try {

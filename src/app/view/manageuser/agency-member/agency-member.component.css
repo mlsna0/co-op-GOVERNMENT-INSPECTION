@@ -129,6 +129,14 @@ input{
 }
 
 /*toggle status style end here! */
+.eyePassword{
+  position: absolute;
+  right: 0.7rem;
+  top: 42%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: transparent;
+}
 
   
 

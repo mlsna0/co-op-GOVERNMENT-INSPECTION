@@ -234,6 +234,9 @@ getOrganizationById(OrganizationID: string){
 getPersonsWithSameOrganization(OrganizationID: string): Observable<any>{
   return this.http.get(`${this.baseUrl}/registerModel/getPersonsWithSameOrganization/${OrganizationID}`)
 }
+getDataRecordWithSameOrganization(currentUserId: string): Observable<any>{
+  return this.http.get(`${this.baseUrl}/recordModel/getRecordWithSameOrganization/${currentUserId}`)
+}
   updateUserProfileById(updatedData: FormData,UserID:string): Observable<any> {
     return this.http.put(`${this.baseUrl}/userModel/updateUserById/${UserID}`, updatedData);
   }

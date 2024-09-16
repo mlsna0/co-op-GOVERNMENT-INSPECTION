@@ -222,6 +222,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
     this.getCurrentUser();
     this.loadPDFs();
     this.fetchAndSetRecords(); 
+    this.getDataRecordWithSameOrganization()
     // console.log("ngOnInit called");
 }
 getCurrentUser(): void {
@@ -233,9 +234,10 @@ getCurrentUser(): void {
     // แปลง JSON เป็นวัตถุ
     this.currentUser = JSON.parse(userData);
     this.RoleCurrenUser = this.currentUser?.role;
-
+    this.currentUserId = this.currentUser?.id;
     // console.log("currentUser: ",this.currentUser);
     // console.log("this RoleCurrenUser : ", this.RoleCurrenUser);
+    //  console.log("currentUser ID : ",this.currentUserId); 
   } else {
     console.log('No user data found in localStorage.');
   }
@@ -261,6 +263,7 @@ loadPDFs(): void {
     }
   );
 }
+///////////////////////////////////////////////////////////////////////////////////////
 fetchAndSetRecords() {
     // console.log("fetchAndSetRecords called");
     this.loading = true;
@@ -430,6 +433,16 @@ combineDocuments(items, userOrganization: string): any[] {
   return combinedDocuments;
 }
 
+
+// getDataRecordWithSameOrganization(){
+
+//  console.log("getDataRecordWithSameOrganization : ",this.currentUserId)
+
+//  this.sv.getDataRecordWithSameOrganization(this.currentUserId).subscribe(res=>{
+//  this.sameDataRecord = res;
+ 
+//  })
+// }
 
 handleError(error) {
   console.error('Error:', error);

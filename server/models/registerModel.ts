@@ -37,7 +37,7 @@ export interface registerModel{
     postCode: string;
     detail: string;
     profileImage: string;
-    agency: string; 
+    agencies: string; 
   }
 
 const RegisterModel = mongoose.model('Employee', registerSchema, 'employees');

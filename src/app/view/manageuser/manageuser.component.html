@@ -108,14 +108,18 @@
                   </div>
               
                   <div class="row box">
-                      <div class="col-sm-6">
-                          <div class="form-group">
+                      <div class="col-sm-6" >
+                          <div class="form-group"  style=" height: 110px;">
                               <label for="password" style="font-size: 16px;">รหัสผ่าน</label>
-                              <input type="password" id="password" formControlName="password" class="form-control" required placeholder="กรอกรหัสผ่านของคุณ"
+                              <input  [type]="PasswordFieldType" type="password" id="password" formControlName="password" class="form-control" required placeholder="กรอกรหัสผ่านของคุณ"
                               [ngClass]="{'box-validate':  regisForm.controls['password'].invalid && (regisForm.controls['password'].touched || regisForm.controls['password'].dirty || Submitted)}">
                               <div *ngIf="regisForm.get('password')?.invalid && (regisForm.get('password')?.touched || regisForm.get('password')?.dirty )">
                                   <small class="error-text">รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร</small>
                               </div>
+                              <button type="button" class="eyePassword" 
+                              (click)="togglePasswordVisibility('Password')">
+                                    <i [class]="PasswordFieldType === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                              </button>
                               <!-- <div *ngIf="regisForm.get('password')?.invalid && (regisForm.get('password')?.touched || regisForm.get('password')?.dirty || Submitted)">
                                 <small class="error-text">กรุณากรอกข้อมูล**</small>
                             </div> -->
@@ -123,13 +127,17 @@
                       </div>
               
                       <div class="col-sm-6">
-                          <div class="form-group">
+                          <div class="form-group"  style=" height: 110px;">
                               <label for="confirmpassword" style="font-size: 16px;">ยืนยัน รหัสผ่าน</label>
-                              <input type="password" id="confirmpassword" class="form-control" formControlName="confirmpassword" required placeholder="กรอกรหัสผ่านของคุณ"
+                              <input  [type]="confirmPasswordFieldType"type="password" id="confirmpassword" class="form-control" formControlName="confirmpassword" required placeholder="กรอกรหัสผ่านของคุณ"
                               [ngClass]="{'box-validate':  regisForm.controls['confirmpassword'].invalid && (regisForm.controls['confirmpassword'].touched || regisForm.controls['confirmpassword'].dirty || Submitted)}">
                               <div *ngIf="regisForm.get('confirmpassword')?.invalid && (regisForm.get('confirmpassword')?.touched || regisForm.get('confirmpassword')?.dirty)">
                                   <small class="error-text">รหัสผ่านไม่ตรงกัน</small>
                               </div>
+                              <button type="button" class="eyePassword" 
+                              (click)="togglePasswordVisibility('confirmPassword')">
+                                   <i [class]="confirmPasswordFieldType === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                             </button>
                               <!-- <div *ngIf="regisForm.get('confirmpassword')?.invalid && (regisForm.get('confirmpassword')?.touched || regisForm.get('confirmpassword')?.dirty || Submitted)">
                                 <small class="error-text">กรุณากรอกข้อมูล**</small>
                             </div> -->

@@ -9,7 +9,7 @@ import bcrypt from 'bcryptjs';
 
 class UserModelCtrl extends BaseCtrl {
     model = userModel;
-    modelEmployee = RegisterModel
+    modelEmployee = RegisterModel;
 
     // New method to get a user by ID
     getUserById = async (req, res) => {
@@ -194,6 +194,10 @@ class UserModelCtrl extends BaseCtrl {
           res.status(400).send('Employee ID and Staus are required.');
           return;
         }
+        if (isActive === undefined || isActive === null) {
+          return res.status(400).send('Status is required.');
+        }
+        
     
         try {
           const user = await User.findOneAndUpdate(
@@ -206,12 +210,55 @@ class UserModelCtrl extends BaseCtrl {
             res.status(404).send('User not found.');
             return;
           }
+          // console.log(user.role)
+  
+               // ถ้าผู้ใช้มี role เป็น 'admin' และกำลังเปลี่ยนสถานะ
+        if (user.role === 'admin') {
+          if (!user.employeeId) {
+            return res.status(400).send('User does not have an associated employee.');
+          }
+          // ดึงข้อมูล Employee ที่เชื่อมโยงกับ user ผ่าน employeeId
+          const employee = await RegisterModel.findById(user.employeeId).populate('agencies'); //ทำไมต้องโดยตรง?
+          
+          if (!employee) {
+            console.log("No employee found for ID:", user.employeeId);
+              res.status(404).send('Employee not found.');
+              return;
+          }
+           // ดึง employees ที่อยู่ใน agency เดียวกับ employee นี้
+        let employees = await RegisterModel.find({
+          'agencies': { $in: employee.agencies }
+      });
+
+      if (employees.length === 0) {
+          return res.status(404).json({ msg: 'ไม่พบบุคคลที่อยู่ใน Agency นี้' });
+      }
+
+      const employeeIds = employees.map(emp => emp._id);
+
+        // ค้นหาผู้ใช้ที่มี employeeId ตรงกับ employeeIds ที่ค้นพบ
+        let users = await User.find({
+          'employeeId': { $in: employeeIds }
+      });
+
+      if (users.length === 0) {
+          return res.status(404).json({ msg: 'ไม่พบบุคคลที่อยู่ใน Agency นี้' });
+      }
+
+      // อัพเดตสถานะผู้ใช้ที่มี role เป็น 'user'
+      await User.updateMany(
+          { employeeId: { $in: employeeIds }, role: 'user' },
+          { isActive: isActive }
+      );
+      }
     
           res.send(user);
         } catch (error) {
+          console.error('Error updating user status:', error);
           res.status(500).send('Server error.');
         }
       }
+
       resetPassword = async (req, res) => {
         try {
             // console.log('Request Body:', req.body);

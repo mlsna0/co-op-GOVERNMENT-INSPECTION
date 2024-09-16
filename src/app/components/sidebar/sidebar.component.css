@@ -156,3 +156,8 @@
   'opsz' 24
 }
 
+.sidePerson{
+  position: relative;
+  width: 100%;
+  border-bottom: 1px solid #dce5f1;
+}
