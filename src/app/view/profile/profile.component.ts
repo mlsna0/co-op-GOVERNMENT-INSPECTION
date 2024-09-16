@@ -118,7 +118,7 @@ export class ProfileComponent implements OnInit {
 
         this.UserID = this.UserData?._id;
         this.OrganizationID = this.UserData?.employeeId?.agencies;
-        this.selectedOrganizationID = this.OrganizationID[0]; 
+        this.selectedOrganizationID = this.OrganizationID; 
         // console.log( " this.OrganizationID > ",this.OrganizationID)
         console.log("Selected Organization ID:", this.selectedOrganizationID);
         // console.log("UserID it send? >",this.UserID);
