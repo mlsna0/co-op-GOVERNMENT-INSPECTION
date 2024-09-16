@@ -190,13 +190,14 @@ export class MapComponent implements AfterViewInit {
     loadUserReport(): void {
       this.loginservice.getUserProfile().subscribe(
         (user) => {
+          // console.log('User Profile:', user); // ตรวจสอบข้อมูล user profile ที่ได้มา
           if (user && user._id) {
             const userRole = user.role;
+            // console.log('User Role:', userRole); // ตรวจสอบบทบาทของผู้ใช้
     
-            // ใช้ getallRecordWithUserAndEmployee() สำหรับทั้ง admin และ superadmin
             this.sv.getallRecordWithUserAndEmployee().subscribe(
               (data) => {
-                // เรียก processData เพื่อประมวลผลข้อมูลตามบทบาท
+                // console.log('All Records Data:', data); // ตรวจสอบข้อมูล records ทั้งหมดที่ได้มา
                 const documents = data;
                 this.processData(documents, userRole, user); // ส่ง user ไปด้วย
               },
@@ -214,36 +215,35 @@ export class MapComponent implements AfterViewInit {
       );
     }
     
+    
     // ฟังก์ชันประมวลผลข้อมูล ใช้ร่วมกันได้ทั้ง superadmin และ admin
     processData(documents: any[], role: string, user: any): void {
+      // console.log('Processing data for role:', role); // ตรวจสอบบทบาทของผู้ใช้
       if (role === 'superadmin') {
-        // หากเป็น superadmin ส่งข้อมูลทั้งหมดไป
+        // console.log('Processing as superadmin'); // Log เมื่อประมวลผลในฐานะ superadmin
         this.processSuperAdminData(documents);
       } else if (role === 'admin') {
-        // ตรวจสอบข้อมูลของ user.employeeId ก่อนเข้าถึง organization
         const userEmployee = user.employeeId;
         const userOrganization = userEmployee ? userEmployee.organization : undefined;
     
-        console.log('User Employee:', userEmployee); // ตรวจสอบข้อมูล employee
-        console.log('User Organization:', userOrganization); // ตรวจสอบ organization
+        // console.log('User Employee:', userEmployee); // ตรวจสอบข้อมูล employee
+        // console.log('User Organization:', userOrganization); // ตรวจสอบ organization
     
         if (userOrganization) {
-          // กรองข้อมูลเฉพาะบริษัทของผู้ใช้ที่ล็อกอินเข้ามา
           const filteredDocuments = documents.filter((doc) => {
             return doc.employee.organization === userOrganization;
           });
     
-          // Log ข้อมูลบริษัทที่ตรงกับผู้ใช้ที่ล็อกอิน
-          console.log(`User's Organization: ${userOrganization}`);
-          console.log('Filtered Documents:', filteredDocuments);
+          // console.log(`User's Organization: ${userOrganization}`); // Log ข้อมูลบริษัทที่ตรงกับผู้ใช้
+          // // console.log('Filtered Documents:', filteredDocuments); // Log ข้อมูลเอกสารที่กรองแล้ว
     
-          // ส่งข้อมูลเฉพาะบริษัทของผู้ใช้ที่ล็อกอินไป
           this.processAdminData(filteredDocuments);
         } else {
           console.error('User organization is undefined.');
         }
       }
     }
+    
     
     processAdminData(filteredData: any): void {
       const locationMap: any = {};
@@ -296,58 +296,61 @@ export class MapComponent implements AfterViewInit {
         }
       }
     }
-
-processSuperAdminData(data: any[]): void {
-  const dataByProvince: { [provinceName: string]: any[] } = {};
-
-  data.forEach(item => {
-    const rawProvince = item.employee?.province;
-    if (!rawProvince) return;
-
-    const provinceId = parseInt(rawProvince, 10);
-    if (isNaN(provinceId)) return;
-
-    const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
-    if (!provinceName) return;
-
-    if (!dataByProvince[provinceName]) {
-      dataByProvince[provinceName] = [];
-    }
-
-    dataByProvince[provinceName].push(item);
-  });
-
-  Object.keys(dataByProvince).forEach(provinceName => {
-    const provinceData = dataByProvince[provinceName];
-    if (!provinceData.length) return;
-
-    const loc = this.provinceCoordinates[provinceName];
-    if (loc) {
-      const topics: string[] = [];
-      const places: string[] = [];
-      const locations: string[] = [];
-
-      provinceData.forEach(item => {
-        // console.log('Item:', item);
-        // สมมุติว่า documents มีอย่างน้อยหนึ่งรายการ
-        item.documents.forEach(doc => {
-          topics.push(doc.record_topic || ''); // ถ้าไม่มีข้อมูลให้เว้นช่องว่าง
-          places.push(doc.record_place || ''); // ถ้าไม่มีข้อมูลให้เว้นช่องว่าง
-          locations.push(doc.record_location || ''); // ถ้าไม่มีข้อมูลให้เว้นช่องว่าง
-        });
+    processSuperAdminData(data: any[]): void {
+      const dataByProvince: { [provinceName: string]: any[] } = {};
+      console.log('SuperAdmin data:', data); // ตรวจสอบข้อมูลที่รับมา
+    
+      data.forEach(item => {
+        const rawProvince = item.agency?.province; // แก้ไขจาก employee เป็น agency
+        // console.log('Raw Province from agency:', rawProvince); // Log ข้อมูล province จาก agency
+    
+        if (!rawProvince) return;
+    
+        const provinceId = parseInt(rawProvince, 10);
+        if (isNaN(provinceId)) return;
+    
+        const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
+        // console.log('Province Name:', provinceName); // ตรวจสอบชื่อจังหวัดที่ได้มา
+    
+        if (!provinceName) return;
+    
+        if (!dataByProvince[provinceName]) {
+          dataByProvince[provinceName] = [];
+        }
+    
+        dataByProvince[provinceName].push(item);
       });
-
-      // console.log(`Adding marker at ${loc.lat}, ${loc.lng} for province ${provinceName}`);
-      // console.log('Topics:', topics);
-      // console.log('Places:', places);
-      // console.log('Locations:', locations);
-
-      this.addMarker(loc.lat, loc.lng, topics, places, locations);
-    } else {
-      // console.warn(`No coordinates found for province: ${provinceName}`);
+    
+      Object.keys(dataByProvince).forEach(provinceName => {
+        const provinceData = dataByProvince[provinceName];
+        if (!provinceData.length) return;
+    
+        const loc = this.provinceCoordinates[provinceName];
+        if (loc) {
+          const topics: string[] = [];
+          const places: string[] = [];
+          const locations: string[] = [];
+    
+          provinceData.forEach(item => {
+            item.documents.forEach(doc => {
+              topics.push(doc.record_topic || ''); // ถ้าไม่มีข้อมูลให้เว้นช่องว่าง
+              places.push(doc.record_place || ''); // ถ้าไม่มีข้อมูลให้เว้นช่องว่าง
+              locations.push(doc.record_location || ''); // ถ้าไม่มีข้อมูลให้เว้นช่องว่าง
+            });
+          });
+    
+          // console.log(`Adding marker at ${loc.lat}, ${loc.lng} for province ${provinceName}`); // Log การเพิ่ม marker
+          // console.log('Topics:', topics);
+          // console.log('Places:', places);
+          // console.log('Locations:', locations);
+    
+          this.addMarker(loc.lat, loc.lng, topics, places, locations);
+        } else {
+          console.warn(`No coordinates found for province: ${provinceName}`);
+        }
+      });
     }
-  });
-}
-
+    
+    
   
 }

@@ -2,6 +2,7 @@ import recordModel from '../models/recordModel';
 import ViewModel from '../models/viewModel';
 import RegisterModel from '../models/registerModel'; // เพิ่มการนำเข้า model ของ employee
 import User from '../models/userModel'; // เพิ่มการนำเข้า model ของ user
+import Agency from "../models/agencyModel";
 import multer, { StorageEngine } from 'multer';
 import { Request, Response } from 'express';
 // import DetailModel from 'models/detailModel';
@@ -29,6 +30,7 @@ class recorCon extends BaseCtrl {
   modelView = ViewModel;
   employeeModel = RegisterModel;
   userModel = User; 
+  agencyModel = Agency;
   
   auth = async (req, res, next) => {
     const token = req.header('Authorization').replace('Bearer ', '');
@@ -295,18 +297,21 @@ getData = async (req, res) => {
 
 getAllRecordsLinkedByEmployeeId = async (req, res) => {
   try {
+    // ดึง users, employees และ documents มา
     const users = await this.userModel.find({});
-    const employees = await this.employeeModel.find({});
+    const employees = await this.employeeModel.find({}).populate('agencies'); // ใช้ populate เพื่อดึงข้อมูล Agency
     const documents = await this.model.find({});
 
     const linkedData = users.map(user => {
+      // หา employee ที่ตรงกับ employeeId ใน user
       const employee = employees.find(emp => emp._id.toString() === user.employeeId.toString());
       const userDocuments = documents.filter(doc => doc.userId.toString() === user._id.toString());
 
       return {
         user,
-        employee: employee || null,
-        documents: userDocuments
+        employee: employee || null, // ถ้าไม่มี employee ก็ให้เป็น null
+        documents: userDocuments,
+        agency: employee ? employee.agencies : null // เพิ่มข้อมูล agencies ของ employee ถ้ามี
       };
     });
 
@@ -314,8 +319,7 @@ getAllRecordsLinkedByEmployeeId = async (req, res) => {
   } catch (error) {
     res.status(500).send('Server error');
   }
-};
-
+}
 getUserDocuments = async (req, res) => {
   try {
     const userId = req.user.id; // ดึง userId จาก req.user หลังจากการผ่าน auth middleware

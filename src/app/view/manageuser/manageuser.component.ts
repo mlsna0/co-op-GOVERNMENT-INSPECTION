@@ -79,7 +79,7 @@ export class ManageuserComponent implements OnInit {
       amphure: ['', Validators.required],
       tambon: ['', Validators.required],
       postCode: ['', Validators.required],
-      role: ['', Validators.required],
+      role: ['admin'],
       profileImage: ['']
     }, { validator: this.passwordMatchValidator });
 
