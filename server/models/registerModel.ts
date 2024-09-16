@@ -20,7 +20,7 @@ const registerSchema = new mongoose.Schema({
     detail: String,
     profileImage: String, 
     timestamps: [{ type: Schema.Types.ObjectId, ref: 'TimeStamp' }] ,// ฟิลด์ timestamps
-    agencies: [{type: Schema.Types.ObjectId, ref: 'Agency'}]
+    agencies: {type: Schema.Types.ObjectId, ref: 'Agency'}
 });
 
 export interface registerModel{
@@ -37,6 +37,7 @@ export interface registerModel{
     postCode: string;
     detail: string;
     profileImage: string;
+    agency: string; 
   }
 
 const RegisterModel = mongoose.model('Employee', registerSchema, 'employees');

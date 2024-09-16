@@ -120,8 +120,8 @@ export class ProfileuserComponent implements OnInit {
       }
       this.OrganizationID = this.UserData?.employeeId?.agencies; //for infomation agency/organization
       console.log( " this.OrganizationID > ",this.OrganizationID)
-      this.selectedOrganizationID = this.OrganizationID[0]; //for infomation agency/organization
-      console.log( "this.selectedOrganizationID > ",this.selectedOrganizationID)
+      this.selectedOrganizationID = this.OrganizationID; //for infomation agency/organization
+       console.log( "this.selectedOrganizationID > ",this.selectedOrganizationID)
       this.sv.getOrganizationById(this.selectedOrganizationID).subscribe(res=>{
         this.DataOrganization = res;
         console.log("Data of Organiz: ",this.DataOrganization)
@@ -353,7 +353,11 @@ resetPassword(UserID: string, newPassword: string) {
   );
 }
   BackRoot(){
-    this.router.navigate(['/manageuser']);
+    if (window.history.length > 1) {
+      window.history.back(); // ใช้ฟังก์ชันของเบราว์เซอร์เพื่อกลับไปหน้าที่แล้ว
+    } else {
+      this.router.navigate(['/manageuser']); // กรณีที่ไม่มีประวัติให้เปลี่ยนเส้นทางไปที่ '/manageuser'
+    }
   }
   editProfile() {
     // Add your edit profile logic here

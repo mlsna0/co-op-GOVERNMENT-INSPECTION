@@ -35,6 +35,7 @@ class RegisterModelCtrl extends BaseCtrl {
     modelAgency = Agency
 
     create = async (req, res) => {
+     
             try {
                 const { firstname, lastname, email, password, confirmpassword, organization, bearing, phone, address, province, amphure, tambon, postCode, role } = req.body;
     
@@ -55,6 +56,7 @@ class RegisterModelCtrl extends BaseCtrl {
                 const hashedPassword = await bcrypt.hash(password, salt);
 
                 const agency = await Agency.findOne({ agency_name: organization });
+            
                 if (!agency) {
                     return res.status(400).json({ msg: 'Agency not found' });
                 }
@@ -297,7 +299,7 @@ class RegisterModelCtrl extends BaseCtrl {
             }
     
             let Organization = await this.modelAgency.findById(OrganizationID);
-            console.log("Fetched Organization:", Organization);
+            // console.log("Fetched Organization:", Organization);
     
             if (!Organization) {
                 return res.status(404).json({ msg: 'Organization not found' });
@@ -311,22 +313,48 @@ class RegisterModelCtrl extends BaseCtrl {
     };
     getPersonsWithSameOrganization = async (req, res) => {
         try {
-            const agencyID = req.params.id; // ดึง agency ID ที่ต้องการค้นหา
+
+            // const agencyID = req.params.id; // ดึง agency ID ที่ต้องการค้นหา
+            const agencyID = new mongoose.Types.ObjectId(req.params.id);
+            // console.log("ID agencyID: ",agencyID)
     
             if (!mongoose.Types.ObjectId.isValid(agencyID)) {
                 return res.status(400).json({ msg: 'รหัส Agency ไม่ถูกต้อง' });
             }
     
-            // ค้นหาบุคคลทั้งหมดที่มี agency ID ตรงกันใน agencies field
-            let persons = await this.model.find({
-                agencies: agencyID
-            });
+            // // ค้นหาบุคคลทั้งหมดที่มี agency ID ตรงกันใน agencies field
+            // let persons = await this.model.find({
+            //     agencies: agencyID
+            // });
     
-            if (persons.length === 0) {
-                return res.status(404).json({ msg: 'ไม่พบบุคคลที่อยู่ใน Agency นี้' });
-            }
+            // if (persons.length === 0) {
+            //     return res.status(404).json({ msg: 'ไม่พบบุคคลที่อยู่ใน Agency นี้' });
+            // }
+
+                  // ค้นหาบุคคลทั้งหมดที่มี agency ID ตรงกันใน agencies field
+                  
+             // ค้นหา Employees ที่มี agencies ตรงกับ agencyID
+             let employees = await this.model.find({
+                            'agencies': agencyID
+                });
+             if (employees.length === 0) {
+                    return res.status(404).json({ msg: 'ไม่พบบุคคลที่อยู่ใน Agency นี้' });
+             }
+
+            
+             const employeeIds = employees.map(emp => emp._id);
+
+             // ค้นหา Users ที่มี employeeId ตรงกับ employeeIds ที่ค้นพบ
+             let users = await User.find({
+                 'employeeId': { $in: employeeIds }
+             }).populate('employeeId');
+     
+             if (users.length === 0) {
+                 return res.status(404).json({ msg: 'ไม่พบบุคคลที่อยู่ใน Agency นี้' });
+             }
     
-            res.status(200).json(persons);
+            res.status(200).json(users);
+            // res.status(200).json(response);
         } catch (error) {
             console.error('เกิดข้อผิดพลาดในฟังก์ชัน getPersonsWithSameAgency:', error.message);
             res.status(500).send('ข้อผิดพลาดในเซิร์ฟเวอร์');

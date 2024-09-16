@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, map, throwError } from 'rxjs';
+
 import * as pdfjsLib from 'pdfjs-dist';
 import { HttpClient } from '@angular/common/http';
 
@@ -77,6 +78,15 @@ export class DocumentService {
  updateCompanyCount(companyCount: number): void {
     console.log("Received company count:", companyCount);
     this.companyCountSubject.next(companyCount);
+  }
+  getTotalCompanies(): Observable<any>{
+    return this.http.get<any[]>(`${this.apiUrl}/agencyModel`).pipe(
+      map(records => records.length), // นับจำนวนเอกสาร
+      catchError(error => {
+        // console.error('Error fetching data:', error);
+        throw 'ไม่สามารถดึงข้อมูลได้';
+      })
+    );
   }
 
 

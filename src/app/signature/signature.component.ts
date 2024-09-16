@@ -649,7 +649,14 @@ blobToBase64(blob: Blob): Promise<string | ArrayBuffer | null> {
   }
 
   BackRoot() {
-    this.router.navigate(['/table-detail', this.documentId]);
+    if (window.history.length > 1) {
+      window.history.back(); // ใช้ฟังก์ชันของเบราว์เซอร์เพื่อกลับไปหน้าที่แล้ว
+    } else if (this.documentId) {
+      this.router.navigate(['/table-detail', this.documentId]); // กรณีที่ไม่มีประวัติ แต่มี documentId ให้เปลี่ยนเส้นทางไปที่ '/table-detail'
+    } else {
+      this.router.navigate(['/table-main']); // กรณีที่ไม่มีประวัติและไม่มี documentId ให้เปลี่ยนเส้นทางไปที่ '/table-main'
+    }
+  
   }
 
   // prevPage() {

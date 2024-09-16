@@ -3,6 +3,7 @@
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
           <li class="breadcrumb-item"><a [routerLink]="['/manageuser']">จัดการผู้ใช้งาน</a></li>
+          <li class="breadcrumb-item"  *ngIf="UserData?.role == 'user'" ><a class="linkA" (click)="BackRoot()">จัดการบุคคลกร</a></li>
           <li class="breadcrumb-item active"><a aria-current="page" >รายละเอียดผู้ใช้งาน</a></li>
         </ol>
       </nav>
@@ -41,21 +42,21 @@
 
                             <div class="card-info">
                                 <div class="row">
-                                    <label for="">  ระดับผู้ใช้งาน : </label>
-                                    <a href="" >   &nbsp;   {{UserData?.role}}</a>
-                             
+                                    <label for=""> ระดับผู้ใช้งาน : </label>
+                                    <p > &nbsp; {{UserData?.role}}</p>
+
 
                                 </div>
                                 <div class="row">
                                     <label for=""> ชื่อ-นามสกุล :</label>
-                                    <a href=""> &nbsp;  {{ UserData?.employeeId?.firstname }} &nbsp;
-                                        {{UserData?.employeeId?.lastname}} </a>
-                                  
+                                    <p > &nbsp; {{ UserData?.employeeId?.firstname }} &nbsp;
+                                        {{UserData?.employeeId?.lastname}} </p>
+
                                 </div>
                                 <div class="row">
                                     <label for=""> ตำแหน่ง : </label>
-                                    <a href=""> &nbsp;     {{UserData?.employeeId?.bearing}}</a>
-                                        
+                                    <p > &nbsp; {{UserData?.employeeId?.bearing}}</p>
+
                                 </div>
                           
                            

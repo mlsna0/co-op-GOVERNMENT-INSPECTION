@@ -26,6 +26,15 @@ h4{
   color: black;
 }
 
+.linkA a{
+  color: #000000;
+  font-weight: 300;
+}
+.linkA:hover{
+  cursor: pointer !important;
+  color: #9c27b0 !important;
+}
+
 
 /* 4. Add a border to .card and padding to .card-header */
 /* .card {

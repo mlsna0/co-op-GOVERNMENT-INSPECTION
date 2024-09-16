@@ -1,0 +1,308 @@
+<div class="main-content">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
+      <li class="breadcrumb-item"><a [routerLink]="['/manageuser']">จัดการผู้ใช้งาน</a></li>
+      <li class="breadcrumb-item active"><a aria-current="page">จัดการบุคคลกร</a></li>
+    </ol>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="card">
+
+      <div class="card-header">
+        <div class="card-title">
+          <p> จัดการผู้ใช้งาน</p>
+        </div>
+
+        <button (click)="openAddPersonModal()" class="btn btn-add">
+          เพิ่มผู้ใช้งาน</button>
+
+      </div>
+
+      <div class="card-body">
+        <table width="100%" datatable [dtOptions]="dtOptions" *ngIf="!loading"
+          class="table table-striped table-bordered" style="color: black;">
+          <thead class="text-primary" style="color: black; font-size: 16px;">
+            <tr>
+              <th style="width: 2%; white-space: nowrap; text-align: center; color: black; font-size: 16px;">
+                ลำดับ
+              </th>
+              <th style="color: black; font-size: 16px;">ชื่อ</th>
+              <th style="color: black; font-size: 16px;">นามสกุล</th>
+              <th style="color: black; font-size: 16px;">ตำเเหน่ง</th>
+              <th style="color: black; font-size: 16px;">อีเมล</th>
+              <th style="color: black; font-size: 16px; width: 13%;">สถานะผู้ใช้งาน</th>
+
+
+              <th class="text-center" style="color: black; font-size: 16px;"><i class="fa fa-gear"></i></th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr *ngFor="let person of dataPerson ; let i = index">
+              <td style="text-align: center; width: 5%;">{{ i + 1 }}</td>
+              <td style="white-space: nowrap;">
+                {{person?.employeeId?.firstname}}
+              </td>
+              <td style="white-space: nowrap;">
+                {{person?.employeeId?.lastname}}
+              </td>
+              <td style="white-space: nowrap;">
+                {{person?.employeeId?.bearing}}
+              </td>
+              <td style="white-space: nowrap;">
+                {{person?.email}}
+              </td>
+              <td class="toggle-container">
+                <input type="checkbox" id="checkbox{{i}}" [(ngModel)]="person.isActive"
+                  (change)="updateUserStatus(person)">
+                <label for="checkbox{{i}}" class="toggle-switch"></label>
+              </td>
+
+              <td class="text-center" style="width:1% ;white-space: nowrap;">
+                        <button (click)="getUserReportProfile(person?._id)" style="border: none; background: none; color: black;">
+                          <i data-toggle="tooltip" title="ดูรายละเอียกช้อมูล" data-placement="top"
+                            class="fa fa-file-text-o ModalIcon"></i>
+                        </button>
+                       
+                </td>
+            </tr>
+          </tbody>
+        </table>
+
+
+        <div class="modal fade" id="memberModel" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width: 115%;">
+              <div class="modal-header" class="card-header">
+                <h5 class="modal-title" id="addItemModalLabel"
+                  style="color: rgb(0, 0, 0); font-family: 'Sarabun', sans-serif !important; font-size: 18px; font-weight: 900;">
+                  เพิ่มข้อมูลผู้ใช้งาน</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: black;">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+
+              </div>
+              <form [formGroup]="regisForm" (ngSubmit)="onSubmit(regisForm.value)">
+                <div class="modal-body">
+                  <div class="row box">
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label for="email" style="font-size: 16px;">อีเมล</label>
+                        <input type="email" id="email" formControlName="email" class="form-control" required
+                          placeholder="กรอกอีเมลของคุณ"
+                          [ngClass]="{'box-validate':  regisForm.controls['email'].invalid && (regisForm.controls['email'].touched || regisForm.controls['email'].dirty || Submitted)}">
+                        <div
+                          *ngIf="regisForm.get('email')?.invalid && (regisForm.get('email')?.touched || regisForm.get('email')?.dirty || Submitted)">
+                          <small class="error-text">กรุณากรอกข้อมูล**</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row box">
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="password" style="font-size: 16px;">รหัสผ่าน</label>
+                        <input type="password" id="password" formControlName="password" class="form-control" required
+                          placeholder="กรอกรหัสผ่านของคุณ"
+                          [ngClass]="{'box-validate':  regisForm.controls['password'].invalid && (regisForm.controls['password'].touched || regisForm.controls['password'].dirty || Submitted)}">
+                        <div
+                          *ngIf="regisForm.get('password')?.invalid && (regisForm.get('password')?.touched || regisForm.get('password')?.dirty )">
+                          <small class="error-text">รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร</small>
+                        </div>
+                        <!-- <div *ngIf="regisForm.get('password')?.invalid && (regisForm.get('password')?.touched || regisForm.get('password')?.dirty || Submitted)">
+                                <small class="error-text">กรุณากรอกข้อมูล**</small>
+                            </div> -->
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="confirmpassword" style="font-size: 16px;">ยืนยัน รหัสผ่าน</label>
+                        <input type="password" id="confirmpassword" class="form-control"
+                          formControlName="confirmpassword" required placeholder="กรอกรหัสผ่านของคุณ"
+                          [ngClass]="{'box-validate':  regisForm.controls['confirmpassword'].invalid && (regisForm.controls['confirmpassword'].touched || regisForm.controls['confirmpassword'].dirty || Submitted)}">
+                        <div
+                          *ngIf="regisForm.get('confirmpassword')?.invalid && (regisForm.get('confirmpassword')?.touched || regisForm.get('confirmpassword')?.dirty)">
+                          <small class="error-text">รหัสผ่านไม่ตรงกัน</small>
+                        </div>
+                        <!-- <div *ngIf="regisForm.get('confirmpassword')?.invalid && (regisForm.get('confirmpassword')?.touched || regisForm.get('confirmpassword')?.dirty || Submitted)">
+                                <small class="error-text">กรุณากรอกข้อมูล**</small>
+                            </div> -->
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row box">
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="firstname" style="font-size: 16px;">ชื่อ</label>
+                        <input type="text" id="firstname" formControlName="firstname" class="form-control" required
+                          placeholder="กรอกชื่อของคุณ"
+                          [ngClass]="{'box-validate':  regisForm.controls['firstname'].invalid && (regisForm.controls['firstname'].touched || regisForm.controls['firstname'].dirty || Submitted)}">
+                        <div
+                          *ngIf="regisForm.get('firstname')?.invalid && (regisForm.get('firstname')?.touched || regisForm.get('firstname')?.dirty || Submitted)">
+                          <small class="error-text">กรุณากรอกข้อมูล*</small>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="lastname" style="font-size: 16px;">นามสกุล</label>
+                        <input type="text" id="lastname" formControlName="lastname" class="form-control" required
+                          placeholder="กรอกนามสกุลของคุณ"
+                          [ngClass]="{'box-validate':  regisForm.controls['lastname'].invalid && (regisForm.controls['lastname'].touched || regisForm.controls['lastname'].dirty || Submitted)}">
+                        <div
+                          *ngIf="regisForm.get('lastname')?.invalid && (regisForm.get('lastname')?.touched || regisForm.get('lastname')?.dirty || Submitted)">
+                          <small class="error-text">กรุณากรอกข้อมูล*</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row box">
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="organization">หน่วยงาน</label>
+                        <input type="text" id="organization" formControlName="organization" class="form-control" disabled>
+                        <input type="hidden" formControlName="organization">
+          
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="bearing" style="font-size: 16px;">ตำเเหน่ง / หน้าที่</label>
+                        <input type="text" id="bearing" formControlName="bearing" class="form-control" required
+                          placeholder="ตำเเหน่ง / หน้าที่"
+                          [ngClass]="{'box-validate':  regisForm.controls['bearing'].invalid && (regisForm.controls['bearing'].touched || regisForm.controls['bearing'].dirty || Submitted)}">
+                        <div
+                          *ngIf="regisForm.get('bearing')?.invalid && (regisForm.get('bearing')?.touched || regisForm.get('bearing')?.dirty || Submitted)">
+                          <small class="error-text">กรุณากรอกข้อมูล*</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row box">
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label for="address" style="font-size: 16px;">ที่อยู่</label>
+                        <input type="text" id="address" formControlName="address" class="form-control" required
+                          placeholder="กรอกที่อยู่"
+                          [ngClass]="{'box-validate':  regisForm.controls['address'].invalid && (regisForm.controls['address'].touched || regisForm.controls['address'].dirty || Submitted)}">
+                        <div
+                          *ngIf="regisForm.get('address')?.invalid && (regisForm.get('address')?.touched || regisForm.get('address')?.dirty || Submitted)">
+                          <small class="error-text">กรุณากรอกข้อมูล*</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row box">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="province" style="font-size: 16px;">จังหวัด</label>
+                        <select class="form-select" formControlName="province"
+                          (change)="onProvinceChange($event.target.value)">
+                          <option value="" disabled selected>จังหวัด</option>
+                          <option *ngFor="let province of provinces" [value]="province.id">{{ province.name_th }}
+                          </option>
+                        </select>
+                        <div
+                          *ngIf="regisForm.get('province')?.invalid && (regisForm.get('province')?.touched || regisForm.get('province')?.dirty || Submitted)">
+                          <small class="error-text">กรุณาเลือกข้อมูล**</small>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="amphure" style="font-size: 16px;">อำเภอ/เขต</label>
+                        <select class="form-select" formControlName="amphure"
+                          (change)="onAmphuresChange($event.target.value)"
+                          [attr.disabled]="isAmphureDisabled ? true : null">
+                          <option value="" disabled selected>อำเภอ/เขต</option>
+                          <option *ngFor="let amphure of amphures" [value]="amphure.id">{{ amphure.name_th }}</option>
+                        </select>
+                        <div
+                          *ngIf="regisForm.get('amphure')?.invalid && (regisForm.get('amphure')?.touched || regisForm.get('amphure')?.dirty || Submitted)">
+                          <small class="error-text">กรุณาเลือกข้อมูล**</small>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="tambon" style="font-size: 16px;">ตำบล/แขวง</label>
+                        <select class="form-select" formControlName="tambon"
+                          (change)="onTambonChange($event.target.value)"
+                          [attr.disabled]="isTambonDisabled ? true : null">
+                          <option value="" disabled selected>ตำบล/แขวง</option>
+                          <option *ngFor="let tambon of tambons" [value]="tambon.id">{{ tambon.name_th }}</option>
+                        </select>
+                        <div
+                          *ngIf="regisForm.get('tambon')?.invalid && (regisForm.get('tambon')?.touched || regisForm.get('tambon')?.dirty || Submitted)">
+                          <small class="error-text">กรุณาเลือกข้อมูล**</small>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="postCode" style="font-size: 16px;">รหัสไปรษณีย์</label>
+                        <select class="form-select" formControlName="postCode"
+                          [attr.disabled]="isPostCodeDisabled ? true : null">
+                          <option value="" disabled selected>รหัสไปรษณีย์</option>
+                          <option *ngFor="let code of postCode" [value]="code">{{ code }}</option>
+                        </select>
+                        <div
+                          *ngIf="regisForm.get('postCode')?.invalid && (regisForm.get('postCode')?.touched || regisForm.get('postCode')?.dirty || Submitted)">
+                          <small class="error-text">กรุณาเลือกข้อมูล**</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row box">
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="phone" style="font-size: 16px;">เบอร์โทรศัพท์</label>
+                        <input type="tel" id="phone" formControlName="phone" class="form-control" required
+                          placeholder="กรอกเบอร์โทรศัทพ์ของคุณ"
+                          [ngClass]="{'box-validate':  regisForm.controls['phone'].invalid && (regisForm.controls['phone'].touched || regisForm.controls['phone'].dirty || Submitted)}">
+                        <div
+                          *ngIf="regisForm.get('phone')?.invalid && (regisForm.get('phone')?.touched || regisForm.get('phone')?.dirty || Submitted)">
+                          <small class="error-text">กรุณากรอกข้อมูล*</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;ยืนยัน</button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"
+                      (click)="closeModal()"></i>
+                    &nbsp; ปิด
+                  </button>
+
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

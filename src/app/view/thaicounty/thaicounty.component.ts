@@ -73,6 +73,7 @@ export class ThaicountyComponent implements OnInit {
      
       this.provinces = data; // เก็บข้อมูลจังหวัดทั้งหมดใน component
       this.loadUserReport();
+      console.log("this.provinces",this.provinces)
       this.loading = false;
       this.dtTrigger.next(this.provinces);
     });

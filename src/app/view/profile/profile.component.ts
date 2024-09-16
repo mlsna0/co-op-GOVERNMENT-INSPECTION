@@ -71,6 +71,8 @@ export class ProfileComponent implements OnInit {
   croppedImage: SafeUrl | '' = '';
   // @Output() imageCropped = new EventEmitter<string>();
 
+  loading:boolean = false;
+
   constructor(
     private fb:FormBuilder,
     private http:HttpClient,
@@ -105,6 +107,7 @@ export class ProfileComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.loading = true;
 
     this.imgpro = environment.URL_UPLOAD
 
@@ -115,7 +118,7 @@ export class ProfileComponent implements OnInit {
 
         this.UserID = this.UserData?._id;
         this.OrganizationID = this.UserData?.employeeId?.agencies;
-        this.selectedOrganizationID = this.OrganizationID[0]; 
+        this.selectedOrganizationID = this.OrganizationID; 
         // console.log( " this.OrganizationID > ",this.OrganizationID)
         console.log("Selected Organization ID:", this.selectedOrganizationID);
         // console.log("UserID it send? >",this.UserID);
@@ -127,6 +130,7 @@ export class ProfileComponent implements OnInit {
           // ใช้ URL ที่เซิร์ฟเวอร์ให้บริการ
           this.profileImgUrl = `http://localhost:3000/uploads/${this.UserData.employeeId.profileImage.replace(/\\/g, '/')}`;
           console.log('Generated profileImgUrl:', this.profileImgUrl);
+          this.loading = false;
         } else {
           this.profileImgUrl = './assets/img/Person-icon.jpg';
         }
@@ -135,6 +139,7 @@ export class ProfileComponent implements OnInit {
         this.sv.getOrganizationById(this.selectedOrganizationID).subscribe(res=>{
           this.DataOrganization = res;
           // console.log("Data of Organiz: ",this.DataOrganization)
+          this.loading = false;
         })
         console.log('profileImgUrl:', this.profileImgUrl);
         // this.UserInfoForm.patchValue(this.UserData);
@@ -173,6 +178,7 @@ export class ProfileComponent implements OnInit {
       this.provinces = data;
       this.amphures = data.flatMap(province => province.amphures);
       this.tambons = this.amphures.flatMap(amphure => amphure.tambons);
+      this.loading = false;
   
       // ตรวจสอบข้อมูลที่โหลดมา
       // console.log('Provinces:', this.provinces);

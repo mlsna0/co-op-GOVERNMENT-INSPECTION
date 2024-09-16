@@ -275,10 +275,11 @@ fetchAndSetRecords() {
         // console.log("User Profile fetched:", userProfile);
         this.fetchRecords(userProfile.employeeId.organization); 
          // ส่ง organization ของผู้ใช้เข้าไป
-         this.loading = true;
+         this.loading = true;  
       },
       error: (error) => {
         this.handleError(error)
+        this.loading = false;
         // console.log("Error in fetching user profile:", error);
       },
     });
@@ -302,12 +303,10 @@ fetchRecords(userOrganization: string) {
       const filteredRecords = this.filterByUserOrganization(groupedRecords, userOrganization);
       // console.log("Filtered Records by User Organization:", filteredRecords);
       
-   
-      
       // Combine documents from the filtered records only for the specific organization
       this.items = this.combineDocuments(filteredRecords[userOrganization] || [], userOrganization);
   
-      // console.log("Combined Documents:", this.items);
+      console.log("Combined Documents:", this.items);
       // this.countUniqueUsers(this.items, userOrganization);
 
       
@@ -319,6 +318,7 @@ fetchRecords(userOrganization: string) {
       // console.log("Error in fetching records:", error);
     },
   });
+
 } 
 
 groupRecordsByOrganization(records) {
@@ -341,6 +341,41 @@ filterByUserOrganization(groupedRecords, userOrganization: string) {
 }
 
 
+
+// combineDocuments(items, userOrganization: string): any[] {
+//   const userSet = new Set();
+//   let combinedDocuments = [];
+//   let signedDocumentsCount = 0;
+//   let totalDocumentsCount = 0;
+
+//   items.forEach(item => {
+//     if (item.employee && typeof item.employee.organization === 'string' && item.employee.organization.includes(userOrganization)) {
+//       userSet.add(item.user.employeeId);
+//       combinedDocuments = combinedDocuments.concat(item.documents || []);
+//       totalDocumentsCount += item.documents.length;
+
+//       item.documents.forEach(document => {
+//         const pdfFileName = `${document._id}.pdf`;
+//         if (this.pdfs.includes(pdfFileName)) {
+//           signedDocumentsCount++;
+//         }
+//       });
+//     }
+//   });
+
+//   const userCount = userSet.size;
+//   this.documentService.updateUserCount(userCount);
+//   this.documentService.updateSignedDocumentsCount(signedDocumentsCount);
+//   this.documentService.updateTotalDocumentsCount(totalDocumentsCount);
+
+//   // Sort documents based on a specific field, e.g., date or ID
+//   combinedDocuments.sort((a, b) => {
+//     // Replace 'dateField' with the actual field you want to sort by
+//     return new Date(b.dateField).getTime() - new Date(a.dateField).getTime();
+//   });
+
+//   return combinedDocuments;
+// }
 
 combineDocuments(items, userOrganization: string): any[] {
   const userSet = new Set();
@@ -376,10 +411,12 @@ combineDocuments(items, userOrganization: string): any[] {
           signedDocumentsCount++; // นับเอกสารที่ถูกเซ็น +1
           // console.log("File found:", pdfFileName);
         } else {
+          this.loading = false;
           // console.log("File not found in PDFs list:", pdfFileName);
         }
       });
     } else {
+      this.loading = false;
       // console.log("Skipped organization:", item.employee.organization);
     }
   });
@@ -420,6 +457,7 @@ getUserDocuments(): void {
     }
   );
 }
+
 
 handleError(error) {
   console.error('Error:', error);
@@ -715,20 +753,11 @@ countRecordFilenames(recordId: any) {
   );
 }
 recordCommit() {
-  // console.log("this.ContentRecordID :", this.ContentRecordID);
-
   if (!this.ContentRecordID) {
     console.error("ID is undefined");
-    Swal.fire({
-      title: 'เกิดข้อผิดพลาด!',
-      text: 'ไม่มีข้อมูล ID ส่งมา',
-      icon: 'error',
-      confirmButtonText: 'ตกลง'
-    });
+    this.toastr.error('ไม่มีข้อมูล ID ส่งมา', 'เกิดข้อผิดพลาด!');
     return;
   }
-
-  // console.log("Record ID being committed:", this.ContentRecordID);
 
   if (this.isWritteActive) {
     const canvas: HTMLCanvasElement = document.getElementById('writteCanvas') as HTMLCanvasElement;
@@ -743,21 +772,15 @@ recordCommit() {
           this.saveRecordContent();
         })
         .catch(error => {
-          Swal.fire({
-            title: 'เกิดข้อผิดพลาด!',
-            text: 'เกิดข้อผิดพลาดในการแปลงภาพเป็นข้อความ.',
-            icon: 'error',
-            confirmButtonText: 'ตกลง',
-            customClass: {
-              confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-            }
-          });
+          console.error("Error in Tesseract recognition:", error);
+          this.toastr.error('เกิดข้อผิดพลาดในการแปลงภาพเป็นข้อความ', 'เกิดข้อผิดพลาด!');
         });
     }
   } else if (this.isTyproActive) {
     this.saveRecordContent();
   }
 }
+
 
 saveRecordContent() {
   const recordData = {
@@ -768,37 +791,22 @@ saveRecordContent() {
   this.sv.updateRecordContent(recordData).subscribe(
     response => {
       // console.log('บันทึกข้อมูลเรียบร้อย', response);
-      Swal.fire({
-        title: 'บันทึกข้อมูลสำเสร็จ!!',
-        text: 'ข้อมูลถูกบันทึกในฐานข้อมูลเรียบร้อย',
-        icon: 'success',
-        confirmButtonText: 'ตกลง',
-        customClass: {
-          confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          document.querySelector('.swal2-confirm').setAttribute('style', 'background-color: #24a0ed; color: white;');
-          this.refreshPage();
-        }
-      });
+      this.toastr.success('เพิ่มข้อมูลจดบันทึกเรียบร้อย', 'สำเสร็จ!!');
+      
+      setTimeout(() => {
+        this.refreshPage(); // รีเฟรชหน้าจอหลังจากแจ้งเตือนสำเร็จ
+      }, 2000); // หน่วงเวลา 2 วินาทีเพื่อให้ Toastr แสดงก่อน
+
       $('#writtenModel').modal('hide');
       this.typroText = ''; // ล้างฟิลด์ข้อความ
     },
     error => {
       // console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล', error);
-      Swal.fire({
-        title: 'เกิดข้อผิดพลาด!',
-        text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.',
-        icon: 'error',
-        confirmButtonText: 'ตกลง',
-        customClass: {
-          confirmButton: 'custom-confirm-button' // กำหนด CSS class ที่สร้างขึ้น
-        }
-      });
+      this.toastr.error('เกิดข้อผิดพลาดในการเพิ่มข้อมูล.', 'เกิดข้อผิดพลาด!');
     }
   );
 }
+
   closeModal() {
     // ซ่อนโมดัล
     $('#insertModel').modal('hide');

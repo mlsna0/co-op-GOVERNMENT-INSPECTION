@@ -17,7 +17,7 @@
 
   export const ROUTES: RouteInfo[] = [
       { path: '/dashboard', title: 'หน้าหลัก', icon: 'dashboard', class: '', roles: ['superadmin','admin'] },
-      { path: '/profile', title: 'ผู้ใช้งาน', icon: 'person', class: '', roles: ['superadmin','admin', 'user'] },
+      { path: '/profile', title: 'ข้อมูลผู้ใช้งาน', icon: 'person', class: '', roles: ['superadmin','admin', 'user'] },
       { path: '/table-main', title: 'การลงตรวจอิเล็กทรอนิค', icon: 'content_paste', class: '', roles: ['admin', 'user'] },
       
       { path: '/manageperson', title: 'การจัดการบุคลลากร', icon: 'manage_accounts', class: '', roles: ['admin'] },

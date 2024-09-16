@@ -105,7 +105,12 @@ export class ManageuserComponent implements OnInit {
     };
     this.ls.getUserReport().subscribe(data => {
       this.user = this.mergeUserData(data.employees, data.users);
-      console.log("status: ",this.user)
+      // console.log("data : ",data)
+      // console.log("data employees : ",data.employees)
+      // console.log("data user : ",data.users)
+ 
+      this.user = this.user.filter(user => user?.role === 'admin'); // กรองเฉพาะที่ role เป็น 'admin'
+      //console.log("status: ", this.user);
       this.loading = false;
     }, error => {
       console.error('Error fetching user data:', error);
@@ -137,8 +142,12 @@ export class ManageuserComponent implements OnInit {
   //   console.log('id',id)
   // }
 
-      getUserReportProfile(userId: any) {
+    getUserReportProfile(userId: any) {
     this.router.navigate(['/profileuser', userId]);
+    }
+    openAgencyMember(UserID){
+      console.log("User ID of next page: ",UserID)
+      this.router.navigate(['/agency-member',UserID]);
     }
 
 
@@ -290,7 +299,7 @@ export class ManageuserComponent implements OnInit {
           console.log(data); // ตรวจสอบข้อมูลที่ได้รับ
         });
         
-      }
+  }
   
     
   
@@ -344,6 +353,7 @@ export class ManageuserComponent implements OnInit {
   openaddperson() {
     this.router.navigate(['/addperson']);
   }
+
   openAddPersonModal(){
     $('#manageUserModel').modal({
       backdrop: 'static', // Prevent closing when clicking outside
