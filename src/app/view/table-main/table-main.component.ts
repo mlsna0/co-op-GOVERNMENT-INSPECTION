@@ -197,11 +197,11 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
     return this.authService.hasRole('user');
   }
  
-  ngOnInit(){
+  ngOnInit() {
     this.loading = true;
     this.items = [];
     this.dtOptions = {
-      order: [0, 'desc'], //'desc' จากมากมาน้อย  asce จากน้อยไปมาก
+      order: [0, 'desc'], // 'desc' จากมากมาน้อย  'asc' จากน้อยไปมาก
       pagingType: 'full_numbers',
       language: {
         lengthMenu: "แสดง _MENU_ รายการ",
@@ -217,32 +217,39 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
         },
       }
     };
-    // console.log("DataTable: ", this.dtOptions);
+    console.log("DataTable options set: ", this.dtOptions);
 
     this.getCurrentUser();
+    console.log("User role on init: ", this.RoleCurrenUser);
+
     if (this.isAdmin) {
+      console.log("User is an admin, loading PDFs...");
       this.loadPDFs(); // ถ้าเป็น admin
     } else if (this.isUser) {
+      console.log("User is a regular user, loading user documents...");
       this.getUserDocuments(); // ถ้าเป็น user ทั่วไป
+    } else {
+      console.log("User role not recognized.");
     }
-    this.fetchAndSetRecords(); 
-    this.getDataRecordWithSameOrganization()
-    // console.log("ngOnInit called");
-    
-}
-getCurrentUser(): void {
-  // ดึงข้อมูลจาก localStorage
-  const userData = localStorage.getItem('currentUser');
 
-  // ตรวจสอบว่ามีข้อมูลหรือไม่
+    this.fetchAndSetRecords(); 
+    console.log("Fetching records...");
+
+    this.getDataRecordWithSameOrganization();
+    console.log("Fetching data records with same organization...");
+}
+
+getCurrentUser(): void {
+  const userData = localStorage.getItem('currentUser');
+  
   if (userData) {
-    // แปลง JSON เป็นวัตถุ
     this.currentUser = JSON.parse(userData);
     this.RoleCurrenUser = this.currentUser?.role;
     this.currentUserId = this.currentUser?.id;
-    // console.log("currentUser: ",this.currentUser);
-    // console.log("this RoleCurrenUser : ", this.RoleCurrenUser);
-    //  console.log("currentUser ID : ",this.currentUserId); 
+    
+    console.log("Current user data: ", this.currentUser);
+    console.log("User role: ", this.RoleCurrenUser);
+    console.log("User ID: ", this.currentUserId);
   } else {
     console.log('No user data found in localStorage.');
   }
