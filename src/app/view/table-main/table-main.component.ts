@@ -225,15 +225,16 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
     if (this.isAdmin) {
       console.log("User is an admin, loading PDFs...");
       this.loadPDFs(); // ถ้าเป็น admin
+        
     } else if (this.isUser) {
       console.log("User is a regular user, loading user documents...");
       this.getUserDocuments(); // ถ้าเป็น user ทั่วไป
     } else {
       console.log("User role not recognized.");
     }
-
-    this.fetchAndSetRecords(); 
-    console.log("Fetching records...");
+    // this.fetchAndSetRecords(); 
+      // console.log("Fetching records...");
+  
 
     this.getDataRecordWithSameOrganization();
     console.log("Fetching data records with same organization...");
@@ -241,15 +242,25 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
 
 getCurrentUser(): void {
   const userData = localStorage.getItem('currentUser');
-  
+  const token = localStorage.getItem('token');
+
   if (userData) {
     this.currentUser = JSON.parse(userData);
+    console.log("Full current user data: ", this.currentUser);
+
     this.RoleCurrenUser = this.currentUser?.role;
     this.currentUserId = this.currentUser?.id;
     
     console.log("Current user data: ", this.currentUser);
     console.log("User role: ", this.RoleCurrenUser);
     console.log("User ID: ", this.currentUserId);
+
+    if (token) {
+      console.log("User token: ", token); // ใช้งานตัวแปร token ในการแสดงผล
+    } else {
+      console.log('No token found in localStorage.');
+    }
+    
   } else {
     console.log('No user data found in localStorage.');
   }
@@ -445,25 +456,17 @@ combineDocuments(items, userOrganization: string): any[] {
   return combinedDocuments;
 }
 getUserDocuments(): void {
+  // this.loading = true; // เริ่มต้นสถานะการโหลด
   this.sv.getUserDocuments().subscribe(
     (documents) => {
       console.log('User Documents:', documents);
-      
-      // Map the data to fit the structure for display
-      this.userDocuments = documents.map((doc: any) => ({
-        record_id: doc.record_id,
-        record_topic: doc.record_topic,
-        record_star_date: doc.record_star_date,
-        record_end_date: doc.record_end_date,
-        record_location: doc.record_location,
-        record_filename: doc.record_filename, // For checking if signed or not
-        _id: doc._id, // For detail actions
-      }));
-      
-      console.log('Mapped User Documents:', this.userDocuments);
+      this.items = documents; // ไม่ทำการ map แค่ตั้งค่า items เท่ากับข้อมูลที่ได้มา
+      console.log('Items:', this.items);
+      this.loading = false; // ตั้งค่าสถานะการโหลดเป็น false เมื่อข้อมูลพร้อม
     },
     (error) => {
       console.error('Error fetching user documents:', error);
+      this.loading = false; // ตั้งค่าสถานะการโหลดเป็น false หากเกิดข้อผิดพลาด
     }
   );
 }

@@ -733,97 +733,76 @@ export class DashboardComponent implements OnInit {
     this.provinceData = {};  // รีเซ็ตข้อมูลของจังหวัด
     this.totalDocuments = 0;
     this.totalSignedDocuments = 0;
-  
-    // console.log('เริ่มต้นการประมวลผลข้อมูลจังหวัดจากเอกสาร:', documents);
-  
+
+    // วนลูปเอกสารแต่ละชุด
     documents.forEach(document => {
-      // console.log('กำลังประมวลผลเอกสาร:', document);
-  
-      // ตรวจสอบว่ามี agency และ province ก่อนที่จะเข้าถึง
-      if (!document.agency || !document.agency.province) {
-        // console.warn('ไม่มีข้อมูล agency หรือ province สำหรับเอกสารนี้, ข้าม:', document);
-        return; // ข้ามเอกสารที่ไม่มีข้อมูล agency หรือ province
-      }
-  
-      // console.log('พบข้อมูล agency และ province:', document.employee.agency);
-  
-      // นับจำนวนเอกสารภายใน document
-      document.documentCount = document.documents.length;
-      // console.log(`จำนวนเอกสารภายใน document นี้คือ: ${document.documentCount}`);
-  
-      // ดึงข้อมูล provinceId และ provinceName จาก agency
-      const provinceId = parseInt(document.agency.province, 10);  // ใช้ province จาก agency
-      const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
-      // console.log(`พบ province ID: ${provinceId}, ชื่อจังหวัด: ${provinceName}`);
-  
-      if (!provinceName || provinceName === 'ไม่ทราบจังหวัด') {
-        // console.warn('ไม่มีชื่อจังหวัดที่ตรงกันหรือจังหวัดไม่ถูกต้อง, ข้าม');
-        return; // ถ้าไม่มีชื่อจังหวัดให้ข้าม
-      }
-  
-      // ตรวจสอบว่ามี provinceName ใน this.provinceData หรือไม่ ถ้าไม่มีให้สร้างใหม่
-      if (!this.provinceData[provinceName]) {
-        this.provinceData[provinceName] = { users: [], documentCount: 0, signedDocuments: 0 };
-        // console.log(`สร้างข้อมูลใหม่สำหรับจังหวัด: ${provinceName}`);
-      }
-  
-      // เพิ่มข้อมูล user และนับจำนวนเอกสารในจังหวัดนั้นๆ
-      this.provinceData[provinceName].users.push(document);
-      this.provinceData[provinceName].documentCount += document.documentCount;
-      // console.log(`อัพเดตข้อมูลเอกสารสำหรับจังหวัด ${provinceName}:`, this.provinceData[provinceName]);
-  
-      // วนลูปเอกสารใน documents เพื่อเช็คเอกสารที่มีการลงนาม
-      document.documents.forEach(doc => {
-        if (!doc._id) {
-          // console.warn('พบเอกสารที่ไม่มี _id, ข้าม:', doc);
-          return; // ข้ามเอกสารที่ไม่มี _id
+        // ตรวจสอบว่ามี agency และ province ก่อนที่จะเข้าถึง
+        if (!document.agency || !document.agency.province) {
+            return; // ข้ามเอกสารที่ไม่มีข้อมูล agency หรือ province
         }
-  
-        // console.log('กำลังตรวจสอบเอกสาร _id:', doc._id);
-  
-        // เช็คว่าเอกสารนี้ถูกลงนามหรือไม่
-        if (this.pdfs.includes(`${doc._id}.pdf`)) {
-          this.provinceData[provinceName].signedDocuments += 1;
-          // console.log(`พบเอกสารที่ลงนามสำหรับ _id: ${doc._id}`);
-        } else {
-          // console.log(`ไม่พบการจับคู่เอกสารที่ลงนามสำหรับ _id: ${doc._id}`);
+
+        // นับจำนวนเอกสารภายใน document
+        document.documentCount = document.documents.length;
+
+        // ดึงข้อมูล provinceId และ provinceName จาก agency
+        const provinceId = parseInt(document.agency.province, 10);  // ใช้ province จาก agency
+        const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
+
+        if (!provinceName || provinceName === 'ไม่ทราบจังหวัด') {
+            return; // ถ้าไม่มีชื่อจังหวัดให้ข้าม
         }
-      });
-  
-      // อัพเดตข้อมูลรวมของเอกสารและเอกสารที่ลงนาม
-      this.totalDocuments += this.provinceData[provinceName].documentCount;
-      this.totalSignedDocuments += this.provinceData[provinceName].signedDocuments;
-      // console.log(`รวมเอกสารทั้งหมด: ${this.totalDocuments}, เอกสารที่ลงนามทั้งหมด: ${this.totalSignedDocuments}`);
+
+        // ตรวจสอบว่ามี provinceName ใน this.provinceData หรือไม่ ถ้าไม่มีให้สร้างใหม่
+        if (!this.provinceData[provinceName]) {
+            this.provinceData[provinceName] = { users: [], documentCount: 0, signedDocuments: 0 };
+        }
+
+        // เพิ่มข้อมูล user และนับจำนวนเอกสารในจังหวัดนั้นๆ
+        this.provinceData[provinceName].users.push(document);
+        this.provinceData[provinceName].documentCount += document.documentCount;
+
+        // วนลูปเอกสารใน documents เพื่อเช็คเอกสารที่มีการลงนาม
+        document.documents.forEach(doc => {
+            if (!doc._id) {
+                return; // ข้ามเอกสารที่ไม่มี _id
+            }
+
+            // เช็คว่าเอกสารนี้ถูกลงนามหรือไม่
+            if (this.pdfs.includes(`${doc._id}.pdf`)) {
+                this.provinceData[provinceName].signedDocuments += 1;
+            }
+        });
     });
-  
-    // console.log('การประมวลผลข้อมูลจังหวัดเสร็จสิ้น, รีเซ็ตข้อมูลจังหวัดทั้งหมด');
-  
+
+    // บวก totalDocuments และ totalSignedDocuments หลังจากลูปเสร็จ
+    for (const provinceName in this.provinceData) {
+        this.totalDocuments += this.provinceData[provinceName].documentCount;
+        this.totalSignedDocuments += this.provinceData[provinceName].signedDocuments;
+    }
+
     // รีเซ็ตข้อมูลจังหวัดทั้งหมด
     this.provinces.forEach(province => {
-      province.count = 0;
-      province.signedDocuments = 0;
-      province.percentage = 0;
+        province.count = 0;
+        province.signedDocuments = 0;
+        province.percentage = 0;
     });
-  
+
     // อัพเดตข้อมูลจังหวัดตามข้อมูลที่ประมวลผลแล้ว
     this.provinces.forEach(province => {
-      const provinceName = province.name_th;
-      if (this.provinceData[provinceName]) {
-        province.count = this.provinceData[provinceName].documentCount;
-        province.signedDocuments = this.provinceData[provinceName].signedDocuments;
-  
-        // คำนวณเปอร์เซ็นต์ของเอกสารที่ลงนาม
-        if (province.count > 0) {
-          province.percentage = (province.signedDocuments / province.count) * 100;
-        } else {
-          province.percentage = 0;
+        const provinceName = province.name_th;
+        if (this.provinceData[provinceName]) {
+            province.count = this.provinceData[provinceName].documentCount;
+            province.signedDocuments = this.provinceData[provinceName].signedDocuments;
+
+            // คำนวณเปอร์เซ็นต์ของเอกสารที่ลงนาม
+            if (province.count > 0) {
+                province.percentage = (province.signedDocuments / province.count) * 100;
+            } else {
+                province.percentage = 0;
+            }
         }
-        // console.log(`อัพเดตข้อมูลจังหวัด: ${provinceName}, จำนวนเอกสาร: ${province.count}, เอกสารที่ลงนาม: ${province.signedDocuments}, เปอร์เซ็นต์: ${province.percentage}`);
-      }
     });
-  
-    // console.log('สิ้นสุดการประมวลผลข้อมูลจังหวัด:', this.provinceData);
-  }
+}
   
 
   private englishToThaiMonthMap: { [key: string]: string } = {

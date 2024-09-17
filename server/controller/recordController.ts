@@ -343,7 +343,7 @@ getUserDocuments = async (req, res) => {
     console.error('Error fetching user documents:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
-};
+}
 
 async getRecordWithSameOrganization(req: Request, res: Response): Promise<void> {
   try {
