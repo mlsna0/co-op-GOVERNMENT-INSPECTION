@@ -10,6 +10,7 @@ import $ from "jquery";
 import 'bootstrap';
 import { first } from 'rxjs';
 import { ProvinceService } from 'app/view/thaicounty/thaicounty.service';
+import { ToastrService } from 'ngx-toastr'; // นำเข้า ToastrService
 
 
 @Component({
@@ -69,6 +70,7 @@ export class ProfileuserComponent implements OnInit {
     private router: Router,
     private ACrouter :ActivatedRoute,
     private ts: ProvinceService,
+    private toastr: ToastrService,
   ) { 
 
     this.UserInfoForm = this.fb.group({
@@ -346,6 +348,11 @@ resetPassword(UserID: string, newPassword: string) {
   this.loginSV.resetUserPassword(UserID).subscribe(
     response => {
       console.log('Password reset successful:', response);
+      this.toastr.success('รีเซ็ตรหัสผ่านสำเร็จ', 'สำเร็จ!!', {
+        timeOut: 1500,
+        positionClass: 'toast-top-right'
+      }); // หน่วงเวลา 2 วินาทีเพื่อให้ Toastr แสดงก่อน
+
     },
     error => {
       console.error('Password reset failed:', error);
