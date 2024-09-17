@@ -657,6 +657,12 @@ onDragEnd(event: DragEvent, index: number): void {
     if (refreshButton) {
         refreshButton.style.display = 'none';
     }
+    const openSignModal = document.querySelector('.openSignModal') as HTMLElement;
+    if (openSignModal) {
+      openSignModal.innerHTML = ""; // ลบเนื้อหาภายใน แต่ยังคงขนาดขององค์ประกอบ
+      openSignModal.style.border = 'none'; // ลบเส้นขอบหากจำเป็น
+      openSignModal.style.background = 'transparent'; // ลบพื้นหลังหากจำเป็น
+  }
     elements.forEach((element, index) => {
       const htmlElement = element as HTMLElement; // Cast Element to HTMLElement
       htmlElement.style.border = 'none';
@@ -725,89 +731,7 @@ onDragEnd(event: DragEvent, index: number): void {
 
     $('#myModal').modal('hide');
   }
-  //   saveRCPDF = () => {
-  //   console.log("Updating PDF in dictionary...");
-  //   // const pdfViewerElement = document.getElementById('pdf-viewer');
-  //   const elements = document.querySelectorAll('.modal-body-detail');
-
-  //   if (!elements.length) {
-  //     console.error('Elements to print not found');
-  //     return;
-  //   }
-
-  //   const pdf = new jsPDF('p', 'mm', 'a4');
-  //   const pdfWidth = 210; // A4 width in mm
-  //   const pdfHeight = 297; // A4 height in mm
-
-  //   let promises = [];
-
-  //   elements.forEach((element, index) => {
-  //     const htmlElement = element as HTMLElement; // Cast Element to HTMLElement
-  //     htmlElement.style.border = 'none';
-  //     htmlElement.style.borderCollapse = 'collapse';
-  //     promises.push(html2canvas(htmlElement, { scale: 5 }).then((canvas) => {
-  //       const imgData = canvas.toDataURL('image/png');
-  //       const canvasWidth = canvas.width;
-  //       const canvasHeight = canvas.height;
-  //       const ratio = canvasWidth / pdfWidth;
-  //       const pdfCanvasHeight = canvasHeight / ratio;
-  //       const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
-
-  //       for (let i = 0; i < numOfPages; i++) {
-  //         const startY = i * pdfHeight * ratio;
-
-  //         // Create a temporary canvas to draw each part
-  //         const tempCanvas = document.createElement('canvas');
-  //         tempCanvas.width = canvasWidth;
-  //         tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
-
-  //         const tempCtx = tempCanvas.getContext('2d');
-  //         tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
-
-  //         const tempImgData = tempCanvas.toDataURL('image/png');
-
-  //         // Check if the image data is not blank
-  //         if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
-  //           if (index > 0 || i > 0) {
-  //             pdf.addPage();
-  //           }
-  //           pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, (tempCanvas.height / ratio));
-  //         }
-  //       }
-  //     }).catch((error) => {
-  //       console.error('Error generating PDF:', error);
-  //     }));
-  //   });
-
-  //   Promise.all(promises).then(() => {
-  //     // Convert the PDF to Blob
-  //     const pdfBlob = pdf.output('blob');
-
-  //     // Create FormData to send the PDF to backend
-  //     const formData = new FormData();
-  //     const pdfFilename = 'การลงตรวจสอบ.pdf'; // Change to the desired filename
-  //     formData.append('id', this.recordId); // Adjust the ID as needed
-  //     formData.append('pdf', pdfBlob, pdfFilename);
-
-  //     // Check if `this.sv.savePDF` exists and is a function
-  //     if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
-  //       // Send the PDF to the backend
-  //       this.sv.savePDF(formData).subscribe(
-  //         response => {
-  //           console.log('PDF saved successfully:', response);
-  //           this.router.navigate(['/table-list']);
-  //         },
-  //         error => {
-  //           console.error('Error saving PDF:', error);
-  //         }
-  //       );
-  //     } else {
-  //       console.error('savePDF function is not defined or not a function');
-  //     }
-  //   });
-
-  //   $('#myModal').modal('hide');
-  // }
+ 
 
   test(){
     alert("1")

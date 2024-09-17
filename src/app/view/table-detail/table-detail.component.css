@@ -298,6 +298,7 @@ align-items: center;
 text-align: center;
 cursor: pointer;
 transition: 0.3s;
+visibility: visible;
 }
 .openSignModal:hover{
 box-shadow: 0 14px 20px -12px rgb(253, 216, 4), 0 4px 15px 0px rgba(211, 211, 211, 0.12), 0 2px 5px -5px rgb(253, 216, 4);
@@ -513,27 +514,7 @@ position: absolute;
   border-radius: 5px;
   
   }
-  .openSignModal{
-  position: relative;
-  
-  display: flex;
-  width: 30mm;
-  height: 20mm;
-  border: 2px dashed orange;
-  background: repeating-linear-gradient(-45deg,  rgb(253, 216, 4) 4px, transparent,  transparent 10px );
-  border-radius: 5px;
-  border-style:dashed ;
-  opacity: 0.5;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.3s;
-  }
-  .openSignModal:hover{
-  box-shadow: 0 14px 20px -12px rgb(253, 216, 4), 0 4px 15px 0px rgba(211, 211, 211, 0.12), 0 2px 5px -5px rgb(253, 216, 4);
-  opacity: 0.9;
-  }
+
   .Writte-sign{
   position: relative; /*[ng-reflect-writteSignElement]*/
   left: -18px;
@@ -858,6 +839,9 @@ input{
   }
   .btn-refreshCanvas{
     display: none !important;
+  }
+  .openSignModal{
+    opacity: 0; /* ทำให้มองไม่เห็น แต่ยังคงพื้นที่ */
   }
   .main-detail {
     width: 100%;
