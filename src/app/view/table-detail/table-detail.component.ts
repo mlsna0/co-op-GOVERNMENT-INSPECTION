@@ -19,6 +19,8 @@ import { AuthService } from 'app/layouts/auth-layout/auth-layout.Service';
 import { NgxExtendedPdfViewerService, pdfDefaultOptions } from 'ngx-extended-pdf-viewer';
 import * as QRCode from 'qrcode';
 
+import { ToastrService } from 'ngx-toastr';
+
 // import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 
@@ -35,8 +37,8 @@ export class TableDetailComponent implements OnInit {
   @ViewChild('mainCenterPanel') mainCenterPanel: ElementRef;//for over sign-content
 
 
-  currentUser:any;
-  RoleCurrenUser:any;
+  currentUser: any;
+  RoleCurrenUser: any;
 
 
 
@@ -45,9 +47,9 @@ export class TableDetailComponent implements OnInit {
   textContentLength: number = 0;
   remainingContentLength: number = 0;
   contentParts: SafeHtml[] = [];
-  saveCount = 0; 
+  saveCount = 0;
   recordId: any;
-  viewData:any[] = [];
+  viewData: any[] = [];
   remainingContent: string = '';//content ที่ตัดออกจะเก็บที่นี้?
   otherRemainingContent: string = '';//content ที่ตัดออกจะเก็บที่นี้? ระดับ 3
   isContentOverflow = false; //
@@ -98,7 +100,8 @@ export class TableDetailComponent implements OnInit {
     private pdfService: NgxExtendedPdfViewerService,
     private el: ElementRef,
     private renderer: Renderer2,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastr: ToastrService,
   ) { }
 
   get isAdmin(): boolean {
@@ -112,7 +115,7 @@ export class TableDetailComponent implements OnInit {
   get isNotSuper(): boolean {
     return this.isAdmin || this.isUser;
   }
-  
+
   get isUser(): boolean {
     return this.authService.hasRole('user');
   }
@@ -124,7 +127,7 @@ export class TableDetailComponent implements OnInit {
       this.recordId = params.get('id');
 
       // ทำงานอื่น ๆ ที่คุณต้องการใช้กับ itemId นี้
-      console.log("recordID it send? >",this.recordId); // ทดสอบการดึงค่า id
+      console.log("recordID it send? >", this.recordId); // ทดสอบการดึงค่า id
     });
 
     this.sv.getDataById(this.recordId).subscribe(res => {
@@ -150,12 +153,12 @@ export class TableDetailComponent implements OnInit {
 
       console.log("it on working.. ")
 
-  
+
       this.isSignModalVisible = new Array(this.viewData.length).fill(false);
-    
+
       setTimeout(() => {
         this.cdr.detectChanges(); // ทำการตรวจสอบการเปลี่ยนแปลง
-    }, 0);
+      }, 0);
     });
 
     this.getCurrentUser();//เพื่อปิด ไม่สามารถไปทีหน้าหลัก dashboard ได้
@@ -164,24 +167,24 @@ export class TableDetailComponent implements OnInit {
 
   ngAfterViewInit() {
 
-   // Subscribe และดึงข้อมูลจาก API หรือแหล่งอื่น ๆ
-   this.sv.getViewByRecordId(this.recordId).subscribe((res: any) => {
-    console.log("getViewByRecordId response:", res);
+    // Subscribe และดึงข้อมูลจาก API หรือแหล่งอื่น ๆ
+    this.sv.getViewByRecordId(this.recordId).subscribe((res: any) => {
+      console.log("getViewByRecordId response:", res);
 
-    this.viewData = res; // กำหนดค่า viewData จากข้อมูลที่ได้รับ
+      this.viewData = res; // กำหนดค่า viewData จากข้อมูลที่ได้รับ
 
-    // รอให้ Angular สร้าง elements และ QueryList ให้เรียบร้อย
-    setTimeout(() => {
-      // กำหนดความยาวของ writteSignElements เท่ากับความยาวของ viewData
- 
-      this.writteSignElements = new QueryList<ElementRef>(...this.viewData.map(() => null));
+      // รอให้ Angular สร้าง elements และ QueryList ให้เรียบร้อย
+      setTimeout(() => {
+        // กำหนดความยาวของ writteSignElements เท่ากับความยาวของ viewData
 
-      // อัพเดท UI หลังจากที่กำหนดค่า
-      this.cdr.detectChanges();
+        this.writteSignElements = new QueryList<ElementRef>(...this.viewData.map(() => null));
 
-      // ต่อไปคุณสามารถดำเนินการเพิ่มอย่างอื่นต่อได้ที่นี่
+        // อัพเดท UI หลังจากที่กำหนดค่า
+        this.cdr.detectChanges();
+
+        // ต่อไปคุณสามารถดำเนินการเพิ่มอย่างอื่นต่อได้ที่นี่
+      });
     });
-  });
 
     //this.checkContentOverflow();
 
@@ -200,13 +203,13 @@ export class TableDetailComponent implements OnInit {
   getCurrentUser(): void {
     // ดึงข้อมูลจาก localStorage
     const userData = localStorage.getItem('currentUser');
-  
+
     // ตรวจสอบว่ามีข้อมูลหรือไม่
     if (userData) {
       // แปลง JSON เป็นวัตถุ
       this.currentUser = JSON.parse(userData);
       this.RoleCurrenUser = this.currentUser?.role;
-  
+
       // console.log("currentUser: ",this.currentUser);
       // console.log("this RoleCurrenUser : ", this.RoleCurrenUser);
     } else {
@@ -216,16 +219,16 @@ export class TableDetailComponent implements OnInit {
 
   //////////////////////////////////////////////////////////////////////
   setupSignCanvas(index: number) {
-    console.log("index sign: " ,index);
-    
+    console.log("index sign: ", index);
+
     let canvasitem = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
     this.canvasList.push(canvasitem)
-    
+
     if (canvasitem) {
       let canvasFind = this.canvasList.find(x => x.id == `writteSignCanvas-${index}`)
       this.ctxList.push(canvasFind.getContext('2d'))
       let ctxFind = this.ctxList.find(x => x.canvas?.id == `writteSignCanvas-${index}`)
-      
+
       let painting = false;
       canvasFind.width = canvasitem.clientWidth;
       canvasFind.height = canvasitem.clientHeight;
@@ -253,7 +256,7 @@ export class TableDetailComponent implements OnInit {
           ctxFind.lineCap = 'round';
           ctxFind.strokeStyle = this.penColor2;
 
-          const rect =  canvasFind.getBoundingClientRect();
+          const rect = canvasFind.getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
 
@@ -266,13 +269,13 @@ export class TableDetailComponent implements OnInit {
         }
       };
 
-       canvasFind.addEventListener('mousedown', startPosition);
-       canvasFind.addEventListener('mouseup', endPosition);
-       canvasFind.addEventListener('mousemove', draw);
+      canvasFind.addEventListener('mousedown', startPosition);
+      canvasFind.addEventListener('mouseup', endPosition);
+      canvasFind.addEventListener('mousemove', draw);
 
       console.log('Sign canvas setup complete');
     } else {
-      console.error('Sign canvas element not found',  canvasitem);
+      console.error('Sign canvas element not found', canvasitem);
     }
   }
 
@@ -285,18 +288,18 @@ export class TableDetailComponent implements OnInit {
   }
 
 
-  openSignModalx(i){
-    console.log("openSignModalx  x "+ i);
-    
+  openSignModalx(i) {
+    console.log("openSignModalx  x " + i);
+
   }
 
   openSignModal(index: number) {
-     console.log("Sign modal is work index: >", index );
+    console.log("Sign modal is work index: >", index);
 
 
     this.isSignModalVisible[index] = true;
 
-    
+
     console.log("it openSign status: ", this.isSignModalVisible);
     this.cdr.detectChanges();
 
@@ -305,8 +308,8 @@ export class TableDetailComponent implements OnInit {
       let signboxEL = this.el.nativeElement as HTMLElement;
       let signboxItem = signboxEL.querySelector<HTMLElement>(`#SignModal-${index}`)
       console.log("signboxItem : ", signboxItem);
-      
-  
+
+
       if (signboxItem) {
         this.cdr.detectChanges();
         // writteSignElement.style.display = 'flex';
@@ -315,9 +318,9 @@ export class TableDetailComponent implements OnInit {
       } else {
         console.error('writteSignElement is null or undefined', signboxItem);//this.writteSignElements.toArray()[index]
       }
-    },0);
+    }, 0);
 
-   
+
   }
 
   addBox() {
@@ -326,13 +329,13 @@ export class TableDetailComponent implements OnInit {
   }
   onDragStart(event: DragEvent, index: number): void {
     if (index === undefined) {
-        console.error('Index is undefined in onDragStart');
-        return;
+      console.error('Index is undefined in onDragStart');
+      return;
     }
     const box = this.boxes[index];
     if (!box) {
-        console.error('Box not found at index start:', index);
-        return;
+      console.error('Box not found at index start:', index);
+      return;
     }
     console.log('Box before drag:', box);
     box.dragStartX = event.clientX - box.left;
@@ -343,17 +346,17 @@ export class TableDetailComponent implements OnInit {
     // const dragBtn = document.getElementById(`drag-btn-${index}`);
     // if (closeBtn) closeBtn.style.display = 'none';
     // if (dragBtn) dragBtn.style.display = 'none';
-}
+  }
 
-onDragEnd(event: DragEvent, index: number): void {
+  onDragEnd(event: DragEvent, index: number): void {
     if (index === undefined) {
-        console.error('Index is undefined in onDragEnd');
-        return;
+      console.error('Index is undefined in onDragEnd');
+      return;
     }
     const box = this.boxes[index];
     if (!box) {
-        console.error('Box not found at index end:', index);
-        return;
+      console.error('Box not found at index end:', index);
+      return;
     }
     box.left = event.clientX - box.dragStartX;
     box.top = event.clientY - box.dragStartY;
@@ -366,7 +369,7 @@ onDragEnd(event: DragEvent, index: number): void {
     // const dragBtn = document.getElementById(`drag-btn-${index}`);
     // if (closeBtn) closeBtn.style.display = 'none';
     // if (dragBtn) dragBtn.style.display = 'none';
-}
+  }
 
   blobToBase64(blob): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -495,7 +498,7 @@ onDragEnd(event: DragEvent, index: number): void {
   onSignPage() {
     const documentId = this.detailItems?._id;  // ใช้ _id จาก MongoDB
     this.router.navigate(['/signature'], { queryParams: { id: documentId } });  // ส่ง id ไปยังหน้าการลงลายเซ็น
-}
+  }
   //add page??
   addDetail() {
     console.log("addDetail work")
@@ -503,12 +506,12 @@ onDragEnd(event: DragEvent, index: number): void {
   }
   //page break
 
-//การเลยขนนาดของ หน้าจอ 
+  //การเลยขนนาดของ หน้าจอ 
   checkContentOverflow() {
     const mainDetailElement = document.getElementById('myDetail');
-    console.log("mainDetailElement :",mainDetailElement);
-    
-    const mainCenterPanelElement = this.mainCenterPanel?.nativeElement; 
+    console.log("mainDetailElement :", mainDetailElement);
+
+    const mainCenterPanelElement = this.mainCenterPanel?.nativeElement;
 
     if (mainDetailElement && mainCenterPanelElement) {
       const contentHeight = mainCenterPanelElement.scrollHeight;
@@ -527,21 +530,21 @@ onDragEnd(event: DragEvent, index: number): void {
 
   //show content table
   getSafeHtml(content: string): SafeHtml {
-    if(!content){
+    if (!content) {
       console.log("no content ", content);
       return "";
     }
     const maxLength = 1520;
     const AddLength = 900;
     const textcontent = content?.substring(0, maxLength);
-    
+
     this.remainingContent = content?.substring(maxLength);
 
     // this.otherRemainingContent = this.remainingContent.substring(3050)
     // this.textContentLength = textcontent.length; 
     // this.remainingContentLength = this.remainingContent.length;
 
-    this.contentParts = this.splitContent(this.remainingContent,maxLength+AddLength);
+    this.contentParts = this.splitContent(this.remainingContent, maxLength + AddLength);
     // console.log("textContent : ",textcontent);
     //  console.log("contentParts :",this.contentParts);
     // console.log("textContent :",textcontent)
@@ -551,12 +554,12 @@ onDragEnd(event: DragEvent, index: number): void {
   }
 
   splitContent(content: string, chunkSize: number): SafeHtml[] {
-      const parts: SafeHtml[] = [];
-      for (let i = 0; i < content.length; i += chunkSize) {
-        const chunk = content.substring(i, i + chunkSize);
-        parts.push(this.sanitizer.bypassSecurityTrustHtml(chunk));
-      }
-      return parts;
+    const parts: SafeHtml[] = [];
+    for (let i = 0; i < content.length; i += chunkSize) {
+      const chunk = content.substring(i, i + chunkSize);
+      parts.push(this.sanitizer.bypassSecurityTrustHtml(chunk));
+    }
+    return parts;
   }
 
 
@@ -573,7 +576,7 @@ onDragEnd(event: DragEvent, index: number): void {
 
     const refreshButton = document.querySelector('.btn-refreshCanvas') as HTMLElement;
     if (refreshButton) {
-        refreshButton.style.display = 'none';
+      refreshButton.style.display = 'none';
     }
     elements.forEach((element, index) => {
       const style = getComputedStyle(element as HTMLElement);
@@ -605,7 +608,7 @@ onDragEnd(event: DragEvent, index: number): void {
     });
   }
 
-  async saveRCPDF() {
+  saveRCPDF() {
     console.log("Updating PDF in dictionary...");
     const elements = document.querySelectorAll('.modal-body-detail');
     const pdfViewerElement = document.getElementById('pdf-viewer');
@@ -655,14 +658,14 @@ onDragEnd(event: DragEvent, index: number): void {
     });
     const refreshButton = document.querySelector('.btn-refreshCanvas') as HTMLElement;
     if (refreshButton) {
-        refreshButton.style.display = 'none';
+      refreshButton.style.display = 'none';
     }
     const openSignModal = document.querySelector('.openSignModal') as HTMLElement;
     if (openSignModal) {
       openSignModal.innerHTML = ""; // ลบเนื้อหาภายใน แต่ยังคงขนาดขององค์ประกอบ
       openSignModal.style.border = 'none'; // ลบเส้นขอบหากจำเป็น
       openSignModal.style.background = 'transparent'; // ลบพื้นหลังหากจำเป็น
-  }
+    }
     elements.forEach((element, index) => {
       const htmlElement = element as HTMLElement; // Cast Element to HTMLElement
       htmlElement.style.border = 'none';
@@ -704,36 +707,60 @@ onDragEnd(event: DragEvent, index: number): void {
     Promise.all(promises).then(() => {
       // Convert the PDF to Blob
       const pdfBlob = pdf.output('blob');
-
-      // Create FormData to send the PDF to backend
+  
+      // Create FormData to send the PDF to the backend
       const formData = new FormData();
       const pdfFilename = 'การลงตรวจสอบ.pdf'; // Change to the desired filename
       formData.append('id', this.recordId); // Adjust the ID as needed
       formData.append('pdf', pdfBlob, pdfFilename);
-
+  
       // Check if this.sv.savePDF exists and is a function
       if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
         // Send the PDF to the backend
         this.sv.savePDF(formData).subscribe(
           response => {
-            this.saveCount++; // เพิ่มค่าตัวแปรเมื่อบันทึกสำเร็จ
-            console.log("PDF saved successfully " + this.saveCount + " times:", response); // แสดงจำนวนการบันทึกสำเร็จ
-            this.router.navigate(['/table-main']);
+            this.saveCount++; // Increment saveCount on successful save
+            console.log("PDF saved successfully " + this.saveCount + " times:", response); // Log success count
+  
+            // Show success notification
+            this.toastr.success('บันทึกข้อมูลสำเร็จ', 'สำเร็จ!!', {
+              timeOut: 1500,
+              positionClass: 'toast-top-right',
+            });
+  
+            // Navigate to another page (or refresh if you prefer)
+            setTimeout(() => {
+              this.router.navigate(['/table-main']);
+            }, 1500); // Matches the Toastr notification timeout
           },
           error => {
             console.error('Error saving PDF:', error);
+  
+            // Show error notification
+            this.toastr.error('บันทึกข้อมูลไม่สำเร็จ', 'ผิดพลาด!', {
+              timeOut: 1500,
+              positionClass: 'toast-top-right',
+            });
           }
         );
       } else {
         console.error('savePDF function is not defined or not a function');
       }
+    }).catch((error) => {
+      console.error('Error generating PDF:', error);
+  
+      // Show error notification
+      this.toastr.error('บันทึกข้อมูลไม่สำเร็จ', 'ผิดพลาด!', {
+        timeOut: 1500,
+        positionClass: 'toast-top-right',
+      });
     });
 
     $('#myModal').modal('hide');
   }
- 
 
-  test(){
+
+  test() {
     alert("1")
   }
 

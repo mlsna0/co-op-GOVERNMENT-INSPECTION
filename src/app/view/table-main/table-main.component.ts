@@ -222,23 +222,23 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
     this.getCurrentUser();
     console.log("User role on init: ", this.RoleCurrenUser);
 
-    if (this.isAdmin) {
-      console.log("User is an admin, loading PDFs...");
+    // if (this.isAdmin) {
+      // console.log("User is an admin, loading PDFs...");
       this.loadPDFs(); // ถ้าเป็น admin
       this.fetchAndSetRecords(); 
         
-    } else if (this.isUser) {
-      console.log("User is a regular user, loading user documents...");
-      this.getUserDocuments(); // ถ้าเป็น user ทั่วไป
-    } else {
-      console.log("User role not recognized.");
-    }
-    // this.fetchAndSetRecords(); 
+    // } else if (this.isUser) {
+      // console.log("User is a regular user, loading user documents...");
+      // this.getUserDocuments(); // ถ้าเป็น user ทั่วไป
+    // } else {
+      // console.log("User role not recognized.");
+    // }
+    this.fetchAndSetRecords(); 
       // console.log("Fetching records...");
   
 
-    this.getDataRecordWithSameOrganization();
-    console.log("Fetching data records with same organization...");
+    // this.getDataRecordWithSameOrganization();
+    // console.log("Fetching data records with same organization...");
 }
 
 getCurrentUser(): void {
@@ -1044,7 +1044,7 @@ async onInsertSummit(data: any) {
       });
 
       $('#insertModel').modal('hide');
-      this.addItemForm.reset();
+      this.addItemForm.reset(); 
       this.personInputs.clear(); // Clear FormArray
       this.addPersonInput();
     },
