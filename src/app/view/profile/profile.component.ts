@@ -1,13 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from "@angular/core";
-import {
-  FormGroup,
-  FormsModule,
-  FormControl,
-  FormBuilder,
-  Validators,
-  FormArray,
-  AbstractControl,
-} from "@angular/forms";
+import {FormGroup,FormsModule,FormControl,FormBuilder,Validators,FormArray,AbstractControl,} from "@angular/forms";
 import { HttpClient } from "@angular/common/http";
 import { ActivatedRoute, Router } from "@angular/router";
 import { loginservice } from "app/layouts/login.services.";
@@ -40,6 +32,7 @@ export class ProfileComponent implements OnInit {
   UserData: any = {};
   DataOrganization: any = {};
   UserInfoForm: FormGroup;
+  Submitted = false;
 
   PersonINT: any = 0;
   EditStatus: boolean = false;
@@ -95,13 +88,14 @@ export class ProfileComponent implements OnInit {
     this.UserInfoForm = this.fb.group({
       firstname: [""],
       lastname: [""],
-      email: ["", Validators.email],
+      
       // password: ["", Validators.minLength(8)],
       // confirmpassword: ["", Validators.minLength(8)],
       // organization:['', ],
       // bearing:['', ],
       address: [""],
-      phone: ["", Validators.pattern("^[0-9]{10}$")],
+      email: ['', [Validators.required, Validators.email]], // Email validation
+      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]], // Phone validation for 10 digits
       province: [""],
       amphure: [""],
       tambon: [""],
@@ -466,43 +460,54 @@ export class ProfileComponent implements OnInit {
   SaveUserInfo() {
     if (this.UserInfoForm.valid) {
       const userId = this.UserID;
-
-      const fileInput = document.querySelector(
-        'input[type="file"]'
-      ) as HTMLInputElement;
-      console.log("fileInput > ", fileInput);
+  
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       const file = fileInput?.files?.[0] || this.previousFile;
-
+  
       const updatedData = new FormData();
       Object.keys(this.UserInfoForm.controls).forEach((key) => {
         updatedData.append(key, this.UserInfoForm.get(key)?.value);
       });
       if (file) {
         updatedData.append("profileImage", file);
-        console.log("uploaded data profile :", file);
       }
-
-      // ส่งข้อมูลที่แก้ไขแล้วไปยังเซิร์ฟเวอร์
+  
+      // Send updated data to the server
       this.sv.updateUserProfileById(updatedData, userId).subscribe(
         (response) => {
-          console.log("Response:", response);
-
-          this.shouldShowToast = true;
+          this.toastr.success('เพิ่มข้อมูลสำเร็จ', 'สำเร็จ!!', {
+            timeOut: 1500,
+            positionClass: 'toast-top-right',
+          });
           this.closeModal();
-          // setTimeout(() => {
-          //   window.location.reload();
-          // }, 2500);
+          
+          setTimeout(() => {
+            location.reload();
+          }, 1500); // Matches the Toastr timeout duration
         },
         (error) => {
-          console.error("Error:", error);
-          this.toastr.error("เกิดข้อผิดพลาดในการอัปเดตโปรไฟล์", "ไม่สำเร็จ", {
-            timeOut: 2500,
-            positionClass: "toast-top-right",
+          // Always display a fixed error message
+          this.toastr.error('เพิ่มข้อมูลไม่สำเร็จ', 'ผิดพลาด!', {
+            timeOut: 1500,
+            positionClass: 'toast-top-right',
           });
         }
       );
+    } else {
+      // Check if phone or email is invalid and show respective error notifications
+      if (this.UserInfoForm.get('email')?.invalid) {
+        this.toastr.error('อีเมลไม่ถูกต้อง', 'ผิดพลาด!', {
+          timeOut: 1500,
+          positionClass: 'toast-top-right',
+        });
+      }
+      if (this.UserInfoForm.get('phone')?.invalid) {
+        this.toastr.error('เบอร์โทรไม่ถูกต้อง', 'ผิดพลาด!', {
+          timeOut: 1500,
+          positionClass: 'toast-top-right',
+        });
+      }
     }
-    // this.EditStatus = false;
   }
 
   cancelEdit() {
