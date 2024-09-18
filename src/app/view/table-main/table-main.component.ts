@@ -223,9 +223,9 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
     console.log("User role on init: ", this.RoleCurrenUser);
 
     // if (this.isAdmin) {
-      console.log("User is an admin, loading PDFs...");
+      // console.log("User is an admin, loading PDFs...");
       this.loadPDFs(); // ถ้าเป็น admin
-      this.fetchAndSetRecords(); 
+      // this.fetchAndSetRecords(); 
         
     // } else if (this.isUser) {
       // console.log("User is a regular user, loading user documents...");
@@ -233,7 +233,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
     // } else {
       // console.log("User role not recognized.");
     // }
-    // this.fetchAndSetRecords(); 
+    this.fetchAndSetRecords(); 
       // console.log("Fetching records...");
   
 
@@ -1044,7 +1044,7 @@ async onInsertSummit(data: any) {
       });
 
       $('#insertModel').modal('hide');
-      this.addItemForm.reset();
+      this.addItemForm.reset(); 
       this.personInputs.clear(); // Clear FormArray
       this.addPersonInput();
     },

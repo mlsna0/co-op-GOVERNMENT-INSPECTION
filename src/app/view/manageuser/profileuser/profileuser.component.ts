@@ -35,6 +35,8 @@ export class ProfileuserComponent implements OnInit {
 
   PersonINT:any=0;
   EditStatus: boolean=false;
+  showModal = false;
+  shouldShowToast = false;
 
   profileImgUrl:string;
 
@@ -43,10 +45,13 @@ export class ProfileuserComponent implements OnInit {
   filteredAmphures = [];
   filteredTambons = [];
 
-
   isAmphureDisabled = true;
   isTambonDisabled = true;
   isPostCodeDisabled = true;
+
+  isProvinceSelectOpen = false;
+  isAmphureSelectOpen = false;
+  isTambonSelectOpen = false;
 
   nameTambons: string[] = [];
   zipCode: any[] = [];
@@ -74,21 +79,22 @@ export class ProfileuserComponent implements OnInit {
   ) { 
 
     this.UserInfoForm = this.fb.group({
-      firstname: ["" ],
+      firstname: [""],
       lastname: [""],
-      email: ["", [ Validators.email]],
+      email: ["", Validators.email],
       // password: ["", Validators.minLength(8)],
       // confirmpassword: ["", Validators.minLength(8)],
-      organization:['', ],
-      address:["", ],
-      phone: ["",[ Validators.pattern('^[0-9]{10}$')]],
-      province: [''],
-      amphure: ['' ],
-      tambon: ['' ],
-      postCode: [''],
-      // role: ['' ],
-      profileImage: ['']
-  })
+      // organization:['', ],
+      // bearing:['', ],
+      address: [""],
+      phone: ["", Validators.pattern("^[0-9]{10}$")],
+      province: [""],
+      amphure: [""],
+      tambon: [""],
+      postCode: [""],
+      profileImage: [""],
+    });
+ 
   }
 
 
@@ -206,86 +212,111 @@ export class ProfileuserComponent implements OnInit {
     if (!provinceId) {
       return;
     }
-  
+
     // ล้างค่าเฉพาะในกรณีที่มีการเลือกจังหวัดที่แตกต่างกัน
-    if (this.UserInfoForm.controls['province'].value !== provinceId) {
+    if (this.UserInfoForm.controls["province"].value !== provinceId) {
       this.UserInfoForm.patchValue({
-        amphure: '',
-        tambon: ''
+        amphure: "",
+        tambon: "",
+        postCode: "",
       });
       this.filteredTambons = [];
       this.isAmphureDisabled = false;
       this.isTambonDisabled = true;
       this.isPostCodeDisabled = true;
     }
-  
-    this.loadAmphures(provinceId); 
+
+    this.loadAmphures(provinceId);
   }
 
+ 
   loadAmphures(provinceId: any) {
-    this.ts.getamphures().subscribe(data => {
-        this.amphures = data.filter(amphure => amphure.province_id === parseInt(provinceId));
-        this.filteredAmphures = this.amphures;
+    this.ts.getamphures().subscribe((data) => {
+      this.amphures = data.filter(
+        (amphure) => amphure.province_id === parseInt(provinceId)
+      );
+      this.filteredAmphures = this.amphures;
 
-        if (this.amphures.length > 0) {
-            this.isAmphureDisabled = false; // เปิดฟิลด์อำเภอถ้ามีอำเภอในจังหวัดนี้
-        }
+      if (this.amphures.length > 0) {
+        this.isAmphureDisabled = false; // เปิดฟิลด์อำเภอถ้ามีอำเภอในจังหวัดนี้
+        // เลือกอำเภอแรกโดยอัตโนมัติ
+        const firstAmphure = this.amphures[0];
+        this.UserInfoForm.patchValue({ amphure: firstAmphure.id });
+        this.loadTambons(firstAmphure.id); // โหลดตำบลตามอำเภอแรก
+      }
 
-        const currentAmphureId = this.UserInfoForm.controls['amphure'].value;
-        if (this.amphures.some(amphure => amphure.id === currentAmphureId)) {
-            this.isTambonDisabled = false; // ปลดล็อคฟิลด์ตำบลถ้ามีอำเภอปัจจุบันที่ตรงกับ amphureId
-            this.loadTambons(currentAmphureId); // โหลดตำบลตามอำเภอปัจจุบัน
-        } else {
-            this.isTambonDisabled = true; // ล็อคฟิลด์ตำบลถ้าไม่มีอำเภอที่ตรงกับ amphureId
-        }
+      const currentAmphureId = this.UserInfoForm.controls["amphure"].value;
+      if (this.amphures.some((amphure) => amphure.id === currentAmphureId)) {
+        this.isTambonDisabled = false; // ปลดล็อคฟิลด์ตำบลถ้ามีอำเภอปัจจุบันที่ตรงกับ amphureId
+        this.loadTambons(currentAmphureId); // โหลดตำบลตามอำเภอปัจจุบัน
+      } else {
+        this.isTambonDisabled = true; // ล็อคฟิลด์ตำบลถ้าไม่มีอำเภอที่ตรงกับ amphureId
+        this.UserInfoForm.patchValue({
+          tambon: "",
+          postCode: "", // ล้างรหัสไปรษณีย์ด้วยเมื่ออำเภอไม่มี
+        });
+        this.filteredTambons = [];
+      }
     });
-}
-
-
-onAmphuresChange(amphureId: any) {
-  if (!amphureId) {
-      return;
   }
 
-  // ล้างค่าตำบลถ้ามีการเลือกอำเภอที่แตกต่างกัน
-  if (this.UserInfoForm.controls['amphure'].value !== amphureId) {
+  onAmphuresChange(amphureId: any) {
+    if (!amphureId) {
+      return;
+    }
+
+    // ล้างค่าตำบลถ้ามีการเลือกอำเภอที่แตกต่างกัน
+    if (this.UserInfoForm.controls["amphure"].value !== amphureId) {
       this.UserInfoForm.patchValue({
-          tambon: '',
-          postCode: '' // ล้างรหัสไปรษณีย์ด้วยเมื่ออำเภอเปลี่ยน
+        tambon: "",
+        postCode: "", // ล้างรหัสไปรษณีย์ด้วยเมื่ออำเภอเปลี่ยน
       });
       this.filteredTambons = []; // ล้างข้อมูลตำบลที่กรองไว้ก่อนหน้า
       this.isTambonDisabled = true; // ล็อคฟิลด์ตำบลก่อนที่จะโหลดตำบลใหม่
       this.isPostCodeDisabled = true;
+    }
+
+    // โหลดตำบลใหม่ตามอำเภอที่เลือก
+    this.loadTambons(amphureId);
   }
 
-  // โหลดตำบลใหม่ตามอำเภอที่เลือก
-  this.loadTambons(amphureId);
-}
 
-
-loadTambons(amphureId: any) {
-  this.ts.gettambons().subscribe(data => {
-      this.tambons = data.filter(tambon => tambon.amphure_id === parseInt(amphureId));
+  loadTambons(amphureId: any) {
+    this.ts.gettambons().subscribe((data) => {
+      this.tambons = data.filter(
+        (tambon) => tambon.amphure_id === parseInt(amphureId)
+      );
       this.filteredTambons = this.tambons;
 
       if (this.filteredTambons.length > 0) {
-          this.isTambonDisabled = false; // ปลดล็อคฟิลด์ตำบลถ้ามีข้อมูลตำบล
+        this.isTambonDisabled = false; // ปลดล็อคฟิลด์ตำบลถ้ามีข้อมูลตำบล
+        // เลือกตำบลแรกโดยอัตโนมัติ
+        const firstTambon = this.filteredTambons[0];
+        this.UserInfoForm.patchValue({
+          tambon: firstTambon.id,
+          postCode: firstTambon.zip_code
+        });
       } else {
-          this.isTambonDisabled = true; // ล็อคฟิลด์ตำบลถ้าไม่มีข้อมูลตำบล
+        this.isTambonDisabled = true; // ล็อคฟิลด์ตำบลถ้าไม่มีข้อมูลตำบล
+        this.UserInfoForm.patchValue({
+          postCode: "", // ล้างรหัสไปรษณีย์ด้วยถ้าไม่มีตำบล
+        });
       }
-  });
-}
+    });
+  }
 
   onTambonChange(tambonId: any) {
-    const selectedTambon = this.filteredTambons.find(tambon => tambon.id === parseInt(tambonId));
+    const selectedTambon = this.filteredTambons.find(
+      (tambon) => tambon.id === parseInt(tambonId)
+    );
     if (selectedTambon) {
-        this.zipCode = selectedTambon.zip_code;
-        this.UserInfoForm.patchValue({
-            postCode: this.zipCode // อัปเดตค่ารหัสไปรษณีย์ในฟอร์ม
-        });
-        this.isPostCodeDisabled = false; // ปลดล็อคฟิลด์รหัสไปรษณีย์
+      this.zipCode = selectedTambon.zip_code;
+      this.UserInfoForm.patchValue({
+        postCode: this.zipCode, // อัปเดตค่ารหัสไปรษณีย์ในฟอร์ม
+      });
+      this.isPostCodeDisabled = false; // ปลดล็อคฟิลด์รหัสไปรษณีย์
     } else {
-        this.isPostCodeDisabled = true; // ล็อคฟิลด์รหัสไปรษณีย์หากไม่พบตำบล
+      this.isPostCodeDisabled = true; // ล็อคฟิลด์รหัสไปรษณีย์หากไม่พบตำบล
     }
   }
 
@@ -389,20 +420,25 @@ resetPassword(UserID: string, newPassword: string) {
      if (file) {
       updatedData.append('profileImage', file);
       }
-      this.sv.updateUserProfileById(updatedData, userId).subscribe(response => {
-        console.log('Response:', response);
-  
-        if (response && response.user) {
-          if (response?.user?.employeeId && response?.user?.employeeId?.firstname) {
-            this.UserData = response;
-           
-          } else {
-            console.error('Firstname not found in user data');
-          }
-        } else {
-          console.error('Unexpected response format', response);
+      this.sv.updateUserProfileById(updatedData, userId).subscribe(
+        (response) => {
+          console.log("Response:", response);
+
+          this.shouldShowToast = true;
+          this.closeModal();
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 2500);
+        },
+        (error) => {
+          console.error("Error:", error);
+          this.toastr.error("เกิดข้อผิดพลาดในการอัปเดตโปรไฟล์", "ไม่สำเร็จ", {
+            timeOut: 2500,
+            positionClass: "toast-top-right",
+          });
         }
-      });
+      );
+      
     }
     this.EditStatus= false;
   }
@@ -412,6 +448,44 @@ resetPassword(UserID: string, newPassword: string) {
   cancelEdit(){
     this.EditStatus= false;
   }
+
+  closeModal(): void {
+    const modalContent = document.querySelector(".EditModal-content");
+
+
+    if ($("#EditModal")) {
+      // ตรวจสอบว่าควรแสดง toast หรือไม่
+      if (this.shouldShowToast) {
+        this.toastr.success("อัปเดตโปรไฟล์สำเร็จ", "สำเร็จ", {
+          timeOut: 2500,
+          positionClass: "toast-top-right",
+        });
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 2500);
+      }
+
+      this.shouldShowToast = false; // รีเซ็ตค่า
+      $("#EditModal").modal("hide");
+    }
+    if ($("#profile-Modal")) {
+      // ตรวจสอบว่าควรแสดง toast หรือไม่
+      if (this.shouldShowToast) {
+        this.toastr.success("อัปเดตโปรไฟล์สำเร็จ", "สำเร็จ", {
+          timeOut: 2500,
+          positionClass: "toast-top-right",
+        });
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 2500);
+      }
+
+      this.shouldShowToast = false; // รีเซ็ตค่า
+      $("#profile-Modal").modal("hide");
+    }
+  }
   openorganizationModel(){
     $('#organizationModel').modal({
       backdrop: 'static', 
@@ -420,6 +494,14 @@ resetPassword(UserID: string, newPassword: string) {
     $('#organizationModel').modal('show');
  
 
+  }
+
+  openEditProfileModal() {
+    $("#EditModal").modal({
+      backdrop: "static",
+      keyboard: false,
+    });
+    $("#EditModal").modal("show");
   }
   
 }

@@ -53,6 +53,10 @@ h4{
   border-radius: 10px;
 
 }
+.card-header a{
+  font-weight: 900;
+  font-size: 18px;
+}
 
 
 /* 5. Update .card-header-danger background color  linear-gradient(60deg,  rgb(255, 209, 0), #fcffc2) */
@@ -60,6 +64,7 @@ h4{
   background:rgb(255, 209, 0);
   font-family: 'Sarabun',sans-serif;
 }
+
 .info-fontSize{
   font-size: 16px
 }
@@ -192,9 +197,20 @@ i{
   justify-content: space-between;
   align-items: center;
 }
-/* .title button:hover{
-  text-decoration: underline;
-} */
+.btn-edit{
+  color: #fff;
+  background-color: #F4A62A;
+  border-color: #f4a72a7c;
+  /* box-shadow: 0 2px 2px 0 #0d6efd, 0 3px 1px -2px #0d6efd, 0 1px 5px 0 #0d6efd; */
+  font-family: 'Sarabun', sans-serif;
+
+}
+.btn-edit:hover{
+  background-color: #F4A62A; 
+  border-color: #4f3000;
+  /* box-shadow: 0 14px 14px -12px #24a0ed51, 0 4px 14px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px #24a0ed51; */
+}
+
 .userInfo{
   margin-bottom: 10px;
   border-radius: 5px;
@@ -298,6 +314,24 @@ justify-content: center;
   right: 10px;
   cursor: pointer;
   color: red;
+}
+
+.EditModal-content {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 610px;
+  height: auto;
+  transform: none;
+  /* animation: slideDown 0.3s ease forwards; */
+
+}
+.EditModal-modal-overlay.close{
+  animation: slideUp 0.2s ease forwards;
+}
+.EditModal-content.close {
+  animation: slideUp 0.2s ease forwards;
 }
 
 .Organization-content  {
