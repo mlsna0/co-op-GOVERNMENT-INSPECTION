@@ -819,7 +819,7 @@ saveRecordContent() {
       
       setTimeout(() => {
         this.refreshPage(); // รีเฟรชหน้าจอหลังจากแจ้งเตือนสำเร็จ
-      }, 2000); // หน่วงเวลา 2 วินาทีเพื่อให้ Toastr แสดงก่อน
+      }, 1500); // หน่วงเวลา 2 วินาทีเพื่อให้ Toastr แสดงก่อน
 
       $('#writtenModel').modal('hide');
       this.typroText = ''; // ล้างฟิลด์ข้อความ
@@ -1417,13 +1417,18 @@ loadContent() {
   }
 
   exportToExcel(): void {
+    if (!this.items || !Array.isArray(this.items.records)) {
+      console.error('ไม่มีข้อมูลในการส่งออก.');
+      return; // ออกจากฟังก์ชันหากไม่มีข้อมูล
+  }
+  
     const exportData = this.items.records.map((item, index) => ({
       'ครั้งที่': index + 1,                                  // ลำดับครั้งที่
-      'หัวข้อการตรวจสอบ': item.record_topic,                 // หัวข้อการตรวจสอบ
-      'วันที่เริ่มตรวจสอบ': item.record_star_date,            // วันที่เริ่มตรวจสอบ
-      'วันที่เสร็จสิ้น':item.record_end_date,
-      'สถานที่': item.record_location,                        // สถานที่
-      'สถานะ': item.record_filename ? 'เซ็นสำเร็จ' : 'ยังไม่ได้เซ็น' // สถานะเซ็น
+      'หัวข้อการตรวจสอบ': item?.record_topic,                 // หัวข้อการตรวจสอบ
+      'วันที่เริ่มตรวจสอบ': item?.record_star_date,            // วันที่เริ่มตรวจสอบ
+      'วันที่เสร็จสิ้น':item?.record_end_date,
+      'สถานที่': item?.record_location,                        // สถานที่
+      'สถานะ': item?.record_filename ? 'เซ็นสำเร็จ' : 'ยังไม่ได้เซ็น' // สถานะเซ็น
     }));
   
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);

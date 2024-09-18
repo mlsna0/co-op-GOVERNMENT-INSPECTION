@@ -223,15 +223,6 @@ export class ManageagencyComponent implements OnInit {
       }
     }
   
-  
-
-
-
-
-
-
-
-  
   openaddagency() {
     this.router.navigate(['/addagency']);
   }
