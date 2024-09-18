@@ -225,7 +225,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
     // if (this.isAdmin) {
       // console.log("User is an admin, loading PDFs...");
       this.loadPDFs(); // ถ้าเป็น admin
-      this.fetchAndSetRecords(); 
+      // this.fetchAndSetRecords(); 
         
     // } else if (this.isUser) {
       // console.log("User is a regular user, loading user documents...");
