@@ -21,7 +21,7 @@
                 <div class="card-title">
                     <p>การจัดการผู้ใช้งาน</p>
                 </div>
-                <!-- <button class="btn btn-primary" (click)="goToChangePassword()">เปลี่ยนรหัสผ่าน</button> -->
+               
               </div>
             <div class="card-body">
 
@@ -72,8 +72,11 @@
                             <div class="userInfo">
                                 <div class="title">
                                    <h4> ข้อมูลผู้ใช้</h4>
-                                   <!-- <button  type="button" (click)=" editProfile()">แก้ไขข้อมูลส่วนตัว</button> -->
+                                
                                     <div>
+                                        <button type="button" class="btn btn-edit" (click)="openEditProfileModal()">
+                                            <i class="fa fa-pencil-square-o"></i> &nbsp; แก้ไขข้อมูล
+                                          </button>
                                         <button type="button" class="btn btn-add"  (click)="resetPassword(UserID,'newPassword')" >รีเซ็ตรหัสผ่าน</button>
                                     </div>
                                     
@@ -266,6 +269,164 @@
                      
                     </div>
                   
+
+                    <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content EditModal-content">
+                            <div class="modal-header" class="card-header">
+                                <a>แก้ไขข้อมูลส่วนตัว</a>
+
+                               
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                    (click)="closeModal()">
+                                    <span aria-hidden="true"
+                                        style="display: flex; color: black; justify-content: flex-end;">&times;</span>
+                                </button>
+    
+                            </div>
+                            <form [formGroup]="UserInfoForm" (ngSubmit)="SaveUserInfo()">
+                            <div class="modal-body">
+                                <div class="user-content">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="">ชื่อ-นามสกุล</label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" formControlName="firstname" class="form-control"
+                                                placeholder="ชื่อ">
+    
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" formControlName="lastname" class="form-control"
+                                                placeholder="นามสกุล">
+                                        </div>
+                                    </div>
+    
+                                    <div class="group-info">
+    
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label for="">ที่อยู่</label>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <input type="text" formControlName="address" class="form-control"
+                                                    placeholder="ที่อยู่">
+                                            </div>
+    
+    
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label for=""></label>
+                                            </div>
+                                            <div class="col-md-5 select-wrapper">
+                                                จังหวัด :
+                                                <select class="form-select" formControlName="province"
+                                                    (focus)="isProvinceSelectOpen = true"
+                                                    (blur)="isProvinceSelectOpen = false"
+                                                    (change)="onProvinceChange($event.target.value)">
+                                                    <option *ngFor="let province of provinces" [value]="province.id">{{
+                                                        province.name_th }}</option>
+                                                </select>
+    
+                                                <div class="iconSelect" [class.rotate]="isProvinceSelectOpen">
+                                                    <i class="fa fa-chevron-down"></i>
+                                                </div>
+                                                <!-- <input type="text" formControlName="province" class="form-control" placeholder="จังหวัด"> -->
+                                            </div>
+    
+                                            <div class="col-md-4 select-wrapper">
+                                                อำเภอ/เขต :
+                                                <select class="form-select" formControlName="amphure"
+                                                    (focus)="isAmphureSelectOpen = true"
+                                                    (blur)="isAmphureSelectOpen = false"
+                                                    (change)="onAmphuresChange($event.target.value)"
+                                                    [attr.disabled]="isAmphureDisabled ? true : null">
+                                                    <option *ngFor="let amphure of amphures" [value]="amphure.id">{{
+                                                        amphure.name_th}}</option>
+                                                </select>
+    
+                                                <div class="iconSelect" [class.rotate]="isAmphureSelectOpen">
+                                                    <i class="fa fa-chevron-down"></i>
+                                                </div>
+                                                <!-- <input type="text"formControlName="amphure" class="form-control" placeholder="อำเภอ"> -->
+                                            </div>
+    
+    
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label for=""></label>
+                                            </div>
+    
+                                            <div class="col-md-5 select-wrapper">
+                                                ตำบล/แขวง :
+                                                <select class="form-select" formControlName="tambon"
+                                                    (focus)="isTambonSelectOpen = true" (blur)="isTambonSelectOpen = false"
+                                                    (change)="onTambonChange($event.target.value)"
+                                                    [attr.disabled]="isTambonDisabled ? true : null">
+                                                    <option *ngFor="let tambon of tambons" [value]="tambon.id">{{
+                                                        tambon.name_th }}</option>
+                                                </select>
+                                                <div class="iconSelect" [class.rotate]="isTambonSelectOpen">
+                                                    <i class="fa fa-chevron-down"></i>
+                                                </div>
+                                                <!-- <input type="text"formControlName="tambon" class="form-control" placeholder="ตำบล"> -->
+                                            </div>
+    
+    
+                                            <div class="col-md-4">
+                                                รหัสไปรษณีย์ :
+                                                <div class="form-control">{{ UserInfoForm.controls['postCode'].value }}
+                                                </div>
+                                                <!-- <input type="text"formControlName="postCode"  class="form-control"  placeholder="รหัสไปรษณีย์"> -->
+                                            </div>
+    
+                                        </div>
+                                    </div>
+    
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="title-info">
+                                                <h4>ข้อมูลติดต่อ</h4>
+                                            </div>
+                                        </div>
+    
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="">อีเมล</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" formControlName="email" class="form-control"
+                                                placeholder="อีเมล">
+                                        </div>
+                                     
+                                    </div>
+                                    <div class="row">
+    
+    
+                                        <div class="col-md-3">
+                                            <label for="">เบอร์โทรศัพท์</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" formControlName="phone" class="form-control"
+                                                placeholder="เบอร์โทรศัพท์">
+                                        </div>
+                                     
+                                    </div>
+    
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="padding-bottom: 0;"> 
+                                <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;ยืนยัน</button>
+                                <button type="button" class="btn btn-danger" (click)="closeModal()">ยกเลิก</button>
+                            </div>
+                           </form>
+                        </div>
+                    </div>
+                </div>
                     
                 </div>
             </div>

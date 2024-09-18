@@ -91,7 +91,7 @@
                   <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top"
                     class="fa fa-pencil-square-o Record"></i>
                 </button>
-                <button  (click)="openDetailModal(item?._id)"
+                <button *ngIf="!item.record_filename" (click)="openDetailModal(item?._id)"
                   style="border: none; background: none; color: black;">
                   <i data-toggle="tooltip" title="เพิ่มเนื้อหา" data-placement="top"
                     class="fa fa-file-text-o ModalIcon"></i>
