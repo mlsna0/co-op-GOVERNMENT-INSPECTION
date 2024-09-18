@@ -206,6 +206,151 @@
             </div>
           </div>
         </div>
+
+        <div class="modal fade" id="EditAgencyModel" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header" class="card-header">
+              <h5 class="modal-title" id="addItemModalLabel"
+                style="color: rgb(0, 0, 0); font-family: 'Sarabun', sans-serif !important; font-size: 18px; font-weight: 900;">
+                เพิ่มข้อมูลหน่วยงาน</h5>
+
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: black;">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form [formGroup]="agenForm" (ngSubmit)="onSubmit(agenForm.value)">
+              <div class="modal-body">
+
+                <div class="row box">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="agency_name" style="font-size: 16px;">ชื่อหน่วยงาน</label>
+                      <input type="text" id="agency_name" formControlName="agency_name" required placeholder="กรอกชื่อหน่วยงาน" class="form-control"
+                      [ngClass]="{'box-validate':  agenForm.controls['agency_name'].invalid && (agenForm.controls['agency_name'].touched || agenForm.controls['agency_name'].dirty || Submitted)}">
+                      <div
+                        *ngIf="agenForm.get('agency_name')?.invalid && (agenForm.get('agency_name')?.touched || agenForm.get('agency_name')?.dirty  || Submitted)">
+                        <small class="error-text">กรุณากรอกข้อมูล*</small>
+                      </div>
+                    </div>
+                  </div>
+              
+                </div>
+
+                <div class="row box">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="email" style="font-size: 16px;">อีเมล</label>
+                      <input type="email" id="email" formControlName="email" required placeholder="กรอกอีเมล" class="form-control"
+                      [ngClass]="{'box-validate':  agenForm.controls['email'].invalid && (agenForm.controls['email'].touched || agenForm.controls['email'].dirty || Submitted)}">
+                      <div
+                        *ngIf="agenForm.get('email')?.invalid && (agenForm.get('email')?.touched || agenForm.get('email')?.dirty  || Submitted)">
+                        <small class="error-text">กรุณากรอกข้อมูล*</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="phone" style="font-size: 16px;">เบอร์โทรศัพท์</label>
+                      <input type="text" id="phone" formControlName="phone" required placeholder="กรอกเบอร์โทรศัทพ์ของคุณ" class="form-control"
+                      [ngClass]="{'box-validate':  agenForm.controls['phone'].invalid && (agenForm.controls['phone'].touched || agenForm.controls['phone'].dirty || Submitted)}">
+                      <div
+                        *ngIf="agenForm.get('phone')?.invalid && (agenForm.get('phone')?.touched || agenForm.get('phone')?.dirty  || Submitted)">
+                        <small class="error-text">กรุณากรอกข้อมูล*</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label for="address" style="font-size: 16px;">ที่ตั้งหน่วยงาน</label>
+                    <input type="text" id="address" formControlName="address" required placeholder="กรอกที่อยู่" class="form-control"
+                    [ngClass]="{'box-validate':  agenForm.controls['address'].invalid && (agenForm.controls['address'].touched || agenForm.controls['address'].dirty || Submitted)}">
+                    <div
+                      *ngIf="agenForm.get('address')?.invalid && (agenForm.get('address')?.touched || agenForm.get('address')?.dirty  || Submitted)">
+                      <small class="error-text">กรุณากรอกข้อมูล*</small>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+                 
+                  <div class="row">
+               
+                  
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label for="province" style="font-size: 16px;">จังหวัด</label>
+                            <select class="form-select" formControlName="province"
+                              (change)="onProvinceChange($event.target.value)">
+                              <option value="" disabled selected>จังหวัด</option>
+                              <option *ngFor="let province of provinces" [value]="province.id">{{ province.name_th }}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-3" style="padding-left: 0;">
+                          <div class="form-group">
+                            <label for="amphure" style="font-size: 16px;">อำเภอ/เขต</label>
+                            <select class="form-select" formControlName="amphure"
+                              (change)="onAmphuresChange($event.target.value)"
+                              [attr.disabled]="isAmphureDisabled ? true : null">
+                              <option value="" disabled selected>อำเภอ/เขต</option>
+                              <option *ngFor="let amphure of amphures" [value]="amphure.id">{{ amphure.name_th}}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label for="tambon" style="font-size: 16px;">ตำบล/แขวง</label>
+                            <select class="form-select" formControlName="tambon"
+                              (change)="onTambonChange($event.target.value)"
+                              [attr.disabled]="isTambonDisabled ? true : null">
+                              <option value="" disabled selected>ตำบล/แขวง</option>
+                              <option *ngFor="let tambon of tambons" [value]="tambon.id">{{ tambon.name_th }}</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-3" style="padding-left: 0;">
+                          <div class="form-group">
+                            <label for="postCode" style="font-size: 16px;">รหัสไปรษณีย์</label>
+                            <select class="form-select" formControlName="postCode"
+                              [attr.disabled]="isPostCodeDisabled ? true : null">
+                              <option value="" disabled selected>รหัสไปรษณีย์</option>
+                              <option *ngFor="let code of postCode" [value]="code">{{ code }}</option>
+                            </select>
+                          </div>
+                        </div>
+
+                     
+                  
+
+                  </div>
+                              
+
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-success"><i
+                  class="fa fa-check"></i>&nbsp;ยืนยัน</button>
+                   <button type="button" class="btn btn-danger" data-dismiss="modal"><i
+                  class="fa fa-times" (click)="closeModal()"></i>
+                    &nbsp; ปิด
+                  </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
       </div>
     </div>
   </div>
