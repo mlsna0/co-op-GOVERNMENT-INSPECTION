@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ProvinceService } from '../../../app/view/thaicounty/thaicounty.service';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Subject } from 'rxjs';
+
+import { SharedService } from 'app/services/shared.service';
 import { loginservice } from 'app/layouts/login.services.';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { ToastrService } from 'ngx-toastr';
+import { ClipEffect } from 'html2canvas/dist/types/render/effects';
 
 
 @Component({
@@ -15,6 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ManageagencyComponent implements OnInit {
   agency: any[] = [];
+  
   dtOptions: any = {}; // datatable.setting = {}
   dtTrigger: Subject<any> = new Subject();
   loading: boolean = true;
@@ -45,6 +49,7 @@ export class ManageagencyComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private ls: loginservice,
+    private sv: SharedService,
     private router: Router,
     private fb: FormBuilder,
     private ts :ProvinceService,
@@ -53,7 +58,7 @@ export class ManageagencyComponent implements OnInit {
     this.agenForm = this.fb.group({
       agency_name: ["", Validators.required],
       email: ["", [Validators.required, Validators.email]],
-      phone: ["", Validators.required, Validators.pattern('^[0-9]{10}$')],
+      phone: ["", [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       address:["", Validators.required],
       province: ['', Validators.required],
       amphure: ['', Validators.required],
@@ -100,23 +105,22 @@ export class ManageagencyComponent implements OnInit {
     onSubmit(data) {
       console.log('data:',data)
       this.Submitted = true; 
-     
+      this.agenForm.markAllAsTouched();
       // const formData = new FormData();
       // Object.keys(this.agenForm.controls).forEach(key => {
       //   formData.append(key, this.agenForm.get(key)?.value);
       // });
+      console.log("ข้อมูล invalid : ",this.agenForm.invalid)
       if (this.agenForm.invalid) {
-
         this.toastr.error('กรุณากรอกข้อมูลทุกช่อง', 'เกิดข้อผิดพลาด!', {
           timeOut: 1500,
           positionClass: 'toast-top-right'
         });
-    
         return;
       }
      
   
-      this.ls.agency(data).subscribe(
+      this.ls.agency(this.agenForm.value).subscribe(
         (response) => {
           console.log("User postagency successfully", response);
           this.toastr.success('เพิ่มข้อมูลสำเร็จ', 'สำเร็จ', {
@@ -136,6 +140,49 @@ export class ManageagencyComponent implements OnInit {
       );
   
     }
+
+    // onSubmitUpdate(data){
+    //   console.log('Update data:', data);
+    //   this.Submitted = true; 
+    //   this.agenForm.markAllAsTouched();
+    
+    //   if (this.agenForm.invalid) {
+    //     this.toastr.error('กรุณากรอกข้อมูลทุกช่อง', 'เกิดข้อผิดพลาด!', {
+    //       timeOut: 1500,
+    //       positionClass: 'toast-top-right'
+    //     });
+    //     return;
+    //   }
+    // console.log("form Id to update: ", this.agenForm.value._id)
+    
+    //   // ตรวจสอบว่ามี ID หรือไม่
+    //   if (data._id) {
+    //     this.sv.UpdateOrganizationById(this.agenForm.value._id, this.agenForm.value).subscribe(
+    //       (response) => {
+    //         console.log("Agency updated successfully", response);
+    //         this.toastr.success('อัปเดตข้อมูลสำเร็จ', 'สำเร็จ', {
+    //           timeOut: 1500,
+    //           positionClass: 'toast-top-right'
+    //         }).onHidden.subscribe(() => {
+    //           window.location.reload();  // รีเฟรชหน้าจอหลังจากแจ้งเตือนหายไป
+    //         });
+    //       },
+    //       (error) => {
+    //         console.error("Error updating agency", error);
+    //         this.toastr.error('การอัปเดตข้อมูลไม่สำเร็จ', 'เกิดข้อผิดพลาด!', {
+    //           timeOut: 1500,
+    //           positionClass: 'toast-top-right'
+    //         });
+    //       }
+    //     );
+    //   } else {
+    //     this.toastr.error('ไม่พบข้อมูลสำหรับการอัปเดต', 'เกิดข้อผิดพลาด!', {
+    //       timeOut: 1500,
+    //       positionClass: 'toast-top-right'
+    //     });
+    //   }
+
+    // }
   
     loadProvinces() {
       this.ts.getProvincesWithDetails().subscribe(data => {
@@ -234,6 +281,33 @@ export class ManageagencyComponent implements OnInit {
     $('#manageAgencyModel').modal('show');
 
   }
+  // openEditAgencyModal(agencyId:any){
+  //   this.sv.getOrganizationById(agencyId).subscribe(
+  //     (agencyData) => {
+  //       console.log('Fetched agency data:', agencyData); // ตรวจสอบข้อมูลที่ดึงมา
+  //       this.agenForm.patchValue({
+  //         _id: agencyData._id, 
+  //         agency_name: agencyData?.agency_name,
+  //         email: agencyData.email,
+  //         phone: agencyData.phone,
+  //         address: agencyData.address,
+  //         province: agencyData.province,
+  //         amphure: agencyData.amphure,
+  //         tambon: agencyData.tambon,
+  //         postCode: agencyData.postCode
+  //       });
+  //       $('#EditAgencyModel').modal({
+  //         backdrop: 'static',
+  //         keyboard: false
+  //       });
+  //       $('#EditAgencyModel').modal('show');
+  //     },
+  //     (error) => {
+  //       console.error("Error fetching agency data", error);
+  //     }
+  //   );
+
+  // }
   closeModal() {
     // ซ่อนโมดัล
     $('#manageAgencyModel').modal('hide');

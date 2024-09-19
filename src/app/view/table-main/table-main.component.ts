@@ -225,7 +225,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
     // if (this.isAdmin) {
       // console.log("User is an admin, loading PDFs...");
       this.loadPDFs(); // ถ้าเป็น admin
-      this.fetchAndSetRecords(); 
+      // this.fetchAndSetRecords(); 
         
     // } else if (this.isUser) {
       // console.log("User is a regular user, loading user documents...");
@@ -529,6 +529,11 @@ handleError(error) {
   //Writter section
   ngAfterViewInit(): void {
     this.setupCanvas();
+    this.updateFontSize();
+    
+
+ 
+  
     // this.setupSignCanvas(index: number);
   }
 
@@ -1262,38 +1267,38 @@ onInput(event: Event): void {
   this.typroText = target.innerHTML;
 }
 
-updateFontSize(): void {
-  const fontElements = document.getElementsByTagName('font');
-  for (let i = 0; i < fontElements.length; i++) {
-    const element = fontElements[i] as HTMLElement;
-    const size = element.getAttribute('size');
-    if (size) {
-      switch (size) {
-        case '1':
-          element.style.fontSize = '8px';
-          break;
-        case '2':
-          element.style.fontSize = '10px';
-          break;
-        case '3':
-          element.style.fontSize = '12px';
-          break;
-        case '4':
-          element.style.fontSize = '14px';
-          break;
-        case '5':
-          element.style.fontSize = '18px';
-          break;
-        case '6':
-          element.style.fontSize = '24px';
-          break;
+// updateFontSize(): void {
+//   const fontElements = document.getElementsByTagName('font');
+//   for (let i = 0; i < fontElements.length; i++) {
+//     const element = fontElements[i] as HTMLElement;
+//     const size = element.getAttribute('size');
+//     if (size) {
+//       switch (size) {
+//         case '1':
+//           element.style.fontSize = '8px';
+//           break;
+//         case '2':
+//           element.style.fontSize = '10px';
+//           break;
+//         case '3':
+//           element.style.fontSize = '12px';
+//           break;
+//         case '4':
+//           element.style.fontSize = '14px';
+//           break;
+//         case '5':
+//           element.style.fontSize = '18px';
+//           break;
+//         case '6':
+//           element.style.fontSize = '24px';
+//           break;
     
-      }
-      element.removeAttribute('size');
-    }
-  }
-  this.updateTyproText();
-}
+//       }
+//       element.removeAttribute('size');
+//     }
+//   }
+//   this.updateTyproText();
+// }
 updateTyproText(): void {
 const editableDiv = document.querySelector('.form-control.full-page-textarea');
 if (editableDiv) {
@@ -1313,24 +1318,24 @@ range.surroundContents(span);
 this.updateTyproText();
 }
 
-mapFontSize(size: string): string {
-switch (size) {
-  case '1':
-    return '8px';
-  case '2':
-    return '10px';
-  case '3':
-    return '12px';
-  case '4':
-    return '14px';
-  case '5':
-    return '18px';
-  case '6':
-    return '24px';
-  default:
-    return '14px'; // Default size
-}
-}
+// mapFontSize(size: string): string {
+// switch (size) {
+//   case '8px':
+//     return '8px';
+//   case '10px':
+//     return '10px';
+//   case '12px':
+//     return '12px';
+//   case '4':
+//     return '14px';
+//   case '5':
+//     return '18px';
+//   case '6':
+//     return '24px';
+//   default:
+//     return '14px'; // Default size
+// }
+// }
 
 editContent() {
   this.typroText = this.detailItems.record_content;
@@ -1368,9 +1373,55 @@ loadContent() {
         'heading',
         'fontName',
       ],
-    ]
+      
+    ],
+    fonts: [
+      {class: 'arial', name: 'Arial'},
+      {class: 'times-new-roman', name: 'Times New Roman'},
+      {class: 'calibri', name: 'Calibri'},
+      {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+    ],
+    // customFontSizes: ['8px', '10px', '12px', '14px', '16px', '18px', '24px', '36px'], // เพิ่มขนาดฟอนต์ที่จะแสดง
    
   };
+
+
+  updateFontSize(): void {
+    const editorElement = document.querySelector('angular-editor') as HTMLElement;
+    if (editorElement) {
+      const innerContent = editorElement.shadowRoot?.querySelector('.angular-editor-content');
+      if (innerContent) {
+        const fontElements = innerContent.getElementsByTagName('font');
+        for (let i = 0; i < fontElements.length; i++) {
+          const element = fontElements[i] as HTMLElement;
+          const size = element.getAttribute('size');
+          if (size) {
+            switch (size) {
+              case '1':
+                element.style.fontSize = '8px';
+                break;
+              case '2':
+                element.style.fontSize = '10px';
+                break;
+              case '3':
+                element.style.fontSize = '12px';
+                break;
+              case '4':
+                element.style.fontSize = '14px';
+                break;
+              case '5':
+                element.style.fontSize = '18px';
+                break;
+              case '6':
+                element.style.fontSize = '24px';
+                break;
+            }
+            element.removeAttribute('size');
+          }
+        }
+      }
+    }
+  }
 
   handleKeydown(event: KeyboardEvent) {
     if (event.ctrlKey && event.key === 'c') {

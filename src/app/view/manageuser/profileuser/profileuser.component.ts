@@ -87,7 +87,7 @@ export class ProfileuserComponent implements OnInit {
       // organization:['', ],
       // bearing:['', ],
       address: [""],
-      phone: ["", Validators.pattern("^[0-9]{10}$")],
+      phone: ["", [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       province: [""],
       amphure: [""],
       tambon: [""],

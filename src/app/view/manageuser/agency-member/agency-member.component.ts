@@ -77,7 +77,7 @@ export class AgencyMemberComponent implements OnInit {
       organization:['', Validators.required],
       bearing:['', Validators.required],
       address:["", Validators.required],
-      phone: ["", Validators.required, Validators.pattern('^[0-9]{10}$')],
+      phone: ["", [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       province: ['', Validators.required],
       amphure: ['', Validators.required],
       tambon: ['', Validators.required],
