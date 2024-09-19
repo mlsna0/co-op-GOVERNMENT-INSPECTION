@@ -767,3 +767,46 @@
       margin: 20mm;
     }
   }
+
+
+ /* เพิ่ม transition สำหรับฟอนต์และการซ่อนแถว */
+th, td {
+  transition: font-size 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Media query for small screens */
+@media screen and (max-width: 1260px) {
+  th {
+    font-size: 12px; /* Smaller font size */
+  }
+  th:nth-child(1), th:nth-child(4), th:nth-child(5),
+  td:nth-child(1), td:nth-child(4), td:nth-child(5) {
+    opacity: 0; /* ซ่อนคอลัมน์แบบค่อยๆ จางลง */
+    transform: scaleY(0); /* ลดขนาดเพื่อให้การซ่อน smooth */
+    display: none; /* ซ่อนอย่างสมบูรณ์หลังจากแอนิเมชันจบ */
+  }
+}
+
+@media screen and (max-width: 860px) {
+  th {
+    font-size: 12px;
+  }
+  th:nth-child(1), th:nth-child(4), th:nth-child(5),
+  td:nth-child(1), td:nth-child(4), td:nth-child(5) {
+    opacity: 0;
+    transform: scaleY(0);
+    display: none;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  th {
+    font-size: 10px;
+  }
+  th:nth-child(2), th:nth-child(3), th:nth-child(4) {
+    white-space: nowrap;
+  }
+  td:nth-child(2), td:nth-child(3), td:nth-child(4) {
+    white-space: nowrap; /* ใช้ white-space แทน display: nowrap */
+  }
+}
