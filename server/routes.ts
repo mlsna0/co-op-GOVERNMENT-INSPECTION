@@ -103,7 +103,7 @@ function setRoutes(app): void {
   router.route('/getAgencies').get(agencyModelCtrl.getAgencies);
 //   router.route('/agencyModel').post(agencyModelCtrl.insert);
   router.route('/getAgencyById').get(agencyModelCtrl.getAgencyById);
-  router.route('/agencyModel/:id').put(agencyModelCtrl.update);
+  router.route('/agencyModel/UpdateOrganizationById/:id').put(agencyModelCtrl.update);
   router.route('/agencyModel/:id').delete(agencyModelCtrl.delete);
 
   // ViewModel routes

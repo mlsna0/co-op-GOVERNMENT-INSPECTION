@@ -54,9 +54,9 @@
 
 
               <!-- <td class="small-cell-text"> 
-              <button (click)="getUserReportProfile(users.id)" style="border: none; background: none; color: black; text-align: center;" >
+              <button (click)="openEditAgencyModal(agency?._id)" style="border: none; background: none; color: black; text-align: center;" >
                 <i data-toggle="tooltip" title="ดูรายละเอียด" data-placement="top"
-                  class="fa fa-file-text-o ModalIcon "></i>
+                  class="fa fa-pencil"></i>
               </button>
             </td>   -->
             </tr>
@@ -207,7 +207,7 @@
           </div>
         </div>
 
-        <div class="modal fade" id="EditAgencyModel" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel"
+        <!-- <div class="modal fade" id="EditAgencyModel" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -220,9 +220,9 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <form [formGroup]="agenForm" (ngSubmit)="onSubmit(agenForm.value)">
+            <form [formGroup]="agenForm" (ngSubmit)="onSubmitUpdate(agenForm.value)">
               <div class="modal-body">
-
+                <input type="text" formControlName="_id">
                 <div class="row box">
                   <div class="col-md-12">
                     <div class="form-group">
@@ -349,7 +349,7 @@
             </form>
           </div>
         </div>
-      </div>
+      </div> -->
 
       </div>
     </div>

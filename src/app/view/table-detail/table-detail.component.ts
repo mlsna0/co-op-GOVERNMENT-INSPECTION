@@ -574,10 +574,18 @@ export class TableDetailComponent implements OnInit {
       return;
     }
 
-    const refreshButton = document.querySelector('.btn-refreshCanvas') as HTMLElement;
-    if (refreshButton) {
-      refreshButton.style.display = 'none';
-    }
+      // ซ่อนปุ่ม refresh ทั้งหมด
+      const refreshButtons = document.querySelectorAll('.btn-refreshCanvas') as NodeListOf<HTMLElement>;
+      refreshButtons.forEach(button => {
+        button.style.display = 'none';
+      });
+      // ลบเนื้อหาใน modal ทั้งหมด
+      const openSignModals = document.querySelectorAll('.openSignModal') as NodeListOf<HTMLElement>;
+      openSignModals.forEach(modal => {
+        modal.innerHTML = ""; // ลบเนื้อหาภายใน
+        modal.style.border = 'none'; // ลบเส้นขอบ
+        modal.style.background = 'transparent'; // ลบพื้นหลัง
+      });
     elements.forEach((element, index) => {
       const style = getComputedStyle(element as HTMLElement);
       if (style.display === 'none') {
@@ -656,16 +664,18 @@ export class TableDetailComponent implements OnInit {
     }).catch((error) => {
       console.error('Error generating PDF:', error);
     });
-    const refreshButton = document.querySelector('.btn-refreshCanvas') as HTMLElement;
-    if (refreshButton) {
-      refreshButton.style.display = 'none';
-    }
-    const openSignModal = document.querySelector('.openSignModal') as HTMLElement;
-    if (openSignModal) {
-      openSignModal.innerHTML = ""; // ลบเนื้อหาภายใน แต่ยังคงขนาดขององค์ประกอบ
-      openSignModal.style.border = 'none'; // ลบเส้นขอบหากจำเป็น
-      openSignModal.style.background = 'transparent'; // ลบพื้นหลังหากจำเป็น
-    }
+    // ซ่อนปุ่ม refresh ทั้งหมด
+    const refreshButtons = document.querySelectorAll('.btn-refreshCanvas') as NodeListOf<HTMLElement>;
+    refreshButtons.forEach(button => {
+      button.style.display = 'none';
+    });
+    // ลบเนื้อหาใน modal ทั้งหมด
+    const openSignModals = document.querySelectorAll('.openSignModal') as NodeListOf<HTMLElement>;
+    openSignModals.forEach(modal => {
+      modal.innerHTML = ""; // ลบเนื้อหาภายใน
+      modal.style.border = 'none'; // ลบเส้นขอบ
+      modal.style.background = 'transparent'; // ลบพื้นหลัง
+    });
     elements.forEach((element, index) => {
       const htmlElement = element as HTMLElement; // Cast Element to HTMLElement
       htmlElement.style.border = 'none';
@@ -707,13 +717,13 @@ export class TableDetailComponent implements OnInit {
     Promise.all(promises).then(() => {
       // Convert the PDF to Blob
       const pdfBlob = pdf.output('blob');
-  
+
       // Create FormData to send the PDF to the backend
       const formData = new FormData();
       const pdfFilename = 'การลงตรวจสอบ.pdf'; // Change to the desired filename
       formData.append('id', this.recordId); // Adjust the ID as needed
       formData.append('pdf', pdfBlob, pdfFilename);
-  
+
       // Check if this.sv.savePDF exists and is a function
       if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
         // Send the PDF to the backend
@@ -721,13 +731,13 @@ export class TableDetailComponent implements OnInit {
           response => {
             this.saveCount++; // Increment saveCount on successful save
             console.log("PDF saved successfully " + this.saveCount + " times:", response); // Log success count
-  
+
             // Show success notification
             this.toastr.success('บันทึกข้อมูลสำเร็จ', 'สำเร็จ!!', {
               timeOut: 1500,
               positionClass: 'toast-top-right',
             });
-  
+
             // Navigate to another page (or refresh if you prefer)
             setTimeout(() => {
               this.router.navigate(['/table-main']);
@@ -735,7 +745,7 @@ export class TableDetailComponent implements OnInit {
           },
           error => {
             console.error('Error saving PDF:', error);
-  
+
             // Show error notification
             this.toastr.error('บันทึกข้อมูลไม่สำเร็จ', 'ผิดพลาด!', {
               timeOut: 1500,
@@ -748,7 +758,7 @@ export class TableDetailComponent implements OnInit {
       }
     }).catch((error) => {
       console.error('Error generating PDF:', error);
-  
+
       // Show error notification
       this.toastr.error('บันทึกข้อมูลไม่สำเร็จ', 'ผิดพลาด!', {
         timeOut: 1500,

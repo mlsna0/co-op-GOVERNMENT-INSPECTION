@@ -49,9 +49,9 @@
                 ครั้งที่
               </th>
               <th style="color: black; font-size: 16px;">หัวข้อการตรวจสอบ</th>
-              <th style="width: 9%; color: black; font-size: 16px;">วันที่เริ่มตรวจสอบ</th>
-              <th style="width: 9%; color: black; font-size: 16px;">วันที่เสร็จสิ้น</th>
-              <th style="width: 5%; color: black; font-size: 16px;">สถานที่</th>
+              <th style="width: 9%; color: black; font-size: 16px; text-align: center;">วันที่เริ่มตรวจสอบ</th>
+              <th style="width: 9%; color: black; font-size: 16px; text-align: center;">วันที่เสร็จสิ้น</th>
+              <th style="width: 5%; color: black; font-size: 16px; text-align: center;">สถานที่</th>
               <th style="width: 5%; color: black; font-size: 16px; text-align: center;">สถานะ</th>
               <th class="text-center" style="color: black; font-size: 16px;"><i class="fa fa-gear"></i></th>
             </tr>
@@ -84,7 +84,7 @@
               </td>
               <td class="text-center" style="width:1% ;white-space: nowrap;">
                 <button (click)="openDataDetail(item?._id)" style="border: none; background: none; color: black;">
-                  <i data-toggle="tooltip" title="ดูรายละเอียดเอกสาร" data-placement="top" class="fa fa-pencil"></i>
+                  <i data-toggle="tooltip" title="แกไข้หัวข้อเอกสาร" data-placement="top" class="fa fa-pencil"></i>
                 </button>
                 <button *ngIf="!item.record_filename" (click)="onRecord(item?._id)"
                   style="border: none; background: none; color: black;">
