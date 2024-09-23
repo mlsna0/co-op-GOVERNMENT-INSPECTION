@@ -1,6 +1,11 @@
 .modal-lg {
   max-width: 100%;
 }
+.inline-text {
+  display: inline;  /* ทำให้ข้อความและ label อยู่บรรทัดเดียวกัน */
+  word-wrap: break-word;  /* ตัดคำเมื่อข้อความยาวเกินคอนเทนเนอร์ */
+  margin-left: 5px;  /* เพิ่มระยะห่างเล็กน้อยระหว่าง label และข้อความ */
+}
 
 .disabled-link {
   pointer-events: none;
@@ -419,6 +424,7 @@ position: absolute;
     margin: 0;
     padding-left: 10px;
     font-size: 16px;
+    word-break: break-word; 
   }
 
 .date-flex{

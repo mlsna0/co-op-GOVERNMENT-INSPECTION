@@ -5,11 +5,12 @@ import { BehaviorSubject, Subject } from 'rxjs';
 
 import { SharedService } from 'app/services/shared.service';
 import { loginservice } from 'app/layouts/login.services.';
-import { Router } from '@angular/router';
+import { ChildActivationEnd, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { ToastrService } from 'ngx-toastr';
 import { ClipEffect } from 'html2canvas/dist/types/render/effects';
 
+import { agencyModel } from '../../../../server/models/agencyModel';
 
 @Component({
   selector: 'app-manageagency',
@@ -23,6 +24,7 @@ export class ManageagencyComponent implements OnInit {
   dtTrigger: Subject<any> = new Subject();
   loading: boolean = true;
   error: string = '';
+  agencyId:any;
 
   //for form
   agenForm: any;
@@ -56,6 +58,7 @@ export class ManageagencyComponent implements OnInit {
     private toastr: ToastrService
   ) { 
     this.agenForm = this.fb.group({
+      _id: [null], 
       agency_name: ["", Validators.required],
       email: ["", [Validators.required, Validators.email]],
       phone: ["", [Validators.required, Validators.pattern('^[0-9]{10}$')]],
@@ -89,13 +92,16 @@ export class ManageagencyComponent implements OnInit {
     };
     this.ls.getagency().subscribe(data => {
       this.agency = data
+
       this.loading = false;
-      // console.log("agency data ",this.agency)
+      console.log("agency data ",this.agency)
     }, error => {
       console.error('Error fetching user data:', error);
       this.loading = false;
     });
     this.loadProvinces() ;
+
+
 
   }
 
@@ -141,48 +147,48 @@ export class ManageagencyComponent implements OnInit {
   
     }
 
-    // onSubmitUpdate(data){
-    //   console.log('Update data:', data);
-    //   this.Submitted = true; 
-    //   this.agenForm.markAllAsTouched();
+    onSubmitUpdate(data){
+      console.log('Update data:', data);
+      this.Submitted = true; 
+      this.agenForm.markAllAsTouched();
     
-    //   if (this.agenForm.invalid) {
-    //     this.toastr.error('กรุณากรอกข้อมูลทุกช่อง', 'เกิดข้อผิดพลาด!', {
-    //       timeOut: 1500,
-    //       positionClass: 'toast-top-right'
-    //     });
-    //     return;
-    //   }
-    // console.log("form Id to update: ", this.agenForm.value._id)
+      if (this.agenForm.invalid) {
+        this.toastr.error('กรุณากรอกข้อมูลทุกช่อง', 'เกิดข้อผิดพลาด!', {
+          timeOut: 1500,
+          positionClass: 'toast-top-right'
+        });
+        return;
+      }
+    console.log("form Id to update: ", this.agenForm.value._id)
     
-    //   // ตรวจสอบว่ามี ID หรือไม่
-    //   if (data._id) {
-    //     this.sv.UpdateOrganizationById(this.agenForm.value._id, this.agenForm.value).subscribe(
-    //       (response) => {
-    //         console.log("Agency updated successfully", response);
-    //         this.toastr.success('อัปเดตข้อมูลสำเร็จ', 'สำเร็จ', {
-    //           timeOut: 1500,
-    //           positionClass: 'toast-top-right'
-    //         }).onHidden.subscribe(() => {
-    //           window.location.reload();  // รีเฟรชหน้าจอหลังจากแจ้งเตือนหายไป
-    //         });
-    //       },
-    //       (error) => {
-    //         console.error("Error updating agency", error);
-    //         this.toastr.error('การอัปเดตข้อมูลไม่สำเร็จ', 'เกิดข้อผิดพลาด!', {
-    //           timeOut: 1500,
-    //           positionClass: 'toast-top-right'
-    //         });
-    //       }
-    //     );
-    //   } else {
-    //     this.toastr.error('ไม่พบข้อมูลสำหรับการอัปเดต', 'เกิดข้อผิดพลาด!', {
-    //       timeOut: 1500,
-    //       positionClass: 'toast-top-right'
-    //     });
-    //   }
+      // ตรวจสอบว่ามี ID หรือไม่
+      if (this.agenForm.value._id) {
+        this.sv.UpdateOrganizationById(this.agenForm.value._id, this.agenForm.value).subscribe(
+          (response) => {
+            console.log("Agency updated successfully", response);
+            this.toastr.success('อัปเดตข้อมูลสำเร็จ', 'สำเร็จ', {
+              timeOut: 1500,
+              positionClass: 'toast-top-right'
+            }).onHidden.subscribe(() => {
+              window.location.reload();  // รีเฟรชหน้าจอหลังจากแจ้งเตือนหายไป
+            });
+          },
+          (error) => {
+            console.error("Error updating agency", error);
+            this.toastr.error('การอัปเดตข้อมูลไม่สำเร็จ', 'เกิดข้อผิดพลาด!', {
+              timeOut: 1500,
+              positionClass: 'toast-top-right'
+            });
+          }
+        );
+      } else {
+        this.toastr.error('ไม่พบข้อมูลสำหรับการอัปเดต', 'เกิดข้อผิดพลาด!', {
+          timeOut: 1500,
+          positionClass: 'toast-top-right'
+        });
+      }
 
-    // }
+    }
   
     loadProvinces() {
       this.ts.getProvincesWithDetails().subscribe(data => {
@@ -290,33 +296,40 @@ export class ManageagencyComponent implements OnInit {
     $('#manageAgencyModel').modal('show');
 
   }
-  // openEditAgencyModal(agencyId:any){
-  //   this.sv.getOrganizationById(agencyId).subscribe(
-  //     (agencyData) => {
-  //       console.log('Fetched agency data:', agencyData); // ตรวจสอบข้อมูลที่ดึงมา
-  //       this.agenForm.patchValue({
-  //         _id: agencyData._id, 
-  //         agency_name: agencyData?.agency_name,
-  //         email: agencyData.email,
-  //         phone: agencyData.phone,
-  //         address: agencyData.address,
-  //         province: agencyData.province,
-  //         amphure: agencyData.amphure,
-  //         tambon: agencyData.tambon,
-  //         postCode: agencyData.postCode
-  //       });
-  //       $('#EditAgencyModel').modal({
-  //         backdrop: 'static',
-  //         keyboard: false
-  //       });
-  //       $('#EditAgencyModel').modal('show');
-  //     },
-  //     (error) => {
-  //       console.error("Error fetching agency data", error);
-  //     }
-  //   );
 
-  // }
+
+  openEditAgencyModal(agencyId: any) {
+    console.log("ID agency: ", agencyId);
+  
+    this.sv.getOrganizationById(agencyId).subscribe(
+      (agencyData: agencyModel) => { // ระบุประเภท agencyModel
+        console.log('Fetched agency data:', agencyData); // ตรวจสอบข้อมูลที่ดึงมา
+  
+        // ใช้ข้อมูลจาก agencyData เพื่อเติมลงในฟอร์ม
+        this.agenForm.patchValue({
+          _id: agencyData._id, 
+          agency_name: agencyData.agency_name,
+          email: agencyData.email,
+          phone: agencyData.phone, // ตอนนี้ TypeScript จะตรวจสอบได้ว่ามีฟิลด์นี้
+          address: agencyData.address,
+          province: agencyData.province,
+          amphure: agencyData.amphure,
+          tambon: agencyData.tambon,
+          postCode: agencyData.postCode
+        });
+        console.log("Patched form values:", this.agenForm.value); 
+        // เปิด modal
+        $('#EditAgencyModel').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+        $('#EditAgencyModel').modal('show');
+      },
+      (error) => {
+        console.error("Error fetching agency data", error);
+      }
+    );
+  }
   closeModal() {
     // ซ่อนโมดัล
     $('#manageAgencyModel').modal('hide');

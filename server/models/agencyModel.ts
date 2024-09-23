@@ -14,6 +14,7 @@ const agencySchema = new mongoose.Schema({
   postCode: String,
 });
 export interface agencyModel{
+  _id?: string; // เพิ่มฟิลด์ _idx
   agency_name: string,
   email: string,
   phone: string,

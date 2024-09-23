@@ -248,7 +248,7 @@ getOrganizationById(OrganizationID: string){
   return this.http.get(`${this.baseUrl}/registerModel/getOrganizationById/${OrganizationID}`)
 }
 UpdateOrganizationById(OrganizationID: string,data: any){
-  return this.http.get(`${this.baseUrl}/agencyModel/UpdateOrganizationById/${OrganizationID}`)
+  return this.http.put(`${this.baseUrl}/agencyModel/UpdateOrganizationById/${OrganizationID}`,data)
 }
 getPersonsWithSameOrganization(OrganizationID: string): Observable<any>{
   return this.http.get(`${this.baseUrl}/registerModel/getPersonsWithSameOrganization/${OrganizationID}`)
