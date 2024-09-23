@@ -738,6 +738,8 @@ export class TableDetailComponent implements OnInit {
               positionClass: 'toast-top-right',
             });
 
+             // เพิ่มการอัปเดตสถานะที่นี่
+             this.updateRecordStatus(this.recordId, 1); // อัปเดตสถานะเป็น 1
             // Navigate to another page (or refresh if you prefer)
             setTimeout(() => {
               this.router.navigate(['/table-main']);
@@ -768,6 +770,23 @@ export class TableDetailComponent implements OnInit {
 
     $('#myModal').modal('hide');
   }
+
+  // เมธอดสำหรับอัปเดตสถานะ
+updateRecordStatus(recordId: string, status: number) {
+  // ตรวจสอบว่าบริการที่เรียกใช้งานถูกต้อง
+  if (typeof this.sv !== 'undefined' && typeof this.sv.updateStatusDocument === 'function') {
+      this.sv.updateStatusDocument(recordId, status).subscribe(
+          response => {
+              console.log("Status updated successfully:", response);
+          },
+          error => {
+              console.error('Error updating status:', error);
+          }
+      );
+  } else {
+      console.error('updateStatus function is not defined or not a function');
+  }
+}
 
 
   test() {

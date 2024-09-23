@@ -233,7 +233,9 @@ export class SharedService {
     return this.http.put(`${this.baseUrl}/updateDataDocument/${data._id}`, data);
 
   }
-
+  updateStatusDocument(recordId: any, status: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/recordModel/updateStatusDocument/${recordId}`, { status });
+}
   searchData(query: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/searchData?query=${query}`);
   }

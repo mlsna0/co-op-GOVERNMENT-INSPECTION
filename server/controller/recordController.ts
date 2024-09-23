@@ -89,36 +89,38 @@ class recorCon extends BaseCtrl {
 
   updateStatus = async (req, res) => {
     try {
-      const { id } = req.body;
-      
-      console.log("ID ที่ได้รับ:", id);  // ตรวจสอบค่า id ที่ได้รับ
-  
-      if (!id) {
-        return res.status(400).json({ error: "กรุณาส่ง id ที่ต้องการอัปเดต" });
-      }
-  
-      if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ error: "id ไม่ถูกต้อง" });
-      }
-  
-      const item = await this.model.findById(id);
-  
-      if (!item) {
-        return res.status(404).json({ error: "ไม่พบข้อมูลที่ต้องการอัปเดต" });
-      }
-  
-      if (item.status !== "0") {
-        return res.status(400).json({ error: "status ปัจจุบันไม่ใช่ 0 จึงไม่สามารถเปลี่ยนเป็น 1 ได้" });
-      }
-  
-      item.status = "1";
-      await item.save();
-  
-      res.status(200).json({ message: "อัปเดต status สำเร็จ", updatedItem: item });
+        const { id } = req.params;
+        const { status } = req.body; // รับค่า status จาก body
+
+        console.log("ID ที่ได้รับ:", id);
+
+        if (!id) {
+            return res.status(400).json({ error: "กรุณาส่ง id ที่ต้องการอัปเดต" });
+        }
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ error: "id ไม่ถูกต้อง" });
+        }
+
+        const item = await this.model.findById(id);
+
+        if (!item) {
+            return res.status(404).json({ error: "ไม่พบข้อมูลที่ต้องการอัปเดต" });
+        }
+
+        if (item.status !== "0") {
+            return res.status(400).json({ error: "status ปัจจุบันไม่ใช่ 0 จึงไม่สามารถเปลี่ยนเป็น 1 ได้" });
+        }
+
+        item.status = status; // เปลี่ยนเป็น status ที่ส่งเข้ามา
+        await item.save();
+
+        res.status(200).json({ message: "อัปเดต status สำเร็จ", updatedItem: item });
     } catch (err) {
-      return res.status(400).json({ error: err.message });
+        return res.status(400).json({ error: err.message });
     }
-  }
+}
+
 
 updateRecordContent = async (req, res) => {
 // console.log("Updating record content: ", req.body);
@@ -358,7 +360,7 @@ async getRecordWithSameOrganization(req: Request, res: Response): Promise<void> 
 
     // ดึงข้อมูลผู้ใช้ที่ตรงกับ currentUserId ถ้าใช้แบบ this. มันจะหาคุณสมบัติไม่เจออะ
     const currentUser = await User.findById(currentUserId).exec();
-    console.log("Current User:", currentUser);
+    // console.log("Current User:", currentUser);
 
     if (!currentUser) {
       res.status(404).send('User not found.');
@@ -367,7 +369,7 @@ async getRecordWithSameOrganization(req: Request, res: Response): Promise<void> 
 
     // ดึงข้อมูลพนักงานที่เชื่อมโยงกับ currentUser  ถ้าใช้แบบ this. มันจะหาคุณสมบัติไม่เจออะ
     const currentEmployee = await RegisterModel.findById(currentUser.employeeId).exec();
-    console.log("Current Employee:", currentEmployee);
+    // console.log("Current Employee:", currentEmployee);
 
     if (!currentEmployee) {
       res.status(404).send('Employee not found.');
@@ -416,16 +418,16 @@ async getRecordWithSameOrganization(req: Request, res: Response): Promise<void> 
         console.log(`No user found for employee recordEmployee ID: ${recordEmployee? recordEmployee._id : 'N/A'}`);
       }
     
-      const view = await ViewModel.findOne({ recordId: record._id }).exec();
-      if (!view) {
-        console.log(`No view found for record ID: ${record._id}`);
-      }
+      // const view = await ViewModel.findOne({ recordId: record._id }).exec();
+      // if (!view) {
+      //   console.log(`No view found for record ID: ${record._id}`);
+      // }
     
       return {
         record,
         employee: recordEmployee,
         user: recordUser,
-        view
+        // view
       };
     }));
 

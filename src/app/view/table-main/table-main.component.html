@@ -75,10 +75,10 @@
                 <button class="searchLocation" (click)="searchLocation(item?.record?.record_location)">ดูพิกัด</button>
               </td>
               <td style="vertical-align: middle; white-space: nowrap; text-align: center; justify-content: center;">
-                <i *ngIf="item.record_filename" class="fa-regular fa-circle-check checkIcon"> &nbsp;
+                <i  *ngIf="item?.record?.status === '1'" class="fa-regular fa-circle-check checkIcon"> &nbsp;
                   <div style="font-family: 'Sarabun',sans-serif;">เซ็นสำเร็จ</div>
                 </i>
-                <i *ngIf="!item.record_filename" class="fa-regular fa-circle-xmark cancleIcon"> &nbsp;
+                <i  *ngIf="item?.record?.status === '0'" class="fa-regular fa-circle-xmark cancleIcon"> &nbsp;
                   <div style="font-family: 'Sarabun',sans-serif;">ยังไม่ได้เซ็น</div>
                 </i>
               </td>
@@ -86,21 +86,21 @@
                 <button (click)="openDataDetail(item?.record?._id)" style="border: none; background: none; color: black;">
                   <i data-toggle="tooltip" title="แกไข้หัวข้อเอกสาร" data-placement="top" class="fa fa-pencil"></i>
                 </button>
-                <button *ngIf="!item.record_filename" (click)="onRecord(item?.record?._id)"
+                <button  *ngIf="item?.record?.status === '0'" (click)="onRecord(item?.record?._id)"
                   style="border: none; background: none; color: black;">
                   <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top"
                     class="fa fa-pencil-square-o Record"></i>
                 </button>
-                <button *ngIf="!item.record_filename" (click)="openDetailModal(item?.record?._id)"
+                <button  *ngIf="item?.record?.status === '0'" (click)="openDetailModal(item?.record?._id)"
                   style="border: none; background: none; color: black;">
                   <i data-toggle="tooltip" title="เพิ่มเนื้อหา" data-placement="top"
                     class="fa fa-file-text-o ModalIcon"></i>
                 </button>
-                <button *ngIf="item.record_filename" style="border: none; background: none; color: black;">
-                  <i class="fa fa-file-pdf-o" (click)="showPDF(item.record_filename)"></i>
+                <button  *ngIf="item?.record?.status === '1'" style="border: none; background: none; color: black;">
+                  <i class="fa fa-file-pdf-o" (click)="showPDF(item.record?.record_filename)"></i>
                 </button>
                 <!-- land insert Qr code -->
-                <button *ngIf="!item.record_filename" (click)="openQrcode(item?.record?._id)"
+                <button  *ngIf="item?.record?.status === '0'" (click)="openQrcode(item?.record?._id)"
                   style="border: none; background: none; color: black;">
                   <i data-toggle="tooltip" title="QR code" data-placement="top" class="bi bi-qr-code"></i>
                 </button>
