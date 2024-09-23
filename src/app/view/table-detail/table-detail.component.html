@@ -93,7 +93,7 @@
                                         <tr>
                                             <th style="text-align: center; vertical-align: middle; width: 10%;">ครั้งที่
                                             </th>
-                                            <th style="text-align: center; vertical-align: middle; width: 600px;">
+                                            <th style="text-align: center; vertical-align: middle; width: 600px; font-family:  'Sarabun', sans-serif;" >
                                                 เนื้อหาการตรวจสอบ</th>
                                         </tr>
     
@@ -104,7 +104,7 @@
                                                 {{detailItems?.record_id}}/{{detailItems?.record_star_date | thaidate
                                                 :'year'}}
                                             </td>
-                                            <td [innerHTML]="getSafeHtml(detailItems?.record_content)"></td>
+                                            <td [innerHTML]="getSafeHtml(detailItems?.record_content)"  style="font-family:  'Sarabun', sans-serif; "></td>
                                         </tr>
                                     </tbody>
                                 </table>
