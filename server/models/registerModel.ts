@@ -24,6 +24,7 @@ const registerSchema = new mongoose.Schema({
 });
 
 export interface registerModel{
+    _id?:string;  // _id จาก MongoDB จะถูกใช้เมื่อมีการบันทึกข้อมูลแล้ว
     firstname: string;
     lastname: string;
     organization: string;

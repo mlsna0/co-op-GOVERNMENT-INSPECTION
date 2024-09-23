@@ -347,56 +347,80 @@ getUserDocuments = async (req, res) => {
 
 async getRecordWithSameOrganization(req: Request, res: Response): Promise<void> {
   try {
-    const  currentUserId  = req.params;
-    console.log(currentUserId)
+    // แก้ไขการดึงค่า id ให้ตรงกับ type ที่ต้องการ
+    const { id: currentUserId } = req.params;
+    // console.log("Current User ID:", currentUserId);
 
     if (!currentUserId) {
       res.status(400).send('Current User ID is required.');
       return;
     }
 
-    // ดึงข้อมูลผู้ใช้ที่ตรงกับ currentUserId
-    const currentUser = await this.userModel.findById(currentUserId).exec();
+    // ดึงข้อมูลผู้ใช้ที่ตรงกับ currentUserId ถ้าใช้แบบ this. มันจะหาคุณสมบัติไม่เจออะ
+    const currentUser = await User.findById(currentUserId).exec();
+    console.log("Current User:", currentUser);
 
     if (!currentUser) {
       res.status(404).send('User not found.');
       return;
     }
 
-    // ดึงข้อมูลพนักงานที่เชื่อมโยงกับ currentUser
-    const currentEmployee = await this.employeeModel.findById(currentUser.employeeId).exec();
+    // ดึงข้อมูลพนักงานที่เชื่อมโยงกับ currentUser  ถ้าใช้แบบ this. มันจะหาคุณสมบัติไม่เจออะ
+    const currentEmployee = await RegisterModel.findById(currentUser.employeeId).exec();
+    console.log("Current Employee:", currentEmployee);
 
     if (!currentEmployee) {
       res.status(404).send('Employee not found.');
       return;
     }
 
-    // ดึง agencyId ของ currentEmployee
-    const agencyId = currentEmployee.agencies; // รับค่า agencyId จาก currentEmployee
+    // ดึง agencyId ของ currentEmployee 
+    const agencyId = currentEmployee.agencies;
+    // console.log("Agency ID:", agencyId);
 
-    // ดึงข้อมูลพนักงานที่เชื่อมโยงกับ agencyId
-    const employees = await this.employeeModel.find({ agencies: agencyId }).exec();
+    // ดึงข้อมูลพนักงานที่เชื่อมโยงกับ agencyId  ถ้าใช้แบบ this. มันจะหาคุณสมบัติไม่เจออะ
+    const employees = await RegisterModel.find({ agencies: agencyId }).exec();
+    // console.log("Employees under the same agency:", employees);
 
     if (!employees.length) {
       res.status(404).send('No employees found for the provided agency.');
       return;
     }
 
-    const employeeIds = employees.map(emp => emp._id);
+     // สร้างอาร์เรย์ของ userIds โดยใช้ employeeId จาก employees
+     const userIds = await Promise.all(employees.map(async (emp) => {
+      const user = await User.findOne({ employeeId: emp._id }).exec();
+      return user ? user._id : null; // หากพบให้เก็บ _id, ไม่พบให้เก็บ null
+    }));
 
-    // ดึงข้อมูล records ที่สร้างโดย employeeIds
-    const records = await this.model.find({ createdBy: { $in: employeeIds } }).exec();
+    // กรอง null ออกจาก userIds
+    const filteredUserIds = userIds.filter(id => id !== null);
+    // console.log("User IDs:", filteredUserIds);
+
+    // ดึงข้อมูล records ที่สร้างโดย userIds
+    const records = await recordModel.find({ userId: { $in: filteredUserIds } }).exec();
+    // console.log("Records:", records);
 
     const result = await Promise.all(records.map(async (record) => {
-      // ดึงข้อมูลพนักงานที่เกี่ยวข้องกับ record
-      const recordEmployee = await this.employeeModel.findById(record.createdBy).exec();
+      // console.log("Result Record Created By ID:", record.userId);
       
-      // ดึงข้อมูลผู้ใช้ที่เกี่ยวข้องกับพนักงาน
-      const recordUser = recordEmployee ? await this.userModel.findById(recordEmployee._id).exec() : null;
-
-      // ดึงข้อมูลวิวที่เกี่ยวข้องกับ record
-      const view = await this.modelView.findOne({ recordId: record._id }).exec();
-
+      const recordUser= await User.findById(record.userId).exec();
+      // console.log(" recordUser",recordUser)
+      if (!recordUser) {
+        console.log(`No employee found for createdBy: ${record.userId}`);
+        // console.log(`record recordUserdata : ${record}`);
+      }
+    
+      const recordEmployee = recordUser? await RegisterModel.findById(recordUser.employeeId).exec() : null;
+      if (!recordEmployee) {
+        console.log(`No user found for employee recordEmployee ID: ${recordEmployee? recordEmployee._id : 'N/A'}`);
+      }
+    
+      const view = await ViewModel.findOne({ recordId: record._id }).exec();
+      if (!view) {
+        console.log(`No view found for record ID: ${record._id}`);
+      }
+    
       return {
         record,
         employee: recordEmployee,

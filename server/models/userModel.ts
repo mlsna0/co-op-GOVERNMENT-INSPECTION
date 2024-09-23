@@ -11,6 +11,14 @@ const userSchema = new mongoose.Schema({
 });
 
 export interface User{
+    _id?:string; // _id จาก MongoDB จะถูกใช้เมื่อมีการบันทึกข้อมูลแล้ว
+    password?: string; // password ที่ต้องมี
+    role?: 'user' | 'admin' | 'superadmin'; // ค่า role ตาม schema
+    isActive?: boolean; // ค่าตาม schema
+    employeeId?: string; // Reference ไปที่ Employee
+    resetPasswordToken?: string; // ค่าตาม schema
+    resetPasswordExpires?: Date; // ค่าตาม schema
+
     firstname: string;
     lastname: string;
     organization: string;

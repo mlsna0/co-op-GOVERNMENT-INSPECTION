@@ -30,15 +30,67 @@
                     <div class="col-md-4">
                         <div class="card-user">
                             <div class="card-avatar">
-                                <a href="javascript:void(0)" style="height: 220px;">
-                                <img class="img" [src]="profileImgUrl" />
-                                <!-- <div class="upload">
-                                    <i class="fa fa-camera"></i>
-                                </div> -->
-                                </a>
+                                <div style="height: 220px;" href="javascript:void(0)">
+                                    <img class="img" [src]="profileImgUrl" />
+                                    <button type="button" class="upload" (click)="openModal()">
+                                        <i class="fa fa-camera"></i>
+                                    </button>
+                                </div>
+                                <div class="modal fade" id="profile-Modal" tabindex="-1" role="dialog"
+                                    aria-labelledby="addItemModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header" class="card-header">
+                                                <h5 class="modal-title" id="addItemModalLabel"
+                                                    style="color: rgb(0, 0, 0); font-family: 'Sarabun', sans-serif !important; font-size: 18px; font-weight: 900;">
+                                                    เปลี่ยนรูปภาพโปรไฟล์</h5>
 
-                               
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close" style="color: black;">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <form [formGroup]="UserInfoForm" (ngSubmit)="SaveUserInfo()">
+                                                <div class="modal-body">
+
+
+
+                                                    <input type="file" id="profileImage" formControlName="profileImage"
+                                                        accept="image/png, image/jpeg, image/jpg"
+                                                        (change)="onFileUploadImgChange($event)">
+
+
+                                                    <div class="profile-image-container">
+                                                        <img [src]="profileImgUrl"
+                                                            alt="profileImgUrl file form database "
+                                                            class="profile-image" [ngClass]="{'d-none': imageSrc}">
+
+                                                        <img [src]="imageSrc" alt="imageSrc file to upload"
+                                                            class="profile-image" [ngClass]="{'d-none': !imageSrc}">
+                                                        <i class="fa-regular fa-trash-can positionTrashCan"
+                                                            (click)="deletedFileUpload()"></i>
+                                                    </div>
+
+
+
+                                                </div>
+                                                <div class="footer-content">
+                                                    <button *ngIf="imageSrc" type="submit" class="btn btn-add">
+                                                        บันทึกเป็นรูปโปรไฟล์</button>
+                                                    <button *ngIf="imageSrc" type="button" class="btn btn-danger"
+                                                        (click)="deletedFileUpload(fileInput)">ยกเลิก</button>
+
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
                             </div>
+
+                        
 
                             <div class="card-info">
                                 <div class="row">

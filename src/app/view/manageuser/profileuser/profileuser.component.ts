@@ -449,6 +449,18 @@ resetPassword(UserID: string, newPassword: string) {
     this.EditStatus= false;
   }
 
+  
+  openModal(): void {
+    $("#profile-Modal").modal({
+      backdrop: "static",
+      keyboard: false,
+    });
+    $("#profile-Modal").modal("show");
+    // document.body.classList.add('no-scroll');
+    // this.showModal = true;
+    // console.log("as",this.showModal)
+  }
+
   closeModal(): void {
     const modalContent = document.querySelector(".EditModal-content");
 

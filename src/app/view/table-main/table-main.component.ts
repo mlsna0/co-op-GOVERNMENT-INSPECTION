@@ -237,7 +237,7 @@ export class TableMainComponent implements OnInit,AfterViewInit  {
       // console.log("Fetching records...");
   
 
-    // this.getDataRecordWithSameOrganization();
+    this.getDataRecordWithSameOrganization();
     // console.log("Fetching data records with same organization...");
 }
 
@@ -271,7 +271,7 @@ loadPDFs(): void {
   this.sv.getAllPDFs().subscribe(
     data => {
       // ตรวจสอบโครงสร้างของ data ที่ได้รับ
-      console.log('Raw data:', data);
+      // console.log('loadPDFs Raw data:', data);
       
       // สมมติว่า data เป็น array ของชื่อไฟล์ PDF
       this.pdfs = data;
@@ -473,15 +473,19 @@ getUserDocuments(): void {
 }
 
 
-// getDataRecordWithSameOrganization(){
+getDataRecordWithSameOrganization(){
+  console.log("Current User ID being sent: ", this.currentUserId);
 
-//  console.log("getDataRecordWithSameOrganization : ",this.currentUserId)
-
-//  this.sv.getDataRecordWithSameOrganization(this.currentUserId).subscribe(res=>{
-//  this.sameDataRecord = res;
- 
-//  })
-// }
+  this.sv.getDataRecordWithSameOrganization(this.currentUserId).subscribe(
+    res => {
+      this.sameDataRecord = res;
+      console.log("getDataRecordWithSameOrganization received: ", this.sameDataRecord);
+    },
+    error => {
+      console.error("Error fetching data: ", error);
+    }
+  );
+}
 
 handleError(error) {
   console.error('Error:', error);

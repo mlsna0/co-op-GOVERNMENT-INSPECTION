@@ -82,7 +82,7 @@ export class AgencyMemberComponent implements OnInit {
       amphure: ['', Validators.required],
       tambon: ['', Validators.required],
       postCode: ['', Validators.required],
-      role: ['', Validators.required],
+      role: ['user'],
       profileImage: ['']
     } ,{ validator: this.passwordMatchValidator });
 
@@ -303,7 +303,7 @@ togglePasswordVisibility(field: string): void {
       
     this.Submitted = true; 
     if (this.regisForm.invalid) {
-
+      console.log(this.regisForm)
       this.toastr.error('กรุณากรอกข้อมูลทุกช่อง', 'เกิดข้อผิดพลาด!', {
         timeOut: 1500,
         positionClass: 'toast-top-right'
