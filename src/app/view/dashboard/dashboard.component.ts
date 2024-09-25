@@ -21,12 +21,22 @@ import { coerceStringArray } from "@angular/cdk/coercion";
 })
 export class DashboardComponent implements OnInit {
   //  provinces: { id: number, name_th: string, selected: boolean }[] = []; // เปลี่ยนเป็น provinces
-  provinces: any[] = [];
-  recordCount: number;
-  companyData: { [key: string]: any } = {};
-  monthlyDataByProvince: { [key: string]: any } = {}; 
+
+
+  //superAdmin count
   userCount: number;
-  AgencyPersonCount:number;
+  recordCount: number;
+  //Admin count
+  SameOrganizationrecordCount: number;
+  recordCountWithStatus1: number;
+  AgencyPersonCount: number;
+  filteredMonth: string | null = null;
+
+  provinces: any[] = [];
+  companyData: { [key: string]: any } = {};
+  monthlyDataByProvince: { [key: string]: any } = {};
+
+
   isAdmin: boolean;
   isSuperAdmin: boolean;
   pdfs: any[] = [];
@@ -69,10 +79,11 @@ export class DashboardComponent implements OnInit {
   filterCriteria = null;
   userCount2: number;
 
- //get data by ID
- userId: string | undefined;
- AgencyID:string | undefined;
- AgencyData:any
+  //get data by ID
+  userId: string | undefined;
+  AgencyID: string | undefined;
+  AgencyData: any
+  DataSameOrganization: any
   @ViewChild('provinceSelect') provinceSelect: MatSelect;
   constructor(
     private provinceService: ProvinceService,
@@ -91,7 +102,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProvinces();
-
+    //super admin count
     this.sv.getRecordCount().subscribe(
       count => {
         this.recordCount = count;
@@ -108,6 +119,9 @@ export class DashboardComponent implements OnInit {
       error => {
         console.error(error);
       });
+
+
+
 
     // Create the chart
     this.setupRouterSubscription();
@@ -133,11 +147,11 @@ export class DashboardComponent implements OnInit {
       this.totalSignedDocumentsCount = count;
       // console.log("Total documents count updated in Component:", this.totalSignedDocumentsCount);
     });
-    
-     this.documentService.getTotalCompanies().subscribe(res =>{
+
+    this.documentService.getTotalCompanies().subscribe(res => {
       this.totalCompanies = res;
-    //  console.log(" จาก serveice",this.totalCompanies);
-     })
+      //  console.log(" จาก serveice",this.totalCompanies);
+    })
     // this.documentService.companyCount$.subscribe(count => {
     //   this.totalCompanies = count;
     //   // console.log("Total compony count updated in Component:", this.totalCompanies);
@@ -155,7 +169,7 @@ export class DashboardComponent implements OnInit {
         }).catch(error => {
           console.error('เกิดข้อผิดพลาดในการคำนวณจำนวนหน้า:', error);
         });
-      },  
+      },
       error: (error) => {
         console.error('เกิดข้อผิดพลาดในการดึงไฟล์ PDF:', error);
       }
@@ -178,7 +192,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
- 
+
   //ถ้าเอา  filterProvinces ไปใส่ใน apply แล้วข้อมูลจะหายไป
   filterProvinces() {
     if (this.filterCriteria && this.filterCriteria.selectedProvinces) {
@@ -201,6 +215,62 @@ export class DashboardComponent implements OnInit {
       // });
     }
   }
+
+
+  //fiter date สำหรับเฉพาะ admin
+  filterChartData() {
+    if (this.startDate && this.endDate) {
+      console.log("Start Date: ", this.startDate);
+      console.log("End Date: ", this.endDate);
+
+      const startDateObj = new Date(this.startDate);
+      startDateObj.setHours(0, 0, 0, 0); // ตั้งค่าเวลาเป็น 00:00:00
+      const endDateObj = new Date(this.endDate);
+      endDateObj.setHours(23, 59, 59, 999); // ตั้งค่าสิ้นสุดที่เวลา 23:59:59.999
+      // console.log("startDateObj: ", startDateObj)
+
+      const filteredData = this.DataSameOrganization.filter(item => {
+        // ตรวจสอบว่า createdDate มีค่า
+        if (!item.record || !item.record?.createdDate || typeof item.record?.createdDate !== 'string') {
+          console.warn("Invalid createdDate:", item.record?.createdDate);
+          return false; // ไม่รวม item นี้ในการกรอง
+        }
+
+        const createdDate = this.convertToDate(item.record?.createdDate);
+        console.log("Original createdDate: ", item.record?.createdDate); // ดูค่า createdDate
+        console.log("Converted createdDate: ", createdDate); // ดูค่าหลังแปลง
+        if (!createdDate) {
+          return false; // หากแปลงวันที่ไม่สำเร็จ ไม่รวม item นี้
+        }
+        // แสดงการเปรียบเทียบวันที่
+        console.log("Comparing:", createdDate, ">=", startDateObj, "&&", createdDate, "<=", endDateObj);
+        return createdDate >= startDateObj && createdDate <= endDateObj;
+      });
+      // แสดงข้อมูลที่กรอง
+      console.log("Filtered Data: ", filteredData);
+
+      // อัปเดตค่าของ SameOrganizationrecordCount และ recordCountWithStatus1 ตามข้อมูลที่กรองแล้ว
+      // this.SameOrganizationrecordCount = filteredData.length;
+      // this.recordCountWithStatus1 = filteredData.filter(item => {
+      //   if (typeof item.record.status !== 'number') {
+      //     console.warn("Invalid status:", item.record.status);
+      //     return false; // ไม่รวม item นี้ในการกรอง
+      //   }
+      //   return Number(item.record.status) === 1;
+      // }).length;
+
+      // console.log("Filtered SameOrganizationrecordCount: ", this.SameOrganizationrecordCount);
+      // console.log("Filtered recordCountWithStatus1: ", this.recordCountWithStatus1);
+
+
+
+
+      // อัปเดตกราฟด้วยข้อมูลที่กรองแล้ว เช็คข้อมูลก่อน??
+      this.createMonthlyChart(filteredData);
+
+    }
+  }
+
 
   private setupRouterSubscription() {
     this.routerSubscription = this.router.events.subscribe(event => {
@@ -245,7 +315,7 @@ export class DashboardComponent implements OnInit {
       if (this.router.url === '/dashboard') {
         if (!this.chart) {
           this.createChart();
-          this.createMonthlyChart(); 
+          this.createMonthlyChart(this.DataSameOrganization);
         }
         if (!this.donutChart) {
           this.createDonutChart();
@@ -308,7 +378,7 @@ export class DashboardComponent implements OnInit {
           name_th: province.name_th,
           selected: false
         }));
-        this.allProvinces = [...this.provinces]; 
+        this.allProvinces = [...this.provinces];
         this.filteredProvinces = [...this.provinces];
         // console.log("Provinces:", this.provinces);
 
@@ -365,7 +435,7 @@ export class DashboardComponent implements OnInit {
     const isChecked = event.target.checked;
     const provinceId = Number(event.target.value);
     const province = this.provinces.find(p => p.id === provinceId);
-    console.log("จังหวัดที่ map : ",province)
+    console.log("จังหวัดที่ map : ", province)
 
     if (province) {
       province.selected = isChecked;
@@ -417,12 +487,7 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  //date filter
-  onDateChange(): void {
-    // ฟังก์ชันเปลี่ยนวันที่
-    // console.log('Start Date:', this.startDate);
-    // console.log('End Date:', this.endDate);
-  }
+
 
 
 
@@ -481,9 +546,9 @@ export class DashboardComponent implements OnInit {
   provinceData: { [provinceName: string]: { users: any[], documentCount: number, signedDocuments: number } } = {};
   monthlyData: { [month: string]: { documentCount: number; signedDocuments: number } } = {};
 
-// เพื่อการรวมข้อมูล ระหว่าง ข้อมูลบริษัท(agencies) ข้อมูลพนักงาน (Employee) ข้อมูล เอกสาร (record)
-//  const agencies = 
-//  const Employee =   recordData;
+  // เพื่อการรวมข้อมูล ระหว่าง ข้อมูลบริษัท(agencies) ข้อมูลพนักงาน (Employee) ข้อมูล เอกสาร (record)
+  //  const agencies = 
+  //  const Employee =   recordData;
 
 
 
@@ -567,36 +632,40 @@ export class DashboardComponent implements OnInit {
 
   createDonutChart(): void {
     const ctx = document.getElementById('myDonutChart') as HTMLCanvasElement | null;
-  
+
     if (!ctx) {
       console.error('ไม่พบองค์ประกอบ Canvas ที่มี ID "myDonutChart"');
       return;
     }
-  
+
     let totalDocuments = 0;
     let totalSignedDocuments = 0;
-  
+    // console.log("this.SameOrganizationrecordCount  : ", this.SameOrganizationrecordCount)
+    // console.log("this.SameOrganizationrecordCount  : ", this.recordCountWithStatus1)
+
     if (this.isAdmin) {
+
+
       // ถ้าเป็น admin ใช้ข้อมูลจาก DocumentService
-      totalDocuments = this.totalDocumentsCount || 0;
-      totalSignedDocuments = this.totalSignedDocumentsCount || 0;
-    } else {
+      totalDocuments = this.SameOrganizationrecordCount || 0; //petch แก้ไขนะ this.SameOrganizationrecordCount this.totalDocumentsCount 
+      totalSignedDocuments = this.recordCountWithStatus1 || 0;//this.totalSignedDocumentsCount
+    } else {//petch แก้ไขนะthis.recordCountWithStatus1
       // ถ้าไม่ใช่ admin (เช่น superadmin) ใช้ข้อมูลเดิม
       totalDocuments = this.totalDocuments || 0;
       totalSignedDocuments = this.totalSignedDocuments || 0;
     }
-  
+
     // การจัดการค่าศูนย์เพื่อป้องกันการเกิดข้อผิดพลาด
     if (totalDocuments === 0) {
       totalDocuments = 1;  // กำหนดค่าเป็น 1 เพื่อให้กราฟแสดงได้
     }
-  
+
     const unsignedDocuments = totalDocuments - totalSignedDocuments;
-  
+
     if (this.donutChart) {
       this.donutChart.destroy();
     }
-  
+
     this.donutChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
@@ -646,15 +715,40 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  //การแปลงค่าตัวแปรที่อยู่ในฐานข้อมูล createdDat
+  convertToDate(dateString: string): Date | null {
+    if (!dateString || typeof dateString !== 'string') {
+      console.error("Invalid date string:", dateString);
+      return null; // คืนค่า null หากไม่ใช่สตริงที่ถูกต้อง
+    }
 
+    const regex = /(\d{1,2})\/(\d{1,2})\/(\d{2,4})/;
+    const match = dateString.match(regex);
 
-  createMonthlyChart(): void {
+    if (match) {
+      let [_, day, month, year] = match;
+
+      // แปลงปีพุทธศักราชเป็นคริสต์ศักราช
+      year = (parseInt(year, 10) - 543).toString(); // แปลงจากปีพุทธศักราช
+
+      return new Date(`${year}-${month}-${day}`);
+    }
+
+    console.error("Date format not recognized:", dateString);
+    return null; // คืนค่า null หากรูปแบบวันที่ไม่ถูกต้อง
+  }
+  createMonthlyChart(data: any[]): void {
+
+    if (!Array.isArray(data)) {
+      console.error("Invalid data provided to createMonthlyChart: expected an array but got", data);
+      return;
+    }
     // console.log('Creating monthly chart for admin');
     const canvas = document.getElementById('myMonthlyChart') as HTMLCanvasElement | null;
     if (!canvas) {
       return;
     }
-  
+
     const ctx = canvas.getContext('2d');
     if (!ctx) {
       return;
@@ -662,38 +756,105 @@ export class DashboardComponent implements OnInit {
     if (this.chart) {
       this.chart.destroy();
     }
-  
+
     // กำหนดเดือนในภาษาไทย
     const months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
-  
-    // ตรวจสอบว่ามีข้อมูลบริษัทของผู้ใช้ใน companyData หรือไม่
-    const userCompany = this.currentUser.employeeId.organization;
-    const companyData = this.companyData[userCompany];
-  
-    if (!companyData) {
-      console.error(`No data available for the company: ${userCompany}`);
-      return;
+
+    // นับจำนวนเอกสารที่ถูกสร้างและลงนามแล้วต่อเดือน
+    const monthlyDocumentCounts = new Array(12).fill(0);
+    const monthlySignedDocuments = new Array(12).fill(0);
+
+    // กำหนดค่าวันที่เริ่มต้นและสิ้นสุด
+    const startDateObj = new Date(this.startDate);
+    const endDateObj = new Date(this.endDate);
+    endDateObj.setHours(23, 59, 59, 999); // ปรับเวลาให้ครบถ้วน
+
+    // กำหนดให้เริ่มต้นเป็น null
+    this.filteredMonth = null;
+    // ตรวจสอบการฟิลเตอร์เดือน
+    if (startDateObj && endDateObj) {
+      const startDateObj = new Date(this.startDate);
+      const endDateObj = new Date(this.endDate);
+      // ถ้า startDate และ endDate ตรงกันและอยู่ในเดือนเดียวกัน
+      if (startDateObj.getMonth() === endDateObj.getMonth() && startDateObj.getFullYear() === endDateObj.getFullYear()) {
+        this.filteredMonth = months[startDateObj.getMonth()];
+        console.log("เดือน : ", this.filteredMonth)
+      } else {
+        this.filteredMonth = null; // ถ้าไม่มีการฟิลเตอร์หรือหลายเดือน
+      }
+    } else {
+      this.filteredMonth = null; // ถ้าไม่มี startDate หรือ endDate
     }
-  
-    // ดึงข้อมูลรายเดือนจาก companyData
-    const monthlyDocumentCounts = months.map(month => companyData.monthlyData[month]?.documentCount || 0);
-    const monthlySignedDocuments = months.map(month => companyData.monthlyData[month]?.signedDocuments || 0);
-  
+
+    // นับเอกสาร
+    data.filter(item => item.record).forEach(item => {
+      const createdDate = this.convertToDate(item.record.createdDate);
+      // console.log('Created Date:', createdDate, 'Original Date:', item.record.createdDate);
+      const monthIndex = createdDate.getMonth();
+      monthlyDocumentCounts[monthIndex]++;
+      if (Number(item.record.status) === 1) {
+        monthlySignedDocuments[monthIndex]++;
+      }
+    });
+
+
+    // เริ่มต้นด้วยการใช้ labels เป็นเดือน
+    let filteredLabels = months;
+    let filteredDocumentCounts = monthlyDocumentCounts.slice();
+    let filteredSignedDocuments = monthlySignedDocuments.slice();
+
+    // หากมีการกรองวันที่เริ่มต้นและสิ้นสุด
+    if (this.startDate && this.endDate) {
+      const startDateObj = new Date(this.startDate); // ตรวจสอบการแปลงวันที่เริ่มต้น
+      const endDateObj = new Date(this.endDate); // ตรวจสอบการแปลงวันที่สิ้นสุด
+      const filterMonth = startDateObj.getMonth();
+      const filterYear = startDateObj.getFullYear();
+
+      // ตรวจสอบว่าช่วงวันที่อยู่ในเดือนและปีเดียวกันหรือไม่
+      if (filterMonth === endDateObj.getMonth() && filterYear === endDateObj.getFullYear()) {
+        // เปลี่ยน labels เป็นวันของเดือนนั้น
+        const daysInMonth = new Date(filterYear, filterMonth + 1, 0).getDate();
+        filteredLabels = Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString()); // สร้าง labels เป็นวัน
+
+        filteredDocumentCounts = new Array(daysInMonth).fill(0);
+        filteredSignedDocuments = new Array(daysInMonth).fill(0);
+
+        // นับเอกสารที่ตรงกับแต่ละวันในเดือนที่ถูกกรอง
+        data.filter(item => item.record).forEach(item => {
+          const createdDate = this.convertToDate(item.record.createdDate);
+          console.log('Created Date:', createdDate); // Debug เพื่อตรวจสอบวันที่
+
+          // ตรวจสอบว่า createdDate อยู่ในช่วง startDate และ endDate หรือไม่
+          if (
+            createdDate.getFullYear() === filterYear &&
+            createdDate.getMonth() === filterMonth &&
+            createdDate >= startDateObj && createdDate <= endDateObj
+          ) {
+            const day = createdDate.getDate() - 1; // วันที่ใน array เริ่มที่ 0
+            console.log('Day:', day + 1); // ตรวจสอบวัน
+            filteredDocumentCounts[day]++;
+            if (Number(item.record.status) === 1) {
+              filteredSignedDocuments[day]++;
+            }
+          }
+        });
+      }
+    }
     this.chart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: months,
+        labels: filteredLabels,
         datasets: [
           {
             label: 'จำนวนเอกสาร',
-            data: monthlyDocumentCounts,
+            data: filteredDocumentCounts,
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgb(255, 99, 132)',
             borderWidth: 1
           },
           {
             label: 'จำนวนเอกสารที่ลงนามแล้ว',
-            data: monthlySignedDocuments,
+            data: filteredSignedDocuments,
             backgroundColor: 'rgba(54, 162, 235, 0.2)',
             borderColor: 'rgb(54, 162, 235)',
             borderWidth: 1
@@ -748,72 +909,72 @@ export class DashboardComponent implements OnInit {
     documents.forEach(document => {
       // ตรวจสอบว่ามี agency และ province ก่อนที่จะเข้าถึง
       if (!document.agency || !document.agency.province) {
-            return; // ข้ามเอกสารที่ไม่มีข้อมูล agency หรือ province
+        return; // ข้ามเอกสารที่ไม่มีข้อมูล agency หรือ province
+      }
+
+      // นับจำนวนเอกสารภายใน document
+      document.documentCount = document.documents.length;
+
+      // ดึงข้อมูล provinceId และ provinceName จาก agency
+      const provinceId = parseInt(document.agency.province, 10);  // ใช้ province จาก agency
+      const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
+
+      if (!provinceName || provinceName === 'ไม่ทราบจังหวัด') {
+        return; // ถ้าไม่มีชื่อจังหวัดให้ข้าม
+      }
+
+      // ตรวจสอบว่ามี provinceName ใน this.provinceData หรือไม่ ถ้าไม่มีให้สร้างใหม่
+      if (!this.provinceData[provinceName]) {
+        this.provinceData[provinceName] = { users: [], documentCount: 0, signedDocuments: 0 };
+      }
+
+      // เพิ่มข้อมูล user และนับจำนวนเอกสารในจังหวัดนั้นๆ
+      this.provinceData[provinceName].users.push(document);
+      this.provinceData[provinceName].documentCount += document.documentCount;
+
+      // วนลูปเอกสารใน documents เพื่อเช็คเอกสารที่มีการลงนาม
+      document.documents.forEach(doc => {
+        if (!doc._id) {
+          return; // ข้ามเอกสารที่ไม่มี _id
         }
 
-        // นับจำนวนเอกสารภายใน document
-        document.documentCount = document.documents.length;
-
-        // ดึงข้อมูล provinceId และ provinceName จาก agency
-        const provinceId = parseInt(document.agency.province, 10);  // ใช้ province จาก agency
-        const provinceName = this.provinceService.getProvinceNameById(provinceId, this.provinces);
-
-        if (!provinceName || provinceName === 'ไม่ทราบจังหวัด') {
-            return; // ถ้าไม่มีชื่อจังหวัดให้ข้าม
+        // เช็คว่าเอกสารนี้ถูกลงนามหรือไม่
+        if (this.pdfs.includes(`${doc._id}.pdf`)) {
+          this.provinceData[provinceName].signedDocuments += 1;
         }
-
-        // ตรวจสอบว่ามี provinceName ใน this.provinceData หรือไม่ ถ้าไม่มีให้สร้างใหม่
-        if (!this.provinceData[provinceName]) {
-            this.provinceData[provinceName] = { users: [], documentCount: 0, signedDocuments: 0 };
-        }
-
-        // เพิ่มข้อมูล user และนับจำนวนเอกสารในจังหวัดนั้นๆ
-        this.provinceData[provinceName].users.push(document);
-        this.provinceData[provinceName].documentCount += document.documentCount;
-
-        // วนลูปเอกสารใน documents เพื่อเช็คเอกสารที่มีการลงนาม
-        document.documents.forEach(doc => {
-            if (!doc._id) {
-                return; // ข้ามเอกสารที่ไม่มี _id
-            }
-
-            // เช็คว่าเอกสารนี้ถูกลงนามหรือไม่
-            if (this.pdfs.includes(`${doc._id}.pdf`)) {
-                this.provinceData[provinceName].signedDocuments += 1;
-            }
-        });
+      });
     });
 
     // บวก totalDocuments และ totalSignedDocuments หลังจากลูปเสร็จ
     for (const provinceName in this.provinceData) {
-        this.totalDocuments += this.provinceData[provinceName].documentCount;
-        this.totalSignedDocuments += this.provinceData[provinceName].signedDocuments;
+      this.totalDocuments += this.provinceData[provinceName].documentCount;
+      this.totalSignedDocuments += this.provinceData[provinceName].signedDocuments;
     }
 
     // รีเซ็ตข้อมูลจังหวัดทั้งหมด
     this.provinces.forEach(province => {
-        province.count = 0;
-        province.signedDocuments = 0;
-        province.percentage = 0;
+      province.count = 0;
+      province.signedDocuments = 0;
+      province.percentage = 0;
     });
 
     // อัพเดตข้อมูลจังหวัดตามข้อมูลที่ประมวลผลแล้ว
     this.provinces.forEach(province => {
-        const provinceName = province.name_th;
-        if (this.provinceData[provinceName]) {
-            province.count = this.provinceData[provinceName].documentCount;
-            province.signedDocuments = this.provinceData[provinceName].signedDocuments;
+      const provinceName = province.name_th;
+      if (this.provinceData[provinceName]) {
+        province.count = this.provinceData[provinceName].documentCount;
+        province.signedDocuments = this.provinceData[provinceName].signedDocuments;
 
-            // คำนวณเปอร์เซ็นต์ของเอกสารที่ลงนาม
-            if (province.count > 0) {
-                province.percentage = (province.signedDocuments / province.count) * 100;
-            } else {
-                province.percentage = 0;
-            }
+        // คำนวณเปอร์เซ็นต์ของเอกสารที่ลงนาม
+        if (province.count > 0) {
+          province.percentage = (province.signedDocuments / province.count) * 100;
+        } else {
+          province.percentage = 0;
         }
+      }
     });
-}
-  
+  }
+
 
   private englishToThaiMonthMap: { [key: string]: string } = {
     January: 'มกราคม',
@@ -830,121 +991,144 @@ export class DashboardComponent implements OnInit {
     December: 'ธันวาคม'
   };
 
- groupByCompany(documents: any[]): void {
-  this.companyData = {};
-  const userCompany = this.currentUser.employeeId.organization;
+  groupByCompany(documents: any[]): void {
+    this.companyData = {};
+    const userCompany = this.currentUser.employeeId.organization;
 
-  documents.forEach(record => {
-    const companyName = record.employee.organization;
+    documents.forEach(record => {
+      const companyName = record.employee.organization;
 
-    if (!companyName || companyName !== userCompany) {
-      return;
-    }
-
-    if (!this.companyData[companyName]) {
-      this.companyData[companyName] = {
-        monthlyData: {}
-      };
-    }
-
-    record.documents.forEach(doc => {
-      if (doc.record_star_date) {
-        const englishMonth = new Date(doc.record_star_date).toLocaleString('default', { month: 'long' });
-        const thaiMonth = this.englishToThaiMonthMap[englishMonth]; // แปลงเป็นเดือนภาษาไทย
-
-        if (!this.companyData[companyName].monthlyData[thaiMonth]) {
-          this.companyData[companyName].monthlyData[thaiMonth] = {
-            documentCount: 0,
-            signedDocuments: 0
-          };
-        }
-
-        this.companyData[companyName].monthlyData[thaiMonth].documentCount += 1;
-
-        if (this.pdfs.includes(`${doc._id}.pdf`)) {
-          this.companyData[companyName].monthlyData[thaiMonth].signedDocuments += 1;
-        }
-      } else {
-        console.warn(`Document ${doc._id} does not have a valid start date.`);
+      if (!companyName || companyName !== userCompany) {
+        return;
       }
-    });
-  });
 
-  // console.log('Grouped data for the user\'s company:', this.companyData);
-}
-
-loadUser(): void {
-  this.loginservice.getUserProfile().subscribe(
-    user => {
-      if (user && user._id) {
-        this.userId = user._id;
-        this.AgencyID = user?.employeeId.agencies
-        const role = user.role;
-        const userCompany = user.employeeId.organization;
-        const loadDocuments = (documents: any[]) => {
-          this.allDocuments = documents;
-          this.currentUser = user;
-          this.isAdmin = role === 'admin';
-          this.isSuperAdmin = role === 'superadmin';
-
-          // console.log(this.currentUser);
-
-          // ประมวลผลข้อมูลตามบทบาท
-          if (this.isSuperAdmin) {
-            this.processProvinceData(documents);
-            this.createChart();
-          } else if (this.isAdmin) {
-            this.groupByCompany(documents);
-            this.createMonthlyChart();
-          }
-            // this.createChart();
-            this.createMonthlyChart();
-          
-
-          this.createDonutChart(); // เรียกใช้กราฟโดนัทที่ต้องการ
-
-          this.dtTrigger.next(this.provinces);
+      if (!this.companyData[companyName]) {
+        this.companyData[companyName] = {
+          monthlyData: {}
         };
-
-        this.sv.getAllRecordsLinkedByEmployeeId().subscribe(
-          recordData => {
-            if (recordData && recordData.length > 0) {
-              loadDocuments(recordData);
-              // console.log("getAllRecordsLinkedByEmployeeId : ",recordData);
-            } else {
-              console.error('ไม่พบเอกสาร');
-            }
-          },
-          error => {
-            console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล:', error);
-          }
-        );
-        this.sv.getOrganizationById(this.AgencyID).subscribe(res=>{
-          this.AgencyData = res;
-          console.log("ข้อมูลบริษัท: ",this.AgencyData)
-        });
-        this.sv.getPersonsWithSameOrganization(this.AgencyID).subscribe(res=>{
-          this.AgencyPersonCount =  res.length;
-          console.log("จำนวนบุคคลกร: ",this.AgencyPersonCount)
-        })
-      } else {
-        console.error('User ID is undefined or null.');
       }
-    },
-    error => {
-      console.error('Error fetching user profile:', error);
+
+      record.documents.forEach(doc => {
+        if (doc.record_star_date) {
+          const englishMonth = new Date(doc.record_star_date).toLocaleString('default', { month: 'long' });
+          const thaiMonth = this.englishToThaiMonthMap[englishMonth]; // แปลงเป็นเดือนภาษาไทย
+
+          if (!this.companyData[companyName].monthlyData[thaiMonth]) {
+            this.companyData[companyName].monthlyData[thaiMonth] = {
+              documentCount: 0,
+              signedDocuments: 0
+            };
+          }
+
+          this.companyData[companyName].monthlyData[thaiMonth].documentCount += 1;
+
+          if (this.pdfs.includes(`${doc._id}.pdf`)) {
+            this.companyData[companyName].monthlyData[thaiMonth].signedDocuments += 1;
+          }
+        } else {
+          console.warn(`Document ${doc._id} does not have a valid start date.`);
+        }
+      });
+    });
+
+    // console.log('Grouped data for the user\'s company:', this.companyData);
+  }
+
+  loadUser(): void {
+    this.loginservice.getUserProfile().subscribe(
+      user => {
+        if (user && user._id) {
+          this.userId = user._id;
+          this.AgencyID = user?.employeeId.agencies
+          const role = user.role;
+          const userCompany = user.employeeId.organization;
+          const loadDocuments = (documents: any[]) => {
+            this.allDocuments = documents;
+            this.currentUser = user;
+            this.isAdmin = role === 'admin';
+            this.isSuperAdmin = role === 'superadmin';
+
+            console.log("curren ID: ", this.userId);
+            this.getAllSameOrganization(this.userId)
+
+            // ประมวลผลข้อมูลตามบทบาท
+            if (this.isSuperAdmin) {
+              this.processProvinceData(documents);
+              this.createChart();
+            } else if (this.isAdmin) {
+              this.groupByCompany(documents);
+              this.createMonthlyChart(this.DataSameOrganization);
+            }
+            // this.createChart();
+            this.createMonthlyChart(this.DataSameOrganization);
+
+
+            this.createDonutChart(); // เรียกใช้กราฟโดนัทที่ต้องการ
+
+            this.dtTrigger.next(this.provinces);
+          };
+
+          this.sv.getAllRecordsLinkedByEmployeeId().subscribe(
+            recordData => {
+              if (recordData && recordData.length > 0) {
+                loadDocuments(recordData);
+                // console.log("getAllRecordsLinkedByEmployeeId : ",recordData);
+              } else {
+                console.error('ไม่พบเอกสาร');
+              }
+            },
+            error => {
+              console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล:', error);
+            }
+          );
+          this.sv.getOrganizationById(this.AgencyID).subscribe(res => {
+            this.AgencyData = res;
+            console.log("ข้อมูลบริษัท: ", this.AgencyData)
+          });
+          this.sv.getPersonsWithSameOrganization(this.AgencyID).subscribe(res => {
+            this.AgencyPersonCount = res.length;
+            console.log("จำนวนบุคคลกร: ", this.AgencyPersonCount)
+          })
+        } else {
+          console.error('User ID is undefined or null.');
+        }
+      },
+      error => {
+        console.error('Error fetching user profile:', error);
+      }
+    );
+  }
+
+  getAllSameOrganization(currentUserId) {
+    if (!currentUserId) {
+      console.log("ไม่ได้รับ currentUserId มา: ", currentUserId)
     }
-  );
-}
-getProvinceName(id: number): string {
-  // ตรวจสอบประเภทของ id และแปลงให้ตรงกันถ้าจำเป็น
-  const provinceId = Number(id);
-  // ตรวจสอบข้อมูลใน provinces
-  // console.log('All Provinces:', this.provinces);
-  const province = this.provinces.find((p) => p.id === provinceId);
-  // console.log(`Searching for Province ID: ${provinceId}. Found:`, province);
-  return province ? province.name_th : "Not Found";
-}
+
+    this.sv.getDataRecordWithSameOrganization(currentUserId).subscribe(res => {
+      this.DataSameOrganization = res;
+      console.log("DataSameOrganization: ", this.DataSameOrganization)
+
+      // นับเฉพาะข้อมูลที่มี field 'record'
+      this.SameOrganizationrecordCount = this.DataSameOrganization.filter(item => item.record).length;
+      console.log("จำนวน record ใน DataSameOrganization: ", this.SameOrganizationrecordCount);
+      // นับเฉพาะข้อมูลที่มี field 'record'
+      this.recordCountWithStatus1 = this.DataSameOrganization.filter(item => item.record && Number(item.record.status) === 1).length;
+      console.log("จำนวน record ที่มี status = 1: ", this.recordCountWithStatus1);
+      this.createDonutChart();
+      this.createMonthlyChart(this.DataSameOrganization);
+    })
+
+
+  }
+  getProvinceName(id: number): string {
+    // ตรวจสอบประเภทของ id และแปลงให้ตรงกันถ้าจำเป็น
+    const provinceId = Number(id);
+    // ตรวจสอบข้อมูลใน provinces
+    // console.log('All Provinces:', this.provinces);
+    const province = this.provinces.find((p) => p.id === provinceId);
+    // console.log(`Searching for Province ID: ${provinceId}. Found:`, province);
+    return province ? province.name_th : "Not Found";
+  }
 
 
 }
