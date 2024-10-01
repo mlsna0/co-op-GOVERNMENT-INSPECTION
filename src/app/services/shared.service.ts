@@ -164,6 +164,20 @@ export class SharedService {
       })
     );
   }
+  saveSignature(documentId: any, personId: any, signatureData: any): Observable<any> {
+    // สร้างข้อมูลที่จะส่งไปยัง backend
+    const data = {
+        personId: personId,
+        signature: signatureData // ข้อมูลลายเซ็นในรูปแบบ base64
+    };
+
+    return this.http.post(`${this.baseUrl}/viewModel/saveSignature/${documentId}`, data).pipe(
+        catchError(error => {
+            console.error('Error updating record content:', error);
+            throw 'ไม่สามารถอัปเดตข้อมูลได้';
+        })
+    );
+}
 
   savePDF(data: FormData): Observable<any> {
     return this.http.put(`${this.baseUrl}/record/savepdf`, data).pipe(

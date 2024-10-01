@@ -113,6 +113,10 @@ function setRoutes(app): void {
   router.route('/viewModel/:id').get(viewModelCtrl.get);
   router.route('/viewModel/:id').put(viewModelCtrl.update);
   router.route('/viewModel/:id').delete(viewModelCtrl.delete);
+  // ตั้งค่าให้บริการไฟล์ลายเซ็น
+  router.use('/signaturesDetail', express.static(path.join(__dirname, 'signaturesDetail')));
+  router.route('/viewModel/saveSignature/:documentId').post(viewModelCtrl.saveSignatureToFile);
+ 
 
   router.route('/registerModel').get(registerModelCtrl.getAll);
   router.route('/registerModel/profile').get(auth.authorize, registerModelCtrl.getUserProfile);//petch add

@@ -670,13 +670,7 @@ position: absolute;
   
   
   
-  .sign-content img{
-      width: 30mm;   
-      height: 20mm;
-      
-      margin-left: 58px;
-     
-    }
+
 
   
   :host ::ng-deep .close{

@@ -1,37 +1,38 @@
 <div class="main-content ">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item" *ngIf="RoleCurrenUser !== 'user'"><a [routerLink]="['/dashboard']"  >หน้าหลัก</a></li>
-          <li class="breadcrumb-item"><a [routerLink]="['/table-main']">การลงตรวจอิเล็กทรอนิค</a></li>
-          <li class="breadcrumb-item active"><a aria-current="page">เนื้อหาเอกสาร</a></li>
+            <li class="breadcrumb-item" *ngIf="RoleCurrenUser !== 'user'"><a [routerLink]="['/dashboard']">หน้าหลัก</a>
+            </li>
+            <li class="breadcrumb-item"><a [routerLink]="['/table-main']">การลงตรวจอิเล็กทรอนิค</a></li>
+            <li class="breadcrumb-item active"><a aria-current="page">เนื้อหาเอกสาร</a></li>
         </ol>
-      </nav>
+    </nav>
 
     <div class="container-fluid">
 
-        
-       <div class="Detail-content card" [ngStyle]="{ width: '230mm' }">
-           <!--  [ngStyle]="{ width: '230mm', height: '327mm' , height: '297mm' }"-->
+
+        <div class="Detail-content card" [ngStyle]="{ width: '230mm' }">
+            <!--  [ngStyle]="{ width: '230mm', height: '327mm' , height: '297mm' }"-->
             <div class="modal-header card-header">
                 <button class="BackPage" (click)="BackRoot()">
                     <i class="fa fa-arrow-left">&nbsp; ย้อนกลับ</i>
 
                 </button>
                 <div class="card-title" id="myModalLabel">
-                    <p style="margin: 0;" >เนื้อหาเอกสาร</p>
-                
+                    <p style="margin: 0;">เนื้อหาเอกสาร</p>
+
                 </div>
                 <button class="btn btn-add" (click)="onSignPage()">
                     ไปที่หน้าการอัปโหลด &nbsp; &nbsp;<i class="fa fa-arrow-up-right-from-square"></i>
-                 </button>
+                </button>
                 <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="BackRoot()">
                     <span aria-hidden="true" style="color: black;">$times</span>
                 </button> -->
-    
+
             </div>
-            
+
             <div class="uploadFilePDF">
-              
+
                 <!-- <input id="fileInput" type="file" class="fileUpload" accept="application/pdf,image/*"
                     (change)="onFileSelected($event)" style="font-size: 14px;">
                 <button type="button" (click)="clearFileInput()"
@@ -41,14 +42,15 @@
             <!-- <button (click)="addDetail()">เพิ่มหน้าใหม่</button> -->
             <!--หน้าในการแสดง ไฟล์ pdf ที่อัปโหลดมา-->
             <div *ngIf="selectedFilePath">
-    
-                <pdf-viewer id="pdf-viewer" *ngIf="testFile" [src]="testFile" [render-text]="true" [original-size]="true"
-                    [borders]="true" [show-borders]="true" style="width: 210mm; height: 297mm;" (click)="test()">
+
+                <pdf-viewer id="pdf-viewer" *ngIf="testFile" [src]="testFile" [render-text]="true"
+                    [original-size]="true" [borders]="true" [show-borders]="true" style="width: 210mm; height: 297mm;"
+                    (click)="test()">
                 </pdf-viewer>
                 <img *ngIf="isFileImage" [src]="selectedFilePath" alt="Image"
                     style="display: block; align-items: center; max-width:  100%; max-height: 297mm;">
             </div>
-    
+
             <div class="page" id="firstPage">
                 <div id="myDetail" class="modal-body-detail"
                     [ngStyle]="{'display': testFile ? 'none' : 'block', width: '210mm' }">
@@ -56,12 +58,12 @@
                     <form action method="get">
                         <div class="mainCenter-panel ">
                             <div class="header-topic">
-    
+
                                 <label style="font-size: 18px; font-weight: bold;">เอกสารตรวจสอบ</label>
                                 <p>{{ detailItems?.record_topic }}</p>
-    
+
                             </div>
-    
+
                             <div class="detail-content">
                                 <div class="date-flex">
                                     <div class="form-group start-date">
@@ -73,18 +75,18 @@
                                         <p>{{ detailItems?.record_end_date | thaidate: 'medium' }}</p>
                                     </div>
                                 </div>
-    
-    
+
+
                                 <div class="form-group">
                                     <label>รายละเอียด:</label>
                                     <p>{{ detailItems?.record_detail }}</p>
                                 </div>
                                 <div class="form-group">
                                     <label>สถานที่:</label>
-                                           
+
                                     <p class="inline-text">{{ detailItems?.record_place }}</p>
-                        
-                                 
+
+
                                 </div>
                             </div>
                             <div class="main-detail">
@@ -93,10 +95,11 @@
                                         <tr>
                                             <th style="text-align: center; vertical-align: middle; width: 10%;">ครั้งที่
                                             </th>
-                                            <th style="text-align: center; vertical-align: middle; width: 600px; font-family:  'Sarabun', sans-serif;" >
+                                            <th
+                                                style="text-align: center; vertical-align: middle; width: 600px; font-family:  'Sarabun', sans-serif;">
                                                 เนื้อหาการตรวจสอบ</th>
                                         </tr>
-    
+
                                     </thead>
                                     <tbody>
                                         <tr>
@@ -104,12 +107,13 @@
                                                 {{detailItems?.record_id}}/{{detailItems?.record_star_date | thaidate
                                                 :'year'}}
                                             </td>
-                                            <td [innerHTML]="getSafeHtml(detailItems?.record_content)"  style="font-family:  'Sarabun', sans-serif; "></td>
+                                            <td [innerHTML]="getSafeHtml(detailItems?.record_content)"
+                                                style="font-family:  'Sarabun', sans-serif; "></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-          
+
                             <div *ngIf="!remainingContent" class="sign-content"
                                 [ngStyle]="{'display':contentParts ? 'flex' : 'none'}">
                                 <!-- [ngStyle]="{'display':!remainingContent ? 'flex' : 'none'}"-->
@@ -117,11 +121,11 @@
                                     <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
                                     <div *ngFor="let person of viewData; let i = index">
                                         <div class="UploadContentBox">
-    
-                                            <div class="openSignModal" (click)="openSignModal(i)"
-                                                [ngStyle]="{'display':isSignModalVisible[i] ? 'none':'flex'}">
+
+                                            <div class="openSignModal" (click)="openSignModal(i,person._id)"
+                                            [ngStyle]="{'display': isSignModalVisible[i] || person.signature ? 'none':'flex' }">
                                                 <a>คลิกเพื่อเซ็น</a>
-    
+
                                             </div>
                                             <!-- Sign modal -->
                                             <div class="Writte-sign" #writteSignElement id="SignModal-{{i}}"
@@ -131,98 +135,108 @@
                                                 <button class="btn-refreshCanvas" (click)="refreshCanvas(i)">
                                                     <i data-toggle="tooltip" title="ล้างหน้ากระดาษ" data-placement="top"
                                                         class="fa fa-refresh"></i></button>
-    
+
                                             </div>
-    
-    
+                                            <!-- แสดงลายเซ็นถ้ามี -->
+                                            <div *ngIf="person.signature">
+                                                <img [src]="getSignatureUrl(person.signature)" alt="Signature"
+                                                    class="signature-image" />
+                                            </div>
+                                           
+
+
                                         </div>
-    
+
                                         <a style="position: relative; font-size: 16px; display: inline;">( {{
                                             person.view_rank }} &nbsp; {{ person.view_first_name }} &nbsp;{{
                                             person.view_last_name }} )</a>
                                     </div>
                                 </div>
                             </div>
-    
-    
+
+
                         </div>
                     </form>
-    
+
                 </div>
-    
-    
+
+
                 <div *ngFor="let part of contentParts; let last = last, let i = index,trackBy: trackByFn">
                     <div id="myDetail" class="modal-body-detail"
                         [ngStyle]="{'display': testFile ? 'none' : 'block', width: '210mm' }">
-    
+
                         <form action method="get">
                             <div #mainCenterPanel class="mainCenter-panel ">
-    
-    
+
+
                                 <div class="main-detail">
                                     <table>
-    
+
                                         <tbody>
                                             <tr>
                                                 <td>
-    
+
                                                 </td>
                                                 <td [innerHTML]="part" style="width: 600px;"></td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-    
+
                                 <div *ngIf="last" class="sign-content">
                                     <!-- <button class="btn btn-success" (click)="openSignModalx(1)">test click page2</button> -->
-    
+
                                     <div class="form-group" style="width: auto;">
                                         <label style="font-size: 16px;">รายชื่อผู้รับผิดชอบ:</label>
                                         <div *ngFor="let person of viewData; let i = index">
                                             <div class="UploadContentBox">
-    
-                                                <div class="openSignModal" (click)="openSignModal(i)"
-                                                    [ngStyle]="{'display':isSignModalVisible[i] ? 'none':'flex'}">
+
+                                                <div class="openSignModal" (click)="openSignModal(i,person._id)"
+                                                [ngStyle]="{'display': isSignModalVisible[i] || person.signature ? 'none':'flex'}">
                                                     <a>คลิกเพื่อเซ็น</a>
-    
+
                                                 </div>
                                                 <div class="Writte-sign" #writteSignElement id="SignModal-{{i}}"
                                                     *ngIf="isSignModalVisible[i]">
                                                     <canvas id="writteSignCanvas-{{i}}" class="full-page-signWritte">
                                                         Errorsometing with canvas
                                                     </canvas>
-                                                    <button (click)="refreshCanvas(i)" >
-                                                        <i data-toggle="tooltip" title="ล้างหน้ากระดาษ" data-placement="top"
-                                                            class="fa fa-refresh"></i>
+                                                    <button  class="btn-refreshCanvas" (click)="refreshCanvas(i)">
+                                                        <i data-toggle="tooltip" title="ล้างหน้ากระดาษ"
+                                                            data-placement="top" class="fa fa-refresh"></i>
                                                     </button>
-    
+
                                                 </div>
-    
-    
+                                                <div *ngIf="person.signature">
+                                                    <img [src]="getSignatureUrl(person.signature)" alt="Signature"
+                                                        class="signature-image" />
+                                                </div>
+
+
                                             </div>
-    
+
                                             <a style="position: relative; font-size: 16px; display: inline;">( {{
                                                 person.view_rank }} &nbsp; {{ person.view_first_name }} &nbsp;{{
                                                 person.view_last_name }} )</a>
                                         </div>
                                     </div>
                                 </div>
-    
-    
+
+
                             </div>
                         </form>
                     </div>
                 </div>
-    
-    
-    
-    
-    
+
+
+
+
+
             </div>
-    
-    
-    
-    
+
+
+
+
             <div class="modal-footer">
                 <button id="btn-add-box" class="btn btn-add pull-center" style="display:none;" (click)="addBox()">
                     <i class="fa fa-plus"></i> &nbsp; เพิ่มกล่องเพื่อเซ็นต์
@@ -240,12 +254,12 @@
                     <i class="fa fa-save"></i>&nbsp; บันทึก
                 </button>
             </div>
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
         </div>
 
     </div>

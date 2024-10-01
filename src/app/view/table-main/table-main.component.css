@@ -106,6 +106,19 @@
     text-align: center;
 
   }
+  .waitingIcon{
+    position: relative;
+    display: flex;
+    width: auto;
+    padding: 4px 8px;
+    color:#dbc100; 
+     /* background-color: #fff0ee;; */
+    /* border: 1px solid #db1900 ; */
+    border-radius: 32px;
+    align-items: center;
+    text-align: center;
+
+  }
   /* .searchLocation:hover{
     background: #dddfff;
     z-index: 30;

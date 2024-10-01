@@ -20,6 +20,7 @@ import { NgxExtendedPdfViewerService, pdfDefaultOptions } from 'ngx-extended-pdf
 import * as QRCode from 'qrcode';
 
 import { ToastrService } from 'ngx-toastr';
+import { config } from 'dotenv';
 
 // import { PdfViewerModule } from 'ng2-pdf-viewer';
 
@@ -53,6 +54,7 @@ export class TableDetailComponent implements OnInit {
   remainingContent: string = '';//content ที่ตัดออกจะเก็บที่นี้?
   otherRemainingContent: string = '';//content ที่ตัดออกจะเก็บที่นี้? ระดับ 3
   isContentOverflow = false; //
+  private isNoContentLogged: boolean = false;
   addItemForm: any;
   boxes: any[] = [];
 
@@ -87,6 +89,13 @@ export class TableDetailComponent implements OnInit {
   ctxList: CanvasRenderingContext2D[] = [];
 
   qrCodeUrl: string | null = null;
+
+  //select box sign to save signature Picture
+  selectedIndex: number | null = null;
+  selectedPersonId: string | null = null;
+  personIdFromURL: any
+  url: string;
+  personId: string | null;
 
 
   constructor(
@@ -288,15 +297,17 @@ export class TableDetailComponent implements OnInit {
   }
 
 
-  openSignModalx(i) {
-    console.log("openSignModalx  x " + i);
+  // openSignModalx(i) {
+  //   console.log("openSignModalx  x " + i);
 
-  }
+  // }
 
-  openSignModal(index: number) {
+  openSignModal(index: number, personId: any) {
     console.log("Sign modal is work index: >", index);
+    console.log("person Id signBox: ", personId)
 
-
+    this.selectedIndex = index;
+    this.selectedPersonId = personId;
     this.isSignModalVisible[index] = true;
 
 
@@ -322,6 +333,91 @@ export class TableDetailComponent implements OnInit {
 
 
   }
+
+  // ฟังก์ชันบันทึกลายเซ็น
+  saveSignature(index: number, personId: string) {
+
+    // ตรวจสอบว่ามี personId หรือไม่ ถ้าไม่มีให้ข้ามไปเลย
+    if (!personId) {
+      console.log("PersonId เป็น null หรือไม่มีค่า ไม่บันทึกลายเซ็น");
+      return;
+    }
+    console.log(" saveSignature index: ", index);
+    console.log("saveSignature person Id:", personId);
+    const canvasElement = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
+
+
+    console.log(" saveSignature canvasElement:", canvasElement);
+    console.log("saveSignature record Id:", this.recordId);
+    // ตรวจสอบว่ามีลายเซ็นหรือไม่
+    let signatureData = '';
+
+    if (canvasElement) {
+      // ตรวจสอบว่ามีการวาดลายเซ็นใน canvas หรือไม่
+      signatureData = canvasElement.toDataURL('image/png'); // แปลงลายเซ็นเป็น base64
+      console.log(" saveSignature signatureData:", signatureData)
+    }
+
+    // ตรวจสอบว่ามีลายเซ็นใน canvas หรือไม่
+    if (!signatureData || !signatureData.startsWith('data:image/png;base64,')) {
+      if (!personId) {
+        console.error("ข้อมูลลายเซ็นไม่ถูกต้อง");
+        return;
+      }
+    }
+
+    // ส่งข้อมูลไปยัง backend พร้อมกับ personId และลายเซ็น
+    this.sv.saveSignature(this.recordId, personId, signatureData).subscribe(response => {
+      if (response.success) {
+
+
+        // สร้างไฟล์ลายเซ็นหลังจากบันทึกสำเร็จ
+        const link = document.createElement('a');
+        link.href = signatureData; // ข้อมูล base64
+        link.download = `signature_${personId}.png`; // ชื่อไฟล์ที่ต้องการดาวน์โหลด
+
+        // // คลิกลิงก์เพื่อดาวน์โหลดไฟล์
+        // document.body.appendChild(link);
+        // link.click();
+        // document.body.removeChild(link); // ลบลิงก์หลังจากดาวน์โหลด
+        // Show success notification
+        this.toastr.success('บันทึกลายเซ็นสำเร็จ', 'สำเร็จ!!', {
+          timeOut: 1500,
+          positionClass: 'toast-top-right',
+        });
+      } else {
+        console.error("เกิดข้อผิดพลาดในการบันทึกลายเซ็น");
+      }
+    });
+  }
+
+  getSignatureUrl(signatureFileName: string): string {
+    const baseUrl = 'http://localhost:3000/api/'; // URL ของเซิร์ฟเวอร์ Express ที่รันอยู่
+    const fullUrl = `${baseUrl}signaturesDetail/${signatureFileName}`;
+    // console.log(" getSignatureUrl ",signatureFileName)
+    // this.getPersonIdFromSignatureFile(signatureFileName)
+
+    return fullUrl;
+
+  }
+  // ฟังก์ชันเพื่อดึง _id จากชื่อไฟล์ลายเซ็นต์
+  getPersonIdFromSignatureFile(signatureFileName: string): string | null {
+    // แยกชื่อไฟล์โดยใช้ _ เป็นตัวแบ่ง
+    const parts = signatureFileName.split('_');
+
+    // ตรวจสอบว่ามีค่าพอที่จะดึง _id ได้ (เช่น ต้องมีส่วนกลางเป็น _id)
+    if (parts.length >= 3) {
+      // _id จะอยู่ในตำแหน่งที่ 1 ของ array
+      this.personIdFromURL = parts[1];
+      // console.log("Extracted personId:", this.personIdFromURL);
+      return this.personIdFromURL;
+    }
+
+    // ถ้าไม่สามารถดึง _id ได้ return null
+    console.error("Unable to extract this.personIdFromURL from filename:", signatureFileName);
+    return null;
+  }
+
 
   addBox() {
     this.boxes.push({ top: '0px', left: '0px' });
@@ -448,48 +544,7 @@ export class TableDetailComponent implements OnInit {
     }
   }
 
-  //move element 2 ถ้าเปิดมาจะไม่สามารถ ใช้ openSignModal ไม่ได้
-  // @HostListener('mousedown', ['$event'])
-  // onMouseDown(event: MouseEvent, index: number): void {
-  //   event.preventDefault();
-  //   const box = this.boxes[index];
-  //   if (!box) {
-  //     console.error('Box not found at index mouse:', index);
-  //     return;
-  //   }
-  //   console.log('Box before drag:', box);
 
-  //   box.dragStartX = event.clientX - box.left;
-  //   box.dragStartY = event.clientY - box.top;
-
-  //   const onMouseMove = (moveEvent: MouseEvent) => {
-  //     box.left = moveEvent.clientX - box.dragStartX;
-  //     box.top = moveEvent.clientY - box.dragStartY;
-  //   };
-
-  //   const onMouseUp = () => {
-  //     document.removeEventListener('mousemove', onMouseMove);
-  //     document.removeEventListener('mouseup', onMouseUp);
-  //     console.log('Box after drag:', box);
-  //   };
-
-  //   document.addEventListener('mousemove', onMouseMove);
-  //   document.addEventListener('mouseup', onMouseUp);
-  // }
-
-  // @HostListener('document:mouseup')
-  // onMouseUp(): void {
-  //   this.isDragging = false;
-  // }
-
-  // @HostListener('document:mousemove', ['$event'])
-  // onMouseMove(event: MouseEvent): void {
-  //   if (this.isDragging) {
-  //     const x = event.clientX - this.offsetX;
-  //     const y = event.clientY - this.offsetY;
-  //     this.renderer.setStyle(this.el.nativeElement, 'transform', `translate(${x}px, ${y}px)`);
-  //   }
-  // }
 
   //ิback to table-list
   BackRoot() {
@@ -509,7 +564,7 @@ export class TableDetailComponent implements OnInit {
   //การเลยขนนาดของ หน้าจอ 
   checkContentOverflow() {
     const mainDetailElement = document.getElementById('myDetail');
-    console.log("mainDetailElement :", mainDetailElement);
+    // console.log("mainDetailElement :", mainDetailElement);
 
     const mainCenterPanelElement = this.mainCenterPanel?.nativeElement;
 
@@ -531,7 +586,10 @@ export class TableDetailComponent implements OnInit {
   //show content table
   getSafeHtml(content: string): SafeHtml {
     if (!content) {
-      console.log("no content ", content);
+      if (!this.isNoContentLogged) {
+        console.log("no content ", content);
+        this.isNoContentLogged = true; // ตั้งค่าเป็น true เมื่อแสดงข้อความแล้ว
+      }
       return "";
     }
     const maxLength = 1520;
@@ -574,19 +632,20 @@ export class TableDetailComponent implements OnInit {
       return;
     }
 
-      // ซ่อนปุ่ม refresh ทั้งหมด
-      const refreshButtons = document.querySelectorAll('.btn-refreshCanvas') as NodeListOf<HTMLElement>;
-      refreshButtons.forEach(button => {
-        button.style.display = 'none';
-      });
-      // ลบเนื้อหาใน modal ทั้งหมด
-      const openSignModals = document.querySelectorAll('.openSignModal') as NodeListOf<HTMLElement>;
-      openSignModals.forEach(modal => {
-        modal.innerHTML = ""; // ลบเนื้อหาภายใน
-        modal.style.border = 'none'; // ลบเส้นขอบ
-        modal.style.background = 'transparent'; // ลบพื้นหลัง
-      });
+    // ซ่อนปุ่ม refresh ทั้งหมด
+    const refreshButtons = document.querySelectorAll('.btn-refreshCanvas') as NodeListOf<HTMLElement>;
+    refreshButtons.forEach(button => {
+      button.style.display = 'none';
+    });
+    // ลบเนื้อหาใน modal ทั้งหมด
+    const openSignModals = document.querySelectorAll('.openSignModal') as NodeListOf<HTMLElement>;
+    openSignModals.forEach(modal => {
+      modal.innerHTML = ""; // ลบเนื้อหาภายใน
+      modal.style.border = 'none'; // ลบเส้นขอบ
+      modal.style.background = 'transparent'; // ลบพื้นหลัง
+    });
     elements.forEach((element, index) => {
+        // ซ่อนปุ่ม refresh ทั้งหมด
       const style = getComputedStyle(element as HTMLElement);
       if (style.display === 'none') {
         return; // ข้าม element ที่ไม่แสดง
@@ -616,54 +675,85 @@ export class TableDetailComponent implements OnInit {
     });
   }
 
+
   saveRCPDF() {
     console.log("Updating PDF in dictionary...");
     const elements = document.querySelectorAll('.modal-body-detail');
-    const pdfViewerElement = document.getElementById('pdf-viewer');
+    // const pdfViewerElement = document.getElementById('pdf-viewer');
 
-    if (!pdfViewerElement && elements.length === 0) {
-      console.error('No elements found to print.');
-      return;
+    // if (!pdfViewerElement && elements.length === 0) {
+    //   console.error('No elements found to print.');
+    //   return;
+    // }
+
+    ///////////////////////////////////////////////////// // ตรวจสอบว่ามีการเซ็นในกล่องใดบ้าง
+
+    let allSigned = true;  // เริ่มต้นสมมุติว่าเซ็นครบ
+    let anySigned = false; // เริ่มต้นสมมุติว่าไม่มีการเซ็น
+
+    this.viewData.forEach((person, index) => {
+
+      const canvasElement = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
+
+      // แสดงข้อมูลคนและลายเซ็น
+      // console.log("personId จาก for Each: ", person);
+      // console.log("person.signature จาก for Each: ", person.signature);
+
+      // ตรวจสอบว่าคนนี้มีลายเซ็นหรือไม่
+      if (person.signature) {
+        anySigned = true;  // ถ้ามีลายเซ็น ให้ตั้งค่าเป็น signed
+      } else if (canvasElement) {
+        // ถ้า canvasElement มีอยู่ ให้ตรวจสอบบริบท
+        console.log(" if canvasElement", canvasElement);
+        const ctx = canvasElement.getContext('2d');
+
+        if (ctx) {
+          const imageData = ctx.getImageData(0, 0, canvasElement.width, canvasElement.height);
+
+          if (imageData) {
+            // ตรวจสอบว่ามีพิกเซลที่ไม่เป็นศูนย์ใน imageData หรือไม่
+            const hasSignature = imageData.data.some(channel => channel !== 0);
+
+            if (hasSignature) {
+              anySigned = true;  // ตั้งค่าเป็น signed ถ้ามีพิกเซลที่วาด
+            } else {
+              allSigned = false;  // ตั้งค่าเป็น false ถ้าไม่มีลายเซ็นวาด
+            }
+          }
+        }
+      } else {
+        // ถ้า canvasElement เป็น null หมายความว่ากล่องนี้ยังไม่ได้เซ็น
+        allSigned = false;  // ยังคงมีบางกล่องที่ยังไม่ได้เซ็น
+      }
+
+
+    });
+
+    this.saveSignature(this.selectedIndex, this.selectedPersonId) //ส่งข้อมูลไปบันทึกลายเซ็น
+    // ส่งสถานะ: ถ้าเซ็นครบ ส่งสถานะ 1, ถ้าไม่ครบ ส่งสถานะ 2
+    const statusToSend = allSigned ? 1 : 2;
+    // console.log("All signed:", allSigned, "Any signed:", anySigned, "Status to send:", statusToSend);
+
+    // หากไม่มีการเซ็นในกล่องใดๆ
+    if (!anySigned) {
+      console.error('No signatures found in any box. Cannot save PDF.');
+      this.toastr.error('ไม่สามารถบันทึกได้ กรุณาลงนาม', 'ผิดพลาด!', {
+        timeOut: 1500,
+        positionClass: 'toast-top-right',
+      });
+      return; // ออกจากฟังก์ชัน
     }
+
+
+    ////////////////////////////////////////////////////
 
     const pdf = new jsPDF('p', 'mm', 'a4');
     const pdfWidth = 210; // A4 width in mm
     const pdfHeight = 297; // A4 height in mm
 
     let promises = [];
+    // const promises: Promise<string>[] = []; 
 
-    html2canvas(pdfViewerElement, { scale: 5 }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const canvasWidth = canvas.width;
-      const canvasHeight = canvas.height;
-      const ratio = canvasWidth / pdfWidth;
-      const pdfCanvasHeight = canvasHeight / ratio;
-      const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
-
-      for (let i = 0; i < numOfPages; i++) {
-        const startY = i * pdfHeight * ratio;
-
-        // Create a temporary canvas to draw each part
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = canvasWidth;
-        tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
-
-        const tempCtx = tempCanvas.getContext('2d');
-        tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
-
-        const tempImgData = tempCanvas.toDataURL('image/png');
-
-        // Check if the image data is not blank
-        if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
-          if (i > 0) {
-            pdf.addPage();
-          }
-          pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, (tempCanvas.height / ratio));
-        }
-      }
-    }).catch((error) => {
-      console.error('Error generating PDF:', error);
-    });
     // ซ่อนปุ่ม refresh ทั้งหมด
     const refreshButtons = document.querySelectorAll('.btn-refreshCanvas') as NodeListOf<HTMLElement>;
     refreshButtons.forEach(button => {
@@ -676,43 +766,124 @@ export class TableDetailComponent implements OnInit {
       modal.style.border = 'none'; // ลบเส้นขอบ
       modal.style.background = 'transparent'; // ลบพื้นหลัง
     });
+     // ลบเนื้อหาใน modal ทั้งหมด
+     const writteSignElement = document.querySelectorAll('.full-page-signWritte') as NodeListOf<HTMLElement>;
+     writteSignElement.forEach(modal => {
+       modal.style.border = 'none'; // ลบเส้นขอบ
+       modal.style.background = 'transparent'; // ลบพื้นหลัง
+     });
+    console.log("elements: ",elements)
     elements.forEach((element, index) => {
-      const htmlElement = element as HTMLElement; // Cast Element to HTMLElement
+      const htmlElement = element as HTMLElement; // แคสต์ Element เป็น HTMLElement
       htmlElement.style.border = 'none';
       htmlElement.style.borderCollapse = 'collapse';
-      promises.push(html2canvas(htmlElement, { scale: 5 }).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
-        const canvasWidth = canvas.width;
-        const canvasHeight = canvas.height;
-        const ratio = canvasWidth / pdfWidth;
-        const pdfCanvasHeight = canvasHeight / ratio;
-        const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
-
-        for (let i = 0; i < numOfPages; i++) {
-          const startY = i * pdfHeight * ratio;
-
-          // Create a temporary canvas to draw each part
-          const tempCanvas = document.createElement('canvas');
-          tempCanvas.width = canvasWidth;
-          tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
-
-          const tempCtx = tempCanvas.getContext('2d');
-          tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
-
-          const tempImgData = tempCanvas.toDataURL('image/png');
-
-          // Check if the image data is not blank
-          if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
-            if (index > 0 || i > 0) {
-              pdf.addPage();
-            }
-            pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, (tempCanvas.height / ratio));
+      console.log("viewData in elements: ",this.viewData)
+      promises.push(
+        html2canvas(htmlElement, {
+          scale: 5,
+          useCORS: true
+        }).then(canvas => {
+          const imgWidth = 210; // A4 width in mm
+          const imgHeight = canvas.height * imgWidth / canvas.width;
+          const contentDataURL = canvas.toDataURL('image/png');
+          if (index > 0) { // เพิ่มหน้าใหม่ใน PDF ถ้าไม่ใช่หน้าแรก
+            pdf.addPage();
           }
-        }
-      }).catch((error) => {
-        console.error('Error generating PDF:', error);
-      }));
+          pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight);
+        }).catch(error => {
+          console.error('Error creating canvas for element:', element, error);
+        })
+      );
+      // ตรวจสอบว่ามีข้อมูลใน viewData และมีขนาดที่ถูกต้อง
+      if (this.viewData && index < this.viewData.length) {
+
+        let person = this.viewData;
+       
+
+        // promises.push(html2canvas(htmlElement, { scale: 5 }).then((canvas) => {
+        //   const imgData = canvas.toDataURL('image/png');
+        //   const canvasWidth = canvas.width;
+        //   const canvasHeight = canvas.height;
+        //   const ratio = canvasWidth / pdfWidth; // กำหนด ratio ที่นี่
+        //   const pdfCanvasHeight = canvasHeight / ratio; // คำนวณ pdfCanvasHeight ที่นี่
+        //   const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
+        //   console.log("num of page: ",numOfPages)
+        //   console.log("canvasHeight: ",canvasHeight)
+      
+        //   for (let i = 0; i < numOfPages; i++) {
+        //     const startY = i * pdfHeight * ratio;
+        //     const remainingHeight = canvasHeight - startY;
+        //     let tempCanvasHeight = Math.min(remainingHeight, pdfHeight * ratio);
+        
+        //     // ปรับให้ tempCanvasHeight เป็น 1 หากมีค่าต่ำกว่า 0.1
+        //     // if (tempCanvasHeight > 0.1 && tempCanvasHeight < 0.5) {
+        //     //     tempCanvasHeight = 1; // กำหนดค่าเป็น 1
+        //     // }
+        
+        //     // console.log(`Page ${i}: startY = ${startY}, remainingHeight = ${remainingHeight}, tempCanvasHeight = ${tempCanvasHeight}`);
+        
+        //     // ตรวจสอบความสูงก่อนสร้าง tempCanvas
+        //     if (tempCanvasHeight > 0) {
+        //         const tempCanvas = document.createElement('canvas');
+        //         tempCanvas.width = canvasWidth;
+        //         tempCanvas.height = tempCanvasHeight;
+        //         // console.log( "tempCanvas.height",tempCanvas.height)
+        
+        //         const tempCtx = tempCanvas.getContext('2d');
+        //         if (tempCtx) {
+        //             // console.log("Drawing image onto tempCanvas...", tempCtx);
+        //             tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvasHeight, 0, 0, canvasWidth, tempCanvasHeight);
+        
+        //             // ตรวจสอบข้อมูลใน tempCanvas หลังจาก drawImage
+        //             const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+        //             if (imageData.data.length === 0 || imageData.data.every(channel => channel === 0)) {
+        //                 console.warn('No image data in tempCanvas, skipping this page.');
+        //                 continue; // ข้ามหน้า PDF ที่ไม่มีข้อมูล
+        //             }
+        
+        //             const tempImgData = tempCanvas.toDataURL('image/png');
+        
+        //             if (tempImgData) {
+        //                 try {
+        //                     if (imageData.data.some(channel => channel !== 0)) {
+        //                         if (index > 0 || i > 0) {
+        //                             pdf.addPage();
+        //                         }
+        //                         pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, tempCanvas.height / ratio);
+        //                     } else {
+        //                         console.warn('No visible content found in tempCanvas, skipping page generation.');
+        //                     }
+        //                 } catch (error) {
+        //                     console.error('Error with getImageData or canvas rendering:', error);
+        //                 }
+        //             }
+        //         } else {
+        //             console.error('Failed to get 2D context from tempCanvas.');
+        //         }
+        //     } else {
+        //       // return
+        //         console.warn(`Skipping page ${i} due to tempCanvasHeight being 0.`);
+        //     }
+        // }
+        //   //////////////////////////////////////////////////////////////////////////////////
+          
+  
+        // });
+        
+        //     console.log("data person: ",person)
+        
+          
+        //   ////////////////////////////////////////////////////////////////
+        // }).catch((error) => {
+        //   // return
+        //   console.error('Error generating PDF:', error);
+        // }));
+      } else {
+        console.warn(`No person data found for index: ${index}`);
+      }
     });
+
+
 
     Promise.all(promises).then(() => {
       // Convert the PDF to Blob
@@ -723,6 +894,10 @@ export class TableDetailComponent implements OnInit {
       const pdfFilename = 'การลงตรวจสอบ.pdf'; // Change to the desired filename
       formData.append('id', this.recordId); // Adjust the ID as needed
       formData.append('pdf', pdfBlob, pdfFilename);
+
+      //////////////////////////////////////////
+      formData.append('status', statusToSend.toString()); // Convert to string
+      //////////////////////////////////////////////////////////
 
       // Check if this.sv.savePDF exists and is a function
       if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
@@ -737,13 +912,13 @@ export class TableDetailComponent implements OnInit {
               timeOut: 1500,
               positionClass: 'toast-top-right',
             });
-
-             // เพิ่มการอัปเดตสถานะที่นี่
-             this.updateRecordStatus(this.recordId, 1); // อัปเดตสถานะเป็น 1
+            console.log("ข้อมูลการส่ง : ", statusToSend)
+            // เพิ่มการอัปเดตสถานะที่นี่
+            this.updateRecordStatus(this.recordId, statusToSend); // อัปเดตสถานะเป็น 1
             // Navigate to another page (or refresh if you prefer)
-            setTimeout(() => {
-              this.router.navigate(['/table-main']);
-            }, 1500); // Matches the Toastr notification timeout
+            // setTimeout(() => {
+            //   this.router.navigate(['/table-main']);
+            // }, 1500); // Matches the Toastr notification timeout
           },
           error => {
             console.error('Error saving PDF:', error);
@@ -759,34 +934,66 @@ export class TableDetailComponent implements OnInit {
         console.error('savePDF function is not defined or not a function');
       }
     }).catch((error) => {
+        // Show error notification
+        this.toastr.error('บันทึกข้อมูลไม่สำเร็จ', 'ผิดพลาด!', {
+          timeOut: 1500,
+          positionClass: 'toast-top-right',
+        });
+      // return
       console.error('Error generating PDF:', error);
 
-      // Show error notification
-      this.toastr.error('บันทึกข้อมูลไม่สำเร็จ', 'ผิดพลาด!', {
-        timeOut: 1500,
-        positionClass: 'toast-top-right',
-      });
+    
     });
 
-    $('#myModal').modal('hide');
+
   }
 
   // เมธอดสำหรับอัปเดตสถานะ
-updateRecordStatus(recordId: string, status: number) {
-  // ตรวจสอบว่าบริการที่เรียกใช้งานถูกต้อง
-  if (typeof this.sv !== 'undefined' && typeof this.sv.updateStatusDocument === 'function') {
-      this.sv.updateStatusDocument(recordId, status).subscribe(
-          response => {
-              console.log("Status updated successfully:", response);
-          },
-          error => {
-              console.error('Error updating status:', error);
-          }
-      );
-  } else {
-      console.error('updateStatus function is not defined or not a function');
+
+
+  private addCanvasToPDF(pdf: jsPDF, canvas: HTMLCanvasElement, pdfWidth: number, pdfHeight: number, newPage: boolean = false) {
+    const imgData = canvas.toDataURL('image/png');
+    const canvasWidth = canvas.width;
+    const canvasHeight = canvas.height;
+    const ratio = canvasWidth / pdfWidth;
+    const pdfCanvasHeight = canvasHeight / ratio;
+    const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
+
+    for (let i = 0; i < numOfPages; i++) {
+      const startY = i * pdfHeight * ratio;
+
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvasWidth;
+      tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
+
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
+
+      const tempImgData = tempCanvas.toDataURL('image/png');
+
+      if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
+        if (newPage || i > 0) {
+          pdf.addPage();
+        }
+        pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, (tempCanvas.height / ratio));
+      }
+    }
   }
-}
+  updateRecordStatus(recordId: string, status: number) {
+    // ตรวจสอบว่าบริการที่เรียกใช้งานถูกต้อง
+    if (typeof this.sv !== 'undefined' && typeof this.sv.updateStatusDocument === 'function') {
+      this.sv.updateStatusDocument(recordId, status).subscribe(
+        response => {
+          console.log("Status updated successfully:", response);
+        },
+        error => {
+          console.error('Error updating status:', error);
+        }
+      );
+    } else {
+      console.error('updateStatus function is not defined or not a function');
+    }
+  }
 
 
   test() {

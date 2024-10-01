@@ -81,6 +81,9 @@
                 <i  *ngIf="item?.record?.status === '0'" class="fa-regular fa-circle-xmark cancleIcon"> &nbsp;
                   <div style="font-family: 'Sarabun',sans-serif;">ยังไม่ได้เซ็น</div>
                 </i>
+                <i  *ngIf="item?.record?.status === '2'" class="fa-regular fa-circle-exclamation waitingIcon"> &nbsp;
+                  <div style="font-family: 'Sarabun',sans-serif;">เซ็นไม่ครบ</div>
+                </i>
               </td>
               <td class="text-center" style="width:1% ;white-space: nowrap;">
                 <button (click)="openDataDetail(item?.record?._id)" style="border: none; background: none; color: black;">
@@ -91,7 +94,7 @@
                   <i data-toggle="tooltip" title="การจดบันทึก" data-placement="top"
                     class="fa fa-pencil-square-o Record"></i>
                 </button>
-                <button  *ngIf="item?.record?.status === '0'" (click)="openDetailModal(item?.record?._id)"
+                <button *ngIf="item?.record?.status === '0' || item?.record?.status === '2'" (click)="openDetailModal(item?.record?._id)"
                   style="border: none; background: none; color: black;">
                   <i data-toggle="tooltip" title="เพิ่มเนื้อหา" data-placement="top"
                     class="fa fa-file-text-o ModalIcon"></i>
@@ -100,7 +103,7 @@
                   <i class="fa fa-file-pdf-o" (click)="showPDF(item.record?.record_filename)"></i>
                 </button>
                 <!-- land insert Qr code -->
-                <button  *ngIf="item?.record?.status === '0'" (click)="openQrcode(item?.record?._id)"
+                <button  *ngIf="item?.record?.status === '0' || item?.record?.status === '2'"  (click)="openQrcode(item?.record?._id)"
                   style="border: none; background: none; color: black;">
                   <i data-toggle="tooltip" title="QR code" data-placement="top" class="bi bi-qr-code"></i>
                 </button>
