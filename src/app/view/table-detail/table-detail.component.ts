@@ -91,8 +91,10 @@ export class TableDetailComponent implements OnInit {
   qrCodeUrl: string | null = null;
 
   //select box sign to save signature Picture
+  // กำหนดตัวแปรสำหรับเก็บข้อมูล
+  selectedPersons: { index: number, id: string }[] = [];
   selectedIndex: number | null = null;
-  selectedPersonId: string | null = null;
+  selectedPersonId: string[] | null = null;
   personIdFromURL: any
   url: string;
   personId: string | null;
@@ -302,12 +304,29 @@ export class TableDetailComponent implements OnInit {
 
   // }
 
-  openSignModal(index: number, personId: any) {
+  openSignModal(index: number, personId: any[]) {
     console.log("Sign modal is work index: >", index);
     console.log("person Id signBox: ", personId)
 
+       // ตรวจสอบว่า personId เป็น string หรือไม่
+       if (typeof personId === 'string') {
+        // ตรวจสอบว่ามี id นี้อยู่ใน selectedPersons หรือไม่
+        const alreadySelected = this.selectedPersons.some(person => person.id === personId);
+        
+        if (!alreadySelected) {
+            // ถ้ายังไม่เคยเลือก id นี้ ก็เพิ่มเข้าไปใน array
+            this.selectedPersons.push({ index, id: personId });
+        } else {
+            console.log(`Person with id ${personId} is already selected.`);
+        }
+    } else {
+        console.error("personId ไม่ใช่ string หรือข้อมูลไม่ถูกต้อง");
+        return;
+    }
+    console.log("this.selectedPersonId: ", this.selectedPersonId);
+
+    console.log("this.selectedPersons: ", this.selectedPersons);
     this.selectedIndex = index;
-    this.selectedPersonId = personId;
     this.isSignModalVisible[index] = true;
 
 
@@ -335,60 +354,67 @@ export class TableDetailComponent implements OnInit {
   }
 
   // ฟังก์ชันบันทึกลายเซ็น
-  saveSignature(index: number, personId: string) {
+  saveSignature(selectedPersons: { index: number, id: string }[]) {
 
-    // ตรวจสอบว่ามี personId หรือไม่ ถ้าไม่มีให้ข้ามไปเลย
-    if (!personId) {
-      console.log("PersonId เป็น null หรือไม่มีค่า ไม่บันทึกลายเซ็น");
-      return;
-    }
-    console.log(" saveSignature index: ", index);
-    console.log("saveSignature person Id:", personId);
-    const canvasElement = document.getElementById(`writteSignCanvas-${index}`) as HTMLCanvasElement;
-
-
-    console.log(" saveSignature canvasElement:", canvasElement);
-    console.log("saveSignature record Id:", this.recordId);
-    // ตรวจสอบว่ามีลายเซ็นหรือไม่
-    let signatureData = '';
-
-    if (canvasElement) {
-      // ตรวจสอบว่ามีการวาดลายเซ็นใน canvas หรือไม่
-      signatureData = canvasElement.toDataURL('image/png'); // แปลงลายเซ็นเป็น base64
-      console.log(" saveSignature signatureData:", signatureData)
-    }
-
-    // ตรวจสอบว่ามีลายเซ็นใน canvas หรือไม่
-    if (!signatureData || !signatureData.startsWith('data:image/png;base64,')) {
-      if (!personId) {
-        console.error("ข้อมูลลายเซ็นไม่ถูกต้อง");
+      // ตรวจสอบว่ามี selectedPersons หรือไม่ ถ้าไม่มีให้ข้ามไปเลย
+      if (!selectedPersons || selectedPersons.length === 0) {
+        console.log("selectedPersons เป็น null หรือไม่มีค่า ไม่บันทึกลายเซ็น");
         return;
-      }
     }
+    console.log(" saveSignature selectedPersons: ", selectedPersons);
 
-    // ส่งข้อมูลไปยัง backend พร้อมกับ personId และลายเซ็น
-    this.sv.saveSignature(this.recordId, personId, signatureData).subscribe(response => {
-      if (response.success) {
+    selectedPersons.forEach(person => {
+      const canvasElement = document.getElementById(`writteSignCanvas-${person.index}`) as HTMLCanvasElement;
+      console.log(" saveSignature canvasElement:", canvasElement);
+      console.log("saveSignature record Id:", this.recordId);
+      // ตรวจสอบว่ามีลายเซ็นหรือไม่
+      let signatureData = '';
 
 
-        // สร้างไฟล์ลายเซ็นหลังจากบันทึกสำเร็จ
-        const link = document.createElement('a');
-        link.href = signatureData; // ข้อมูล base64
-        link.download = `signature_${personId}.png`; // ชื่อไฟล์ที่ต้องการดาวน์โหลด
-
-        // // คลิกลิงก์เพื่อดาวน์โหลดไฟล์
-        // document.body.appendChild(link);
-        // link.click();
-        // document.body.removeChild(link); // ลบลิงก์หลังจากดาวน์โหลด
-        // Show success notification
-        this.toastr.success('บันทึกลายเซ็นสำเร็จ', 'สำเร็จ!!', {
-          timeOut: 1500,
-          positionClass: 'toast-top-right',
-        });
-      } else {
-        console.error("เกิดข้อผิดพลาดในการบันทึกลายเซ็น");
+             // ตรวจสอบว่ามีลายเซ็นหรือไม่
+     if (!this.isSignatureDrawn(canvasElement)) {
+              console.error("ยังไม่มีการเซ็น ลายเซ็นไม่ถูกบันทึก");
+              return; // ถ้ายังไม่มีการวาดลายเซ็น ให้ข้ามการบันทึก
+          }
+      if (canvasElement) {
+        // ตรวจสอบว่ามีการวาดลายเซ็นใน canvas หรือไม่
+        signatureData = canvasElement.toDataURL('image/png'); // แปลงลายเซ็นเป็น base64
+        console.log(" saveSignature signatureData:", signatureData)
       }
+      // ตรวจสอบว่ามีลายเซ็นใน canvas หรือไม่
+      if (!signatureData || !signatureData.startsWith('data:image/png;base64,')) {
+        if (!person.id) {
+          console.error("ข้อมูลลายเซ็นไม่ถูกต้อง");
+          return;
+        }
+      }
+      // ส่งข้อมูลไปยัง backend พร้อมกับ personId และลายเซ็น
+      this.sv.saveSignature(this.recordId, person.id, signatureData).subscribe(response => {
+        if (response.success) {
+
+
+          // สร้างไฟล์ลายเซ็นหลังจากบันทึกสำเร็จ
+          const link = document.createElement('a');
+          link.href = signatureData; // ข้อมูล base64
+          link.download = `signature_${person.id}.png`; // ชื่อไฟล์ที่ต้องการดาวน์โหลด
+
+          // // คลิกลิงก์เพื่อดาวน์โหลดไฟล์
+          // document.body.appendChild(link);
+          // link.click();
+          // document.body.removeChild(link); // ลบลิงก์หลังจากดาวน์โหลด
+          // Show success notification
+          this.toastr.success('บันทึกลายเซ็นสำเร็จ', 'สำเร็จ!!', {
+            timeOut: 1500,
+            positionClass: 'toast-top-right',
+          });
+        } else {
+          console.error("เกิดข้อผิดพลาดในการบันทึกลายเซ็น");
+        }
+      });
+
     });
+
+
   }
 
   getSignatureUrl(signatureFileName: string): string {
@@ -418,6 +444,22 @@ export class TableDetailComponent implements OnInit {
     return null;
   }
 
+
+  private isSignatureDrawn(canvasElement: HTMLCanvasElement): boolean {
+    const context = canvasElement.getContext('2d');
+    // ตรวจสอบว่า context มีค่า
+    if (!context) return false;
+  
+    // เช็ค pixel ของ canvas ว่ามีการวาดลายเซ็น
+    const pixels = context.getImageData(0, 0, canvasElement.width, canvasElement.height);
+    for (let i = 0; i < pixels.data.length; i += 4) {
+      // ถ้าพบ pixel ที่ไม่ใช่สีพื้นหลัง (0, 0, 0, 0) แสดงว่ามีการวาดลายเซ็น
+      if (pixels.data[i + 3] > 0) {
+        return true; // มีการวาดลายเซ็น
+      }
+    }
+    return false; // ไม่มีการวาดลายเซ็น
+  }
 
   addBox() {
     this.boxes.push({ top: '0px', left: '0px' });
@@ -645,7 +687,7 @@ export class TableDetailComponent implements OnInit {
       modal.style.background = 'transparent'; // ลบพื้นหลัง
     });
     elements.forEach((element, index) => {
-        // ซ่อนปุ่ม refresh ทั้งหมด
+      // ซ่อนปุ่ม refresh ทั้งหมด
       const style = getComputedStyle(element as HTMLElement);
       if (style.display === 'none') {
         return; // ข้าม element ที่ไม่แสดง
@@ -687,7 +729,7 @@ export class TableDetailComponent implements OnInit {
     // }
 
     ///////////////////////////////////////////////////// // ตรวจสอบว่ามีการเซ็นในกล่องใดบ้าง
-
+    this.saveSignature(this.selectedPersons); //ส่งข้อมูลไปบันทึกลายเซ็น
     let allSigned = true;  // เริ่มต้นสมมุติว่าเซ็นครบ
     let anySigned = false; // เริ่มต้นสมมุติว่าไม่มีการเซ็น
 
@@ -729,7 +771,7 @@ export class TableDetailComponent implements OnInit {
 
     });
 
-    this.saveSignature(this.selectedIndex, this.selectedPersonId) //ส่งข้อมูลไปบันทึกลายเซ็น
+
     // ส่งสถานะ: ถ้าเซ็นครบ ส่งสถานะ 1, ถ้าไม่ครบ ส่งสถานะ 2
     const statusToSend = allSigned ? 1 : 2;
     // console.log("All signed:", allSigned, "Any signed:", anySigned, "Status to send:", statusToSend);
@@ -766,18 +808,18 @@ export class TableDetailComponent implements OnInit {
       modal.style.border = 'none'; // ลบเส้นขอบ
       modal.style.background = 'transparent'; // ลบพื้นหลัง
     });
-     // ลบเนื้อหาใน modal ทั้งหมด
-     const writteSignElement = document.querySelectorAll('.full-page-signWritte') as NodeListOf<HTMLElement>;
-     writteSignElement.forEach(modal => {
-       modal.style.border = 'none'; // ลบเส้นขอบ
-       modal.style.background = 'transparent'; // ลบพื้นหลัง
-     });
-    console.log("elements: ",elements)
+    // ลบเนื้อหาใน modal ทั้งหมด
+    const writteSignElement = document.querySelectorAll('.full-page-signWritte') as NodeListOf<HTMLElement>;
+    writteSignElement.forEach(modal => {
+      modal.style.border = 'none'; // ลบเส้นขอบ
+      modal.style.background = 'transparent'; // ลบพื้นหลัง
+    });
+    console.log("elements: ", elements)
     elements.forEach((element, index) => {
       const htmlElement = element as HTMLElement; // แคสต์ Element เป็น HTMLElement
       htmlElement.style.border = 'none';
       htmlElement.style.borderCollapse = 'collapse';
-      console.log("viewData in elements: ",this.viewData)
+      console.log("viewData in elements: ", this.viewData)
       promises.push(
         html2canvas(htmlElement, {
           scale: 5,
@@ -798,7 +840,7 @@ export class TableDetailComponent implements OnInit {
       if (this.viewData && index < this.viewData.length) {
 
         let person = this.viewData;
-       
+
 
         // promises.push(html2canvas(htmlElement, { scale: 5 }).then((canvas) => {
         //   const imgData = canvas.toDataURL('image/png');
@@ -809,40 +851,40 @@ export class TableDetailComponent implements OnInit {
         //   const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
         //   console.log("num of page: ",numOfPages)
         //   console.log("canvasHeight: ",canvasHeight)
-      
+
         //   for (let i = 0; i < numOfPages; i++) {
         //     const startY = i * pdfHeight * ratio;
         //     const remainingHeight = canvasHeight - startY;
         //     let tempCanvasHeight = Math.min(remainingHeight, pdfHeight * ratio);
-        
+
         //     // ปรับให้ tempCanvasHeight เป็น 1 หากมีค่าต่ำกว่า 0.1
         //     // if (tempCanvasHeight > 0.1 && tempCanvasHeight < 0.5) {
         //     //     tempCanvasHeight = 1; // กำหนดค่าเป็น 1
         //     // }
-        
+
         //     // console.log(`Page ${i}: startY = ${startY}, remainingHeight = ${remainingHeight}, tempCanvasHeight = ${tempCanvasHeight}`);
-        
+
         //     // ตรวจสอบความสูงก่อนสร้าง tempCanvas
         //     if (tempCanvasHeight > 0) {
         //         const tempCanvas = document.createElement('canvas');
         //         tempCanvas.width = canvasWidth;
         //         tempCanvas.height = tempCanvasHeight;
         //         // console.log( "tempCanvas.height",tempCanvas.height)
-        
+
         //         const tempCtx = tempCanvas.getContext('2d');
         //         if (tempCtx) {
         //             // console.log("Drawing image onto tempCanvas...", tempCtx);
         //             tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvasHeight, 0, 0, canvasWidth, tempCanvasHeight);
-        
+
         //             // ตรวจสอบข้อมูลใน tempCanvas หลังจาก drawImage
         //             const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
         //             if (imageData.data.length === 0 || imageData.data.every(channel => channel === 0)) {
         //                 console.warn('No image data in tempCanvas, skipping this page.');
         //                 continue; // ข้ามหน้า PDF ที่ไม่มีข้อมูล
         //             }
-        
+
         //             const tempImgData = tempCanvas.toDataURL('image/png');
-        
+
         //             if (tempImgData) {
         //                 try {
         //                     if (imageData.data.some(channel => channel !== 0)) {
@@ -866,13 +908,13 @@ export class TableDetailComponent implements OnInit {
         //     }
         // }
         //   //////////////////////////////////////////////////////////////////////////////////
-          
-  
+
+
         // });
-        
+
         //     console.log("data person: ",person)
-        
-          
+
+
         //   ////////////////////////////////////////////////////////////////
         // }).catch((error) => {
         //   // return
@@ -916,9 +958,9 @@ export class TableDetailComponent implements OnInit {
             // เพิ่มการอัปเดตสถานะที่นี่
             this.updateRecordStatus(this.recordId, statusToSend); // อัปเดตสถานะเป็น 1
             // Navigate to another page (or refresh if you prefer)
-            // setTimeout(() => {
-            //   this.router.navigate(['/table-main']);
-            // }, 1500); // Matches the Toastr notification timeout
+            setTimeout(() => {
+              this.router.navigate(['/table-main']);
+            }, 1500); // Matches the Toastr notification timeout
           },
           error => {
             console.error('Error saving PDF:', error);
@@ -934,15 +976,15 @@ export class TableDetailComponent implements OnInit {
         console.error('savePDF function is not defined or not a function');
       }
     }).catch((error) => {
-        // Show error notification
-        this.toastr.error('บันทึกข้อมูลไม่สำเร็จ', 'ผิดพลาด!', {
-          timeOut: 1500,
-          positionClass: 'toast-top-right',
-        });
+      // Show error notification
+      this.toastr.error('บันทึกข้อมูลไม่สำเร็จ', 'ผิดพลาด!', {
+        timeOut: 1500,
+        positionClass: 'toast-top-right',
+      });
       // return
       console.error('Error generating PDF:', error);
 
-    
+
     });
 
 
