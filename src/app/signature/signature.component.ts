@@ -488,84 +488,232 @@ export class SignatureComponent implements OnInit {
     this.router.navigate(['/signature'], { queryParams: { id: this.documentId } });
   }
 
-  async saveRCPDF() {
-    console.log("กำลังอัปเดต PDF ในพจนานุกรม...");
-    const pdfViewerElement = document.getElementById('pdf-viewer');
 
+  // async saveRCPDF() {
+  //   console.log("กำลังอัปเดต PDF ในพจนานุกรม...");
+  //   const pdfViewerElement = document.getElementById('pdf-viewer');
+  
+  //   if (!pdfViewerElement) {
+  //     console.error('ไม่พบองค์ประกอบ PDF viewer ที่จะพิมพ์.');
+  //     return;
+  //   }
+  
+  //   const pdf = new jsPDF('p', 'mm', 'a4');
+  //   const pdfWidth = 210; // ความกว้างของ A4 ในหน่วยมม.
+  //   const pdfHeight = 297; // ความสูงของ A4 ในหน่วยมม.
+  
+  //   try {
+  //     // จับภาพเนื้อหาของ pdfViewerElement เป็น canvas
+  //     const canvas = await html2canvas(pdfViewerElement, { scale: 5 });
+  //     const imgData = canvas.toDataURL('image/png');
+  //     const canvasWidth = canvas.width;
+  //     const canvasHeight = canvas.height;
+  //     const ratio = canvasWidth / pdfWidth;
+  //     const pdfCanvasHeight = canvasHeight / ratio;
+  //     const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
+  
+  //     // เพิ่มแต่ละส่วนของภาพที่จับมาเป็นหน้าใน PDF
+  //     for (let i = 0; i < numOfPages; i++) {
+  //       const startY = i * pdfHeight * ratio;
+  
+  //       // สร้าง canvas ชั่วคราวสำหรับแต่ละหน้า
+  //       const tempCanvas = document.createElement('canvas');
+  //       tempCanvas.width = canvasWidth;
+  //       tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
+  
+  //       const tempCtx = tempCanvas.getContext('2d');
+  //       tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
+  
+  //       const tempImgData = tempCanvas.toDataURL('image/png');
+  
+  //       // เพิ่มแต่ละหน้าใน PDF
+  //       if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
+  //         if (i > 0) {
+  //           pdf.addPage();
+  //         }
+  //         const finalHeight = tempCanvas.height / ratio;
+  //         // ตรวจสอบว่า finalHeight เกินขนาด PDF หรือไม่ ถ้าเกินให้ลดขนาด
+  //         pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, finalHeight > pdfHeight ? pdfHeight : finalHeight);
+  //       }
+  //     }
+  
+  //     // แปลง PDF เป็น Blob
+  //     const pdfBlob = pdf.output('blob');
+  //     const formData = new FormData();
+  //     const pdfFilename = 'การลงตรวจสอบ.pdf'; // เปลี่ยนชื่อไฟล์ตามต้องการ
+  //     formData.append('id', this.recordId); // ปรับค่า ID ตามที่ต้องการ
+  //     formData.append('pdf', pdfBlob, pdfFilename);
+  
+  //     console.log('pdfBlob:', pdfBlob);
+  //     console.log('recordId:', this.recordId);
+  //     console.log('formData:', formData); // ตรวจสอบค่า formData ทั้งหมด
+  
+  //     // บันทึก PDF ถ้า `savePDF` ฟังก์ชันมีอยู่
+  //     if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
+  //       this.sv.savePDF(formData).subscribe(
+  //         async response => {
+  //           this.saveCount++;
+  //           console.log("บันทึก PDF สำเร็จจำนวน " + this.saveCount + " ครั้ง:", response);
+            
+  //           // เพิ่มการอัปเดตสถานะหลังจากบันทึก PDF สำเร็จ
+  //           await this.updateRecordStatus(this.recordId, 1);
+  
+  //           // แสดงการแจ้งเตือนสำเร็จ
+  //           this.toastr.success('บันทึกข้อมูลสำเร็จ', 'สำเร็จ!!', {
+  //             timeOut: 1500,
+  //             positionClass: 'toast-top-right',
+  //           });
+  
+  //           // นำทางไปหน้าอื่น
+  //           setTimeout(() => {
+  //             this.router.navigate(['/table-main']);
+  //           }, 1500); // ตรงกับเวลาของ Toastr notification
+  //         },
+  //         error => {
+  //           console.error('เกิดข้อผิดพลาดในการบันทึก PDF:', error);
+  
+  //           // แสดงการแจ้งเตือนข้อผิดพลาด
+  //           this.toastr.error('บันทึกข้อมูลไม่สำเร็จ', 'ผิดพลาด!', {
+  //             timeOut: 1500,
+  //             positionClass: 'toast-top-right',
+  //           });
+  //         }
+  //       );
+  //     } else {
+  //       console.error('ฟังก์ชัน savePDF ไม่มีหรือไม่เป็นฟังก์ชัน');
+  //     }
+  
+  //     $('#myModal').modal('hide');
+  //   } catch (error) {
+  //     console.error('เกิดข้อผิดพลาดในการสร้าง PDF:', error);
+  
+  //     // แสดงการแจ้งเตือนข้อผิดพลาด
+  //     this.toastr.error('บันทึกข้อมูลไม่สำเร็จ', 'ผิดพลาด!', {
+  //       timeOut: 1500,
+  //       positionClass: 'toast-top-right',
+  //     });
+  //   }
+  // }
+  async saveRCPDF() {
+    console.log("Updating PDF in dictionary...");
+    
+    // ตรวจสอบว่ามีองค์ประกอบ `pdf-viewer` หรือไม่
+    const pdfViewerElement = document.getElementById('pdf-viewer');
     if (!pdfViewerElement) {
-      console.error('ไม่พบองค์ประกอบ PDF viewer ที่จะพิมพ์.');
-      return;
+        console.error('No PDF viewer element found to print.');
+        return;
     }
 
     const pdf = new jsPDF('p', 'mm', 'a4');
-    const pdfWidth = 210; // ความกว้างของ A4 ในหน่วยมม.
-    const pdfHeight = 297; // ความสูงของ A4 ในหน่วยมม.
+    const pdfWidth = 210; // A4 width in mm
+    const pdfHeight = 297; // A4 height in mm
 
     try {
-      // จับภาพเนื้อหาของ pdfViewerElement เป็น canvas
-      const canvas = await html2canvas(pdfViewerElement, { scale: 5 });
-      const imgData = canvas.toDataURL('image/png');
-      const canvasWidth = canvas.width;
-      const canvasHeight = canvas.height;
-      const ratio = canvasWidth / pdfWidth;
-      const pdfCanvasHeight = canvasHeight / ratio;
-      const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
+        // จับภาพเนื้อหาของ  `pdf-viewer` เป็น canvas
+        const canvas = await html2canvas(pdfViewerElement, { scale: 5 });
+        const imgData = canvas.toDataURL('image/png');
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        const ratio = canvasWidth / pdfWidth;
+        const pdfCanvasHeight = canvasHeight / ratio;
+        const numOfPages = Math.ceil(pdfCanvasHeight / pdfHeight);
 
-      // เพิ่มแต่ละส่วนของภาพที่จับมาเป็นหน้าใน PDF
-      for (let i = 0; i < numOfPages; i++) {
-        const startY = i * pdfHeight * ratio;
+        // วนลูปเพื่อเพิ่มหน้าภาพแต่ละส่วนลงใน PDF
+        for (let i = 0; i < numOfPages; i++) {
+            const startY = i * pdfHeight * ratio;
 
-        // สร้าง canvas ชั่วคราวสำหรับแต่ละหน้า
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = canvasWidth;
-        tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
+            // สร้าง canvas ชั่วคราวเพื่อเพิ่มภาพแต่ละส่วน
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = canvasWidth;
+            tempCanvas.height = Math.min(canvasHeight - startY, pdfHeight * ratio);
 
-        const tempCtx = tempCanvas.getContext('2d');
-        tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.drawImage(canvas, 0, startY, canvasWidth, tempCanvas.height, 0, 0, canvasWidth, tempCanvas.height);
 
-        const tempImgData = tempCanvas.toDataURL('image/png');
+            const tempImgData = tempCanvas.toDataURL('image/png');
 
-        // เพิ่มแต่ละหน้าใน PDF
-        if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
-          if (i > 0) {
-            pdf.addPage();
-          }
-          pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, pdfHeight); // เปลี่ยน tempCanvas.height / ratio เป็น pdfHeight
+            // ตรวจสอบว่าภาพไม่ใช่ภาพว่างเปล่า
+            if (tempImgData && tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data.some(channel => channel !== 0)) {
+                if (i > 0) {
+                    pdf.addPage();
+                }
+                pdf.addImage(tempImgData, 'PNG', 0, 0, pdfWidth, tempCanvas.height / ratio);
+            }
         }
-      }
 
-      // แปลง PDF เป็น Blob
-      const pdfBlob = pdf.output('blob');
-      const formData = new FormData();
-      const pdfFilename = 'การลงตรวจสอบ.pdf'; // เปลี่ยนชื่อไฟล์ตามต้องการ
-      formData.append('id', this.recordId); // ปรับค่า ID ตามที่ต้องการ
-      formData.append('pdf', pdfBlob, pdfFilename);
+        // แปลง PDF เป็น Blob
+        const pdfBlob = pdf.output('blob');
 
-      console.log('pdfBlob:', pdfBlob);
-      console.log('recordId:', this.recordId);
-      console.log('formData:', formData); // ตรวจสอบค่า formData ทั้งหมด
+        // สร้าง FormData เพื่อส่ง PDF ไปยัง backend
+        const formData = new FormData();
+        const pdfFilename = 'การลงตรวจสอบ.pdf'; // เปลี่ยนชื่อไฟล์ตามต้องการ
+        formData.append('id', this.recordId); // ปรับค่า ID ตามที่ต้องการ
+        formData.append('pdf', pdfBlob, pdfFilename);
 
-      // บันทึก PDF ถ้า `savePDF` ฟังก์ชันมีอยู่
-      if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
-        this.sv.savePDF(formData).subscribe(
-          response => {
-            this.saveCount++;
-            console.log("บันทึก PDF สำเร็จจำนวน " + this.saveCount + " ครั้ง:", response);
-            this.router.navigate(['/table-main']);
-          },
-          error => {
-            console.error('เกิดข้อผิดพลาดในการบันทึก PDF:', error);
-          }
-        );
-      } else {
-        console.error('ฟังก์ชัน savePDF ไม่มีหรือไม่เป็นฟังก์ชัน');
-      }
+        // ตรวจสอบว่า `savePDF` ฟังก์ชันมีอยู่และเป็นฟังก์ชัน
+        if (typeof this.sv !== 'undefined' && typeof this.sv.savePDF === 'function') {
+            // ส่ง PDF ไปยัง backend
+            this.sv.savePDF(formData).subscribe(
+                async response => {
+                    this.saveCount++;
+                    console.log("PDF saved successfully " + this.saveCount + " times:", response);
 
-      $('#myModal').modal('hide');
+                    // เพิ่มการอัปเดตสถานะหลังจากบันทึก PDF สำเร็จ
+                    await this.updateRecordStatus(this.recordId, 1);
+
+                    // แสดงการแจ้งเตือนสำเร็จ
+                    this.toastr.success('บันทึกข้อมูลสำเร็จ', 'สำเร็จ!!', {
+                        timeOut: 1500,
+                        positionClass: 'toast-top-right',
+                    });
+
+                    // นำทางไปหน้าอื่น
+                    setTimeout(() => {
+                        this.router.navigate(['/table-main']);
+                    }, 1500); // ตรงกับเวลาของ Toastr notification
+                },
+                error => {
+                    console.error('Error saving PDF:', error);
+
+                    // แสดงการแจ้งเตือนข้อผิดพลาด
+                    this.toastr.error('บันทึกข้อมูลไม่สำเร็จ', 'ผิดพลาด!', {
+                        timeOut: 1500,
+                        positionClass: 'toast-top-right',
+                    });
+                }
+            );
+        } else {
+            console.error('savePDF function is not defined or not a function');
+        }
+
+        $('#myModal').modal('hide');
     } catch (error) {
-      console.error('เกิดข้อผิดพลาดในการสร้าง PDF:', error);
+        console.error('Error generating PDF:', error);
+
+        // แสดงการแจ้งเตือนข้อผิดพลาด
+        this.toastr.error('บันทึกข้อมูลไม่สำเร็จ', 'ผิดพลาด!', {
+            timeOut: 1500,
+            positionClass: 'toast-top-right',
+        });
+    }
+}
+  // เมธอดสำหรับอัปเดตสถานะ
+  updateRecordStatus(recordId: string, status: number) {
+    if (typeof this.sv !== 'undefined' && typeof this.sv.updateStatusDocument === 'function') {
+      this.sv.updateStatusDocument(recordId, status).subscribe(
+        response => {
+          console.log("อัปเดตสถานะสำเร็จ:", response);
+        },
+        error => {
+          console.error('เกิดข้อผิดพลาดในการอัปเดตสถานะ:', error);
+        }
+      );
+    } else {
+      console.error('ฟังก์ชัน updateStatus ไม่มีหรือไม่เป็นฟังก์ชัน');
     }
   }
+  
+
 
   // saveRCPDF() {
   //   console.log("Updating PDF in dictionary...");
