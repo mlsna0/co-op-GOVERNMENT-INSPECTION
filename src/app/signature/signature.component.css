@@ -322,6 +322,15 @@ justify-content: center;
 margin-top: 15px;
 }
 
+
+:host ::ng-deep .ng2-pdf-viewer-container{
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
 /* :host ::ng-deep .pdfViewer.removePageBorders {
 border: 1px solid black; 
 box-sizing: border-box;  
