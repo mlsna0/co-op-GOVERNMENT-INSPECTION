@@ -609,7 +609,7 @@ export class SignatureComponent implements OnInit {
     const pdfHeight = 297; // A4 height in mm
 
     try {
-        // จับภาพเนื้อหาของ `pdf-viewer` เป็น canvas
+        // จับภาพเนื้อหาของ  `pdf-viewer` เป็น canvas
         const canvas = await html2canvas(pdfViewerElement, { scale: 5 });
         const imgData = canvas.toDataURL('image/png');
         const canvasWidth = canvas.width;
