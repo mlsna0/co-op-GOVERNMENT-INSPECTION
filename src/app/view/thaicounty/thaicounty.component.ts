@@ -1,4 +1,4 @@
-import { Component, OnInit,Input, OnChanges, SimpleChanges  } from '@angular/core';
+import { Component, OnInit,Input, OnChanges, SimpleChanges, ViewChild  } from '@angular/core';
 import { ProvinceService } from '../../../app/view/thaicounty/thaicounty.service';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -11,6 +11,7 @@ import { saveAs } from 'file-saver';
 // import 'datatables.net-dt/css/jquery.dataTables.css';
 import * as $ from 'jquery';
 import { forkJoin } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
 
 interface Province {
   signedDocuments: number;
@@ -28,6 +29,9 @@ interface Province {
   styleUrls: ['./thaicounty.component.css']
 })
 export class ThaicountyComponent implements OnInit {
+  @ViewChild(DataTableDirective, { static: false })
+  dtElement: DataTableDirective; // ประกาศ dtElement เพื่อเชื่อมโยงกับ DataTable
+ 
   totalDocuments: number = 0;
   totalSignedDocuments: number = 0;
   @Input() filterCriteria: any;
@@ -40,6 +44,11 @@ export class ThaicountyComponent implements OnInit {
   loading: boolean = true;
   usersByProvince: { [provinceName: string]: any[] } = {};
   exportCounter: any;
+
+
+  groupProvincesData:any[] =[];
+  filteredProvincesData: any[] = []; // ข้อมูลที่กรองแล้ว
+  originalData: any[] = []; // เก็บข้อมูลต้นฉบับ
   
   constructor(
     private provinceService: ProvinceService,
@@ -47,12 +56,22 @@ export class ThaicountyComponent implements OnInit {
     private sv:SharedService,
     private loginservice: loginservice, 
     private documentService: DocumentService
-  ) { }
+  ) { 
+  }
 
   ngOnInit(): void {
+    this.loading = true;
     this.dtOptions = {
       order: [[1, 'desc']],
       pagingType: 'full_numbers',
+      columns: [
+        { title: 'จังหวัด', data: 'provinceName' },
+        { title: 'จำนวนหน่วยงาน', data: 'agenciesCount' },
+        { title: 'จำนวนเอกสาร', data: 'documentCount' },
+        { title: 'จำนวนเอกสารที่ลงนามแล้ว', data: 'signedCount' },
+        { title: 'จำนวนเอกสารดำเนินงาน', data: 'onProcessCount' },
+        { title: 'เปอร์เซ็นต์', data: 'percentage' }
+      ],
       language: {
         lengthMenu: 'แสดง _MENU_ รายการ',
         search: 'ค้นหา',
@@ -74,45 +93,83 @@ export class ThaicountyComponent implements OnInit {
       this.provinces = data; // เก็บข้อมูลจังหวัดทั้งหมดใน component
       this.loadUserReport();
       console.log("this.provinces",this.provinces)
-      this.loading = false;
+    
       this.dtTrigger.next(this.provinces);
+      this.loading = false;
     });
-    this.loadPDFs()
+    // this.loadPDFs()
+    this.loadUserReportNew();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['filterCriteria']) {
-      // console.log('FilterCriteria changed: ', changes['filterCriteria'].currentValue);
       if (this.filterCriteria) {
-        this.applyFilter();
+        // ตรวจสอบว่ามีค่า refresh ใน filterCriteria หรือไม่
+        if (this.filterCriteria.refresh) {
+          // ถ้าเป็นการรีเฟรช ให้รีเซ็ตข้อมูลทั้งหมด
+          this.resetData();
+        } else {
+          // ถ้าไม่ใช่การรีเฟรช ให้ทำการกรองข้อมูลตาม filterCriteria
+          this.applyFilter();
+        }
       }
     }
   }
+  
+
+
+
   applyFilter() {
+    // ถ้ามี filterCriteria ให้ทำการกรอง
     if (this.filterCriteria) {
-      // console.log('Applying filter with criteria: ', this.filterCriteria);
-      // โค้ดการกรองข้อมูลตาม this.filterCriteria
       this.filterProvinces();
     }
+  
+    // ตรวจสอบว่ามีการเลือกจังหวัดหรือไม่
+    if (this.filterCriteria && this.filterCriteria.selectedProvinces && this.filterCriteria.selectedProvinces.length > 0) {
+      const selectedIds = this.filterCriteria.selectedProvinces.map(id => id.toString()); // แปลงเป็น string
+      console.log("รหัสจังหวัดที่เลือก: ", selectedIds);
+  
+      // กรองข้อมูลตามจังหวัดที่เลือก
+      this.filteredProvincesData = this.groupProvincesData.filter(provinceData => {
+        const isIncluded = selectedIds.includes(provinceData.province.toString());
+        return isIncluded;
+      });
+    } else {
+      // ถ้าไม่มีการเลือกจังหวัด ให้แสดงข้อมูลทั้งหมด (รีเซ็ต)
+      this.filteredProvincesData = [...this.groupProvincesData];
+    }
+  
+    console.log("ข้อมูลจังหวัดที่กรองแล้ว: ", this.filteredProvincesData);
+    
+    // อัปเดต DataTable โดยไม่ทำลาย instance
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.clear(); // ลบข้อมูลเก่าใน DataTable
+      dtInstance.rows.add(this.filteredProvincesData); // เพิ่มข้อมูลใหม่ (กรองแล้วหรือทั้งหมด)
+      dtInstance.draw(); // วาดใหม่เพื่อแสดงข้อมูลที่กรองแล้วหรือทั้งหมด
+    });
   }
+
+  resetData() {
+    // ฟังก์ชันสำหรับโหลดข้อมูลทั้งหมดใหม่
+    this.filteredProvincesData = [...this.groupProvincesData]; // รีเซ็ตข้อมูลกลับเป็นค่าเริ่มต้นทั้งหมด
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.clear(); 
+      dtInstance.rows.add(this.filteredProvincesData); 
+      dtInstance.draw(); 
+    });
+  }
+  
   filterProvinces() {
+    // กรอง provinces ตาม filterCriteria
     if (this.filterCriteria && this.filterCriteria.selectedProvinces) {
       const selectedIds = this.filterCriteria.selectedProvinces; // Get selected province IDs
   
-      this.provinces = this.provinces.filter(province =>
-        selectedIds.includes(province.id) // Check if province ID is in selected IDs
-        
-      );
-      // console.log('Filtered Provinces:', this.provinces);
-  
-      // Update DataTable with filtered data
+      // ใช้ฟังก์ชัน filter เพื่อลดจำนวน provinces
+      this.provinces = this.provinces.filter(province => selectedIds.includes(province.id));
+      console.log(" filterProvinces: ",this.provinces)
+      // อัปเดต DataTable ด้วยข้อมูลที่กรองแล้ว
       this.dtTrigger.next(this.provinces);
-      // $(document).ready(() => {
-      //   const table = $('#yourDataTableId').DataTable(); // Update this with your table ID
-      //   table.clear(); // Clear existing data
-      //   table.rows.add(this.provinces); // Add new data
-      //   table.draw(); // Redraw the table
-      // });
     }
   }
   ngOnDestroy(): void {
@@ -227,14 +284,102 @@ loadPDFs(): void {
         }
     );
 }
+
+loadUserReportNew() {
+  // ตั้งค่าสถานะการโหลดเป็น true ก่อนเริ่มการเรียก API
+  this.loading = true;
+
+  this.sv.getAllRecordsWithEmployees().subscribe(
+    res => {
+      // เก็บผลลัพธ์จาก API
+      console.log("thaicountry getAllRecordsWithEmployees: ",res)
+      this.groupProvincesData = res;
+
+      // สร้างแผนที่ของชื่อจังหวัดจาก provinces
+      const provinceMap = new Map(this.provinces.map(province => [province.id.toString(), province.name_th]));
+
+      // สร้างอาร์เรย์ใหม่ที่เก็บข้อมูลของทั้ง 77 จังหวัด
+      const fullProvinceData = this.provinces.map(province => {
+        const foundProvince = this.groupProvincesData.find(group => group.province.toString() === province.id.toString());
+
+        if (foundProvince) {
+          const totalDocuments = foundProvince.documentCount || 0; // จำนวนเอกสารทั้งหมด
+          const signedDocuments = foundProvince.signedCount || 0; // จำนวนเอกสารที่เซ็น
+
+          // คำนวณเปอร์เซ็นต์
+          const percentage = totalDocuments > 0 ? (signedDocuments / totalDocuments) * 100 : 0;
+
+          return {
+            ...foundProvince,
+            provinceName: province.name_th,
+            percentage: percentage,
+            
+          };
+        } else {
+          return {
+            province: province.id,
+            provinceName: province.name_th,
+            agenciesCount: 0, 
+            documentCount: 0,
+            signedCount: 0,
+            onProcessCount: 0, 
+            percentage: 0,
+          };
+          
+        }
+      
+      });
+
+      // เก็บข้อมูลเต็ม 77 จังหวัดกลับใน groupProvincesData
+      this.groupProvincesData = fullProvinceData;
+
+      // เก็บข้อมูลต้นฉบับไว้เพื่อใช้ในการกรองข้อมูล
+      this.originalData = [...fullProvinceData];
+
+      // Debugging: ตรวจสอบข้อมูลที่จะถูกส่งไปยัง DataTable
+      console.log('Data to be sent to DataTable: ', this.groupProvincesData);
+
+      // อัปเดต DataTable
+      this.dtTrigger.next(this.groupProvincesData);
+
+      // Debugging: ตรวจสอบว่า DataTable ถูกอัปเดตแล้ว
+      console.log('DataTable updated.');
+
+      // เรียกใช้ applyFilter หลังจากโหลดข้อมูลเพื่อกรองข้อมูลที่แสดง
+      if (this.filterCriteria) {
+        console.log('Applying filter: ', this.filterCriteria);
+        this.applyFilter();
+      }
+
+      // หยุดสถานะการโหลดเมื่อข้อมูลเสร็จสมบูรณ์
+      this.loading = false;
+    },
+    error => {
+      // จัดการข้อผิดพลาดในการโหลดข้อมูล
+      console.error('Error loading data: ', error);
+
+      // หยุดสถานะการโหลดในกรณีที่เกิดข้อผิดพลาด
+      this.loading = false;
+    }
+  );
+}
 exportToExcel(): void {
   // กำหนดข้อมูลตามลำดับคอลัมน์ที่ต้องการ
-  const exportData = this.provinces.map((province, index) => ({
+  // const exportData = this.provinces.map((province, index) => ({
+  //   'ลำดับ': index + 1,
+  //   'จังหวัด': province.name_th,
+  //   'จำนวนเอกสาร': province.count,
+  //   'จำนวนเอกสารที่ถูกเซ็น': province.signedDocuments,
+  //   'เปอร์เซ็นต์': province.percentage.toFixed(2) + '%',
+  // }));
+  const exportData = this.groupProvincesData.map((groupProvincesData, index) => ({
     'ลำดับ': index + 1,
-    'จังหวัด': province.name_th,
-    'จำนวนเอกสาร': province.count,
-    'จำนวนเอกสารที่ถูกเซ็น': province.signedDocuments,
-    'เปอร์เซ็นต์': province.percentage.toFixed(2) + '%',
+    'จังหวัด':  groupProvincesData?.provinceName,
+    'จำนวนหน่วยงาน':groupProvincesData?.agenciesCount,
+    'จำนวนเอกสาร': groupProvincesData?.documentCount,
+    'จำนวนเอกสารที่ถูกเซ็น':  groupProvincesData?.signedCount,
+    'จำนวนเอกสารดำเนินงาน':  groupProvincesData?.onProcessCount,
+    'เปอร์เซ็นต์': groupProvincesData.percentage.toFixed(2) + '%',
   }));
 
   // สร้างแผ่นงาน (worksheet) จากข้อมูลที่จัดเรียงแล้ว

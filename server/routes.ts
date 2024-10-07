@@ -59,6 +59,7 @@ function setRoutes(app): void {
   // RecordModel routes
   router.route('/pdfs').get(recordModelCtrl.getAllPDFs);
   router.route('/recordModel').get(recordModelCtrl.getAll);
+  router.route('/recordModel/getAllRecordsWithEmployees').get(recordModelCtrl.getAllRecordsWithEmployees); //ทดลอง
   router.route('/recordModel/count').get(recordModelCtrl.count);
   router.route('/recordModel').post(recordModelCtrl.insert);
   router.route('/recordModel/:id').get(recordModelCtrl.get);
