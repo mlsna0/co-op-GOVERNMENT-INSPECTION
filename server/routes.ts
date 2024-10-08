@@ -279,6 +279,8 @@ function setRoutes(app): void {
         }
     });
 
+    app.use('/api/stampSignature', express.static(path.join(__dirname, '..', 'dist', 'server')));
+
     router.route('/test').get(async (req, res: any) => {
         let CAFile = fs.readFileSync('C:/Users/Administrator/Desktop/oca/dist/oca/test.p12')
         console.log(CAFile)
