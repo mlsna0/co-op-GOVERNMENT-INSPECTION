@@ -59,6 +59,7 @@ function setRoutes(app): void {
   // RecordModel routes
   router.route('/pdfs').get(recordModelCtrl.getAllPDFs);
   router.route('/recordModel').get(recordModelCtrl.getAll);
+  router.route('/recordModel/getAllRecordsWithEmployees').get(recordModelCtrl.getAllRecordsWithEmployees); //ทดลอง
   router.route('/recordModel/count').get(recordModelCtrl.count);
   router.route('/recordModel').post(recordModelCtrl.insert);
   router.route('/recordModel/:id').get(recordModelCtrl.get);
@@ -277,6 +278,8 @@ function setRoutes(app): void {
             }
         }
     });
+
+    app.use('/api/stampSignature', express.static(path.join(__dirname, '..', 'dist', 'server')));
 
     router.route('/test').get(async (req, res: any) => {
         let CAFile = fs.readFileSync('C:/Users/Administrator/Desktop/oca/dist/oca/test.p12')

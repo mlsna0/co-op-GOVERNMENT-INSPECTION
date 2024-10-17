@@ -308,7 +308,100 @@ class recorCon extends BaseCtrl {
       res.status(400).json({ error: err.message });
     }
   }
+//////ทดลอง
+async getAllRecordsWithEmployees(req: Request, res: Response): Promise<void> {
+  try {
+    // ดึงข้อมูลพนักงานทั้งหมด
+    const employees = await RegisterModel.find().exec();
+    if (!employees.length) {
+      res.status(404).send('No employees found.');
+      return;
+    }
 
+    // ดึงข้อมูลเอกสารทั้งหมด
+    const allRecords = await recordModel.find().exec();
+    if (!allRecords.length) {
+      res.status(404).send('No records found.');
+      return;
+    }
+
+    // ดึงข้อมูลที่มี employee และเชื่อมโยงกับ agency และ records
+    const result = await Promise.all(allRecords.map(async (record) => {
+      const recordUser = await User.findById(record.userId).exec();
+      if (!recordUser) return null;
+
+      const employee = await RegisterModel.findById(recordUser.employeeId).exec();
+      if (!employee) return null;
+
+      const agency = await Agency.findById(employee.agencies).exec();
+      if (!agency) return null;
+
+      // จัดรูปแบบข้อมูลให้ตรงตามที่ต้องการ
+      return {
+        user: recordUser,   // ข้อมูลผู้ใช้
+        employee: employee,  // ข้อมูลพนักงาน
+        documents: [],      // ปรับตามที่คุณต้องการ (หรือสามารถเก็บเอกสารได้ที่นี่)
+        agency: agency,     // ข้อมูลหน่วยงาน
+        status: record.status // เพิ่ม status ของเอกสาร
+      };
+    }));
+
+    // กรองค่า null ออกจากผลลัพธ์
+    const filteredResult = result.filter(item => item !== null);
+
+    if (!filteredResult.length) {
+      res.status(404).send('No records found.');
+      return;
+    }
+
+    // Grouping the results by province
+    const groupedByProvince: { [key: string]: any } = {};
+
+    for (const record of filteredResult) {
+      const province = record.agency.province; // สมมติว่า agency มีฟิลด์ province
+      if (!groupedByProvince[province]) {
+        groupedByProvince[province] = {
+          province: province,
+          agenciesCount: 0,
+          documentCount: 0, // เพิ่ม documentCount
+          signedCount: 0,
+          unsignCount: 0,
+          onProcessCount: 0,
+          records: []
+          
+        };
+      }
+      groupedByProvince[province].agenciesCount += 1; // เพิ่มจำนวนหน่วยงาน
+      groupedByProvince[province].documentCount += 1; // นับเอกสารในจังหวัด
+      groupedByProvince[province].records.push(record); // เพิ่มเอกสารใน province นั้น
+
+      // นับจำนวนการเซ็นตาม status
+      switch (record.status) {
+        case "0": // unsigned
+          groupedByProvince[province].unsignCount += 1;
+          break;
+        case "1": // signed
+          groupedByProvince[province].signedCount += 1;
+          break;
+        case "2": // onProcess
+          groupedByProvince[province].onProcessCount += 1;
+          break;
+        default:
+          break;
+      }
+    }
+
+    // เปลี่ยนให้เป็นอาร์เรย์เพื่อส่งกลับ
+    const finalResult = Object.values(groupedByProvince);
+
+    // ส่งผลลัพธ์ทั้งหมดกลับไปให้หน้าบ้าน
+    res.send(finalResult);
+  } catch (error) {
+    console.error('Error retrieving all records with employees:', error);
+    res.status(500).send('Server error.');
+  }
+}
+//////////////////////////////////////////////////////////////////
   getAllRecordsLinkedByEmployeeId = async (req, res) => {
     try {
       // ดึง users, employees และ documents มา

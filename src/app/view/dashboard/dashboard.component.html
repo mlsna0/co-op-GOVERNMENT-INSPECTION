@@ -66,7 +66,37 @@
         </div>
         <div class="col-md-6">
           <div class="donutChartBG">
-            <div class="text-donut">จำนวนการลงนาม</div>
+            <div class="text-donut">  จำนวนการลงนาม
+             
+              <div class="info" >
+                <div class="SignedStatus">
+                  <div class="boxColorSigned">
+                    <div class="boxFill"></div>
+                  </div>
+                  <a   *ngIf="isSuperAdmin" style="color: rgb(255, 209, 0); font-size: 32px;     font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;" >
+                    {{ (totalSignedDocuments/totalDocuments)*100 | number: '1.0-2'}}%
+
+                  </a>
+                  <a  *ngIf="isAdmin" style="color: rgb(255, 209, 0);  font-size: 32px;  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;">
+                    {{ (recordCountWithStatus1/SameOrganizationrecordCount)*100 | number: '1.0-2'}}%</a>
+                  
+                </div>
+                <div class="unSignStatus">
+                 <div class="boxColor">
+                  <div class="boxFill-unSignStatus"></div>
+                 </div>
+                  <a  *ngIf="isSuperAdmin" style="color: rgb(195, 195, 198); font-size: 32px;  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;" > 
+                    {{((totalDocuments -totalSignedDocuments) / totalDocuments) * 100 | number: '1.0-2'}}%
+
+                  </a>
+                  <a  *ngIf="isAdmin" style="color: rgb(195, 195, 198); font-size: 32px;  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;">
+                    {{((SameOrganizationrecordCount -recordCountWithStatus1) / SameOrganizationrecordCount) * 100 | number: '1.0-2'}}%
+                  </a>
+                 
+                </div>
+             
+              </div>
+            </div>
             <div class="chart-container">
               <canvas id="myDonutChart"></canvas>
             </div>

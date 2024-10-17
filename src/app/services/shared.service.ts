@@ -204,6 +204,14 @@ export class SharedService {
       })
     );
   }
+  getAllRecordsWithEmployees():Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/recordModel/getAllRecordsWithEmployees`).pipe(
+      catchError(error => {
+        // console.error('Error fetching PDFs:', error);
+        return throwError('ไม่สามารถดึงข้อมูลได้');
+      })
+    );
+  }
 
   getAllRecordsLinkedByEmployeeId(): Observable<any> {
     return this.http.get(`${this.baseUrl}/getall`).pipe(

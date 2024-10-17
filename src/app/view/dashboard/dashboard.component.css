@@ -327,8 +327,76 @@ height: 50px;
   height: 100%;
 }
 .text-donut{
+  position: relative;
+  font-weight: 900;
+ width: 29%;
+ height: 100%;
+ 
+
+}
+.info{
+  position: relative;
+  bottom: -10px;
+  left: 0;
+  right: 0; /* ทำให้คอนเทนเนอร์ขยายตามความกว้าง */
+  display: flex; /* หากต้องการให้จัดเรียงแบบแถว */
+  flex-direction: column;
+  justify-content: space-between; /* กำหนดการจัดตำแหน่งลูกภายใน */
+  padding: 10px; /* กำหนดระยะห่างจากขอบ */
+}
+.text-donut-title{
   font-weight: 900;
   width: 29%;
+
+}
+.unSignStatus{
+ 
+  display: flex;
+  align-items: center;
+
+}
+.boxColor {
+  width: 60px;
+  height: 10px;
+  background-color: white;
+  border: rgb(195, 195, 198);
+  border-radius: 5px;
+  position: relative; /* ใช้สำหรับตำแหน่งของกล่อง */
+  overflow: hidden; /* ซ่อนส่วนที่เกิน */
+}
+.boxFill-unSignStatus {
+  height: 100%; /* ให้ความสูงเท่ากับ boxColor */
+  background-color: rgba(195, 195, 198, 0.7); /* สีพื้นหลังที่จะเติม */
+  position: absolute; /* ให้ตำแหน่งเป็น absolute */
+  left: 0; /* เริ่มต้นจากซ้าย */
+  top: 0; /* เริ่มต้นจากด้านบน */
+  width: 0; /* เริ่มต้นที่ 0% */
+  animation: fillAnimation 0.9s forwards; /* กำหนดให้ animaiton ทำงาน */
+}
+
+
+.SignedStatus{
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+}
+.boxColorSigned{
+  position: relative; /* ใช้สำหรับตำแหน่งของกล่อง */
+  width: 60px;
+  height: 10px;
+  background-color:white ;
+  border: rgb(255, 209, 0);
+  border-radius: 5px;
+  overflow: hidden; /* ซ่อนส่วนที่เกิน */
+}
+.boxFill {
+  height: 100%; /* ให้ความสูงเท่ากับ boxColor */
+  background-color: rgba(255, 209, 0, 0.7); /* สีพื้นหลังที่จะเติม */
+  position: absolute; /* ให้ตำแหน่งเป็น absolute */
+  left: 0; /* เริ่มต้นจากซ้าย */
+  top: 0; /* เริ่มต้นจากด้านบน */
+  width: 0; /* เริ่มต้นที่ 0% */
+  animation: fillAnimation 0.5s forwards; /* กำหนดให้ animaiton ทำงาน */
 }
 .donutChartBG{
   background: white;
@@ -531,4 +599,9 @@ justify-content: flex-end;
     height: auto;
   }
 
+}
+@keyframes fillAnimation {
+  to {
+    width: 100%; /* เติมเต็มความกว้าง 100% */
+  }
 }

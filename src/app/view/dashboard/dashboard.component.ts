@@ -29,6 +29,7 @@ export class DashboardComponent implements OnInit {
   //Admin count
   SameOrganizationrecordCount: number;
   recordCountWithStatus1: number;
+  recordCountWithStatus2:number;
   AgencyPersonCount: number;
   filteredMonth: string | null = null;
 
@@ -78,6 +79,8 @@ export class DashboardComponent implements OnInit {
   //การส่งข้อมูลไปยัง component อื่น เช่น <app-thaicounty></app-thaicounty>
   filterCriteria = null;
   userCount2: number;
+
+  testData:any; //for test
 
   //get data by ID
   userId: string | undefined;
@@ -181,6 +184,8 @@ export class DashboardComponent implements OnInit {
     //   console.log('Total Pages:', data.totalPages); // ตรวจสอบข้อมูล
     //   this.totalPdfPages = data.totalPages;
     // });
+
+    // this.getAllRecordsWithEmployees();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -482,6 +487,12 @@ export class DashboardComponent implements OnInit {
       province.selected = false;
       this.isFilterActive = false;
     });
+
+
+   // แทนการส่งค่า [] ว่าง ให้ส่งค่า refresh ไปแทน
+   this.filterCriteria = {
+    refresh: true // เพิ่มตัวบ่งชี้ว่าเป็นการรีเฟรช
+  };
     this.loadAllProvinces();
     // this.loadProvinces();
 
@@ -740,6 +751,7 @@ export class DashboardComponent implements OnInit {
   createMonthlyChart(data: any[]): void {
 
     if (!Array.isArray(data)) {
+      return;
       console.error("Invalid data provided to createMonthlyChart: expected an array but got", data);
       return;
     }
@@ -781,6 +793,7 @@ export class DashboardComponent implements OnInit {
         console.log("เดือน : ", this.filteredMonth)
       } else {
         this.filteredMonth = null; // ถ้าไม่มีการฟิลเตอร์หรือหลายเดือน
+        console.log("เดือน : ", this.filteredMonth)
       }
     } else {
       this.filteredMonth = null; // ถ้าไม่มี startDate หรือ endDate
@@ -1099,6 +1112,8 @@ export class DashboardComponent implements OnInit {
     );
   }
 
+  
+
   getAllSameOrganization(currentUserId) {
     if (!currentUserId) {
       console.log("ไม่ได้รับ currentUserId มา: ", currentUserId)
@@ -1110,10 +1125,13 @@ export class DashboardComponent implements OnInit {
 
       // นับเฉพาะข้อมูลที่มี field 'record'
       this.SameOrganizationrecordCount = this.DataSameOrganization.filter(item => item.record).length;
-      console.log("จำนวน record ใน DataSameOrganization: ", this.SameOrganizationrecordCount);
+      // console.log("จำนวน record ใน DataSameOrganization: ", this.SameOrganizationrecordCount);
       // นับเฉพาะข้อมูลที่มี field 'record'
       this.recordCountWithStatus1 = this.DataSameOrganization.filter(item => item.record && Number(item.record.status) === 1).length;
-      console.log("จำนวน record ที่มี status = 1: ", this.recordCountWithStatus1);
+      // console.log("จำนวน record ที่มี status = 1: ", this.recordCountWithStatus1);
+      // นับเฉพาะข้อมูลที่มี field 'record'
+      this.recordCountWithStatus2 = this.DataSameOrganization.filter(item => item.record && Number(item.record.status) === 2).length;
+      // console.log("จำนวน record ที่มี status = 2: ", this.recordCountWithStatus2);
       this.createDonutChart();
       this.createMonthlyChart(this.DataSameOrganization);
     })
@@ -1129,6 +1147,11 @@ export class DashboardComponent implements OnInit {
     // console.log(`Searching for Province ID: ${provinceId}. Found:`, province);
     return province ? province.name_th : "Not Found";
   }
-
+  getAllRecordsWithEmployees(){
+    this.sv.getAllRecordsWithEmployees().subscribe(res=>{
+      this.testData = res;
+      console.log("testData form getAllRecordsWithEmployees: ",this.testData) 
+    })
+  }
 
 }

@@ -119,7 +119,7 @@ export class loginservice {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`${this.baseUrl}/registerModel/profile`, { headers })
       .pipe(
-        tap(data => console.log('Data from API:', data)), // เพิ่มการตรวจสอบข้อมูลที่ได้รับ
+       // tap(data => console.log('Data from API:', data)), // เพิ่มการตรวจสอบข้อมูลที่ได้รับ
         catchError(error => {
           console.error('Error fetching user profile:', error);
           return throwError(error);
