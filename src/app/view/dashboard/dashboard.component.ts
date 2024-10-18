@@ -783,20 +783,24 @@ export class DashboardComponent implements OnInit {
 
     // กำหนดให้เริ่มต้นเป็น null
     this.filteredMonth = null;
+    console.log("กำหนด? เดือน : ", this.filteredMonth)
     // ตรวจสอบการฟิลเตอร์เดือน
-    if (startDateObj && endDateObj) {
+    if (this.startDate && this.endDate) {
       const startDateObj = new Date(this.startDate);
       const endDateObj = new Date(this.endDate);
+
       // ถ้า startDate และ endDate ตรงกันและอยู่ในเดือนเดียวกัน
       if (startDateObj.getMonth() === endDateObj.getMonth() && startDateObj.getFullYear() === endDateObj.getFullYear()) {
         this.filteredMonth = months[startDateObj.getMonth()];
-        console.log("เดือน : ", this.filteredMonth)
+        console.log("เดือน : ", this.filteredMonth);
       } else {
-        this.filteredMonth = null; // ถ้าไม่มีการฟิลเตอร์หรือหลายเดือน
-        console.log("เดือน : ", this.filteredMonth)
+         this.filteredMonth = null; // ถ้าไม่มีการฟิลเตอร์หรือหลายเดือน
+        
+        console.log("else เดือน : ", this.filteredMonth)
       }
     } else {
       this.filteredMonth = null; // ถ้าไม่มี startDate หรือ endDate
+      console.log("else ไม่มี startDate หรือ endDate : ", this.filteredMonth);
     }
 
     // นับเอกสาร

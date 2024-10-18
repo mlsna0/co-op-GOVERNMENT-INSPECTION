@@ -80,22 +80,22 @@ function setRoutes(app): void {
 
   // UserModel routes
   router.route('/userModel/resetPassword').put(auth.authorize, userModelCtrl.resetPassword);
-  router.route('/timeStampModel').get(userModelCtrl.getAll);
-  router.route('/timeStampModel/count').get(userModelCtrl.count);
-  router.route('/timeStampModel').post(userModelCtrl.insert);
-  router.route('/timeStampModel/:id').get(userModelCtrl.get);
-  router.route('/timeStampModel/:id').put(userModelCtrl.update);
-  router.route('/timeStampModel/:id').delete(userModelCtrl.delete);
+  router.route('/userModel').get(userModelCtrl.getAll);
+  router.route('/userModel/count').get(userModelCtrl.count);
+  router.route('/userModel').post(userModelCtrl.insert);
+  router.route('/userModel/:id').get(userModelCtrl.get);
+  router.route('/userModel/:id').put(userModelCtrl.update);
+  router.route('/userModel/:id').delete(userModelCtrl.delete);
   
   // router.route('/timeStampModel').get(userModelCtrl.getTimeLogin);
 
   //TimeStampModel routes
-  router.route('/userModel').get(timestampModelCtrl.getAll);
-  router.route('/userModel/count').get(timestampModelCtrl.count);
-  router.route('/userModel').post(timestampModelCtrl.insert);
-  router.route('/userModel/:id').get(timestampModelCtrl.get);
-  router.route('/userModel/:id').put(timestampModelCtrl.update);
-  router.route('/userModel/:id').delete(timestampModelCtrl.delete);
+  router.route('/timeStampModel').get(timestampModelCtrl.getAll);
+  router.route('/timeStampModel/count').get(timestampModelCtrl.count);
+  router.route('/timeStampModel').post(timestampModelCtrl.insert);
+  router.route('/timeStampModel/:id').get(timestampModelCtrl.get);
+  router.route('/timeStampModel/:id').put(timestampModelCtrl.update);
+  router.route('/timeStampModel/:id').delete(timestampModelCtrl.delete);
 
 
   router.route('/agencyModel').get(agencyModelCtrl.getAll);

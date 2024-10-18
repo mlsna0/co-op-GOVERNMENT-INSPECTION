@@ -2,8 +2,8 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">หน้าหลัก</a></li>
-          <li class="breadcrumb-item"><a [routerLink]="['/manageuser']">จัดการผู้ใช้งาน</a></li>
-          <li class="breadcrumb-item"  *ngIf="UserData?.role == 'user'" ><a class="linkA" (click)="BackRoot()">จัดการบุคคลกร</a></li>
+          <li class="breadcrumb-item" *ngIf="currenUser?.role == 'superadmin'"><a [routerLink]="['/manageuser']">จัดการผู้ใช้งาน</a></li>
+          <li class="breadcrumb-item"   ><a class="linkA" (click)="BackRoot()">จัดการบุคคลกรในหน่วยงาน</a></li>
           <li class="breadcrumb-item active"><a aria-current="page" >รายละเอียดผู้ใช้งาน</a></li>
         </ol>
       </nav>

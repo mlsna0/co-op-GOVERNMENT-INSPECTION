@@ -177,9 +177,9 @@
                     <div class="col-sm-6">
                       <div class="form-group">
                         <label for="organization">หน่วยงาน</label>
-                        <input type="text" id="organization" formControlName="organization" class="form-control" disabled>
-                        <input type="hidden" formControlName="organization">
-          
+                        <input type="text" id="organization" formControlName="organizationName" class="form-control"  [value]="DataOrganization?.agency_name" disabled>
+                        <input type="hidden" formControlName="organization"  [value]="DataOrganization?._id">
+                    
                       </div>
                     </div>
 

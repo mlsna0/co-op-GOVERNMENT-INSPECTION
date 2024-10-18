@@ -338,9 +338,9 @@ async getAllRecordsWithEmployees(req: Request, res: Response): Promise<void> {
 
       // จัดรูปแบบข้อมูลให้ตรงตามที่ต้องการ
       return {
-        user: recordUser,   // ข้อมูลผู้ใช้
-        employee: employee,  // ข้อมูลพนักงาน
-        documents: [],      // ปรับตามที่คุณต้องการ (หรือสามารถเก็บเอกสารได้ที่นี่)
+        // user: recordUser,   // ข้อมูลผู้ใช้
+        // employee: employee,  // ข้อมูลพนักงาน
+        // documents: [],      // ปรับตามที่คุณต้องการ (หรือสามารถเก็บเอกสารได้ที่นี่)
         agency: agency,     // ข้อมูลหน่วยงาน
         status: record.status // เพิ่ม status ของเอกสาร
       };

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { ProvinceService } from '../../../app/view/thaicounty/thaicounty.service';
 import { HttpClient } from '@angular/common/http';
@@ -28,6 +28,8 @@ export class ManageuserComponent implements OnInit {
   organization: any[] = [];
   availableOrganizations: any[] = []; // ตัวแปรใหม่สำหรับเก็บ organization ที่ยังไม่ถูกเลือก
   selectedOrganization: string = ''; // เพิ่มตัวแปรใหม่เพื่อเก็บค่า organization ที่เลือก
+  usedOrganizations: any; // เพิ่มตัวแปรใหม่เพื่อเก็บค่าข้อมูลผู้ใช้
+  users: any[] = []; // ประกาศตัวแปร users เป็น array
 
 
   provinces: any[] = [];
@@ -64,7 +66,8 @@ export class ManageuserComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private ls: loginservice,
-
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone,
     private sv: SharedService,
     private router: Router,
     private fb: FormBuilder,
@@ -80,7 +83,7 @@ export class ManageuserComponent implements OnInit {
       organization: ['', Validators.required],
       bearing: ['', Validators.required],
       address: ["", Validators.required],
-      phone: ["",  [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      phone: ["", [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       province: ['', Validators.required],
       amphure: ['', Validators.required],
       tambon: ['', Validators.required],
@@ -180,15 +183,83 @@ export class ManageuserComponent implements OnInit {
   }
 
   updateUserStatus(user: any) {
-
     console.log('User ID status:', user.id);
-    console.log('user.isActive status:', user.isActive)
+    console.log('user.isActive status:', user.isActive);
+
     if (user.id) {
-      this.sv.updateUserStatus(user.id, user.isActive).subscribe(response => {
-        console.log('Status updated successfully:', response);
-      })
+      this.sv.updateUserStatus(user.id, user.isActive).subscribe(
+        response => {
+          console.log('Status updated successfully:', response);
+
+          // ดึงข้อมูลผู้ใช้ทั้งหมดใน agency เดียวกัน
+          this.sv.getPersonsWithSameOrganization(response.agencyId).subscribe(
+            (usersInAgency: any[]) => {
+              // console.log("same agency: ",usersInAgency)
+      
+              let otherAdminUpdated = false;
+
+              usersInAgency.forEach(userInAgency => {
+                // console.log("Before change - userInAgency isActive: ", userInAgency.isActive);  // เช็คสถานะก่อน
+                if (userInAgency.role === 'admin' && userInAgency._id !== user._id) {
+                  // console.log("Checking admin with ID: ", userInAgency._id);
+                  if (userInAgency.isActive) {
+                    // console.log("userInAgency isActive is true, changing to false...");
+                    userInAgency.isActive = false;  // ปิดสถานะของ admin คนอื่น
+                  
+                  }
+                }
+                otherAdminUpdated =  userInAgency.isActive;
+                // console.log("After change - userInAgency isActive: ", userInAgency.isActive);  // เช็คสถานะหลัง
+              });
+                 // บังคับให้ UI อัปเดต
+           // อัปเดตตัวแปร users
+          //  this.users = usersInAgency;
+          //  console.log("this users: ", this.users);
+
+          //  // บังคับให้ Angular อัปเดต UI
+          //  this.cdr.detectChanges();
+
+           // ถ้ามีการอัปเดต admin คนอื่น จะรีเฟรชหน้าเว็บ
+           if (otherAdminUpdated) {
+            this.cdr.detectChanges();
+             window.location.reload();
+            // console.log("on  window.location.reload();")
+           }
+            
+            },
+            err => {
+              console.error('Error fetching users in agency:', err);
+            }
+          );
+
+        },
+        error => {
+          console.error('Error updating user status:', error);
+        }
+      );
     }
-  }
+}
+  // updateUserStatus(user: any) {
+  //   console.log('User ID status:', user.id);
+  //   console.log('user.isActive status:', user.isActive);
+
+  //   if (user.id) {
+  //     this.sv.updateUserStatus(user.id, user.isActive).subscribe(
+  //       response => {
+  //         console.log('Status updated successfully:', response);
+      
+  //         this.cdr.detectChanges();
+  //       },
+  //       error => {
+  //         console.error('Error udating user status:', error);
+  //       }
+  //     );
+  //   }
+  // }
+
+
+
+    
   //toggle eyes 
   togglePasswordVisibility(field: string): void {
     if (field === 'Password') {
@@ -226,6 +297,7 @@ export class ManageuserComponent implements OnInit {
     this.exportCounter++;
   }
 
+  //เพิ่มข้อมูลผู้ใช้งาน
   onSubmit(data) {
     const organizationValue = this.regisForm.get('organization')?.value;
     if (!organizationValue) {
@@ -233,9 +305,10 @@ export class ManageuserComponent implements OnInit {
       return;
     }
     console.log('Organization value:', organizationValue);
-  
+    this.updateAgencyStatus(organizationValue);
+
     this.selectedOrganization = organizationValue;
-  
+
     this.Submitted = true;
     if (this.regisForm.invalid) {
       this.toastr.error('กรุณากรอกข้อมูลทุกช่อง', 'เกิดข้อผิดพลาด!', {
@@ -257,10 +330,10 @@ export class ManageuserComponent implements OnInit {
       });
       return;
     }
-  
+
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     const file = fileInput?.files?.[0];
-  
+
     const formData = new FormData();
     Object.keys(this.regisForm.controls).forEach(key => {
       formData.append(key, this.regisForm.get(key)?.value);
@@ -268,14 +341,14 @@ export class ManageuserComponent implements OnInit {
     if (file) {
       formData.append('profileImage', file);
     }
-  
+
     this.ls.register(formData).subscribe(
       (response) => {
         this.toastr.success('ลงทะเบียนสำเร็จ', 'สำเร็จ!', {
           timeOut: 1500,
           positionClass: 'toast-top-right'
         }).onHidden.subscribe(() => {
-          this.filterAvailableOrganizations(); // Refresh the organizations
+          // this.filterAvailableOrganizations(); // Refresh the organizations
           this.closeModal(); // Close the modal
         });
       },
@@ -288,7 +361,7 @@ export class ManageuserComponent implements OnInit {
       }
     );
   }
-  
+
 
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password');
@@ -320,19 +393,94 @@ export class ManageuserComponent implements OnInit {
     );
   }
 
+  // filterAvailableOrganizations(): void {
+  //   this.ls.getuserregister().subscribe(
+  //     (usedOrganizations: any[]) => {
+  //       console.log('Used organizations:', usedOrganizations); // Log used organizations
+  //       console.log('All organizations before filtering:', this.organization); // Log before filtering
+  //       this.availableOrganizations = this.organization.filter(org =>
+  //         // !usedOrganizations.some(usedOrg => usedOrg.organization  === org.agency_name)
+  //         !usedOrganizations.some(usedOrg => usedOrg.agencies  === org._id)
+  //       );
+  //       console.log('Available organizations:', this.availableOrganizations);
+  //     },
+  //     (error) => console.error('Error loading used organizations:', error)
+  //   );
+  // }
   filterAvailableOrganizations(): void {
-    this.ls.getuserregister().subscribe(
-      (usedOrganizations: any[]) => {
-        console.log('Used organizations:', usedOrganizations); // Log used organizations
-        console.log('All organizations before filtering:', this.organization); // Log before filtering
-        this.availableOrganizations = this.organization.filter(org =>
-          !usedOrganizations.some(usedOrg => usedOrg.organization  === org.agency_name)
+    // Get all users
+    this.ls.getUsers().subscribe(
+      (users: any[]) => {
+        console.log('All users:', users); // Log users
+
+        // Get all used organizations from user registrations
+        this.ls.getuserregister().subscribe(
+          (usedOrganizations: any[]) => {
+            console.log('Used organizations:', this.usedOrganizations); // Log used organizations
+            console.log('All organizations before filtering:', this.organization); // Log all organizations before filtering
+            this.usedOrganizations = usedOrganizations;
+            // Filter organizations ที่มี admin ใช้งานแล้ว โดยเช็คว่าองค์กรนั้นถูกใช้โดยผู้ใช้ที่ role ไม่ใช่ "user" และมี isActive เป็น true
+            this.availableOrganizations = this.organization.filter(org => {
+              // หาผู้ใช้ที่มีบทบาทไม่ใช่ "user" และมีสถานะเป็น active สำหรับ agency นี้
+              const usedNonUserForAgency = usedOrganizations.find(usedOrg =>
+                usedOrg.agencies === org._id && users.find(user =>
+                  user.employeeId === usedOrg._id && user.role !== 'user' && user.isActive
+                )
+              );
+
+              // Log user ที่ใช้หน่วยงานนี้
+              if (usedNonUserForAgency) {
+                console.log(`Found active non-user role for organization ${org._id}:`, usedNonUserForAgency);
+              }
+
+              // Return true ถ้าไม่มีผู้ใช้ที่มีบทบาทที่ไม่ใช่ user และ isActive ใช้ agency นี้
+              return !usedNonUserForAgency;
+            });
+
+            console.log('Available organizations after filtering:', this.availableOrganizations);
+          },
+          (error) => console.error('Error loading used organizations:', error)
         );
-        console.log('Available organizations:', this.availableOrganizations);
       },
-      (error) => console.error('Error loading used organizations:', error)
+      (error) => console.error('Error loading users:', error)
     );
   }
+  updateAgencyStatus(agencyId) {
+
+    console.log("form Id to update: ", agencyId)
+    const updateData = { isActive: false };
+    // ตรวจสอบว่ามี ID หรือไม่
+    if (agencyId) {
+      this.sv.UpdateOrganizationById(agencyId, updateData).subscribe(
+        (response) => {
+          console.log("Agency updated successfully", response);
+          // this.toastr.success('อัปเดตข้อมูลสำเร็จ', 'สำเร็จ', {
+          //   timeOut: 1500,
+          //   positionClass: 'toast-top-right'
+          // }).onHidden.subscribe(() => {
+          // //  window.location.reload();  // รีเฟรชหน้าจอหลังจากแจ้งเตือนหายไป
+          // });
+        },
+        (error) => {
+          console.error("Error updating agency", error);
+          this.toastr.error('การอัปเดตสถานะหน่วยงานไม่สำเร็จ', 'เกิดข้อผิดพลาด!', {
+            timeOut: 1500,
+            positionClass: 'toast-top-right'
+          });
+        }
+      );
+    } else {
+      this.toastr.error('ไม่พบข้อมูลสำหรับการอัปเดต', 'เกิดข้อผิดพลาด!', {
+        timeOut: 1500,
+        positionClass: 'toast-top-right'
+      });
+    }
+
+  }
+
+
+
+
 
   onProvinceChange(provinceId: number) {
     this.regisForm.controls['amphure'].setValue('');

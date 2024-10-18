@@ -12,6 +12,7 @@ const agencySchema = new mongoose.Schema({
   amphure: String,
   tambon: String,
   postCode: String,
+  isActive: { type: Boolean, default: true },
 });
 export interface agencyModel{
   _id?: string; // เพิ่มฟิลด์ _idx

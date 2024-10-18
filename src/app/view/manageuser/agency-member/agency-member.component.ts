@@ -135,7 +135,7 @@ export class AgencyMemberComponent implements OnInit {
 
         // console.log("Data of Organiz: ",this.DataOrganization)
         this.regisForm.patchValue({
-          organization: this.DataOrganization?.agency_name
+          organization: this.DataOrganization?._id
         });
     //    this.loading = false; // เมื่อข้อมูลถูกโหลดแล้ว ให้สถานะเป็น false
       });

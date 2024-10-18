@@ -292,7 +292,7 @@ getDataRecordWithSameOrganization(currentUserId: string): Observable<any>{
     const body = { userId, newPassword };
     return this.http.put(`${this.baseUrl}/userModel/resetPassword`, body);
   }
-  updateUserStatus(userId: string, isActive: boolean): Observable<any> {
+  updateUserStatus(userId: string[], isActive: boolean): Observable<any> {
     // console.log("user Id service: ",userId)
     return this.http.put<any>(`${this.baseUrl}/userModel/updateUserStatus/${userId}`, { isActive })
       .pipe(

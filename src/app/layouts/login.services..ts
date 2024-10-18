@@ -152,7 +152,7 @@ export class loginservice {
 
 
   getUsers(): Observable<any[]> {
-    return this.http.get<any[]>(this.baseUrl);
+    return this.http.get<any[]>(`${this.baseUrl}/userModel`);
   }
 
   getUserById(userId: string): Observable<any> {

@@ -127,16 +127,17 @@ export class ProfileuserComponent implements OnInit {
         this.profileImgUrl = './assets/img/Person-icon.jpg';
       }
       this.OrganizationID = this.UserData?.employeeId?.agencies; //for infomation agency/organization
-      console.log( " this.OrganizationID > ",this.OrganizationID)
+      // console.log( " this.OrganizationID > ",this.OrganizationID)
       this.selectedOrganizationID = this.OrganizationID; //for infomation agency/organization
-       console.log( "this.selectedOrganizationID > ",this.selectedOrganizationID)
+      //  console.log( "this.selectedOrganizationID > ",this.selectedOrganizationID)
       this.sv.getOrganizationById(this.selectedOrganizationID).subscribe(res=>{
         this.DataOrganization = res;
-        console.log("Data of Organiz: ",this.DataOrganization)
+        // console.log("Data of Organiz: ",this.DataOrganization)
       });
 
-      this.UserRole =this.UserData?.role
-      this.isSuperAdmin = this.UserRole === 'superadmin';
+      // this.UserRole =this.UserData?.role
+      // this.isSuperAdmin = this.UserRole === 'superadmin';
+   
       this.UserInfoForm.patchValue({
         firstname: this.UserData?.employeeId.firstname,
         lastname: this.UserData?.employeeId.lastname,
@@ -158,6 +159,7 @@ export class ProfileuserComponent implements OnInit {
 
     this.loginSV.getUserProfile().subscribe(res=>{
       this.currenUser = res
+      // console.log("get user profile: ",this.currenUser)
     })
   
     // this.sv.currentProfileImageUrl.subscribe(url=> this.profileImgUrl= url);

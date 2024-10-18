@@ -49,6 +49,8 @@ export class ThaicountyComponent implements OnInit {
   groupProvincesData:any[] =[];
   filteredProvincesData: any[] = []; // ข้อมูลที่กรองแล้ว
   originalData: any[] = []; // เก็บข้อมูลต้นฉบับ
+
+
   
   constructor(
     private provinceService: ProvinceService,
@@ -60,7 +62,7 @@ export class ThaicountyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loading = true;
+    // this.loading = true;
     this.dtOptions = {
       order: [[1, 'desc']],
       pagingType: 'full_numbers',
@@ -91,9 +93,9 @@ export class ThaicountyComponent implements OnInit {
     this.provinceService.getProvinces().subscribe(data => {
      
       this.provinces = data; // เก็บข้อมูลจังหวัดทั้งหมดใน component
-      this.loadUserReport();
+      // this.loadUserReport();
       console.log("this.provinces",this.provinces)
-    
+   
       this.dtTrigger.next(this.provinces);
       this.loading = false;
     });
@@ -288,6 +290,7 @@ loadPDFs(): void {
 loadUserReportNew() {
   // ตั้งค่าสถานะการโหลดเป็น true ก่อนเริ่มการเรียก API
   this.loading = true;
+  
 
   this.sv.getAllRecordsWithEmployees().subscribe(
     res => {
@@ -296,10 +299,10 @@ loadUserReportNew() {
       this.groupProvincesData = res;
 
       // สร้างแผนที่ของชื่อจังหวัดจาก provinces
-      const provinceMap = new Map(this.provinces.map(province => [province.id.toString(), province.name_th]));
+   //  const provinceMap = new Map(this.provinces.map(province => [province.id.toString(), province.name_th]));
 
       // สร้างอาร์เรย์ใหม่ที่เก็บข้อมูลของทั้ง 77 จังหวัด
-      const fullProvinceData = this.provinces.map(province => {
+     const fullProvinceData = this.provinces.map(province => {
         const foundProvince = this.groupProvincesData.find(group => group.province.toString() === province.id.toString());
 
         if (foundProvince) {
@@ -334,8 +337,10 @@ loadUserReportNew() {
       this.groupProvincesData = fullProvinceData;
 
       // เก็บข้อมูลต้นฉบับไว้เพื่อใช้ในการกรองข้อมูล
-      this.originalData = [...fullProvinceData];
+      // this.originalData = [...fullProvinceData];
 
+
+  
       // Debugging: ตรวจสอบข้อมูลที่จะถูกส่งไปยัง DataTable
       console.log('Data to be sent to DataTable: ', this.groupProvincesData);
 
@@ -343,7 +348,7 @@ loadUserReportNew() {
       this.dtTrigger.next(this.groupProvincesData);
 
       // Debugging: ตรวจสอบว่า DataTable ถูกอัปเดตแล้ว
-      console.log('DataTable updated.');
+      // console.log('DataTable updated.');
 
       // เรียกใช้ applyFilter หลังจากโหลดข้อมูลเพื่อกรองข้อมูลที่แสดง
       if (this.filterCriteria) {
@@ -363,6 +368,12 @@ loadUserReportNew() {
     }
   );
 }
+
+
+
+
+
+
 exportToExcel(): void {
   // กำหนดข้อมูลตามลำดับคอลัมน์ที่ต้องการ
   // const exportData = this.provinces.map((province, index) => ({

@@ -35,6 +35,7 @@ class RegisterModelCtrl extends BaseCtrl {
     modelAgency = Agency
 
     create = async (req, res) => {
+        
      
             try {
                 const { firstname, lastname, email, password, confirmpassword, organization, bearing, phone, address, province, amphure, tambon, postCode, role } = req.body;
@@ -54,8 +55,11 @@ class RegisterModelCtrl extends BaseCtrl {
     
                 const salt = await bcrypt.genSalt(10);
                 const hashedPassword = await bcrypt.hash(password, salt);
+                console.log("create : ",req.body)
+                 // แปลง organization (ซึ่งเป็น _id) ให้เป็น ObjectId
+                const organizationId = new mongoose.Types.ObjectId(organization);
 
-                const agency = await Agency.findOne({ agency_name: organization });
+                const agency = await Agency.findOne({_id : organizationId});
             
                 if (!agency) {
                     return res.status(400).json({ msg: 'Agency not found' });

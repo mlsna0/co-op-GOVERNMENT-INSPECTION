@@ -70,7 +70,7 @@ h4{
 }
 .filter-box{
   display: flex;
-  width: 140px;
+  max-width: 140px;
   align-items: center;
   justify-content: space-between;
   padding: 10px;
@@ -81,8 +81,12 @@ h4{
 .fa {
   transition: transform 0.3s ease;
 }
-
+.icon-fa{
+  position: relative;
+  margin-left: 15px;
+}
 .animate {
+
   transition: transform 0.3s ease;
   transform: rotate(180deg);
 }
@@ -184,8 +188,8 @@ input[type="date"] {
   font-size: 14px;
   margin-bottom: 0px;
   padding: 0px;
-  border: 0px solid #ccc;
-  border-radius: 4px;
+  border: 0px solid transparent;
+  /* border-radius: 4px; */
 }
 /* dropDown */
 .tab-filter{

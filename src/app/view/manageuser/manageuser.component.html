@@ -165,10 +165,10 @@
                       <div class="col-sm-6">
                           <div class="form-group">
                               <label for="organization">หน่วยงาน</label>
-                              <select class="form-select" id="organization" formControlName="organization">
-                                  <option value="" disabled selected>เลือกหน่วยงาน</option>
-                                  <option *ngFor="let org of availableOrganizations" [value]="org.agency_name">{{ org.agency_name }}</option>
-                              </select>
+                                <select class="form-select" id="organization" formControlName="organization">
+                                    <option value="" disabled selected>เลือกหน่วยงาน</option>
+                                    <option *ngFor="let org of availableOrganizations" [value]="org._id">{{ org.agency_name }}</option>
+                                </select>
                               <div *ngIf="regisForm.get('organization')?.invalid && (regisForm.get('organization')?.touched || regisForm.get('organization')?.dirty || Submitted)">
                                 <small class="error-text">กรุณากรอกข้อมูล*</small>
                             </div>
