@@ -22,9 +22,9 @@
       <button type="button" (click)="BackRoot()" class="BackPage">
         <i class="fa fa-arrow-left"> &nbsp; ย้อนกลับ</i>
       </button>
-      <button type="button" (click)="saveRCPDF()" class="BackPage">
+      <!-- <button type="button" (click)="saveRCPDF()" class="BackPage">
         <i> &nbsp; บันทึกPDF</i>
-      </button>
+      </button> -->
 
       <div class="card-body">
         <div class="signTool-content" *ngIf="loading">
@@ -72,6 +72,8 @@
             <label class="form-check-label ms-2" for="exampleCheck1">ใช้ลายเซ็นที่บันทึกไว้</label>
           </div>
 
+          
+
           <div class="submit-content">
             <button (click)="submitSign()" *ngIf="dragList.length > 1 && typeSignature == 'pin'"
               [disabled]="dragList.length == 1" style="height: 40px;" class="btn btn-success">ลงนามเอกสาร
@@ -91,14 +93,20 @@
             <label class="text-danger">{{errorMessage}}</label>
           </div>
 
+          <div class="submit-content">
           <button (click)="submitSign()" *ngIf="dragList.length > 1 && typeSignature == 'ca'"
             [disabled]="dragList.length == 1" style="height: 40px;"
             class="btn btn-success mt-1">ลงนามอิเล็กทรอนิกส์</button>
 
-          <button (click)="lastSubmit()" *ngIf="step == 2" style="height: 40px;" type="button"
+          <!-- <button (click)="lastSubmit()" *ngIf="step == 2" style="height: 40px;" type="button"
+            class="btn btn-success">ยืนยันการลงนาม</button> -->
+
+            <button (click)="saveRCPDF()" *ngIf="step == 2" style="height: 40px;" type="button"
             class="btn btn-success">ยืนยันการลงนาม</button>
+
           <button *ngIf="step == 2" (click)="reload()" style="height: 40px;" type="button"
             class="btn btn-danger ms-2">ลงนามเอกสารอีกครั้ง</button>
+          </div>
 
           <div class="pageFile" *ngIf="selectedFile">
             <div class="mt-2" *ngIf="loading" style="display: flex; justify-content: center;">
@@ -125,9 +133,10 @@
               [show-all]="false" 
               [(page)]="pageVariable" 
               (pages-initialized)="pageInitialized($event)"
-              (click)="selectEle($event)" 
+              (click)="selectEle($event)"
               [ngClass]="{'cursor-copy': stageMarkSign}"
-              style=" width: 210mm;
+              style=" display: flex; border: 1px solid black; 
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);  width: 210mm;
               height: 297mm;"></pdf-viewer>
 
               <div class="example-box" #cdkDrag_ cdkDragBoundary=".canvasWrapper" cdkDrag
